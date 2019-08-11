@@ -1,7 +1,7 @@
 package me.piggypiglet.framework.console;
 
 import me.piggypiglet.framework.logging.Logger;
-import me.piggypiglet.framework.logging.implementations.DefaultLogger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.user.User;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class ConsoleUser extends User {
-    private static final Logger LOGGER = new DefaultLogger("Console");
+    private static final Logger LOGGER = LoggerFactory.getLogger("Console");
 
     public ConsoleUser() {
         super("Console", "", new ArrayList<>());

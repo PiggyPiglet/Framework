@@ -3,5 +3,6 @@ rootProject.name = 'framework'
 include (
         'core',
         'console',
+        'logback',
         'test'
 )

@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":core")
+
+    compile 'ch.qos.logback:logback-classic:+'
+}

@@ -1,6 +1,7 @@
 dependencies {
     compile project(":core")
     compile project(":console")
+    compile project(":logback")
 }
 
 shadowJar {

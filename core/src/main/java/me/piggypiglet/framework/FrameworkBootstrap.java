@@ -5,6 +5,7 @@ import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.CommandsRegisterable;
+import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
 import org.reflections.Reflections;
@@ -32,6 +33,7 @@ final class FrameworkBootstrap {
         final List<Class<? extends StartupRegisterable>> registerables = new ArrayList<>();
 
         Stream.of(
+                ImplementationFinderRegisterable.class,
                 CommandsRegisterable.class,
                 ShutdownRegisterablesRegisterable.class,
                 ShutdownHookRegisterable.class
