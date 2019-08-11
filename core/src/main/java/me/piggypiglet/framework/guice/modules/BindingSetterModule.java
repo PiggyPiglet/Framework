@@ -1,6 +1,8 @@
 package me.piggypiglet.framework.guice.modules;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.binder.AnnotatedBindingBuilder;
+import com.google.inject.binder.LinkedBindingBuilder;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
 
 import java.util.List;
@@ -25,7 +27,18 @@ public final class BindingSetterModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     public void configure() {
         providers.forEach((c, o) -> bind(c).toInstance(o));
-        annotatedBindings.forEach(b -> bind(b.getClazz()).annotatedWith(b.getAnnotation()).toInstance(b.getInstance()));
+        annotatedBindings.forEach(b -> {
+            AnnotatedBindingBuilder bind = bind(b.getClazz());
+            LinkedBindingBuilder link;
+
+            if (b.isObject()) {
+                link = bind.annotatedWith(b.getObjectAnnotation());
+            } else {
+                link = bind.annotatedWith(b.getClassAnnotation());
+            }
+
+            link.toInstance(b.getInstance());
+        });
         requestStaticInjection(staticInjections);
     }
 }

@@ -5,6 +5,7 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
+import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.utils.FileUtils;
 
@@ -19,10 +20,12 @@ import java.util.Map;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Singleton
 public final class FileManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger("FileManager");
+
     private final Map<String, Object> files = new HashMap<>();
 
     public FileWrapper loadFile(String name, String internalPath, String externalPath) throws Exception {
-        LoggerFactory.getLogger("FileManager").info("Loading {}.", name);
+        LOGGER.info("Loading %s.", name);
 
         if (externalPath == null) {
             return putAndGet(name, new FileWrapper(null, FileUtils.readEmbedToString(internalPath)));
@@ -34,7 +37,7 @@ public final class FileManager {
     }
 
     public FileConfiguration loadConfig(String name, String internalPath, String externalPath) throws Exception {
-        LoggerFactory.getLogger("FileManager").info("Loading {}.", name);
+        LOGGER.info("Loading %s.", name);
 
         if (externalPath == null) {
             return putAndGet(name, FileConfigurationFactory.get(internalPath, FileUtils.readEmbedToString(internalPath)));

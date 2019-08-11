@@ -4,10 +4,7 @@ import com.google.inject.Injector;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.registerables.startup.CommandsRegisterable;
-import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
-import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
-import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import me.piggypiglet.framework.registerables.startup.*;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
@@ -34,6 +31,7 @@ final class FrameworkBootstrap {
 
         Stream.of(
                 ImplementationFinderRegisterable.class,
+                FilesRegisterable.class,
                 CommandsRegisterable.class,
                 ShutdownRegisterablesRegisterable.class,
                 ShutdownHookRegisterable.class

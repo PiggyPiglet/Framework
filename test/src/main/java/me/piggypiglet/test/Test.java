@@ -9,8 +9,9 @@ import me.piggypiglet.framework.Framework;
 public final class Test {
     public static void main(String[] args) {
         Framework.builder()
-                .commandPrefix("test")
+                .commandPrefix("")
                 .pckg("me.piggypiglet.test")
+                .file(true, "config", "/config.json", "./config.json", Config.class)
                 .build()
                 .init();
     }
