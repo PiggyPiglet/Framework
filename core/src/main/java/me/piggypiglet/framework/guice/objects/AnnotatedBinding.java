@@ -8,10 +8,10 @@ import java.lang.annotation.Annotation;
 // ------------------------------
 public final class AnnotatedBinding {
     private final Class clazz;
-    private final Class<? extends Annotation> annotation;
+    private final Annotation annotation;
     private final Object instance;
 
-    public AnnotatedBinding(Class clazz, Class<? extends Annotation> annotation, Object instance) {
+    public AnnotatedBinding(Class clazz, Annotation annotation, Object instance) {
         this.clazz = clazz;
         this.annotation = annotation;
         this.instance = instance;
@@ -21,7 +21,7 @@ public final class AnnotatedBinding {
         return clazz;
     }
 
-    public Class<? extends Annotation> getAnnotation() {
+    public Annotation getAnnotation() {
         return annotation;
     }
 

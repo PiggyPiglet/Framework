@@ -27,7 +27,7 @@ public abstract class StartupRegisterable {
         providers.put(instance.getClass(), instance);
     }
 
-    protected void addAnnotatedBinding(Class interfaze, Class<? extends Annotation> annotation, Object instance) {
+    protected void addAnnotatedBinding(Class interfaze, Annotation annotation, Object instance) {
         annotatedBindings.add(
                 new AnnotatedBinding(interfaze, annotation, instance)
         );

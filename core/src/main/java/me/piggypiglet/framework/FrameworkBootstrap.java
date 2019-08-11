@@ -8,6 +8,7 @@ import me.piggypiglet.framework.registerables.startup.CommandsRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ final class FrameworkBootstrap {
         ).forEach(registerables::add);
 
         registerables.addAll(config.getStartupRegisterables());
+        injector.get().getInstance(Reflections.class).getSubTypesOf(StartupRegisterable.class).stream().filter(r -> !registerables.contains(r)).forEach(registerables::add);
 
         registerables.forEach(r -> {
             StartupRegisterable registerable = injector.get().getInstance(r);

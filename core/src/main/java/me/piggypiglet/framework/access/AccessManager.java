@@ -1,8 +1,7 @@
 package me.piggypiglet.framework.access;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.commands.CommandHandler;
-import me.piggypiglet.framework.task.Task;
+import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.user.User;
 
 // ------------------------------
@@ -10,10 +9,9 @@ import me.piggypiglet.framework.user.User;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class AccessManager {
-    @Inject private Task task;
-    @Inject private CommandHandler commandHandler;
+    @Inject private CommandHandlers commandHandlers;
 
-    public void processCommand(User user, String message) {
-        task.async(r -> commandHandler.process(user, message));
+    public void processCommand(String commandHandler, User user, String message) {
+        commandHandlers.process(commandHandler, user, message);
     }
 }

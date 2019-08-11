@@ -3,6 +3,7 @@ package me.piggypiglet.framework;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,14 +14,12 @@ import java.util.stream.Stream;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Framework {
-    private final Class main;
     private final String pckg;
     private final List<Class<? extends StartupRegisterable>> startupRegisterables;
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
     private final String commandPrefix;
 
-    private Framework(Class main, String pckg, List<Class<? extends StartupRegisterable>> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix) {
-        this.main = main;
+    private Framework(String pckg, List<Class<? extends StartupRegisterable>> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix) {
         this.pckg = pckg;
         this.startupRegisterables = startupRegisterables;
         this.shutdownRegisterables = shutdownRegisterables;
@@ -33,10 +32,6 @@ public final class Framework {
 
     public void init() {
         new FrameworkBootstrap(this);
-    }
-
-    public Class getMain() {
-        return main;
     }
 
     public String getPckg() {
@@ -56,18 +51,12 @@ public final class Framework {
     }
 
     public static final class FrameworkBuilder {
-        private Object main = "d-main";
         private String pckg = "d-pckg";
-        private List<Class<? extends StartupRegisterable>> startupRegisterables = null;
-        private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = null;
+        private List<Class<? extends StartupRegisterable>> startupRegisterables = new ArrayList<>();
+        private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
         private String commandPrefix = "d-commandPrefix";
 
         private FrameworkBuilder() {}
-
-        public final FrameworkBuilder main(Class main) {
-            this.main = main;
-            return this;
-        }
 
         public final FrameworkBuilder pckg(String pckg) {
             this.pckg = pckg;
@@ -92,7 +81,7 @@ public final class Framework {
         }
 
         public Framework build() {
-            String unsetVars = Stream.of(main, pckg, commandPrefix).filter(o -> {
+            String unsetVars = Stream.of(pckg, commandPrefix).filter(o -> {
                 try {
                     return ((String) o).startsWith("d-");
                 } catch (Exception e) {
@@ -102,7 +91,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((Class) main, pckg, startupRegisterables, shutdownRegisterables, commandPrefix);
+            return new Framework(pckg, startupRegisterables, shutdownRegisterables, commandPrefix);
         }
     }
 }

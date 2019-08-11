@@ -1,7 +1,6 @@
 package me.piggypiglet.framework.commands;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.implementations.HelpCommand;
 import me.piggypiglet.framework.user.User;
@@ -13,7 +12,6 @@ import java.util.List;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-@Singleton
 public final class CommandHandler {
     @Inject private Framework framework;
     @Inject private HelpCommand defHelpCommand;
@@ -57,6 +55,10 @@ public final class CommandHandler {
     public void setCommands(List<Command> commands) {
         this.commands = commands;
         helpCommand = commands.stream().filter(Command::isDefault).findFirst().orElse(defHelpCommand);
+    }
+
+    public List<Command> getCommands() {
+        return commands;
     }
 
     private String[] args(String text) {

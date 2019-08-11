@@ -13,6 +13,7 @@ import java.util.List;
 public abstract class Command {
     private final String command;
 
+    private List<String> handlers = new ArrayList<>();
     private String description = "null";
     private String usage = "<required args> [optional args]";
     private List<String> permissions = new ArrayList<>();
@@ -34,6 +35,10 @@ public abstract class Command {
         return command;
     }
 
+    public List<String> getHandlers() {
+        return handlers;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -51,23 +56,28 @@ public abstract class Command {
     }
 
     protected class Options {
-        protected Options description(String description) {
+        public Options handlers(String... handlers) {
+            Command.this.handlers = Arrays.asList(handlers);
+            return this;
+        }
+
+        public Options description(String description) {
             Command.this.description = description;
             return this;
         }
 
-        protected Options usage(String usage) {
+        public Options usage(String usage) {
             Command.this.usage = usage;
             return this;
         }
 
-        protected Options permissions(String... permissions) {
+        public Options permissions(String... permissions) {
             Command.this.permissions = Arrays.asList(permissions);
             return this;
         }
 
-        protected Options def(boolean value) {
-            Command.this.def = value;
+        public Options def(boolean value) {
+            def = value;
             return this;
         }
     }

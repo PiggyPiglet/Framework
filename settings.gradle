@@ -2,5 +2,6 @@ rootProject.name = 'framework'
 
 include (
         'core',
-        'console'
+        'console',
+        'test'
 )

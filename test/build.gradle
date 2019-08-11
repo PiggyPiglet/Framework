@@ -1,0 +1,13 @@
+dependencies {
+    compile project(":core")
+    compile project(":console")
+}
+
+shadowJar {
+    relocate 'me.piggypiglet.framework', 'me.piggypiglet.test.framework'
+    manifest {
+        attributes(
+                'Main-Class': 'me.piggypiglet.test.Test'
+        )
+    }
+}
