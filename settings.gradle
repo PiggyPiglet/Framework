@@ -1,0 +1,6 @@
+rootProject.name = 'framework'
+
+include (
+        'core',
+        'console'
+)

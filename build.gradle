@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        maven {
+            url = 'https://plugins.gradle.org/m2'
+        }
+
+        dependencies {
+            classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    group 'me.piggypiglet'
+    version '1.0.0'
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        maven {
+            url = 'https://repo.piggypiglet.me/repository/maven-releases/'
+        }
+        maven {
+            url = 'https://repo.aikar.co/content/groups/aikar/'
+        }
+    }
+
+    dependencies {
+        compile 'com.google.inject:guice:+'
+        compile 'com.google.code.gson:gson:+'
+        compile 'commons-io:commons-io:+'
+        compile 'org.reflections:reflections:+'
+        compile 'me.piggypiglet:TimeAPI:+'
+        testCompile 'junit:junit:4.12'
+    }
+
+    shadowJar {
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+        relocate 'co.aikar.idb', 'me.piggypiglet.framework.idb'
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+}
