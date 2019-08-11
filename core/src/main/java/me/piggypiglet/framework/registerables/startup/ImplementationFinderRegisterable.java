@@ -3,6 +3,7 @@ package me.piggypiglet.framework.registerables.startup;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
+import me.piggypiglet.framework.task.implementations.DefaultTask;
 import org.reflections.Reflections;
 
 // ------------------------------
@@ -14,6 +15,6 @@ public final class ImplementationFinderRegisterable extends StartupRegisterable 
 
     @Override
     protected void execute() {
-        reflections.getSubTypesOf(Task.class).stream().findFirst().ifPresent(t -> addBinding(Task.class, injector.getInstance(t)));
+        reflections.getSubTypesOf(Task.class).stream().filter(c -> c != DefaultTask.class).findFirst().ifPresent(t -> addBinding(Task.class, injector.getInstance(t)));
     }
 }
