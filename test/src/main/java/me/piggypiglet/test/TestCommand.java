@@ -2,7 +2,6 @@ package me.piggypiglet.test;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.Command;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.user.User;
 
 // ------------------------------
@@ -10,7 +9,7 @@ import me.piggypiglet.framework.user.User;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class TestCommand extends Command {
-    @Inject @Config private FileConfiguration config;
+    @Inject @Oof private String test;
 
     public TestCommand() {
         super("test");
@@ -18,7 +17,7 @@ public final class TestCommand extends Command {
 
     @Override
     protected boolean execute(User user, String[] args) {
-        user.sendMessage(config.getString("test"));
+        user.sendMessage("oof");
         return true;
     }
 }

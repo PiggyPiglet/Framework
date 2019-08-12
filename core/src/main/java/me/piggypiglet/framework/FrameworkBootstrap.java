@@ -5,9 +5,11 @@ import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.*;
+import me.piggypiglet.framework.utils.annotations.Addon;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
@@ -32,13 +34,18 @@ final class FrameworkBootstrap {
         Stream.of(
                 ImplementationFinderRegisterable.class,
                 FilesRegisterable.class,
-                CommandsRegisterable.class,
                 ShutdownRegisterablesRegisterable.class,
                 ShutdownHookRegisterable.class
         ).forEach(registerables::add);
 
         registerables.addAll(config.getStartupRegisterables());
-        injector.get().getInstance(Reflections.class).getSubTypesOf(StartupRegisterable.class).stream().filter(r -> !registerables.contains(r)).forEach(registerables::add);
+        registerables.add(CommandsRegisterable.class);
+
+        injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class).stream()
+                .map(c -> c.getAnnotation(Addon.class))
+                .map(Addon::value)
+                .map(Arrays::stream)
+                .forEach(s -> s.filter(r -> !registerables.contains(r)).forEach(registerables::add));
 
         registerables.forEach(r -> {
             StartupRegisterable registerable = injector.get().getInstance(r);

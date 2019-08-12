@@ -1,4 +1,4 @@
-package me.piggypiglet.test;
+package me.piggypiglet.framework.utils.annotations.files;
 
 import com.google.inject.BindingAnnotation;
 
