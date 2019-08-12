@@ -6,6 +6,7 @@ import me.piggypiglet.framework.json.JsonParser;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 // ------------------------------
@@ -15,9 +16,17 @@ import java.util.stream.Collectors;
 public final class JsonFileConfiguration extends AbstractFileConfiguration {
     private JsonParser parser;
 
-    public JsonFileConfiguration() {}
+    public JsonFileConfiguration() {
+        super(s -> s.endsWith(".json"));
+    }
+
+    public JsonFileConfiguration(Map<String, Object> items) {
+        this();
+        this.parser = new JsonParser(items);
+    }
 
     private JsonFileConfiguration(JsonParser parser) {
+        this();
         this.parser = parser;
     }
 

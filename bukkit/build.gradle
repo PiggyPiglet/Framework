@@ -1,0 +1,14 @@
+repositories {
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile(project(":core")) {
+        exclude group: 'com.google.code', module: 'gson'
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+
+    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
+}

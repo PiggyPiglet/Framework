@@ -1,14 +1,15 @@
 dependencies {
-    compile project(":core")
-    compile project(":console")
-    compile project(":logback")
+    compile project(":bukkit")
+
+    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
 }
 
 shadowJar {
     relocate 'me.piggypiglet.framework', 'me.piggypiglet.test.framework'
-    manifest {
-        attributes(
-                'Main-Class': 'me.piggypiglet.test.Test'
-        )
-    }
+    destinationDirectory = file("$rootDir/test/spigot/plugins")
+//    manifest {
+//        attributes(
+//                'Main-Class': 'me.piggypiglet.test.Test'
+//        )
+//    }
 }

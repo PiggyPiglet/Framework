@@ -11,6 +11,10 @@ import java.util.List;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class BlankFileConfiguration extends AbstractFileConfiguration {
+    public BlankFileConfiguration() {
+        super(s -> true);
+    }
+
     @Override
     public Object get(String path) {
         return null;

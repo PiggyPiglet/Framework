@@ -4,7 +4,12 @@ import com.google.inject.Injector;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.registerables.startup.*;
+import me.piggypiglet.framework.registerables.startup.CommandsRegisterable;
+import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
+import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
+import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
+import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.Addon;
 import org.reflections.Reflections;
 
@@ -33,6 +38,7 @@ final class FrameworkBootstrap {
 
         Stream.of(
                 ImplementationFinderRegisterable.class,
+                FileTypesRegisterable.class,
                 FilesRegisterable.class,
                 ShutdownRegisterablesRegisterable.class,
                 ShutdownHookRegisterable.class

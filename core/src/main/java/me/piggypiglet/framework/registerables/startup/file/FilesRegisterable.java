@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.registerables.startup;
+package me.piggypiglet.framework.registerables.startup.file;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;

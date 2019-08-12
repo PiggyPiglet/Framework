@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.console;
+package me.piggypiglet.framework.console.commands;
 
 import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.user.User;

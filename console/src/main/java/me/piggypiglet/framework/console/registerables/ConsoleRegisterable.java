@@ -1,8 +1,9 @@
-package me.piggypiglet.framework.console;
+package me.piggypiglet.framework.console.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.access.AccessManager;
 import me.piggypiglet.framework.commands.CommandHandlers;
+import me.piggypiglet.framework.console.user.ConsoleUser;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.user.User;

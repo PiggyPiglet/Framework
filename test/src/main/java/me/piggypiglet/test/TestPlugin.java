@@ -1,19 +1,19 @@
 package me.piggypiglet.test;
 
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.utils.annotations.files.Config;
+import org.bukkit.plugin.java.JavaPlugin;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-public final class Test {
-    public static void main(String[] args) {
+public final class TestPlugin extends JavaPlugin {
+    @Override
+    public void onEnable() {
         Framework.builder()
-                .commandPrefix("")
+                .main(getClass())
                 .pckg("me.piggypiglet.test")
-                .file(true, "config", "/config.json", "./config.json", Config.class)
-                .startup(TestRegisterable.class)
+                .commandPrefix("test")
                 .build()
                 .init();
     }

@@ -21,7 +21,7 @@ public final class JsonParser {
         items = new Gson().fromJson(json, LinkedTreeMap.class);
     }
 
-    private JsonParser(Map<String, Object> items) {
+    public JsonParser(Map<String, Object> items) {
         this.items = items;
     }
 

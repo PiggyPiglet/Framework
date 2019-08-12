@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.file;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
@@ -20,6 +21,8 @@ import java.util.Map;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Singleton
 public final class FileManager {
+    @Inject private FileConfigurationFactory fileConfigurationFactory;
+
     private static final Logger LOGGER = LoggerFactory.getLogger("FileManager");
 
     private final Map<String, Object> files = new HashMap<>();
@@ -40,12 +43,12 @@ public final class FileManager {
         LOGGER.info("Loading %s.", name);
 
         if (externalPath == null) {
-            return putAndGet(name, FileConfigurationFactory.get(internalPath, FileUtils.readEmbedToString(internalPath)));
+            return putAndGet(name, fileConfigurationFactory.get(internalPath, FileUtils.readEmbedToString(internalPath)));
         }
 
         File file = createFile(externalPath, internalPath);
 
-        return putAndGet(name, FileConfigurationFactory.get(file));
+        return putAndGet(name, fileConfigurationFactory.get(file));
     }
 
     public FileConfiguration getConfig(String name) {
@@ -83,5 +86,4 @@ public final class FileManager {
 
         return file;
     }
-
 }

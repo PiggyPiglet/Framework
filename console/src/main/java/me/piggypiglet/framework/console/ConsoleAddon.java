@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.console;
 
+import me.piggypiglet.framework.console.registerables.ConsoleRegisterable;
 import me.piggypiglet.framework.utils.annotations.Addon;
 
 // ------------------------------
@@ -7,5 +8,5 @@ import me.piggypiglet.framework.utils.annotations.Addon;
 // https://www.piggypiglet.me
 // ------------------------------
 @Addon({ConsoleRegisterable.class})
-public final class Console {
+public final class ConsoleAddon {
 }

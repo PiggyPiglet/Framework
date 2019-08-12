@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.console;
+package me.piggypiglet.framework.console.user;
 
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;

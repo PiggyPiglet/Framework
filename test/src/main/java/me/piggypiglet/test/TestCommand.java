@@ -1,6 +1,5 @@
 package me.piggypiglet.test;
 
-import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.user.User;
 
@@ -9,15 +8,13 @@ import me.piggypiglet.framework.user.User;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class TestCommand extends Command {
-    @Inject @Oof private String test;
-
     public TestCommand() {
         super("test");
     }
 
     @Override
     protected boolean execute(User user, String[] args) {
-        user.sendMessage("oof");
+        user.sendMessage("test");
         return true;
     }
 }

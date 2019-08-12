@@ -5,17 +5,24 @@ import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
 public abstract class AbstractFileConfiguration implements FileConfiguration {
+    private final Predicate<String> match;
+
     protected static final String NULL_STRING = "null";
     protected static final int NULL_NUM = 0;
     protected static final boolean NULL_BOOL = false;
 
     private File file;
+
+    protected AbstractFileConfiguration(Predicate<String> match) {
+        this.match = match;
+    }
 
     public final AbstractFileConfiguration load(File file, String fileContent) {
         this.file = file;
@@ -27,6 +34,10 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
 
     public File getFile() {
         return file;
+    }
+
+    public Predicate<String> getMatch() {
+        return match;
     }
 
     @SafeVarargs

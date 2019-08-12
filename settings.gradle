@@ -4,5 +4,6 @@ include (
         'core',
         'console',
         'logback',
+        'bukkit',
         'test'
 )
