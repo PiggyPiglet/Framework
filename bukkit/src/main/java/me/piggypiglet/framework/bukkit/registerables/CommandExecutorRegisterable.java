@@ -21,6 +21,7 @@ public final class CommandExecutorRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
+        //todo: do a proper null check, throw custom exception if null
         Objects.requireNonNull(main.getCommand(framework.getCommandPrefix())).setExecutor(commandHandler);
         accessManager.newHandler("bukkit", injector);
     }
