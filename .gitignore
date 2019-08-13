@@ -1,10 +1,6 @@
 .idea/
 .gradle/
-*/build/libs/
-*/build/classes/
-*/build/resources/
-*/build/tmp/
-*/build/generated/
+build/
 out/
 *.iml
 test/spigot/
