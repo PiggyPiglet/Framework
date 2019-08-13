@@ -4,18 +4,18 @@ import com.google.inject.Injector;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.registerables.startup.CommandsRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import me.piggypiglet.framework.registerables.startup.commands.CommandsRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.Addon;
 import org.reflections.Reflections;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -23,18 +23,21 @@ import java.util.stream.Stream;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-final class FrameworkBootstrap {
+public final class FrameworkBootstrap {
+    private AtomicReference<Injector> injector;
+    private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
+
     private final Framework config;
 
-    FrameworkBootstrap(Framework config) {
+    public FrameworkBootstrap(Framework config) {
         this.config = config;
 
         start();
     }
 
     private void start() {
-        final AtomicReference<Injector> injector = new AtomicReference<>(new InitialModule(config).createInjector());
-        final List<Class<? extends StartupRegisterable>> registerables = new ArrayList<>();
+        injector = new AtomicReference<>(new InitialModule(this, config).createInjector());
+        final Set<Class<? extends StartupRegisterable>> registerables = new LinkedHashSet<>();
 
         Stream.of(
                 ImplementationFinderRegisterable.class,
@@ -64,6 +67,16 @@ final class FrameworkBootstrap {
                         registerable.getStaticInjections().toArray(new Class[]{})
                 )));
             }
+
+            this.registerables.add(registerable);
         });
+    }
+
+    public Injector getInjector() {
+        return injector.get();
+    }
+
+    public Set<StartupRegisterable> getRegisterables() {
+        return registerables;
     }
 }

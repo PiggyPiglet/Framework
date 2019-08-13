@@ -2,6 +2,7 @@ package me.piggypiglet.framework.guice.modules;
 
 import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.FrameworkBootstrap;
 import org.reflections.Reflections;
 
 // ------------------------------
@@ -9,14 +10,22 @@ import org.reflections.Reflections;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class InitialModule extends AbstractModule {
+    private final FrameworkBootstrap main;
     private final Framework config;
 
-    public InitialModule(Framework config) {
+    public InitialModule(FrameworkBootstrap main, Framework config) {
+        this.main = main;
         this.config = config;
     }
 
     public Injector createInjector() {
         return Guice.createInjector(this);
+    }
+
+    @Provides
+    @Singleton
+    public FrameworkBootstrap providesFrameworkBootstrap() {
+        return main;
     }
 
     @Provides

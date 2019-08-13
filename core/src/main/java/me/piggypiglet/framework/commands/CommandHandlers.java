@@ -34,11 +34,12 @@ public final class CommandHandlers {
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toList()));
     }
 
-    public Map<String, CommandHandler> getCommandHandlers() {
-        return commandHandlers;
-    }
-
     public List<Command> getCommands() {
         return commands;
+    }
+
+    public void clearCommands() {
+        commands.clear();
+        commandHandlers.values().stream().map(CommandHandler::getCommands).forEach(List::clear);
     }
 }
