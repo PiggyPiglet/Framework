@@ -14,7 +14,7 @@ public final class TestCommand extends Command {
 
     @Override
     protected boolean execute(User user, String[] args) {
-        user.sendMessage("test");
+        user.sendMessage("oof");
         return true;
     }
 }

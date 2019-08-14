@@ -7,16 +7,18 @@ import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import me.piggypiglet.framework.registerables.startup.commands.CommandHandlerRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandsRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
-import me.piggypiglet.framework.utils.annotations.Addon;
+import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import org.reflections.Reflections;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // ------------------------------
@@ -26,6 +28,7 @@ import java.util.stream.Stream;
 public final class FrameworkBootstrap {
     private AtomicReference<Injector> injector;
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
+    private final Set<Addon> addons = new LinkedHashSet<>();
 
     private final Framework config;
 
@@ -39,22 +42,32 @@ public final class FrameworkBootstrap {
         injector = new AtomicReference<>(new InitialModule(this, config).createInjector());
         final Set<Class<? extends StartupRegisterable>> registerables = new LinkedHashSet<>();
 
+        addons.addAll(injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class).stream()
+                .map(c -> c.getAnnotation(Addon.class))
+                .collect(Collectors.toSet()));
+
         Stream.of(
                 ImplementationFinderRegisterable.class,
                 FileTypesRegisterable.class,
-                FilesRegisterable.class,
-                ShutdownRegisterablesRegisterable.class,
-                ShutdownHookRegisterable.class
+                FilesRegisterable.class
         ).forEach(registerables::add);
 
         registerables.addAll(config.getStartupRegisterables());
-        registerables.add(CommandsRegisterable.class);
 
-        injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class).stream()
-                .map(c -> c.getAnnotation(Addon.class))
-                .map(Addon::value)
+        Stream.of(
+                CommandsRegisterable.class,
+                CommandHandlerRegisterable.class
+        ).forEach(registerables::add);
+
+        addons.stream()
+                .map(Addon::startup)
                 .map(Arrays::stream)
                 .forEach(s -> s.filter(r -> !registerables.contains(r)).forEach(registerables::add));
+
+        Stream.of(
+                ShutdownRegisterablesRegisterable.class,
+                ShutdownHookRegisterable.class
+        ).forEach(registerables::add);
 
         registerables.forEach(r -> {
             StartupRegisterable registerable = injector.get().getInstance(r);
@@ -78,5 +91,9 @@ public final class FrameworkBootstrap {
 
     public Set<StartupRegisterable> getRegisterables() {
         return registerables;
+    }
+
+    public Set<Addon> getAddons() {
+        return addons;
     }
 }

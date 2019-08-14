@@ -1,19 +1,17 @@
 package me.piggypiglet.test;
 
 import me.piggypiglet.framework.Framework;
-import org.bukkit.plugin.java.JavaPlugin;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-public final class TestPlugin extends JavaPlugin {
-    @Override
-    public void onEnable() {
+public final class Test {
+    public static void main(String[] args) {
         Framework.builder()
-                .main(getClass())
+                .main(Test.class)
                 .pckg("me.piggypiglet.test")
-                .commandPrefix("test")
+                .commandPrefix("!")
                 .build()
                 .init();
     }

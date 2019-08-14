@@ -2,12 +2,12 @@ package me.piggypiglet.framework.task.implementations;
 
 import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
+import sh.okx.timeapi.TimeAPI;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -18,18 +18,18 @@ public final class DefaultTask extends Task {
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(10);
 
     @Override
-    public void async(Consumer<GRunnable> task) {
-        EXECUTOR.submit(gRunnable(task));
+    protected void async(GRunnable task) {
+        EXECUTOR.submit(task);
     }
 
     @Override
-    protected void scheduleAsync(Consumer<GRunnable> task, long millis, boolean repeat) {
-        final GRunnable gRunnable = gRunnable(task);
+    protected void scheduleAsync(GRunnable task, TimeAPI time, boolean repeat) {
+        long millis = time.getMilliseconds();
 
         if (repeat) {
-            SCHEDULER.scheduleAtFixedRate(gRunnable, millis, millis, TimeUnit.MILLISECONDS);
+            SCHEDULER.scheduleAtFixedRate(task, millis, millis, TimeUnit.MILLISECONDS);
         } else {
-            SCHEDULER.schedule(gRunnable, millis, TimeUnit.MILLISECONDS);
+            SCHEDULER.schedule(task, millis, TimeUnit.MILLISECONDS);
         }
     }
 

@@ -1,21 +1,22 @@
 repositories {
+    jcenter()
     maven {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
 }
 
 dependencies {
-    compile project(":bukkit")
-
-    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
+    compile project(":core")
+    compile project(":jda")
+    compile project(":console")
+    compile project(":logback")
 }
 
 shadowJar {
     relocate 'me.piggypiglet.framework', 'me.piggypiglet.test.framework'
-    destinationDirectory = file("$rootDir/test/spigot/plugins")
-//    manifest {
-//        attributes(
-//                'Main-Class': 'me.piggypiglet.test.Test'
-//        )
-//    }
+    manifest {
+        attributes(
+                'Main-Class': 'me.piggypiglet.test.Test'
+        )
+    }
 }

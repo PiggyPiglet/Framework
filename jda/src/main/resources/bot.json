@@ -1,0 +1,7 @@
+{
+  "token": "<TOKEN>",
+  "activity": {
+    "type": "default",
+    "activity": "test"
+  }
+}

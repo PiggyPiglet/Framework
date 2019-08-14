@@ -1,9 +1,0 @@
-name: Test
-main: me.piggypiglet.test.TestPlugin
-version: 1.0.0
-api-version: "1.14"
-website: https://piggypiglet.me
-author: PiggyPiglet
-commands:
-  test:
-    description: test

@@ -1,5 +1,5 @@
 dependencies {
-    compile project(":core")
+    compileOnly project(":core")
 
     compile 'ch.qos.logback:logback-classic:1.3.0-alpha4'
 }

@@ -1,0 +1,8 @@
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile project(":core")
+    compile 'net.dv8tion:JDA:+'
+}
