@@ -1,5 +1,4 @@
 repositories {
-    jcenter()
     maven {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
@@ -7,9 +6,9 @@ repositories {
 
 dependencies {
     compile project(":core")
-    compile project(":jda")
-    compile project(":console")
-    compile project(":logback")
+    compile project(":bukkit")
+
+    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
 }
 
 shadowJar {
