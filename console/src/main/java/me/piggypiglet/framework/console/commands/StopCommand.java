@@ -10,7 +10,7 @@ import me.piggypiglet.framework.user.User;
 public final class StopCommand extends Command {
     public StopCommand() {
         super("stop");
-        options.handlers("console");
+        options.handlers("console").usage("").description("Stop the application.");
     }
 
     @Override

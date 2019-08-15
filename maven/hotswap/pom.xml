@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>me.piggypiglet</groupId>
 			<artifactId>framework-core</artifactId>
-			<version>1.0.0</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hotswapagent</groupId>
