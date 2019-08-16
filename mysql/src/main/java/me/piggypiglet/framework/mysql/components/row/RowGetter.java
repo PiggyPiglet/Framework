@@ -2,10 +2,8 @@ package me.piggypiglet.framework.mysql.components.row;
 
 import co.aikar.idb.DbRow;
 import me.piggypiglet.framework.mysql.components.MySQLComponent;
-import me.piggypiglet.framework.mysql.components.row.objects.Location;
+import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -15,11 +13,11 @@ import java.util.concurrent.CompletableFuture;
 // ------------------------------
 public final class RowGetter extends MySQLComponent {
     private final String table;
-    private final List<Location> locations;
+    private final KeyValueSet location;
 
-    private RowGetter(String table, List<Location> locations) {
+    private RowGetter(String table, KeyValueSet location) {
         this.table = table;
-        this.locations = locations;
+        this.location = location;
     }
 
     public static Builder builder(String table) {
@@ -28,20 +26,24 @@ public final class RowGetter extends MySQLComponent {
 
     public static class Builder {
         private final String table;
-        private final List<Location> locations = new ArrayList<>();
+        private KeyValueSet location;
 
         private Builder(String table) {
             this.table = table;
         }
 
-        public Builder locations(Location... locations) {
-            this.locations.addAll(Arrays.asList(locations));
+        public Builder location(KeyValueSet location) {
+            this.location = location;
             return this;
         }
 
         public RowGetter build() {
-            return new RowGetter(table, locations);
+            return new RowGetter(table, location);
         }
+    }
+
+    public CompletableFuture<DbRow> get() {
+        return get(table, location);
     }
 
     public CompletableFuture<List<DbRow>> getAll() {
@@ -49,6 +51,6 @@ public final class RowGetter extends MySQLComponent {
     }
 
     public CompletableFuture<Boolean> exists() {
-        return exists(table, locations);
+        return exists(table, location);
     }
 }

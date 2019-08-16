@@ -1,8 +1,9 @@
 package me.piggypiglet.framework.mysql.components.row;
 
 import me.piggypiglet.framework.mysql.components.MySQLComponent;
-import me.piggypiglet.framework.mysql.components.row.objects.Row;
+import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 // ------------------------------
@@ -11,13 +12,11 @@ import java.util.concurrent.CompletableFuture;
 // ------------------------------
 public final class RowCreator extends MySQLComponent {
     private final String table;
-    private final String[] keys;
-    private final Object[] values;
+    private final KeyValueSet data;
 
-    private RowCreator(String table, String[] keys, Object[] values) {
+    private RowCreator(String table, KeyValueSet data) {
         this.table = table;
-        this.keys = keys;
-        this.values = values;
+        this.data = data;
     }
 
     public static Builder builder(String table) {
@@ -26,29 +25,28 @@ public final class RowCreator extends MySQLComponent {
 
     public static class Builder {
         private final String table;
-        private String[] keys;
-        private Object[] values;
+        private final KeyValueSet.Builder builder = KeyValueSet.builder();
 
         private Builder(String table) {
             this.table = table;
         }
 
-        public Builder keys(String... keys) {
-            this.keys = keys;
+        public Builder key(String... keys) {
+            Arrays.stream(keys).forEach(builder::key);
             return this;
         }
 
-        public Builder values(String... values) {
-            this.values = values;
+        public Builder value(Object... values) {
+            Arrays.stream(values).forEach(builder::value);
             return this;
         }
 
         public RowCreator build() {
-            return new RowCreator(table, keys, values);
+            return new RowCreator(table, builder.build());
         }
     }
 
     public CompletableFuture<Boolean> execute() {
-        return create(table, new Row(keys, values));
+        return create(table, data);
     }
 }

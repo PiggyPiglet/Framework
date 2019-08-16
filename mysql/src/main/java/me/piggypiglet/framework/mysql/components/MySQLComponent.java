@@ -1,8 +1,8 @@
 package me.piggypiglet.framework.mysql.components;
 
 import co.aikar.idb.DbRow;
-import me.piggypiglet.framework.mysql.components.row.objects.Location;
-import me.piggypiglet.framework.mysql.components.row.objects.Row;
+import com.google.common.collect.Maps;
+import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 
 import java.util.List;
@@ -13,18 +13,27 @@ import java.util.concurrent.CompletableFuture;
 // https://www.piggypiglet.me
 // ------------------------------
 public abstract class MySQLComponent {
-    protected CompletableFuture<Boolean> create(String table, Row row) {
-        return MySQLUtils.create(table, row.getKeys(), row.getValues());
+    protected CompletableFuture<Boolean> create(String table, KeyValueSet data) {
+        return MySQLUtils.create(table, data.getKeys(), data.getValues());
+    }
+
+    protected CompletableFuture<DbRow> get(String table, KeyValueSet location) {
+        return MySQLUtils.getRow(table, location.getKeys(), location.getValues());
     }
 
     protected CompletableFuture<List<DbRow>> getAll(String table) {
         return MySQLUtils.getRows(table);
     }
 
-    protected CompletableFuture<Boolean> exists(String table, List<Location> locations) {
-        String[] keys = locations.stream().map(Location::getKey).toArray(String[]::new);
-        Object[] values = locations.stream().map(Location::getValue).toArray();
+    protected CompletableFuture<Boolean> exists(String table, KeyValueSet location) {
+        return MySQLUtils.exists(table, location.getKeys(), location.getValues());
+    }
 
-        return MySQLUtils.exists(table, keys, values);
+    protected boolean delete(String table, KeyValueSet location) {
+        return MySQLUtils.remove(table, location.getKeys(), location.getValues());
+    }
+
+    protected boolean edit(String table, KeyValueSet location, KeyValueSet changes) {
+        return MySQLUtils.set(table, Maps.immutableEntry(location.getKeys(), location.getValues()), Maps.immutableEntry(changes.getKeys(), changes.getValues()));
     }
 }

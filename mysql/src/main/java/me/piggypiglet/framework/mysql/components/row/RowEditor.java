@@ -7,13 +7,15 @@ import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-public final class RowDeleter extends MySQLComponent {
+public final class RowEditor extends MySQLComponent {
     private final String table;
     private final KeyValueSet location;
+    private final KeyValueSet changes;
 
-    private RowDeleter(String table, KeyValueSet location) {
+    private RowEditor(String table, KeyValueSet location, KeyValueSet changes) {
         this.table = table;
         this.location = location;
+        this.changes = changes;
     }
 
     public static Builder builder(String table) {
@@ -23,6 +25,7 @@ public final class RowDeleter extends MySQLComponent {
     public static class Builder {
         private final String table;
         private KeyValueSet location;
+        private KeyValueSet changes;
 
         private Builder(String table) {
             this.table = table;
@@ -33,12 +36,17 @@ public final class RowDeleter extends MySQLComponent {
             return this;
         }
 
-        public RowDeleter build() {
-            return new RowDeleter(table, location);
+        public Builder changes(KeyValueSet changes) {
+            this.changes = changes;
+            return this;
+        }
+
+        public RowEditor build() {
+            return new RowEditor(table, location, changes);
         }
     }
 
     public boolean execute() {
-        return delete(table, location);
+        return edit(table, location, changes);
     }
 }
