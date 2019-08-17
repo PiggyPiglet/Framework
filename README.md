@@ -29,11 +29,11 @@ repositories {
 [Maven](https://github.com/PiggyPiglet/Framework/wiki/Maven-Setup):
 ```xml
 <repositories>
-    <repository>
-	    <id>piggypiglet</id>
-	    <name>piggypiglet</name>
-	    <url>https://repo.piggypiglet.me/repository/maven-releases/</url>
-	</repository>
+  <repository>
+    <id>piggypiglet</id>
+    <name>piggypiglet</name>
+    <url>https://repo.piggypiglet.me/repository/maven-releases/</url>
+  </repository>
 </repositories>
 ```
 More info can be found on their respective pages.
