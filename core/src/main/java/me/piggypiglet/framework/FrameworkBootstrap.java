@@ -3,8 +3,10 @@ package me.piggypiglet.framework;
 import com.google.inject.Injector;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
+import me.piggypiglet.framework.registerables.startup.ManagersRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandHandlerRegisterable;
@@ -12,7 +14,6 @@ import me.piggypiglet.framework.registerables.startup.commands.CommandsRegistera
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import org.reflections.Reflections;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -49,7 +50,8 @@ public final class FrameworkBootstrap {
         Stream.of(
                 ImplementationFinderRegisterable.class,
                 FileTypesRegisterable.class,
-                FilesRegisterable.class
+                FilesRegisterable.class,
+                ManagersRegisterable.class
         ).forEach(registerables::add);
 
         registerables.addAll(config.getStartupRegisterables());
@@ -73,9 +75,9 @@ public final class FrameworkBootstrap {
             StartupRegisterable registerable = injector.get().getInstance(r);
             registerable.run(injector.get());
 
-            if (registerable.getProviders().size() > 0 || registerable.getAnnotatedBindings().size() > 0 || registerable.getStaticInjections().size() > 0) {
+            if (registerable.getBindings().size() > 0 || registerable.getAnnotatedBindings().size() > 0 || registerable.getStaticInjections().size() > 0) {
                 injector.set(injector.get().createChildInjector(new BindingSetterModule(
-                        registerable.getProviders(),
+                        registerable.getBindings(),
                         registerable.getAnnotatedBindings(),
                         registerable.getStaticInjections().toArray(new Class[]{})
                 )));
@@ -85,14 +87,26 @@ public final class FrameworkBootstrap {
         });
     }
 
+    /**
+     * Get an instance of the current injector, as the injectable injector isn't updated through child injectors.
+     * @return Injector instance
+     */
     public Injector getInjector() {
         return injector.get();
     }
 
+    /**
+     * Get all the startup registerable instances that were initialized during startup.
+     * @return Set of StartupRegisterable instances
+     */
     public Set<StartupRegisterable> getRegisterables() {
         return registerables;
     }
 
+    /**
+     * Get all found addons and their data.
+     * @return Set of Addon annotation data objects.
+     */
     public Set<Addon> getAddons() {
         return addons;
     }

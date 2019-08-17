@@ -1,6 +1,11 @@
+version '1.0.0'
+
 repositories {
+//    maven {
+//        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+//    }
     maven {
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        url = 'https://repo.aikar.co/content/groups/aikar/'
     }
 }
 
@@ -8,6 +13,7 @@ dependencies {
     compile project(":core")
     compile project(":console")
     compile project(":logback")
+    compile project(":mysql")
 //    compile project(":bukkit")
 
 //    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'

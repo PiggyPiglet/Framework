@@ -1,0 +1,11 @@
+{
+  "user": "root",
+  "password": "pass1234",
+  "db": "application",
+  "host": "127.0.0.1",
+
+  "save-interval": "10 mins",
+  "tables": [
+    "data"
+  ]
+}

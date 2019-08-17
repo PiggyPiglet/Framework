@@ -5,10 +5,10 @@ import com.google.inject.name.Names;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.task.implementations.DefaultTask;
-import org.reflections.Reflections;
 
 import java.util.Optional;
 

@@ -32,34 +32,65 @@ public final class Framework {
         this.files = files;
     }
 
+    /**
+     * Initialize a new instance of FrameworkBuilder
+     * @return FrameworkBuilder
+     */
     public static FrameworkBuilder builder() {
         return new FrameworkBuilder();
     }
 
+    /**
+     * Start the bootstrap process with the current framework configuration.
+     */
     public void init() {
         new FrameworkBootstrap(this);
     }
 
+    /**
+     * Get the main class
+     * @return Class
+     */
     public Class<?> getMain() {
         return main;
     }
 
+    /**
+     * Get the projects package
+     * @return String
+     */
     public String getPckg() {
         return pckg;
     }
 
+    /**
+     * Get all manually inputted StartupRegisterables
+     * @return Classes extending StartupRegisterable
+     */
     public List<Class<? extends StartupRegisterable>> getStartupRegisterables() {
         return startupRegisterables;
     }
 
+    /**
+     * Get all manually inputted ShutdownRegisterables
+     * @return Classes extending ShutdownRegisterable
+     */
     public List<Class<? extends ShutdownRegisterable>> getShutdownRegisterables() {
         return shutdownRegisterables;
     }
 
+    /**
+     * Get the application's main command prefix.
+     * @return String
+     */
     public String getCommandPrefix() {
         return commandPrefix;
     }
 
+    /**
+     * Get information on all files that need to be made
+     * @return List of FileData
+     */
     public List<FileData> getFiles() {
         return files;
     }
@@ -74,38 +105,80 @@ public final class Framework {
 
         private FrameworkBuilder() {}
 
+        /**
+         * Set the application's main class
+         * @param main Main class
+         * @return FrameworkBuilder
+         */
         public final FrameworkBuilder main(Class<?> main) {
             this.main = main;
             return this;
         }
 
+        /**
+         * Set the application's package
+         * @param pckg Application's package
+         * @return FrameworkBuilder
+         */
         public final FrameworkBuilder pckg(String pckg) {
             this.pckg = pckg;
             return this;
         }
 
+        /**
+         * Add startup registerables to be ran in the bootstrap, in order.
+         * @param registerables Varargs classes extending StartupRegisterable
+         * @return FrameworkBuilder
+         */
         @SafeVarargs
         public final FrameworkBuilder startup(Class<? extends StartupRegisterable>... registerables) {
             startupRegisterables = Arrays.asList(registerables);
             return this;
         }
 
+        /**
+         * Add shutdown registerables to be ran in the shutdown hook, in order.
+         * @param registerables Varargs classes extending ShutdownRegisterable
+         * @return FrameworkBuilder
+         */
         @SafeVarargs
         public final FrameworkBuilder shutdown(Class<? extends ShutdownRegisterable>... registerables) {
             shutdownRegisterables = Arrays.asList(registerables);
             return this;
         }
 
+        /**
+         * The application's command prefix, to be used in command handlers.
+         * @param commandPrefix String
+         * @return FrameworkBuilder
+         */
         public final FrameworkBuilder commandPrefix(String commandPrefix) {
             this.commandPrefix = commandPrefix;
             return this;
         }
 
+        /**
+         * Add a file to be copied from an embed and loaded into memory.
+         * @param config Should this file be stored as a FileConfiguration
+         * @param name Name of the file to be referenced in FileManager
+         * @param internalPath The internal path of the file.
+         * @param externalPath The external path of the file, set to null if file shouldn't be copied outside the jar.
+         * @param annotation Annotation to bind the instance to.
+         * @return FrameworkBuilder
+         */
         public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Class<? extends Annotation> annotation) {
             files.add(new FileData(config, name, internalPath, externalPath, annotation));
             return this;
         }
 
+        /**
+         * Compile all the user-set options into an instance of Framework
+         * NOTE: Will crash if any of the following aren't set:
+         * - main
+         * - package
+         * - command prefix
+         * @return Framework instance
+         */
         public final Framework build() {
             String unsetVars = Stream.of(main, pckg, commandPrefix).filter(o -> {
                 try {

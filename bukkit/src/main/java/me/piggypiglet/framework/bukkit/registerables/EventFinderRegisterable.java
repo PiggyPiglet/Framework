@@ -1,10 +1,10 @@
 package me.piggypiglet.framework.bukkit.registerables;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.reflections.Reflections;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019

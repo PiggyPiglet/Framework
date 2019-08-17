@@ -4,8 +4,10 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.file.FileConfigurationFactory;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import org.reflections.Reflections;
+
+import java.util.Set;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -17,6 +19,7 @@ public final class FileTypesRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        reflections.getSubTypesOf(AbstractFileConfiguration.class).stream().filter(c -> c != BlankFileConfiguration.class).map(injector::getInstance).forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));
+        Set<Class<? extends AbstractFileConfiguration>> files = reflections.getSubTypesOf(AbstractFileConfiguration.class);
+        files.stream().filter(c -> c != BlankFileConfiguration.class).map(injector::getInstance).forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));
     }
 }

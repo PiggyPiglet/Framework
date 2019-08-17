@@ -12,19 +12,41 @@ import java.util.Set;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+/**
+ * JsonParser class, used for parsing json, as the name suggests. Use . as a path separator when receiving nested objects, for example
+ * {
+ *     "test": {
+ *         "key": "value"
+ *     }
+ * }
+ * In this json, key could be received as JsonParser#getString("test.key");
+ */
 @SuppressWarnings("unused")
 public final class JsonParser {
     private Map<String, Object> items;
 
+    /**
+     * Create a JsonParser instance from raw json data as a string
+     * @param json JSON String
+     */
     @SuppressWarnings("unchecked")
     public JsonParser(String json) {
         items = new Gson().fromJson(json, LinkedTreeMap.class);
     }
 
+    /**
+     * Load JsonParser with already-decoded json data.
+     * @param items Map of json data
+     */
     public JsonParser(Map<String, Object> items) {
         this.items = items;
     }
 
+    /**
+     * Get an object at a specific path
+     * @param path Path to find the object at
+     * @return Object
+     */
     public Object get(String path) {
         Object object = items.getOrDefault(path, null);
 
@@ -40,6 +62,11 @@ public final class JsonParser {
         return object;
     }
 
+    /**
+     * Get a section and turn it into a JsonParser instance.
+     * @param path Path the json section can be found at
+     * @return JsonParser
+     */
     @SuppressWarnings("unchecked")
     public JsonParser getJsonSection(String path) {
         Object object = get(path);
@@ -51,6 +78,11 @@ public final class JsonParser {
         return null;
     }
 
+    /**
+     * Get a string at a specific path
+     * @param path Path of the string
+     * @return String
+     */
     public String getString(String path) {
         Object object = get(path);
 
@@ -61,16 +93,31 @@ public final class JsonParser {
         return null;
     }
 
+    /**
+     * Get an Integer at a specific path
+     * @param path Path of the integer
+     * @return Integer
+     */
     public Integer getInt(String path) {
         Double d = getDouble(path);
         return d == null ? null : d.intValue();
     }
 
+    /**
+     * Get a long at a specific path
+     * @param path Path of the Long
+     * @return Long
+     */
     public Long getLong(String path) {
         Double d = getDouble(path);
         return d == null ? null : d.longValue();
     }
 
+    /**
+     * Get a Double at a specific path
+     * @param path Path of the Double
+     * @return Double
+     */
     public Double getDouble(String path) {
         Object object = get(path);
 
@@ -81,6 +128,11 @@ public final class JsonParser {
         return null;
     }
 
+    /**
+     * Get a boolean at a specific path
+     * @param path Path of the boolean
+     * @return Boolean
+     */
     public Boolean getBoolean(String path) {
         Object object = get(path);
 
@@ -91,6 +143,11 @@ public final class JsonParser {
         return null;
     }
 
+    /**
+     * Get a list of strings at a specific path
+     * @param path Path of the list
+     * @return List of Strings
+     */
     @SuppressWarnings("unchecked")
     public final List<String> getStringList(String path) {
         Object object = get(path);
@@ -106,6 +163,11 @@ public final class JsonParser {
         return null;
     }
 
+    /**
+     * Get a list of sections, parsed as JsonParsers.
+     * @param path Path of the list
+     * @return List of JsonParsers
+     */
     @SuppressWarnings("unchecked")
     public final List<JsonParser> getJsonList(String path) {
         Object object = get(path);
@@ -127,6 +189,11 @@ public final class JsonParser {
         return null;
     }
 
+    /**
+     * Get a list without knowing the type of the content
+     * @param path Path of the list
+     * @return List
+     */
     public final List<?> getList(String path) {
         Object object = get(path);
 

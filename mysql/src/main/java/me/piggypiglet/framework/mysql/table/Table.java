@@ -26,8 +26,6 @@ public abstract class Table<T> {
 
     protected abstract KeyValueSet typeToRow(T t);
 
-    protected abstract KeyValueSet typeToLocation(T t);
-
     protected RowCreator.Builder creator() {
         return RowCreator.builder(table);
     }

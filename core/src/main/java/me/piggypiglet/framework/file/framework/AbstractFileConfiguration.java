@@ -20,22 +20,45 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
 
     private File file;
 
+    /**
+     * Provision a predicate to see whether a file extension will match this configuration
+     * @param match Predicate
+     */
     protected AbstractFileConfiguration(Predicate<String> match) {
         this.match = match;
     }
 
+    /**
+     * Load and populate an AbstractFileConfiguration instance
+     * @param file File
+     * @param fileContent File's raw content
+     * @return AbstractFileConfiguration
+     */
     public final AbstractFileConfiguration load(File file, String fileContent) {
         this.file = file;
         internalLoad(file, fileContent);
         return this;
     }
 
+    /**
+     * Optional code that will be executed on load
+     * @param file File instance
+     * @param fileContent File's raw content as a String
+     */
     protected void internalLoad(File file, String fileContent) {}
 
+    /**
+     * Get this FileConfiguration's file instance
+     * @return File
+     */
     public File getFile() {
         return file;
     }
 
+    /**
+     * Get a predicate to test whether a file extension matches this specific AbstractFileConfiguration
+     * @return Predicate
+     */
     public Predicate<String> getMatch() {
         return match;
     }

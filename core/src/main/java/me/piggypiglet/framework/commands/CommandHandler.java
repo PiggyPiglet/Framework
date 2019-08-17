@@ -31,7 +31,7 @@ public final class CommandHandler {
             for (Command c : commands) {
                 String cmd = c.getCommand();
 
-                if (message.toLowerCase().startsWith(cmd.toLowerCase())) {
+                if (startsWith(message, cmd)) {
                     List<String> permissions = c.getPermissions();
 
                     if (permissions.size() == 0 || permissions.stream().anyMatch(user::hasPermission)) {
@@ -66,5 +66,12 @@ public final class CommandHandler {
         args = Arrays.copyOfRange(args, 1, args.length);
 
         return args.length == 0 ? new String[]{} : args;
+    }
+
+    private boolean startsWith(String msg, String q) {
+        msg = msg.toLowerCase();
+        q = q.toLowerCase();
+
+        return msg.endsWith(q) || msg.startsWith(q + " ");
     }
 }

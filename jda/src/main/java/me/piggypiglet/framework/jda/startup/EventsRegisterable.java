@@ -1,10 +1,10 @@
 package me.piggypiglet.framework.jda.startup;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.reflections.Reflections;
 
 import java.util.EventListener;
 import java.util.List;

@@ -3,8 +3,8 @@ package me.piggypiglet.framework.registerables.startup.commands;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.commands.CommandHandlers;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import org.reflections.Reflections;
 
 import java.util.stream.Collectors;
 

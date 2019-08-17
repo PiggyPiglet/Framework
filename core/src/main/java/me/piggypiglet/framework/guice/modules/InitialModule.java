@@ -3,7 +3,7 @@ package me.piggypiglet.framework.guice.modules;
 import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.FrameworkBootstrap;
-import org.reflections.Reflections;
+import me.piggypiglet.framework.reflection.Reflections;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -37,6 +37,6 @@ public final class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public Reflections providesReflections() {
-        return new Reflections(config.getPckg());
+        return new Reflections(new org.reflections.Reflections(config.getPckg()));
     }
 }

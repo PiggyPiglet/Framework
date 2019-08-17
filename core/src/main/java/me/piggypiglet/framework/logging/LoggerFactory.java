@@ -11,6 +11,11 @@ import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 public final class LoggerFactory {
     @Inject @Named("logger") private static Class logger;
 
+    /**
+     * Get an instance using the set logger implementation. Will return DefaultLogger (implementation of Java Logger) if no custom loggers have been made.
+     * @param name Name of the logger
+     * @return Logger instance
+     */
     public static Logger getLogger(String name) {
         try {
             return ((Logger) logger.getConstructors()[0].newInstance()).create(name);
