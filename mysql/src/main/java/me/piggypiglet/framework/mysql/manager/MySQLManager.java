@@ -2,6 +2,7 @@ package me.piggypiglet.framework.mysql.manager;
 
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.mysql.table.Table;
+import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
 
 // ------------------------------
@@ -17,9 +18,13 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Man
 
     @Override
     public void setup() {
-        table.getAll().whenComplete((s, t) -> {
-            items.addAll(s);
-            populate(items);
+        MySQLUtils.isReady().whenComplete((b, t) -> {
+            if (b) {
+                table.getAll().whenComplete((s, th) -> {
+                    items.addAll(s);
+                    populate(items);
+                });
+            }
         });
     }
 

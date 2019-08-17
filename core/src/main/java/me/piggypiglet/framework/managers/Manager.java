@@ -26,6 +26,14 @@ public abstract class Manager<S extends SearchUtils.Searchable> {
     }
 
     /**
+     * Add an item to a manager.
+     * @param item Item to add
+     */
+    public void add(S item) {
+        items.add(item);
+    }
+
+    /**
      * Search the manager with a query, uses levenshtein weighted ratio.
      * @param query Query string
      * @return List of searchables, in order of most similar to least.

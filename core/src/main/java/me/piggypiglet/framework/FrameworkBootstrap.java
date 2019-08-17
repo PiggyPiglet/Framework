@@ -50,8 +50,7 @@ public final class FrameworkBootstrap {
         Stream.of(
                 ImplementationFinderRegisterable.class,
                 FileTypesRegisterable.class,
-                FilesRegisterable.class,
-                ManagersRegisterable.class
+                FilesRegisterable.class
         ).forEach(registerables::add);
 
         registerables.addAll(config.getStartupRegisterables());
@@ -67,6 +66,7 @@ public final class FrameworkBootstrap {
                 .forEach(s -> s.filter(r -> !registerables.contains(r)).forEach(registerables::add));
 
         Stream.of(
+                ManagersRegisterable.class,
                 ShutdownRegisterablesRegisterable.class,
                 ShutdownHookRegisterable.class
         ).forEach(registerables::add);

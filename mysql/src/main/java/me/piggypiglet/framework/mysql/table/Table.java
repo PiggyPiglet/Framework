@@ -48,6 +48,14 @@ public abstract class Table<T> {
 
     public CompletableFuture<Boolean> save(T t) {
         final KeyValueSet row = typeToRow(t);
-        return creator().key(row.getKeys()).value(row.getValues()).build().execute();
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        getter().location(row).build().exists().whenComplete((b, th) -> {
+            if (b) {
+                creator().key(row.getKeys()).value(row.getValues()).build().execute().whenComplete((b_, th_) -> future.complete(b_));
+            }
+        });
+
+        return future;
     }
 }

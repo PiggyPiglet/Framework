@@ -5,7 +5,6 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.implementations.HelpCommand;
 import me.piggypiglet.framework.user.User;
 
-import java.util.Arrays;
 import java.util.List;
 
 // ------------------------------
@@ -35,7 +34,7 @@ public final class CommandHandler {
                     List<String> permissions = c.getPermissions();
 
                     if (permissions.size() == 0 || permissions.stream().anyMatch(user::hasPermission)) {
-                        String[] args = args(message);
+                        String[] args = args(message.replaceFirst(cmd, "").trim());
 
                         if (!c.run(user, args)) {
                             user.sendMessage("Incorrect usage, correct usage is: %s %s", cmd, c.getUsage());
@@ -63,9 +62,8 @@ public final class CommandHandler {
 
     private String[] args(String text) {
         String[] args = text.trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-        args = Arrays.copyOfRange(args, 1, args.length);
 
-        return args.length == 0 ? new String[]{} : args;
+        return args[0].isEmpty() ? new String[]{} : args;
     }
 
     private boolean startsWith(String msg, String q) {

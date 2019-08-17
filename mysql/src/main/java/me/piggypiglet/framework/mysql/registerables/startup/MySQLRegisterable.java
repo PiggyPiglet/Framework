@@ -8,6 +8,7 @@ import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.mysql.annotations.SQL;
 import me.piggypiglet.framework.mysql.annotations.SQLConfig;
+import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 
@@ -46,6 +47,8 @@ public final class MySQLRegisterable extends StartupRegisterable {
                     e.printStackTrace();
                 }
             }
+
+            MySQLUtils.isReady().complete(true);
         });
     }
 }

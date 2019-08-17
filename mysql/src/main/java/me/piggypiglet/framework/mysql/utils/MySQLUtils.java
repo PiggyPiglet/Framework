@@ -21,6 +21,11 @@ import java.util.function.Consumer;
 // ------------------------------
 public final class MySQLUtils {
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(7);
+    private static final CompletableFuture<Boolean> READY = new CompletableFuture<>();
+
+    public static CompletableFuture<Boolean> isReady() {
+        return READY;
+    }
 
     public static CompletableFuture<Boolean> create(String table, String[] keys, Object... values) {
         Preconditions.checkArgument(keys.length == values.length, "Key length doesn't match value length.");
