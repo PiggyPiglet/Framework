@@ -1,7 +1,10 @@
 package me.piggypiglet.framework.http.responses;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
+import me.piggypiglet.framework.file.objects.FileWrapper;
+import me.piggypiglet.framework.http.annotations.DefaultHTTP;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,8 @@ import java.util.List;
 // ------------------------------
 @Singleton
 public final class ResponseHandler {
+    @Inject @DefaultHTTP private FileWrapper def;
+
     private final List<Route> routes = new ArrayList<>();
 
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
@@ -23,7 +28,7 @@ public final class ResponseHandler {
             }
         }
 
-        return NanoHTTPD.newFixedLengthResponse("null");
+        return NanoHTTPD.newFixedLengthResponse(def.getFileContent());
     }
 
     public List<Route> getRoutes() {

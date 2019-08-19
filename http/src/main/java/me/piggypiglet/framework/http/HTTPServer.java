@@ -29,7 +29,7 @@ public final class HTTPServer {
         try {
             nanoHTTPD = new NestedServer(ip, port);
             nanoHTTPD.start();
-            LOGGER.info("HTTP Server started at {}:{}", ip, port);
+            LOGGER.info("HTTP Server started at %s:%s", ip, port);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.http;
 
+import me.piggypiglet.framework.http.annotations.DefaultHTTP;
 import me.piggypiglet.framework.http.annotations.HTTP;
 import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;
 import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
@@ -19,6 +20,12 @@ import me.piggypiglet.framework.utils.annotations.addon.File;
                 externalPath = "./http.json",
                 internalPath = "/http.json",
                 annotation = HTTP.class
+        ), @File(
+                config = false,
+                name = "http-default",
+                externalPath = "./index.html",
+                internalPath = "/index.html",
+                annotation = DefaultHTTP.class
         )},
         shutdown = ShutdownHTTP.class
 )
