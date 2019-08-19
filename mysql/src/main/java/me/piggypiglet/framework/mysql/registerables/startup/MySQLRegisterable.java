@@ -6,6 +6,7 @@ import co.aikar.idb.PooledDatabaseOptions;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.mysql.annotations.SQL;
 import me.piggypiglet.framework.mysql.annotations.SQLConfig;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
@@ -23,6 +24,8 @@ public final class MySQLRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
+        LoggerFactory.getLogger("MySQL").info("Initializing MySQL module.");
+
         final String sql = this.sql.getFileContent();
 
         task.async(r -> {

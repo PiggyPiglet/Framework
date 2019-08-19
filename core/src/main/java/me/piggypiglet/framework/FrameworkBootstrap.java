@@ -3,6 +3,7 @@ package me.piggypiglet.framework;
 import com.google.inject.Injector;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
@@ -85,6 +86,8 @@ public final class FrameworkBootstrap {
 
             this.registerables.add(registerable);
         });
+
+        LoggerFactory.getLogger("RPF").info("Bootstrap process completed.");
     }
 
     /**

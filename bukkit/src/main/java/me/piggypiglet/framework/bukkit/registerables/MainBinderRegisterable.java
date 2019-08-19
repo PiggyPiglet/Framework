@@ -2,6 +2,7 @@ package me.piggypiglet.framework.bukkit.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +15,7 @@ public final class MainBinderRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
+        LoggerFactory.getLogger("Bukkit").info("Initializing Bukkit bindings.");
         addBinding(JavaPlugin.class, JavaPlugin.getProvidingPlugin(framework.getMain()));
     }
 }
