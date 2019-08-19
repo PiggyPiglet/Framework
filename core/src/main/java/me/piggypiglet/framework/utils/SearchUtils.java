@@ -31,7 +31,7 @@ public final class SearchUtils {
         private SearchPair(Searchable item, String query) {
             this.item = item;
             this.query = query;
-            this.similarity = FuzzySearch.weightedRatio(item.getTitle(), query);
+            this.similarity = FuzzySearch.weightedRatio(item.getName(), query);
         }
 
         @Override
@@ -48,6 +48,6 @@ public final class SearchUtils {
     }
 
     public interface Searchable {
-        String getTitle();
+        String getName();
     }
 }

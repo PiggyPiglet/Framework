@@ -29,11 +29,11 @@ public abstract class MySQLComponent {
         return MySQLUtils.exists(table, location.getKeys(), location.getValues());
     }
 
-    protected boolean delete(String table, KeyValueSet location) {
+    protected CompletableFuture<Boolean> delete(String table, KeyValueSet location) {
         return MySQLUtils.remove(table, location.getKeys(), location.getValues());
     }
 
-    protected boolean edit(String table, KeyValueSet location, KeyValueSet changes) {
+    protected CompletableFuture<Boolean> edit(String table, KeyValueSet location, KeyValueSet changes) {
         return MySQLUtils.set(table, Maps.immutableEntry(location.getKeys(), location.getValues()), Maps.immutableEntry(changes.getKeys(), changes.getValues()));
     }
 }

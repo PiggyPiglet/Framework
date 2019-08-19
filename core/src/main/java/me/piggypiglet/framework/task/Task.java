@@ -49,8 +49,8 @@ public abstract class Task {
      *             </ul>
      *             The following are examples of use:
      *             <ul>
-     *               <li>"10 secs 5 mins" - 10 seconds & 5 minutes</li>
-     *               <li>"20m4w5hrs" - 20 minutes, 4 weeks & 5 hours</li>
+     *               <li>"10 secs 5 mins" - 10 seconds &amp; 5 minutes</li>
+     *               <li>"20m4w5hrs" - 20 minutes, 4 weeks &amp; 5 hours</li>
      *             </ul>
      * @param repeat Whether to loop
      */

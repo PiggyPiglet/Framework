@@ -32,24 +32,45 @@ public final class RowGetter extends MySQLComponent {
             this.table = table;
         }
 
+        /**
+         * Location of the row(s) to find
+         * @param location Location
+         * @return Builder instance
+         */
         public Builder location(KeyValueSet location) {
             this.location = location;
             return this;
         }
 
+        /**
+         * Build the row getter
+         * @return RowGetter
+         */
         public RowGetter build() {
             return new RowGetter(table, location);
         }
     }
 
+    /**
+     * Get a specific row from the location
+     * @return CompletableFuture of DbRow
+     */
     public CompletableFuture<DbRow> get() {
         return get(table, location);
     }
 
+    /**
+     * Get all rows in the table
+     * @return CompletableFuture List of DbRows
+     */
     public CompletableFuture<List<DbRow>> getAll() {
         return getAll(table);
     }
 
+    /**
+     * Check if the row exists
+     * @return CompletableFuture of boolean
+     */
     public CompletableFuture<Boolean> exists() {
         return exists(table, location);
     }

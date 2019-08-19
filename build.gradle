@@ -42,3 +42,24 @@ subprojects {
 
     compileJava.options.encoding = 'UTF-8'
 }
+
+def exportedProjects = [
+        ":core",
+        ":bukkit",
+        ":console",
+        ":hotswap",
+        ":jda",
+        ":logback",
+        ":mysql",
+        ":http"
+]
+
+task allJavadoc(type: Javadoc) {
+    source exportedProjects.collect {
+        project(it).sourceSets.main.allJava
+    }
+    classpath = files(exportedProjects.collect {
+        project(it).sourceSets.main.compileClasspath
+    })
+    destinationDir = file("${buildDir}/docs/javadoc")
+}

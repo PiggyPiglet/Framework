@@ -83,7 +83,7 @@ public abstract class Command {
         }
 
         /**
-         * Command's usage, should be self explanatory, but an example is <required args> [optional args].
+         * Command's usage, should be self explanatory, but an example is &lt;required args&gt; [optional args].
          * @param usage String
          * @return Options
          */

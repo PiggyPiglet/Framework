@@ -31,21 +31,39 @@ public final class RowCreator extends MySQLComponent {
             this.table = table;
         }
 
+        /**
+         * Specify the column names for this row
+         * @param keys Column names
+         * @return Builder instance
+         */
         public Builder key(String... keys) {
             Arrays.stream(keys).forEach(builder::key);
             return this;
         }
 
+        /**
+         * Values for keys, in order
+         * @param values Values
+         * @return Builder instance
+         */
         public Builder value(Object... values) {
             Arrays.stream(values).forEach(builder::value);
             return this;
         }
 
+        /**
+         * Build the RowCreator
+         * @return RowCreator
+         */
         public RowCreator build() {
             return new RowCreator(table, builder.build());
         }
     }
 
+    /**
+     * Create the row
+     * @return CompletableFuture on whether the operation was successful
+     */
     public CompletableFuture<Boolean> execute() {
         return create(table, data);
     }

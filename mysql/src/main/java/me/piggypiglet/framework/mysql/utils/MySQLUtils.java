@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -23,10 +22,21 @@ public final class MySQLUtils {
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(7);
     private static final CompletableFuture<Boolean> READY = new CompletableFuture<>();
 
+    /**
+     * See whether MySQL is ready for operation
+     * @return CompletableFuture of current mysql status
+     */
     public static CompletableFuture<Boolean> isReady() {
         return READY;
     }
 
+    /**
+     * Create a row in a table.
+     * @param table Table name
+     * @param keys Columns to fill
+     * @param values Column values
+     * @return CompletableFuture of whether the operation was succeeded.
+     */
     public static CompletableFuture<Boolean> create(String table, String[] keys, Object... values) {
         Preconditions.checkArgument(keys.length == values.length, "Key length doesn't match value length.");
 
@@ -47,14 +57,21 @@ public final class MySQLUtils {
         return success;
     }
 
-    public static boolean set(String table, Map.Entry<String[], Object[]> location, Map.Entry<String[], Object[]> replace) {
+    /**
+     * Edit a pre-existing row in a table with new values
+     * @param table Table name
+     * @param location Location of the row
+     * @param replace Column names and their values to replace
+     * @return boolean of whether the operation was successful
+     */
+    public static CompletableFuture<Boolean> set(String table, Map.Entry<String[], Object[]> location, Map.Entry<String[], Object[]> replace) {
         String[] replaceKeys = replace.getKey();
         Object[] replaceValues = replace.getValue();
         String[] locKeys = location.getKey();
         Object[] locValues = location.getValue();
         Preconditions.checkArgument(replaceKeys.length == replaceValues.length && locKeys.length == locValues.length, "Replace keys don't match value length, or Loc keys don't match value length");
 
-        boolean success = false;
+        CompletableFuture<Boolean> success = new CompletableFuture<>();
         int replaceKeysLength = replaceKeys.length;
 
         if (replaceKeysLength > 0) {
@@ -66,48 +83,76 @@ public final class MySQLUtils {
 
             replacements.append(replaceKeys[replaceKeysLength - 1]).append("=").append("%s");
 
-            try {
-                exists(table, location.getKey(), location.getValue()).whenComplete((r, t) -> {
-                    if (r) {
+            exists(table, location.getKey(), location.getValue()).whenComplete((r, t) -> {
+                if (r) {
+                    try {
                         DB.executeUpdateAsync("UPDATE `" + table + "` SET " + format(replacements.toString(), replaceValues) + " WHERE " + whereFormat(locKeys, locValues) + ";");
+                        success.complete(true);
+                    } catch (Exception e) {
+                        success.complete(false);
+                        e.printStackTrace();
                     }
-                });
-                success = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                }
+            });
         }
 
         return success;
     }
 
+    /**
+     * Get a row from a location
+     * @param table Table name
+     * @param keys Column names
+     * @param values Values to look for in columns
+     * @return CompletableFuture of DbRow
+     */
     public static CompletableFuture<DbRow> getRow(String table, String[] keys, Object[] values) {
         return DB.getFirstRowAsync("SELECT * FROM `" + table + "` WHERE " + whereFormat(keys, values) + ";");
     }
 
+    /**
+     * Get all rows in a table
+     * @param table Table name
+     * @return CompletableFuture of list of DbRows
+     */
     public static CompletableFuture<List<DbRow>> getRows(String table) {
         return DB.getResultsAsync("SELECT * FROM `" + table + "`;");
     }
 
-    public static boolean remove(String table, String[] keys, Object[] values) {
+    /**
+     * Remove a specific row at a location
+     * @param table Table name
+     * @param keys Column names
+     * @param values Column values
+     * @return CompletableFuture of whether the operation was successful
+     */
+    public static CompletableFuture<Boolean> remove(String table, String[] keys, Object[] values) {
         Preconditions.checkArgument(keys.length == values.length, "Key length doesn't match values length.");
 
-        final AtomicBoolean success = new AtomicBoolean(false);
+        final CompletableFuture<Boolean> success = new CompletableFuture<>();
 
-        try {
-            exists(table, keys, values).whenComplete((r, t) -> {
-                if (r) {
+        exists(table, keys, values).whenComplete((r, t) -> {
+            if (r) {
+                try {
                     DB.executeUpdateAsync("DELETE FROM `" + table + "` WHERE " + whereFormat(keys, values) + ";");
-                    success.set(true);
+                    success.complete(true);
+                } catch (Exception e) {
+                    success.complete(false);
+                    e.printStackTrace();
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            }
+        });
 
-        return success.get();
+        return success;
     }
 
+    /**
+     * Check if a row exists at a specific location
+     * @param table Table name
+     * @param keys Column names
+     * @param values Column values
+     * @return CompletableFuture of whether the row exists or not
+     */
     public static CompletableFuture<Boolean> exists(String table, String[] keys, Object[] values) {
         Preconditions.checkArgument(keys.length == values.length, "Key and value length don't match.");
 

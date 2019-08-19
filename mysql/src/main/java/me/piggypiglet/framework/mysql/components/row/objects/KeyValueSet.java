@@ -16,6 +16,10 @@ public final class KeyValueSet {
         this.values = values;
     }
 
+    /**
+     * Get an instance of the builder
+     * @return Builder instance
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -24,16 +28,30 @@ public final class KeyValueSet {
         private final List<String> keys = new ArrayList<>();
         private final List<Object> values = new ArrayList<>();
 
+        /**
+         * Key for values
+         * @param key Key
+         * @return Builder instance
+         */
         public Builder key(String key) {
             keys.add(key);
             return this;
         }
 
+        /**
+         * Value for keys, in order
+         * @param value Value
+         * @return Builder instance
+         */
         public Builder value(Object value) {
             values.add(value);
             return this;
         }
 
+        /**
+         * Build the KeyValueSet
+         * @return KeyValueSet
+         */
         public KeyValueSet build() {
             return new KeyValueSet(keys, values);
         }
