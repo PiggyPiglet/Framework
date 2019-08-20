@@ -4,6 +4,7 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 - Child injector based startup system
 - Platform independent command API
 - MySQL API
+- HTTP JSON Web APIs
 - Task manager
 - Logback support
 - HotswapAgent support (WIP)
