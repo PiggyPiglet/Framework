@@ -1,0 +1,16 @@
+repositories {
+    maven {
+        url 'https://repo.spongepowered.org/maven'
+    }
+}
+
+dependencies {
+    compile project(":core") {
+        exclude group: 'com.google.inject', module: 'guice'
+//        exclude group: 'javax.inject', module: 'javax.inject'
+//        exclude group: 'aopalliance', module: 'aopalliance'
+        exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    compileOnly 'org.spongepowered:spongeapi:7.1.0'
+}

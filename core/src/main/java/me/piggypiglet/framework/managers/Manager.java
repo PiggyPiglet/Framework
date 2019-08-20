@@ -1,7 +1,5 @@
 package me.piggypiglet.framework.managers;
 
-import me.piggypiglet.framework.utils.SearchUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,7 @@ import java.util.List;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-public abstract class Manager<S extends SearchUtils.Searchable> {
+public abstract class Manager<S> {
     protected final List<S> items = new ArrayList<>();
 
     /**
@@ -31,16 +29,6 @@ public abstract class Manager<S extends SearchUtils.Searchable> {
      */
     public void add(S item) {
         items.add(item);
-    }
-
-    /**
-     * Search the manager with a query, uses levenshtein weighted ratio.
-     * @param query Query string
-     * @return List of searchables, in order of most similar to least.
-     */
-    @SuppressWarnings("unchecked")
-    public List<S> search(String query) {
-        return SearchUtils.search((List<SearchUtils.Searchable>) items, query);
     }
 
     /**

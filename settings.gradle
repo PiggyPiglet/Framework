@@ -6,6 +6,7 @@ include (
         'mysql',
         'logback',
         'bukkit',
+        'sponge',
         'jda',
         'hotswap',
         'http',
