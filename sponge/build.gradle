@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":core") {
+    compile(project(":core")) {
         exclude group: 'com.google.inject', module: 'guice'
 //        exclude group: 'javax.inject', module: 'javax.inject'
 //        exclude group: 'aopalliance', module: 'aopalliance'
