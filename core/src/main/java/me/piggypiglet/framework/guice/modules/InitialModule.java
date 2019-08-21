@@ -4,6 +4,7 @@ import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.FrameworkBootstrap;
 import me.piggypiglet.framework.reflection.Reflections;
+import me.piggypiglet.framework.utils.annotations.Main;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -20,6 +21,11 @@ public final class InitialModule extends AbstractModule {
 
     public Injector createInjector() {
         return Guice.createInjector(this);
+    }
+
+    @Override
+    public void configure() {
+        bind(Object.class).annotatedWith(Main.class).toInstance(config.getMain());
     }
 
     @Provides

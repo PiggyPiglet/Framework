@@ -4,19 +4,23 @@ repositories {
 //    maven {
 //        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 //    }
+//    maven {
+//        url = 'https://repo.aikar.co/content/groups/aikar/'
+//    }
     maven {
-        url = 'https://repo.aikar.co/content/groups/aikar/'
+        url 'https://repo.spongepowered.org/maven'
     }
 }
 
 dependencies {
     compile project(":core")
-    compile project(":console")
-    compile project(":logback")
-    compile project(":mysql")
+//    compile project(":console")
+//    compile project(":logback")
+//    compile project(":mysql")
 //    compile project(":http")
-//    compile project(":bukkit")
+    compile project(":sponge")
 
+    compileOnly 'org.spongepowered:spongeapi:7.1.0'
 //    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
 }
 
@@ -27,4 +31,5 @@ shadowJar {
                 'Main-Class': 'me.piggypiglet.test.Test'
         )
     }
+    destinationDirectory = file("server/mods")
 }

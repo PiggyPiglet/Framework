@@ -1,5 +1,6 @@
 package me.piggypiglet.framework;
 
+import com.google.inject.Injector;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
@@ -16,16 +17,18 @@ import java.util.stream.Stream;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Framework {
-    private final Class<?> main;
+    private final Object main;
     private final String pckg;
+    private final Injector injector;
     private final List<Class<? extends StartupRegisterable>> startupRegisterables;
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
     private final String commandPrefix;
     private final List<FileData> files;
 
-    private Framework(Class<?> main, String pckg, List<Class<? extends StartupRegisterable>> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
+    private Framework(Object main, String pckg, Injector injector, List<Class<? extends StartupRegisterable>> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
         this.main = main;
         this.pckg = pckg;
+        this.injector = injector;
         this.startupRegisterables = startupRegisterables;
         this.shutdownRegisterables = shutdownRegisterables;
         this.commandPrefix = commandPrefix;
@@ -48,10 +51,10 @@ public final class Framework {
     }
 
     /**
-     * Get the main class
-     * @return Class
+     * Get the main instance
+     * @return Object
      */
-    public Class<?> getMain() {
+    public Object getMain() {
         return main;
     }
 
@@ -61,6 +64,14 @@ public final class Framework {
      */
     public String getPckg() {
         return pckg;
+    }
+
+    /**
+     * Get the project's initial injector
+     * @return Injector
+     */
+    public Injector getInjector() {
+        return injector;
     }
 
     /**
@@ -98,6 +109,7 @@ public final class Framework {
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
+        private Injector injector = null;
         private List<Class<? extends StartupRegisterable>> startupRegisterables = new ArrayList<>();
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
         private String commandPrefix = "d-commandPrefix";
@@ -106,11 +118,11 @@ public final class Framework {
         private FrameworkBuilder() {}
 
         /**
-         * Set the application's main class
-         * @param main Main class
+         * Set the application's main instance
+         * @param main Main instance
          * @return FrameworkBuilder
          */
-        public final FrameworkBuilder main(Class<?> main) {
+        public final FrameworkBuilder main(Object main) {
             this.main = main;
             return this;
         }
@@ -122,6 +134,16 @@ public final class Framework {
          */
         public final FrameworkBuilder pckg(String pckg) {
             this.pckg = pckg;
+            return this;
+        }
+
+        /**
+         * Set the application's initial injector, if one is already made.
+         * @param injector Application's injector
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder injector(Injector injector) {
+            this.injector = injector;
             return this;
         }
 
@@ -190,7 +212,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((Class<?>) main, pckg, startupRegisterables, shutdownRegisterables, commandPrefix, files);
+            return new Framework(main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files);
         }
     }
 }

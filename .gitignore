@@ -3,4 +3,4 @@
 build/
 out/
 *.iml
-test/spigot/
+test/server/

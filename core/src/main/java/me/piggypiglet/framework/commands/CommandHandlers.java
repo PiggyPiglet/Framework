@@ -34,6 +34,10 @@ public final class CommandHandlers {
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toList()));
     }
 
+    public List<Command> getCommands(String handler) {
+        return commandHandlers.get(handler).getCommands();
+    }
+
     public List<Command> getCommands() {
         return commands;
     }

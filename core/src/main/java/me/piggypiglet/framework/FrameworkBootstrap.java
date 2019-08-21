@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class FrameworkBootstrap {
-    private AtomicReference<Injector> injector;
+    private final AtomicReference<Injector> injector = new AtomicReference<>();
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
     private final Set<Addon> addons = new LinkedHashSet<>();
 
@@ -37,11 +37,16 @@ public final class FrameworkBootstrap {
     public FrameworkBootstrap(Framework config) {
         this.config = config;
 
+        if (config.getInjector() == null) {
+            injector.set(new InitialModule(this, config).createInjector());
+        } else {
+            injector.set(config.getInjector().createChildInjector(new InitialModule(this, config)));
+        }
+
         start();
     }
 
     private void start() {
-        injector = new AtomicReference<>(new InitialModule(this, config).createInjector());
         final Set<Class<? extends StartupRegisterable>> registerables = new LinkedHashSet<>();
 
         addons.addAll(injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class).stream()
