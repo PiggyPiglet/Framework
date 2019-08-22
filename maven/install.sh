@@ -12,8 +12,9 @@ IFS="," read -ra my_array <<< "$names"
 
 for i in "${my_array[@]}"
 do
-  cp maven/$i/pom.xml maven/tmp/pom.xml
+  IFS="/" read -ra cutName <<< "$i"
+  cp maven/$cutName[-1]/pom.xml maven/tmp/pom.xml
   sed -i "s/@VERSION@/$2/g" maven/tmp/pom.xml
-  mvn deploy:deploy-file -DgroupId=me.piggypiglet -DartifactId=framework-$i -Dversion=$2 -Dpackaging=jar -Dfile=$i/build/libs/$i-$2.jar -DpomFile=maven/tmp/pom.xml -DrepositoryId=piggypiglet -Durl=https://repo.piggypiglet.me/repository/maven-releases
+  mvn deploy:deploy-file -DgroupId=me.piggypiglet -DartifactId=framework-$cutName[-1] -Dversion=$2 -Dpackaging=jar -Dfile=$cutName[-1]/build/libs/$i-$2.jar -DpomFile=maven/tmp/pom.xml -DrepositoryId=piggypiglet -Durl=https://repo.piggypiglet.me/repository/maven-releases
   rm maven/tmp/pom.xml
 done

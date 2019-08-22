@@ -1,7 +1,6 @@
 package me.piggypiglet.framework.bukkit.registerables;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.annotations.Main;

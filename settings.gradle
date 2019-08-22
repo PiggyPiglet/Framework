@@ -2,13 +2,13 @@ rootProject.name = 'framework'
 
 include (
         'core',
-        'console',
-        'mysql',
-        'logback',
-        'bukkit',
-        'sponge',
-        'jda',
-        'hotswap',
-        'http',
+        ':addons:console',
+        ':addons:mysql',
+        ':addons:logback',
+        ':addons:hotswap',
+        ':addons:http',
+        ':bindings:bukkit',
+        ':bindings:sponge',
+        ':bindings:jda',
         'test'
 )

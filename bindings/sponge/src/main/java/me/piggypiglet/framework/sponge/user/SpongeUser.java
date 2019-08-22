@@ -2,7 +2,6 @@ package me.piggypiglet.framework.sponge.user;
 
 import me.piggypiglet.framework.user.User;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.Map;

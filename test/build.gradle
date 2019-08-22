@@ -18,7 +18,7 @@ dependencies {
 //    compile project(":logback")
 //    compile project(":mysql")
 //    compile project(":http")
-    compile project(":sponge")
+    compile project(":bindings:sponge")
 
     compileOnly 'org.spongepowered:spongeapi:7.1.0'
 //    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'

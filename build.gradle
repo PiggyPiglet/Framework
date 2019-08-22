@@ -45,13 +45,14 @@ subprojects {
 
 def exportedProjects = [
         ":core",
-        ":bukkit",
-        ":console",
-        ":hotswap",
-        ":jda",
-        ":logback",
-        ":mysql",
-        ":http"
+        ":addons:console",
+        ":addons:mysql",
+        ":addons:logback",
+        ":addons:hotswap",
+        ":addons:http",
+        ":bindings:bukkit",
+        ":bindings:sponge",
+        ":bindings:jda"
 ]
 
 task allJavadoc(type: Javadoc) {
