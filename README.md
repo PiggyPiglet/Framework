@@ -3,20 +3,30 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 ### Features:
 - Child injector based startup system
 - Platform independent command API
-- MySQL API
-- HTTP JSON Web APIs
 - Task manager
-- Logback support
-- HotswapAgent support (WIP)
-- Console commands
 - Manager API (including levenshtein searching)
 - Configuration system (JSON Default)
 - File manager
+- Plenty of addons
+  - MySQL API
+  - Logback Implementation
+  - HotswapAgent support (WIP)
+  - Serve HTTP JSON
+  - Console interaction
+- Loads of pre-made bindings for popular apis
+  - Bukkit
+  - Sponge (WIP)
+  - JDA
+  - Velocity (Soon)
+  - Bungee (Soon)
+  - Nukkit (Soon)
 - More to come
 
 Alone with these, there are also implementations for popular apis, such as Bukkit and JDA. In these, you can expect things that you'd normally have to do manually, to be done automatically, for example event registering.
 
 ### Usage
+Comprehensive documentation can be found on the [wiki](https://github.com/PiggyPiglet/Framework/wiki), and method/class descriptions on the [javadocs](https://rpf.piggypiglet.me/docs).
+
 Builds can be downloaded from [here](https://ci.piggypiglet.me/Framework), however I recommend you use my maven repository instead.<br/>
 [Gradle](https://github.com/PiggyPiglet/Framework/wiki/Gradle-Setup):
 ```groovy
