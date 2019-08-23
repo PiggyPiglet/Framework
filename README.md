@@ -27,7 +27,7 @@ Alone with these, there are also implementations for popular apis, such as Bukki
 ### Usage
 Comprehensive documentation can be found on the [wiki](https://github.com/PiggyPiglet/Framework/wiki), and method/class descriptions on the [javadocs](https://rpf.piggypiglet.me/docs).
 
-Builds can be downloaded from [here](https://ci.piggypiglet.me/Framework), however I recommend you use my maven repository instead.<br/>
+Builds can be downloaded from [here](https://ci.piggypiglet.me/job/Framework/), however I recommend you use my maven repository instead.<br/>
 [Gradle](https://github.com/PiggyPiglet/Framework/wiki/Gradle-Setup):
 ```groovy
 repositories {
