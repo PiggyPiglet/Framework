@@ -13,11 +13,12 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
   - HotswapAgent support (WIP)
   - Serve HTTP JSON
   - Console interaction
+  - Runtime Jar Loader (Soon)
 - Loads of pre-made bindings for popular apis
   - Bukkit
   - Sponge
   - JDA
-  - Velocity (WIP)
+  - Velocity
   - Bungee (Soon)
   - Nukkit (Soon)
 - More to come
