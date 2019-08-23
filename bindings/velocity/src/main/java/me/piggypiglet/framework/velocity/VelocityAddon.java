@@ -2,6 +2,7 @@ package me.piggypiglet.framework.velocity;
 
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.velocity.registerables.CommandExecutorRegisterable;
+import me.piggypiglet.framework.velocity.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.velocity.registerables.LoggerRegisterable;
 
 // ------------------------------
@@ -9,7 +10,7 @@ import me.piggypiglet.framework.velocity.registerables.LoggerRegisterable;
 // https://www.piggypiglet.me
 // ------------------------------
 @Addon(
-        startup = {LoggerRegisterable.class, CommandExecutorRegisterable.class}
+        startup = {LoggerRegisterable.class, CommandExecutorRegisterable.class, EventFinderRegisterable.class}
 )
 public final class VelocityAddon {
 }

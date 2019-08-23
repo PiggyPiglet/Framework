@@ -7,21 +7,25 @@ repositories {
 //    maven {
 //        url = 'https://repo.aikar.co/content/groups/aikar/'
 //    }
+//    maven {
+//        url 'https://repo.spongepowered.org/maven'
+//    }
     maven {
-        url 'https://repo.spongepowered.org/maven'
+        url = 'https://repo.velocitypowered.com/snapshots/'
     }
 }
 
 dependencies {
-    compile project(":core")
+//    compile project(":core")
 //    compile project(":console")
 //    compile project(":logback")
 //    compile project(":mysql")
 //    compile project(":http")
-    compile project(":bindings:sponge")
+    compile project(":bindings:velocity")
 
-    compileOnly 'org.spongepowered:spongeapi:7.1.0'
-//    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
+//    compileOnly 'org.spongepowered:spongeapi:7.1.0'
+    compileOnly 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
 }
 
 shadowJar {
@@ -31,5 +35,5 @@ shadowJar {
                 'Main-Class': 'me.piggypiglet.test.Test'
         )
     }
-    destinationDirectory = file("server/mods")
+    destinationDirectory = file("server/plugins")
 }

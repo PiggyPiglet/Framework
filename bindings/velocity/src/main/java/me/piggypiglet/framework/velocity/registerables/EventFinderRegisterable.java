@@ -21,7 +21,7 @@ public final class EventFinderRegisterable extends StartupRegisterable {
     @Override
     @SuppressWarnings("unchecked")
     protected void execute() {
-        reflections.getClassesWithAnnotatedMethods(Subscribe.class).stream().map(injector::getInstance).forEach(l -> server.getEventManager().register(main, l));
+        reflections.getClassesWithAnnotatedMethods(Subscribe.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> server.getEventManager().register(main, l));
         reflections.getSubTypesOf(EventHandler.class).forEach(l -> server.getEventManager().register(main, ReflectionUtils.getClassGeneric(l), injector.getInstance(l)));
     }
 }
