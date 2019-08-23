@@ -52,7 +52,8 @@ def exportedProjects = [
         ":addons:http",
         ":bindings:bukkit",
         ":bindings:sponge",
-        ":bindings:jda"
+        ":bindings:jda",
+        ":bindings:velocity"
 ]
 
 task allJavadoc(type: Javadoc) {

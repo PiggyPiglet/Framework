@@ -10,5 +10,6 @@ include (
         ':bindings:bukkit',
         ':bindings:sponge',
         ':bindings:jda',
+        ':bindings:velocity',
         'test'
 )
