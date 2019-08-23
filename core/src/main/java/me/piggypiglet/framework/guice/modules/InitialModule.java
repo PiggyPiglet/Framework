@@ -5,6 +5,9 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.FrameworkBootstrap;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.utils.annotations.Main;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -43,6 +46,6 @@ public final class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public Reflections providesReflections() {
-        return new Reflections(new org.reflections.Reflections(config.getPckg()));
+        return new Reflections(new org.reflections.Reflections(config.getPckg(), new MethodAnnotationsScanner(), new TypeAnnotationsScanner(), new SubTypesScanner()));
     }
 }
