@@ -26,7 +26,7 @@ public final class TestCommand extends Command {
         try {
             Class.forName("me.piggypiglet.test.TestClass");
             exists = true;
-            user.sendMessage(me.piggypiglet.test.TestClass.test());
+//            user.sendMessage(me.piggypiglet.test.TestClass.test());
             return true;
         } catch (Exception ignored) {}
 

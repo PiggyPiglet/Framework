@@ -20,7 +20,7 @@ dependencies {
     compile project(":addons:console")
     compile project(":addons:logback")
     compile project(":addons:jars")
-    compileOnly files('build/libs/testr.jar')
+//    compileOnly files('build/libs/testr.jar')
 //    compile project(":mysql")
 //    compile project(":http")
 //    compile project(":bindings:velocity")
