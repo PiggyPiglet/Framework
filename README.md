@@ -19,7 +19,7 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
   - Sponge
   - JDA
   - Velocity
-  - Bungee (Soon)
+  - BungeeCord
   - Nukkit (Soon)
 - More to come
 

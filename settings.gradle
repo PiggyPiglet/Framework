@@ -11,5 +11,6 @@ include (
         ':bindings:sponge',
         ':bindings:jda',
         ':bindings:velocity',
+        ':bindings:bungeecord',
         'test'
 )
