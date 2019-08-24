@@ -7,6 +7,7 @@ include (
         ':addons:logback',
         ':addons:hotswap',
         ':addons:http',
+        ':addons:jars',
         ':bindings:bukkit',
         ':bindings:sponge',
         ':bindings:jda',

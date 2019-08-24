@@ -10,22 +10,24 @@ repositories {
 //    maven {
 //        url 'https://repo.spongepowered.org/maven'
 //    }
-    maven {
-        url = 'https://repo.velocitypowered.com/snapshots/'
-    }
+//    maven {
+//        url = 'https://repo.velocitypowered.com/snapshots/'
+//    }
 }
 
 dependencies {
-//    compile project(":core")
-//    compile project(":console")
-//    compile project(":logback")
+    compile project(":core")
+    compile project(":addons:console")
+    compile project(":addons:logback")
+    compile project(":addons:jars")
+    compileOnly files('build/libs/testr.jar')
 //    compile project(":mysql")
 //    compile project(":http")
-    compile project(":bindings:velocity")
+//    compile project(":bindings:velocity")
 
 //    compileOnly 'org.spongepowered:spongeapi:7.1.0'
-    compileOnly 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
-    annotationProcessor 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
+//    compileOnly 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
+//    annotationProcessor 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
 }
 
 shadowJar {
@@ -35,5 +37,5 @@ shadowJar {
                 'Main-Class': 'me.piggypiglet.test.Test'
         )
     }
-    destinationDirectory = file("server/plugins")
+//    destinationDirectory = file("server/plugins")
 }
