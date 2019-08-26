@@ -1,6 +1,7 @@
 package me.piggypiglet.test;
 
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
 // ------------------------------
@@ -13,7 +14,7 @@ public final class Test {
                 .main(this)
                 .pckg("me.piggypiglet.test")
                 .commandPrefix("!")
-                .startup(new RegisterableData(HelloRegisterable.class))
+                .startup(new RegisterableData(LoaderRegisterable.class, BootPriority.BEFORE_IMPL))
                 .build()
                 .init();
     }

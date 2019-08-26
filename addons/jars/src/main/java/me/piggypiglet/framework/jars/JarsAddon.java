@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.jars;
 
+import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.jars.registerables.LoaderRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
@@ -9,7 +10,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 // https://www.piggypiglet.me
 // ------------------------------
 @Addon(
-        startup = @Startup(LoaderRegisterable.class)
+        startup = @Startup(
+                value = LoaderRegisterable.class,
+                priority = BootPriority.BEFORE_IMPL
+        )
 )
 public final class JarsAddon {
 }

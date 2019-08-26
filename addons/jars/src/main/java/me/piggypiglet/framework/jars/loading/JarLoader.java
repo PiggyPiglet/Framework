@@ -7,11 +7,15 @@ import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.utils.FileUtils;
 import me.piggypiglet.framework.utils.annotations.Main;
 
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +44,6 @@ public final class JarLoader {
     public final <T> void loadAll(String dir, T... datas) {
         if (datas.length == 0) return;
 
-        System.out.println(loaders);
-
         loaders.get(datas[0].getClass()).run(dir, datas);
     }
 
@@ -65,9 +67,7 @@ public final class JarLoader {
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
 
                 try (InputStream is = connection.getInputStream()) {
-                    FileOutputStream out = new FileOutputStream(lib);
-                    copy(is, out);
-                    out.close();
+                    Files.copy(is, Paths.get(lib.toURI()), StandardCopyOption.REPLACE_EXISTING);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -94,31 +94,25 @@ public final class JarLoader {
         logger.info("Successfully loaded jar " + name);
     }
 
-    /**
-     * Copy the downloaded dependencies (jars) to it's respected place
-     * @param input typically data of the jar
-     * @param output typically an outputted jar file
-     * @throws IOException typically can happen if there's an issue writing the data for the jars
-     */
-    private void copy(InputStream input, OutputStream output) throws IOException {
-        byte[] buf = new byte[1024];
-        int n = input.read(buf);
-
-        while (n >= 0) {
-            output.write(buf, 0, n);
-            n = input.read(buf);
-        }
-
-        output.flush();
-    }
+//    /**
+//     * Copy the downloaded dependencies (jars) to it's respected place
+//     * @param input data of the jar
+//     * @param output an outputted jar file
+//     * @throws IOException typically can happen if there's an issue writing the data for the jars
+//     */
+//    private void copy(InputStream input, OutputStream output) throws IOException {
+//        byte[] buf = new byte[1024];
+//        int n = input.read(buf);
+//
+//        while (n >= 0) {
+//            output.write(buf, 0, n);
+//            n = input.read(buf);
+//        }
+//
+//        output.flush();
+//    }
 
     public Map<Class, Loader> getLoaders() {
         return loaders;
     }
-
-    /**
-     * Represents the loader class to handle jars
-     * @param <T> loader
-     */
-
 }

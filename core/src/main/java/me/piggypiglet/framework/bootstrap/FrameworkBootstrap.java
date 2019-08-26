@@ -62,13 +62,13 @@ public final class FrameworkBootstrap {
         registerables.putAll(BootPriority.COMMANDS, linkedHashSet(CommandsRegisterable.class, CommandHandlerRegisterable.class));
         registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class));
 
-        processRegisterableData(config.getStartupRegisterables().stream(), registerables);
-
         addons.stream()
                 .map(Addon::startup)
                 .map(Arrays::stream)
                 .map(s -> s.map(RegisterableData::new))
                 .forEach(s -> processRegisterableData(s, registerables));
+
+        processRegisterableData(config.getStartupRegisterables().stream(), registerables);
 
         for (BootPriority priority : BootPriority.values()) {
             final Collection<Class<? extends StartupRegisterable>> section = registerables.get(priority);
