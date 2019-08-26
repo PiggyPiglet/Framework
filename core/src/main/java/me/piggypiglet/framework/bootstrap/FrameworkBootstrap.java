@@ -19,9 +19,7 @@ import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -64,10 +62,13 @@ public final class FrameworkBootstrap {
         registerables.putAll(BootPriority.COMMANDS, linkedHashSet(CommandsRegisterable.class, CommandHandlerRegisterable.class));
         registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class));
 
-        Stream.of(
-                config.getStartupRegisterables().stream().map(s -> new Startup[]{s}),
-                addons.stream().map(Addon::startup)
-        ).forEach(s -> processStartupStream(s, registerables));
+        processRegisterableData(config.getStartupRegisterables().stream(), registerables);
+
+        addons.stream()
+                .map(Addon::startup)
+                .map(Arrays::stream)
+                .map(s -> s.map(RegisterableData::new))
+                .forEach(s -> processRegisterableData(s, registerables));
 
         for (BootPriority priority : BootPriority.values()) {
             final Collection<Class<? extends StartupRegisterable>> section = registerables.get(priority);
@@ -96,11 +97,8 @@ public final class FrameworkBootstrap {
         return Arrays.stream(registerables).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private void processStartupStream(Stream<? extends Annotation[]> stream, Multimap<BootPriority, Class<? extends StartupRegisterable>> registerableMap) {
-        stream
-                .map(Arrays::stream)
-                .map(s -> s.map(RegisterableData::new))
-                .forEach(s -> s.forEach(r -> registerableMap.put(r.getPriority(), r.getRegisterable())));
+    private void processRegisterableData(Stream<RegisterableData> data, Multimap<BootPriority, Class<? extends StartupRegisterable>> registerables) {
+        data.forEach(r -> registerables.put(r.getPriority(), r.getRegisterable()));
     }
 
     /**

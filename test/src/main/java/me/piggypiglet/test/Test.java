@@ -1,6 +1,7 @@
 package me.piggypiglet.test;
 
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -12,7 +13,7 @@ public final class Test {
                 .main(this)
                 .pckg("me.piggypiglet.test")
                 .commandPrefix("!")
-                .startup()
+                .startup(new RegisterableData(HelloRegisterable.class))
                 .build()
                 .init();
     }

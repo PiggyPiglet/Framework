@@ -4,7 +4,7 @@ import me.piggypiglet.framework.sponge.registerables.CommandExecutorRegisterable
 import me.piggypiglet.framework.sponge.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.sponge.registerables.LoggerRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
+import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -12,9 +12,9 @@ import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
 // ------------------------------
 @Addon(
         startup = {
-                @AddonStartup(LoggerRegisterable.class),
-                @AddonStartup(CommandExecutorRegisterable.class),
-                @AddonStartup(EventFinderRegisterable.class)
+                @Startup(LoggerRegisterable.class),
+                @Startup(CommandExecutorRegisterable.class),
+                @Startup(EventFinderRegisterable.class)
         }
 )
 public final class SpongeAddon {

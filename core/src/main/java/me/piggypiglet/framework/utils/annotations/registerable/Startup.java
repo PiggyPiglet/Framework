@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 public @interface Startup {
     Class<? extends StartupRegisterable> value();
 
-    BootPriority priority() default BootPriority.MANUAL;
+    BootPriority priority() default BootPriority.ADDONS;
 }

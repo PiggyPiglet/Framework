@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
+import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ public final class Framework {
     private final Object main;
     private final String pckg;
     private final Injector injector;
-    private final List<Startup> startupRegisterables;
+    private final List<RegisterableData> startupRegisterables;
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
     private final String commandPrefix;
     private final List<FileData> files;
 
-    private Framework(Object main, String pckg, Injector injector, List<Startup> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
+    private Framework(Object main, String pckg, Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -79,7 +79,7 @@ public final class Framework {
      * Get all manually inputted StartupRegisterables
      * @return Classes extending StartupRegisterable
      */
-    public List<Startup> getStartupRegisterables() {
+    public List<RegisterableData> getStartupRegisterables() {
         return startupRegisterables;
     }
 
@@ -111,7 +111,7 @@ public final class Framework {
         private Object main = "d-main";
         private String pckg = "d-pckg";
         private Injector injector = null;
-        private List<Startup> startupRegisterables = new ArrayList<>();
+        private List<RegisterableData> startupRegisterables = new ArrayList<>();
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
         private String commandPrefix = "d-commandPrefix";
         private final List<FileData> files = new ArrayList<>();
@@ -153,7 +153,7 @@ public final class Framework {
          * @param registerables Varargs classes extending StartupRegisterable
          * @return FrameworkBuilder
          */
-        public final FrameworkBuilder startup(Annotation... registerables) {
+        public final FrameworkBuilder startup(RegisterableData... registerables) {
             startupRegisterables = Arrays.asList(registerables);
             return this;
         }

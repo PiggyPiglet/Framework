@@ -7,7 +7,7 @@ import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
-import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
+import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -15,8 +15,8 @@ import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
 // ------------------------------
 @Addon(
         startup = {
-                @AddonStartup(RoutesRegisterable.class),
-                @AddonStartup(HTTPRegisterable.class)
+                @Startup(RoutesRegisterable.class),
+                @Startup(HTTPRegisterable.class)
         },
         files = {@File(
                 config = true,

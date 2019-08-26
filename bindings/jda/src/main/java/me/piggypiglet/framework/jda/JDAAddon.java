@@ -7,7 +7,7 @@ import me.piggypiglet.framework.jda.startup.EventsRegisterable;
 import me.piggypiglet.framework.jda.startup.FinishRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
-import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
+import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -15,9 +15,9 @@ import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
 // ------------------------------
 @Addon(
         startup = {
-                @AddonStartup(BuilderRegisterable.class),
-                @AddonStartup(EventsRegisterable.class),
-                @AddonStartup(FinishRegisterable.class)
+                @Startup(BuilderRegisterable.class),
+                @Startup(EventsRegisterable.class),
+                @Startup(FinishRegisterable.class)
         },
         files = {@File(
                 config = true,
