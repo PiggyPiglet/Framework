@@ -2,7 +2,7 @@ package me.piggypiglet.framework.guice.modules;
 
 import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.FrameworkBootstrap;
+import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.utils.annotations.Main;
 import org.reflections.scanners.MethodAnnotationsScanner;

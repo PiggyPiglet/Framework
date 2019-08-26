@@ -1,6 +1,9 @@
-package me.piggypiglet.framework;
+package me.piggypiglet.framework.bootstrap;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Injector;
+import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.logging.LoggerFactory;
@@ -15,8 +18,12 @@ import me.piggypiglet.framework.registerables.startup.commands.CommandsRegistera
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
+import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,52 +54,53 @@ public final class FrameworkBootstrap {
     }
 
     private void start() {
-        final Set<Class<? extends StartupRegisterable>> registerables = new LinkedHashSet<>();
-
         addons.addAll(injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class).stream()
                 .map(c -> c.getAnnotation(Addon.class))
                 .collect(Collectors.toSet()));
 
-        Stream.of(
-                ImplementationFinderRegisterable.class,
-                FileTypesRegisterable.class,
-                FilesRegisterable.class
-        ).forEach(registerables::add);
+        final Multimap<BootPriority, Class<? extends StartupRegisterable>> registerables = ArrayListMultimap.create();
 
-        registerables.addAll(config.getStartupRegisterables());
+        registerables.putAll(BootPriority.IMPL, linkedHashSet(ImplementationFinderRegisterable.class, FileTypesRegisterable.class, FilesRegisterable.class));
+        registerables.putAll(BootPriority.COMMANDS, linkedHashSet(CommandsRegisterable.class, CommandHandlerRegisterable.class));
+        registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class));
 
         Stream.of(
-                CommandsRegisterable.class,
-                CommandHandlerRegisterable.class
-        ).forEach(registerables::add);
+                config.getStartupRegisterables().stream().map(s -> new Startup[]{s}),
+                addons.stream().map(Addon::startup)
+        ).forEach(s -> processStartupStream(s, registerables));
 
-        addons.stream()
-                .map(Addon::startup)
-                .map(Arrays::stream)
-                .forEach(s -> s.filter(r -> !registerables.contains(r)).forEach(registerables::add));
+        for (BootPriority priority : BootPriority.values()) {
+            final Collection<Class<? extends StartupRegisterable>> section = registerables.get(priority);
 
-        Stream.of(
-                ManagersRegisterable.class,
-                ShutdownRegisterablesRegisterable.class,
-                ShutdownHookRegisterable.class
-        ).forEach(registerables::add);
+            section.forEach(r -> {
+                StartupRegisterable registerable = injector.get().getInstance(r);
+                registerable.run(injector.get());
 
-        registerables.forEach(r -> {
-            StartupRegisterable registerable = injector.get().getInstance(r);
-            registerable.run(injector.get());
+                if (registerable.getBindings().size() > 0 || registerable.getAnnotatedBindings().size() > 0 || registerable.getStaticInjections().size() > 0) {
+                    injector.set(injector.get().createChildInjector(new BindingSetterModule(
+                            registerable.getBindings(),
+                            registerable.getAnnotatedBindings(),
+                            registerable.getStaticInjections().toArray(new Class[]{})
+                    )));
+                }
 
-            if (registerable.getBindings().size() > 0 || registerable.getAnnotatedBindings().size() > 0 || registerable.getStaticInjections().size() > 0) {
-                injector.set(injector.get().createChildInjector(new BindingSetterModule(
-                        registerable.getBindings(),
-                        registerable.getAnnotatedBindings(),
-                        registerable.getStaticInjections().toArray(new Class[]{})
-                )));
-            }
-
-            this.registerables.add(registerable);
-        });
+                this.registerables.add(registerable);
+            });
+        }
 
         LoggerFactory.getLogger("RPF").info("Bootstrap process completed.");
+    }
+
+    @SafeVarargs
+    private final Set<Class<? extends StartupRegisterable>> linkedHashSet(Class<? extends StartupRegisterable>... registerables) {
+        return Arrays.stream(registerables).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private void processStartupStream(Stream<? extends Annotation[]> stream, Multimap<BootPriority, Class<? extends StartupRegisterable>> registerableMap) {
+        stream
+                .map(Arrays::stream)
+                .map(s -> s.map(RegisterableData::new))
+                .forEach(s -> s.forEach(r -> registerableMap.put(r.getPriority(), r.getRegisterable())));
     }
 
     /**

@@ -5,13 +5,19 @@ import me.piggypiglet.framework.bungeecord.registerables.EventFinderRegisterable
 import me.piggypiglet.framework.bungeecord.registerables.LoggerRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.MainBinderRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
 @Addon(
-        startup = {MainBinderRegisterable.class, LoggerRegisterable.class, EventFinderRegisterable.class, CommandExecutorRegisterable.class}
+        startup = {
+                @AddonStartup(MainBinderRegisterable.class),
+                @AddonStartup(LoggerRegisterable.class),
+                @AddonStartup(EventFinderRegisterable.class),
+                @AddonStartup(CommandExecutorRegisterable.class)
+        }
 )
 public final class BungeeAddon {
 }

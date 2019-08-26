@@ -7,13 +7,17 @@ import me.piggypiglet.framework.mysql.registerables.startup.MySQLRegisterable;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLSavingRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
+import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
 @Addon(
-        startup = {MySQLRegisterable.class, MySQLSavingRegisterable.class},
+        startup = {
+                @AddonStartup(MySQLRegisterable.class),
+                @AddonStartup(MySQLSavingRegisterable.class)
+        },
         shutdown = MySQLShutdown.class,
         files = {@File(
                 config = true,

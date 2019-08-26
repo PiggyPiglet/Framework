@@ -1,7 +1,7 @@
 package me.piggypiglet.framework.hotswap.plugin;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.FrameworkBootstrap;
+import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import org.hotswap.agent.annotation.LoadEvent;
 import org.hotswap.agent.annotation.OnClassLoadEvent;
 import org.hotswap.agent.annotation.Plugin;

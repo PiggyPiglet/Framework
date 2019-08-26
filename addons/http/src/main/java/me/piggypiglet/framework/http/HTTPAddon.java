@@ -7,13 +7,17 @@ import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
+import me.piggypiglet.framework.utils.annotations.registerable.AddonStartup;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
 @Addon(
-        startup = {RoutesRegisterable.class, HTTPRegisterable.class},
+        startup = {
+                @AddonStartup(RoutesRegisterable.class),
+                @AddonStartup(HTTPRegisterable.class)
+        },
         files = {@File(
                 config = true,
                 name = "http",

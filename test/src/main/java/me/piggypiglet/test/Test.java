@@ -12,6 +12,7 @@ public final class Test {
                 .main(this)
                 .pckg("me.piggypiglet.test")
                 .commandPrefix("!")
+                .startup()
                 .build()
                 .init();
     }
