@@ -14,7 +14,13 @@ public final class TestCommand extends Command {
 
     @Override
     protected boolean execute(User user, String[] args) {
-        user.sendMessage(TestClass.test());
+        try {
+            Class.forName("me.piggypiglet.test.TestClass");
+            user.sendMessage("exists");
+            return true;
+        } catch (Exception ignored) {}
+
+        user.sendMessage("doesn't exist");
         return true;
     }
 }

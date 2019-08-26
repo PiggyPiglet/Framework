@@ -1,6 +1,7 @@
 package me.piggypiglet.framework.jars.loading;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.jars.loading.update.OutdatedJarManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +49,7 @@ public abstract class Loader<T> {
         List<Jar> jarsList = Arrays.asList(jars);
 
         jarsList.forEach(j -> jarLoader.load(j, dir));
-//        OutdatedJarManager.deleteOutdated(dir, jarsList.stream().map(Jar::getFormattedName).toArray(String[]::new));
+        OutdatedJarManager.deleteOutdated(dir, jarsList.stream().map(Jar::getFormattedName).toArray(String[]::new));
     }
 
     public Class getJarType() {

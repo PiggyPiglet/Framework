@@ -29,7 +29,7 @@ public final class OutdatedJarScanner {
 
     public OutdatedJarScanner scan() {
         files.replaceAll(this::cutJarAtVersion);
-        File[] files = directory.listFiles(f -> this.files.contains(cutJarAtVersion(f.getName())));
+        File[] files = directory.listFiles(f -> !this.files.contains(cutJarAtVersion(f.getName().replace(".jar", ""))));
 
         if (files != null) {
             needsUpdating = ImmutableList.copyOf(files);
@@ -43,6 +43,7 @@ public final class OutdatedJarScanner {
     }
 
     private String cutJarAtVersion(String fileName) {
-        return fileName.substring(0, fileName.lastIndexOf('-')).toLowerCase();
+        String[] split = fileName.split("-");
+        return split[split.length - 1];
     }
 }

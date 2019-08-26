@@ -1,5 +1,7 @@
 package me.piggypiglet.framework.jars.loading.update;
 
+import me.piggypiglet.framework.logging.LoggerFactory;
+
 import java.io.File;
 
 // ------------------------------
@@ -14,6 +16,7 @@ public final class OutdatedJarManager {
             );
 
             if (deleter.needsUpdating()) {
+                LoggerFactory.getLogger("OutdatedJarManager").info("Deleting outdated/irrelevant jars in %s.", dir);
                 deleter.deleteAll();
             }
         } catch (Exception e) {
