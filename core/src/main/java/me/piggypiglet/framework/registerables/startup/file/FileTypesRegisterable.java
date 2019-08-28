@@ -19,7 +19,6 @@ public final class FileTypesRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        Set<Class<? extends AbstractFileConfiguration>> files = reflections.getSubTypesOf(AbstractFileConfiguration.class);
-        files.stream().filter(c -> c != BlankFileConfiguration.class).map(injector::getInstance).forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));
+        reflections.getSubTypesOf(AbstractFileConfiguration.class).stream().filter(c -> c != BlankFileConfiguration.class).map(injector::getInstance).forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));
     }
 }

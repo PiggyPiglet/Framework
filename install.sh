@@ -4,6 +4,9 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
+gradle clean
+gradle jar
+
 cd /e/Documents/Github/Framework/
 mkdir maven/tmp/
 

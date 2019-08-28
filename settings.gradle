@@ -13,5 +13,6 @@ include (
         ':bindings:jda',
         ':bindings:velocity',
         ':bindings:bungeecord',
+        ':samples:bukkit-sample',
         'test'
 )

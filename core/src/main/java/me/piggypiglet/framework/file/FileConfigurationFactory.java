@@ -31,6 +31,8 @@ public final class FileConfigurationFactory {
     }
 
     private AbstractFileConfiguration getAFC(String path) throws Exception {
+        System.out.println(configTypes.values());
+
         return (AbstractFileConfiguration) Arrays.stream(configTypes.get(configTypes.keySet().stream()
                 .filter(p -> p.test(path))
                 .findAny()

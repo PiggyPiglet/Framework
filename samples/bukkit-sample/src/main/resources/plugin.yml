@@ -1,0 +1,6 @@
+name: DemoPlugin
+version: 1.0.0
+main: me.piggypiglet.demo.Demo
+author: PiggyPiglet
+website: https://rpf.piggypiglet.me
+prefix: "DEMO"

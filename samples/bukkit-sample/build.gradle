@@ -1,0 +1,17 @@
+version '1.0.0'
+
+repositories {
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile project(":bindings:bukkit")
+    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
+}
+
+shadowJar {
+    relocate 'me.piggypiglet.framework', 'me.piggypiglet.demo.framework'
+    destinationDirectory = file('server/plugins/')
+}
