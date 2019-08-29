@@ -25,7 +25,7 @@ public final class SpigotFileConfiguration extends AbstractFileConfiguration {
         config = new YamlConfiguration();
 
         try {
-            config.load(fileContent);
+            config.load(file);
         } catch (Exception e) {
             e.printStackTrace();
         }

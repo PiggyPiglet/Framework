@@ -3,6 +3,7 @@ package me.piggypiglet.framework;
 import com.google.inject.Injector;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.objects.FileData;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Framework {
-    private final Object main;
+    private final MainBinding main;
     private final String pckg;
     private final Injector injector;
     private final List<RegisterableData> startupRegisterables;
@@ -26,7 +27,7 @@ public final class Framework {
     private final String commandPrefix;
     private final List<FileData> files;
 
-    private Framework(Object main, String pckg, Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
+    private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -53,9 +54,9 @@ public final class Framework {
 
     /**
      * Get the main instance
-     * @return Object
+     * @return MainBinding
      */
-    public Object getMain() {
+    public MainBinding getMain() {
         return main;
     }
 
@@ -120,11 +121,24 @@ public final class Framework {
 
         /**
          * Set the application's main instance
-         * @param main Main instance
+         * @param clazz Class to bind the instance under, for example, in bukkit, you'd enter JavaPlugin.class
+         * @param instance Main instance
          * @return FrameworkBuilder
          */
-        public final FrameworkBuilder main(Object main) {
-            this.main = main;
+        public final FrameworkBuilder main(Class clazz, Object instance) {
+            this.main = new MainBinding(clazz, instance);
+            return this;
+        }
+
+        /**
+         * Set the application's main instance
+         * @param clazz Class to bind the instance under, for example, un bukkit you'd enter JavaPlugin.class
+         * @param annotation Annotation to bind under
+         * @param instance Main instance
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder main(Class clazz, Class<? extends Annotation> annotation, Object instance) {
+            this.main = new MainBinding(clazz, instance, annotation);
             return this;
         }
 
@@ -212,7 +226,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework(main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files);
+            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files);
         }
     }
 }

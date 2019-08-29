@@ -14,7 +14,7 @@ public final class Demo extends JavaPlugin {
     @Override
     public void onEnable() {
         Framework.builder()
-                .main(this)
+                .main(JavaPlugin.class, this)
                 .pckg("me.piggypiglet.demo")
                 .commandPrefix("demo")
                 .startup(new RegisterableData(BroadcasterRegisterable.class))

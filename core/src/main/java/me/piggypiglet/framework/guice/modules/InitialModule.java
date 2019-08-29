@@ -3,8 +3,8 @@ package me.piggypiglet.framework.guice.modules;
 import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.reflection.Reflections;
-import me.piggypiglet.framework.utils.annotations.Main;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -26,9 +26,16 @@ public final class InitialModule extends AbstractModule {
         return Guice.createInjector(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void configure() {
-        bind(Object.class).annotatedWith(Main.class).toInstance(config.getMain());
+        final MainBinding main = config.getMain();
+
+        if (main.getAnnotation() != null) {
+            bind(main.getClazz()).annotatedWith(main.getAnnotation()).toInstance(main.getInstance());
+        } else {
+            bind(main.getClazz()).toInstance(main.getInstance());
+        }
     }
 
     @Provides
