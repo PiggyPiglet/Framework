@@ -34,7 +34,7 @@ public abstract class Route {
     protected abstract String provide(Map<String, List<String>> params);
 
     /**
-     * Process parameters and return a string based on them & the route
+     * Process parameters and return a string based on them &amp; the route
      * @param params Params
      * @return String
      */
