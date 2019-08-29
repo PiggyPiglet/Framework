@@ -58,6 +58,7 @@ public final class CommandHandler {
 
     /**
      * Set this commandhandler's commands.
+     * @param commands Commands to set
      */
     public void setCommands(List<Command> commands) {
         this.commands = commands;
@@ -66,6 +67,7 @@ public final class CommandHandler {
 
     /**
      * Get commands this command handler can process
+     * @return List of commands
      */
     public List<Command> getCommands() {
         return commands;

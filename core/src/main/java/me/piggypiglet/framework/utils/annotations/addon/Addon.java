@@ -20,16 +20,19 @@ import java.lang.annotation.Target;
 public @interface Addon {
     /**
      * Array of startup registerables to be registered
+     * @return Array of Startup annotations
      */
     Startup[] startup() default {};
 
     /**
      * Array of shutdown registerables to be registered
+     * @return Array of ShutdownRegisterable classes
      */
     Class<? extends ShutdownRegisterable>[] shutdown() default {};
 
     /**
      * Array of files to be registered
+     * @return Array of File annotation
      */
     File[] files() default {};
 }

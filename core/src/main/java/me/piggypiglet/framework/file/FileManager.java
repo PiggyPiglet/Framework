@@ -33,7 +33,7 @@ public final class FileManager {
      * @param internalPath Internal path of the file to be exported
      * @param externalPath External path to save and load the file from
      * @return Returns a file wrapper containing the file object and it's plaintext content
-     *
+     * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
     public FileWrapper loadFile(String name, String internalPath, String externalPath) throws Exception {
         LOGGER.info("Loading %s.", name);
@@ -53,6 +53,7 @@ public final class FileManager {
      * @param internalPath Internal path of the config to be exported
      * @param externalPath External path to save and load the config from
      * @return FileConfiguration object
+     * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
     public FileConfiguration loadConfig(String name, String internalPath, String externalPath) throws Exception {
         LOGGER.info("Loading %s.", name);
@@ -83,6 +84,9 @@ public final class FileManager {
 
     /**
      * Get the raw type instance of a stored file/config (FileWrapper or FileConfiguration)
+     * @param name Name of the file
+     * @param <T> Type
+     * @return Type
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String name) {

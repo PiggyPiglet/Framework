@@ -25,6 +25,9 @@ public final class Reflections {
 
     /**
      * Gets all sub types in hierarchy of a given type
+     * @param type Interface to search for sub classes under
+     * @param <T> Interface type
+     * @return Set of found classes
      */
     public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
         return reflections.getSubTypesOf(type).stream().filter(this::isDisabled).collect(Collectors.toSet());
@@ -32,6 +35,8 @@ public final class Reflections {
 
     /**
      * Get types annotated with a given annotation
+     * @param annotation Annotation to search for
+     * @return Set of found classes
      */
     public Set<Class<?>> getTypesAnnotatedWith(Class<? extends Annotation> annotation) {
         return reflections.getTypesAnnotatedWith(annotation).stream().filter(this::isDisabled).collect(Collectors.toSet());
@@ -39,6 +44,8 @@ public final class Reflections {
 
     /**
      * Get classes that contain a specific annotation
+     * @param annotation Annotation to search for
+     * @return Set of found classes
      */
     public Set<Class<?>> getClassesWithAnnotatedMethods(Class<? extends Annotation> annotation) {
         return reflections.getMethodsAnnotatedWith(annotation).stream().map(Method::getDeclaringClass).filter(this::isDisabled).collect(Collectors.toSet());

@@ -23,6 +23,9 @@ public final class FileConfigurationFactory {
 
     /**
      * Load a fileconfiguration from a file object
+     * @param file File object
+     * @return FileConfiguration instance
+     * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
     public FileConfiguration get(File file) throws Exception {
         String fileContent = FileUtils.readFileToString(file);
@@ -32,6 +35,9 @@ public final class FileConfigurationFactory {
     /**
      * Load a fileconfiguration straight from the file content
      * @param path Path of the file
+     * @param fileContent plain text file content
+     * @return FileConfiguration instance
+     * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
     public FileConfiguration get(String path, String fileContent) throws Exception {
         return getAFC(path).load(null, fileContent);

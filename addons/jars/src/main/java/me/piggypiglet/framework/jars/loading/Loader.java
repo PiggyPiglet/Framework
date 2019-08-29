@@ -37,6 +37,7 @@ public abstract class Loader<T> {
      * Loads all the jar files
      * @param dir directory of the jars
      * @param datas the jars
+     * @return Array of jars to be loaded
      */
     protected abstract Jar[] loadAll(String dir, T[] datas);
 
