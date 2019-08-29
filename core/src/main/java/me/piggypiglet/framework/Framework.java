@@ -5,6 +5,7 @@ import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
+import me.piggypiglet.framework.utils.annotations.Main;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
 import java.lang.annotation.Annotation;
@@ -121,24 +122,22 @@ public final class Framework {
 
         /**
          * Set the application's main instance
+         * @param instance Main instance
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder main(Object instance) {
+            this.main = new MainBinding(Object.class, instance, Main.class);
+            return this;
+        }
+
+        /**
+         * Set the application's main instance
          * @param clazz Class to bind the instance under, for example, in bukkit, you'd enter JavaPlugin.class
          * @param instance Main instance
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder main(Class clazz, Object instance) {
             this.main = new MainBinding(clazz, instance);
-            return this;
-        }
-
-        /**
-         * Set the application's main instance
-         * @param clazz Class to bind the instance under, for example, un bukkit you'd enter JavaPlugin.class
-         * @param annotation Annotation to bind under
-         * @param instance Main instance
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder main(Class clazz, Class<? extends Annotation> annotation, Object instance) {
-            this.main = new MainBinding(clazz, instance, annotation);
             return this;
         }
 
