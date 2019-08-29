@@ -23,10 +23,21 @@ public final class CommandHandlers {
     private final List<Command> commands = new ArrayList<>();
     private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
 
+    /**
+     * Find and run a command in a specific handler.
+     * @param commandHandler Handler to attempt to find the command in
+     * @param user User running the command
+     * @param message Message, including command prefix, command, and arguments.
+     */
     public void process(String commandHandler, User user, String message) {
         task.async(r -> commandHandlers.get(commandHandler).process(user, message));
     }
 
+    /**
+     * Create a new command handler.
+     * @param name String the command handler will be referenced by
+     * @param injector Instance of the applications injector.
+     */
     public void newHandler(String name, Injector injector) {
         CommandHandler commandHandler = injector.getInstance(CommandHandler.class);
 
@@ -34,14 +45,26 @@ public final class CommandHandlers {
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toList()));
     }
 
+    /**
+     * Get the commands from a specific handler
+     * @param handler Handler name
+     * @return List of commands that handler can process
+     */
     public List<Command> getCommands(String handler) {
         return commandHandlers.get(handler).getCommands();
     }
 
+    /**
+     * Get all commands registered in RPF
+     * @return List of commands
+     */
     public List<Command> getCommands() {
         return commands;
     }
 
+    /**
+     * Clear commands in here, and all underlying command handlers.
+     */
     public void clearCommands() {
         commands.clear();
         commandHandlers.values().stream().map(CommandHandler::getCommands).forEach(List::clear);

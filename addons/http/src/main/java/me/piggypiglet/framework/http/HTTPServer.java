@@ -13,6 +13,10 @@ import me.piggypiglet.framework.logging.LoggerFactory;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+
+/**
+ * Wrapper class for NanoHTTP HTTP server
+ */
 @Singleton
 public final class HTTPServer {
     @Inject @HTTP private FileConfiguration config;
@@ -22,6 +26,9 @@ public final class HTTPServer {
 
     private NanoHTTPD nanoHTTPD;
 
+    /**
+     * Start the HTTP server
+     */
     public void start() {
         String ip = config.getString("ip");
         int port = config.getInt("port");
@@ -35,6 +42,9 @@ public final class HTTPServer {
         }
     }
 
+    /**
+     * Stop the HTTP Server
+     */
     public void stop() {
         LOGGER.info("Shutting down HTTP server.");
         nanoHTTPD.stop();

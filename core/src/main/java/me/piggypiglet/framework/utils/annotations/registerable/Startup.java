@@ -12,6 +12,10 @@ import java.lang.annotation.Target;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+
+/**
+ * StartupRegisterable wrapper for addons
+ */
 @Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME)
 public @interface Startup {
     Class<? extends StartupRegisterable> value();

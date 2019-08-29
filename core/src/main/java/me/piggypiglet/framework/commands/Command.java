@@ -19,6 +19,9 @@ public abstract class Command {
     private List<String> permissions = new ArrayList<>();
     private boolean def = false;
 
+    /**
+     * Configure options for this command.
+     */
     protected Options options = new Options();
 
     protected Command(String command) {

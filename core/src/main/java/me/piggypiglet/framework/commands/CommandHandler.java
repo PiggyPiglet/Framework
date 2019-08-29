@@ -18,6 +18,11 @@ public final class CommandHandler {
     private List<Command> commands;
     private Command helpCommand;
 
+    /**
+     * Find a matching command accessible to this command handler, and run it with the user's input
+     * @param user User to run the command on
+     * @param message String user input
+     */
     public void process(User user, String message) {
         if (message.startsWith(framework.getCommandPrefix())) {
             message = message.replaceFirst(framework.getCommandPrefix(), "").trim();
@@ -51,11 +56,17 @@ public final class CommandHandler {
         }
     }
 
+    /**
+     * Set this commandhandler's commands.
+     */
     public void setCommands(List<Command> commands) {
         this.commands = commands;
         helpCommand = commands.stream().filter(Command::isDefault).findFirst().orElse(defHelpCommand);
     }
 
+    /**
+     * Get commands this command handler can process
+     */
     public List<Command> getCommands() {
         return commands;
     }

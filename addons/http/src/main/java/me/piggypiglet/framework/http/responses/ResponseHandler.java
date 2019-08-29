@@ -19,6 +19,11 @@ public final class ResponseHandler {
 
     private final List<Route> routes = new ArrayList<>();
 
+    /**
+     * Find the first route the matches the user's input, and handle the response
+     * @param session Session info
+     * @return Response
+     */
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
         for (Route route : routes) {
             if (session.getUri().toLowerCase().replace("/", "").startsWith(route.getRoute())) {
@@ -31,6 +36,10 @@ public final class ResponseHandler {
         return NanoHTTPD.newFixedLengthResponse(def.getFileContent());
     }
 
+    /**
+     * Get all routes stored in this ResponseHandler
+     * @return List of Routes
+     */
     public List<Route> getRoutes() {
         return routes;
     }

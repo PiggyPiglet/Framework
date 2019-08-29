@@ -16,10 +16,19 @@ public abstract class Loader<T> {
 
     private final Class jarType;
 
+    /**
+     * Just mirror your generic here, but as a class
+     * @param jarType Generic class
+     */
     protected Loader(Class jarType) {
         this.jarType = jarType;
     }
 
+    /**
+     * Test if the dir and data provided is for this loader
+     * @param <T_> Data type array
+     * @return Predicate
+     */
     public <T_> BiPredicate<String, T_[]> isCorrectLoader() {
         return (dir, datas) -> datas.length > 0 && datas[0].getClass().equals(jarType);
     }

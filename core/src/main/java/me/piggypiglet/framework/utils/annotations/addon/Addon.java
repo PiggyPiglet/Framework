@@ -12,11 +12,24 @@ import java.lang.annotation.Target;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+
+/**
+ * Configuration annotation for addons
+ */
 @Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME)
 public @interface Addon {
+    /**
+     * Array of startup registerables to be registered
+     */
     Startup[] startup() default {};
 
+    /**
+     * Array of shutdown registerables to be registered
+     */
     Class<? extends ShutdownRegisterable>[] shutdown() default {};
 
+    /**
+     * Array of files to be registered
+     */
     File[] files() default {};
 }

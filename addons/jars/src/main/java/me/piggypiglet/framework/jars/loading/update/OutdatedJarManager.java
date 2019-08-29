@@ -9,6 +9,11 @@ import java.io.File;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class OutdatedJarManager {
+    /**
+     * Delete any outdated jars
+     * @param dir Directory to look in
+     * @param files Current files
+     */
     public static void deleteOutdated(String dir, String... files) {
         try {
             OutdatedJarDeleter deleter = new OutdatedJarDeleter(

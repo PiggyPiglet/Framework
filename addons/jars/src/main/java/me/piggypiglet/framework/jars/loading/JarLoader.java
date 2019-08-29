@@ -39,6 +39,12 @@ public final class JarLoader {
         }
     }
 
+    /**
+     * Find a loader based on the inputted data and directory, then load the data into the classpath
+     * @param dir Directory to look for jars in
+     * @param datas Data to load
+     * @param <T> Data type
+     */
     @SafeVarargs
     @SuppressWarnings("unchecked")
     public final <T> void loadAll(String dir, T... datas) {
@@ -82,7 +88,6 @@ public final class JarLoader {
             throw new RuntimeException("Hash doesn't match on " + name);
         }
 
-        // a custom solution will be necessary eventually, as this usage of urlclassloader is removed in java 9 with no replacement
         URLClassLoader loader = (URLClassLoader) main.getClass().getClassLoader();
 
         try {
@@ -94,24 +99,10 @@ public final class JarLoader {
         logger.info("Successfully loaded jar " + name);
     }
 
-//    /**
-//     * Copy the downloaded dependencies (jars) to it's respected place
-//     * @param input data of the jar
-//     * @param output an outputted jar file
-//     * @throws IOException typically can happen if there's an issue writing the data for the jars
-//     */
-//    private void copy(InputStream input, OutputStream output) throws IOException {
-//        byte[] buf = new byte[1024];
-//        int n = input.read(buf);
-//
-//        while (n >= 0) {
-//            output.write(buf, 0, n);
-//            n = input.read(buf);
-//        }
-//
-//        output.flush();
-//    }
-
+    /**
+     * Get all loaders stored in this JarLoader
+     * @return List of loaders
+     */
     public Map<Class, Loader> getLoaders() {
         return loaders;
     }

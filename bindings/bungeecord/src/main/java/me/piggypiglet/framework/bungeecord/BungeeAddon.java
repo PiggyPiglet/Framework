@@ -3,7 +3,6 @@ package me.piggypiglet.framework.bungeecord;
 import me.piggypiglet.framework.bungeecord.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.LoggerRegisterable;
-import me.piggypiglet.framework.bungeecord.registerables.MainBinderRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
@@ -13,7 +12,6 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 // ------------------------------
 @Addon(
         startup = {
-                @Startup(MainBinderRegisterable.class),
                 @Startup(LoggerRegisterable.class),
                 @Startup(EventFinderRegisterable.class),
                 @Startup(CommandExecutorRegisterable.class)

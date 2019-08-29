@@ -11,6 +11,10 @@ import java.lang.annotation.Target;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+
+/**
+ * Annotation for the default html filewrapper binding
+ */
 @BindingAnnotation
 @Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultHTTP {

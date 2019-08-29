@@ -21,11 +21,18 @@ import java.util.function.Predicate;
 public final class FileConfigurationFactory {
     private final Map<Predicate<String>, Class<? extends AbstractFileConfiguration>> configTypes = new HashMap<>();
 
+    /**
+     * Load a fileconfiguration from a file object
+     */
     public FileConfiguration get(File file) throws Exception {
         String fileContent = FileUtils.readFileToString(file);
         return getAFC(file.getPath()).load(file, fileContent);
     }
 
+    /**
+     * Load a fileconfiguration straight from the file content
+     * @param path Path of the file
+     */
     public FileConfiguration get(String path, String fileContent) throws Exception {
         return getAFC(path).load(null, fileContent);
     }
@@ -41,6 +48,10 @@ public final class FileConfigurationFactory {
                 .newInstance();
     }
 
+    /**
+     * Get all config types this factory can map to
+     * @return Map of AbstractFileConfigurations, with the key as a predicate testing whether a path matches a config
+     */
     public Map<Predicate<String>, Class<? extends AbstractFileConfiguration>> getConfigTypes() {
         return configTypes;
     }

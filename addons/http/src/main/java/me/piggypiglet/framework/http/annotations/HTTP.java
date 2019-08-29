@@ -11,6 +11,10 @@ import java.lang.annotation.Target;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+
+/**
+ * Annotation for the HTTP config binding
+ */
 @BindingAnnotation
 @Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME)
 public @interface HTTP {

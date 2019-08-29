@@ -5,6 +5,12 @@ package me.piggypiglet.framework.utils;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class ReflectionUtils {
+    /**
+     * Get a classes generic, a bit iffy, might not work in all scenarios
+     * @param clazz Class to get the generic from
+     * @param <T> Type
+     * @return Class of the generic type, with the type as the classes generic
+     */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getClassGeneric(Class clazz) {
         try {

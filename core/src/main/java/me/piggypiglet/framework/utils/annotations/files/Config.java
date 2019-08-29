@@ -11,6 +11,10 @@ import java.lang.annotation.Target;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
+
+/**
+ * Utility annotation you can use for your config file
+ */
 @BindingAnnotation
 @Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
