@@ -20,7 +20,7 @@ public final class ManagersRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        task.async(r -> reflections.getSubTypesOf(Manager.class).stream().filter(c -> !Modifier.isAbstract(c.getModifiers())).map(injector::getInstance).forEach(managersManager.getManagers()::add));
-        managersManager.setup();
+        reflections.getSubTypesOf(Manager.class).stream().filter(c -> !Modifier.isAbstract(c.getModifiers())).map(injector::getInstance).forEach(managersManager.getManagers()::add);
+        task.async(r -> managersManager.setup());
     }
 }
