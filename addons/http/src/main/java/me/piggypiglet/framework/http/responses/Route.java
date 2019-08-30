@@ -35,8 +35,11 @@ public abstract class Route {
 
     /**
      * Process parameters and return a string based on them &amp; the route
-     * @param params Params
-     * @return String
+     * @param params Map of params and their value(s). Identical to a multimap, example format would be:
+     *               url/route?test=oof&amp;test=oof2&amp;oof=test
+     *               which would result in:
+     *               {test:["oof", "oof2"],oof:["test"]}
+     * @return String (JSON)
      */
     public String run(Map<String, List<String>> params) {
         return provide(params);
