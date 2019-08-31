@@ -53,15 +53,6 @@ More info can be found on their respective pages.
 ### Status
 ![Jenkins](https://img.shields.io/jenkins/build/https/ci.piggypiglet.me/Framework)
 <br/>Versions:
-* Core - 1.0.0
-* Console - 1.0.0
-* Hotswap - 1.0.0
-* HTTP - 1.0.0
-* Jars - 1.0.0
-* Logback - 1.0.0
-* MySQL - 1.0.0
-* Bukkit - 1.0.0
-* BungeeCord - 1.0.0
-* JDA - 1.0.0
-* Sponge - 1.0.0
-* Velocity - 1.0.0
+| Core  | Console | Hotswap | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity |
+|-------|---------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|
+| 1.0.0 | 1.0.0   | 1.0.0   | 1.0.0 | 1.0.0 | 1.0.0   | 1.0.0 | 1.0.0  | 1.0.0      | 1.0.0 | 1.0.0  | 1.0.0    |
