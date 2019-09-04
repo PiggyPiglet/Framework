@@ -44,9 +44,9 @@
     	<version>2.6</version>
   	</dependency>
     <dependency>
-    	<groupId>org.reflections</groupId>
+    	<groupId>me.piggypiglet</groupId>
     	<artifactId>reflections</artifactId>
-    	<version>0.9.11</version>
+    	<version>0.9.12</version>
   	</dependency>
     <dependency>
     	<groupId>me.piggypiglet</groupId>

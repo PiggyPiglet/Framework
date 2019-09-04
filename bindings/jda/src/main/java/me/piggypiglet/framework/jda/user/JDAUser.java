@@ -3,8 +3,6 @@ package me.piggypiglet.framework.jda.user;
 import me.piggypiglet.framework.user.User;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.util.List;
-
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
@@ -12,11 +10,10 @@ import java.util.List;
 public final class JDAUser extends User {
     private final TextChannel channel;
 
-    public JDAUser(net.dv8tion.jda.api.entities.User user, TextChannel channel, List<String> permissions) {
+    public JDAUser(net.dv8tion.jda.api.entities.User user, TextChannel channel) {
         super(
                 user.getName(),
-                user.getId(),
-                permissions
+                user.getId()
         );
         this.channel = channel;
     }
@@ -24,5 +21,10 @@ public final class JDAUser extends User {
     @Override
     protected void sendMessage(String message) {
         channel.sendMessage(message).queue();
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return true;
     }
 }

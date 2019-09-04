@@ -6,8 +6,6 @@ import com.velocitypowered.api.proxy.Player;
 import me.piggypiglet.framework.user.User;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.util.ArrayList;
-
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
@@ -18,8 +16,7 @@ public final class VelocityUser extends User {
     public VelocityUser(CommandSource source) {
         super(
                 source instanceof ConsoleCommandSource ? "Console" : ((Player) source).getUsername(),
-                source instanceof ConsoleCommandSource ? "Console" : ((Player) source).getUniqueId().toString(),
-                new ArrayList<>()
+                source instanceof ConsoleCommandSource ? "Console" : ((Player) source).getUniqueId().toString()
         );
 
         this.source = source;

@@ -5,8 +5,6 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.ArrayList;
-
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
@@ -17,8 +15,7 @@ public final class BungeeUser extends User {
     public BungeeUser(CommandSender sender) {
         super(
                 sender.getName(),
-                sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getUniqueId().toString() : "Console",
-                new ArrayList<>(sender.getPermissions())
+                sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getUniqueId().toString() : "Console"
         );
 
         this.sender = sender;
@@ -27,5 +24,10 @@ public final class BungeeUser extends User {
     @Override
     protected void sendMessage(String message) {
         sender.sendMessage(TextComponent.fromLegacyText(message));
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return sender.hasPermission(permission);
     }
 }

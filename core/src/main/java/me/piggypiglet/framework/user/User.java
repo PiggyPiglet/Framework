@@ -1,8 +1,5 @@
 package me.piggypiglet.framework.user;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
@@ -10,18 +7,15 @@ import java.util.stream.Collectors;
 public abstract class User {
     private final String name;
     private final String id;
-    private final List<String> permissions;
 
     /**
      * Provide basic info to the superclass
      * @param name Name of the user
      * @param id ID of the user
-     * @param permissions Permissions the user has
      */
-    protected User(String name, String id, List<String> permissions) {
+    protected User(String name, String id) {
         this.name = name;
         this.id = id;
-        this.permissions = permissions.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
     /**
@@ -45,9 +39,7 @@ public abstract class User {
      * @param permission String
      * @return Boolean
      */
-    public boolean hasPermission(String permission) {
-        return permissions.contains(permission.toLowerCase());
-    }
+    public abstract boolean hasPermission(String permission);
 
     /**
      * Implementation of sending the user a message

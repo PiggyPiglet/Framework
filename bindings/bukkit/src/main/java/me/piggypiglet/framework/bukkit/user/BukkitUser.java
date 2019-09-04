@@ -5,9 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-
-import java.util.stream.Collectors;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -19,8 +16,7 @@ public final class BukkitUser extends User {
     public BukkitUser(CommandSender sender) {
         super(
                 sender.getName(),
-                sender instanceof Player ? ((Player) sender).getUniqueId().toString() : "console",
-                sender.getEffectivePermissions().stream().map(PermissionAttachmentInfo::getPermission).collect(Collectors.toList())
+                sender instanceof Player ? ((Player) sender).getUniqueId().toString() : "console"
         );
 
         this.sender = sender;
@@ -29,6 +25,11 @@ public final class BukkitUser extends User {
     @Override
     protected void sendMessage(String message) {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return sender.hasPermission(permission);
     }
 
     public boolean isPlayer() {
