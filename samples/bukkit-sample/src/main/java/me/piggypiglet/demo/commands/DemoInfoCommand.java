@@ -27,6 +27,7 @@ public final class DemoInfoCommand extends Command {
         };
 
         user.sendMessage(String.join("\n", message), config.getString("broadcast.message"), config.getString("broadcast.interval"));
+
         return true;
     }
 }

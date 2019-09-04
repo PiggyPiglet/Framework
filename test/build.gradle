@@ -1,17 +1,25 @@
 version '1.0.0'
 
+repositories {
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
 dependencies {
-    compile project(":core")
-    compile project(":addons:console")
-    compile project(":addons:logback")
-    compile project(":addons:jars")
+    compile project(":bindings:bukkit")
+    compileOnly 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
 }
 
 shadowJar {
-    relocate 'me.piggypiglet.framework', 'me.piggypiglet.test.framework'
-    manifest {
-        attributes(
-                'Main-Class': 'me.piggypiglet.test.Test'
-        )
-    }
+    relocate 'me.piggypiglet.framework', 'at.helpch.bukkitforcedhosts.framework'
+    destinationDirectory = file("server/plugins/")
+//    manifest {
+//        attributes(
+//                'Main-Class': 'me.piggypiglet.test.Test'
+//        )
+//    }
 }
