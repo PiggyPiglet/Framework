@@ -10,16 +10,19 @@ repositories {
 }
 
 dependencies {
-    compile project(":bindings:bukkit")
-    compileOnly 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
+    compile project(":core")
+    compile project(":addons:console")
+    compile project(":addons:logback")
+    compile project(":addons:jars")
+//    compileOnly 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
 }
 
 shadowJar {
-    relocate 'me.piggypiglet.framework', 'at.helpch.bukkitforcedhosts.framework'
-    destinationDirectory = file("server/plugins/")
-//    manifest {
-//        attributes(
-//                'Main-Class': 'me.piggypiglet.test.Test'
-//        )
-//    }
+    relocate 'me.piggypiglet.framework', 'me.piggypiglet.test.framework'
+//    destinationDirectory = file("server/plugins/")
+    manifest {
+        attributes(
+                'Main-Class': 'me.piggypiglet.test.TestApp'
+        )
+    }
 }

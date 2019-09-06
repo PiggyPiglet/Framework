@@ -1,9 +1,9 @@
 package me.piggypiglet.framework.sponge.task;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
-import me.piggypiglet.framework.utils.annotations.Main;
 import sh.okx.timeapi.TimeAPI;
 
 // ------------------------------
@@ -11,11 +11,11 @@ import sh.okx.timeapi.TimeAPI;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class SpongeTaskManager extends Task {
-    @Inject @Main private Object main;
+    @Inject private MainBinding main;
 
     @Override
     protected void async(GRunnable task) {
-        builder().async().execute(task).submit(main);
+        builder().async().execute(task).submit(main.getInstance());
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class SpongeTaskManager extends Task {
             builder.intervalTicks(time.getTicks());
         }
 
-        builder.submit(main);
+        builder.submit(main.getInstance());
     }
 
     private static org.spongepowered.api.scheduler.Task.Builder builder() {

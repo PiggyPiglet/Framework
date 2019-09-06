@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.jars.loading.update;
+package me.piggypiglet.framework.jars.loading.web.update;
 
 import com.google.common.collect.ImmutableList;
 

@@ -40,6 +40,12 @@ public final class InitialModule extends AbstractModule {
 
     @Provides
     @Singleton
+    public MainBinding providesMainBinding() {
+        return config.getMain();
+    }
+
+    @Provides
+    @Singleton
     public FrameworkBootstrap providesFrameworkBootstrap() {
         return main;
     }
