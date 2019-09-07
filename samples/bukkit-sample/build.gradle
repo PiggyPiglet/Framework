@@ -12,6 +12,5 @@ dependencies {
 }
 
 shadowJar {
-    relocate 'me.piggypiglet.framework', 'me.piggypiglet.demo.framework'
     destinationDirectory = file('server/plugins/')
 }

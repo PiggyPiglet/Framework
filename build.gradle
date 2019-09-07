@@ -58,7 +58,6 @@ def exportedProjects = [
         ":addons:console",
         ":addons:mysql",
         ":addons:logback",
-        ":addons:hotswap",
         ":addons:http",
         ":addons:jars",
         ":bindings:bukkit",

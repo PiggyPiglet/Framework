@@ -18,7 +18,6 @@ dependencies {
 }
 
 shadowJar {
-    relocate 'me.piggypiglet.framework', 'me.piggypiglet.test.framework'
 //    destinationDirectory = file("server/plugins/")
     manifest {
         attributes(

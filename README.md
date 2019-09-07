@@ -10,7 +10,6 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 - Plenty of addons
   - MySQL API
   - Logback Implementation
-  - HotswapAgent support (WIP)
   - Serve HTTP JSON
   - Console interaction
   - Runtime Jar Loader (WIP)
@@ -54,6 +53,6 @@ More info can be found on their respective pages.
 ![Jenkins](https://img.shields.io/jenkins/build/https/ci.piggypiglet.me/Framework)
 <br/>Versions:
 
-| Core  | Console | Hotswap | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity |
-|-------|---------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|
-| 1.0.0 | 1.0.0   | 1.0.0   | 1.0.0 | 1.0.0 | 1.0.0   | 1.0.0 | 1.0.0  | 1.0.0      | 1.0.0 | 1.0.0  | 1.0.0    |
+| Core  | Console | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity |
+|-------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|
+| 1.0.0 | 1.0.0   | 1.0.0 | 1.0.0 | 1.0.0   | 1.0.0 | 1.0.0  | 1.0.0      | 1.0.0 | 1.0.0  | 1.0.0    |
