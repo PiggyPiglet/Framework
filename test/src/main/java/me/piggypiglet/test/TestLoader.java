@@ -1,7 +1,7 @@
 package me.piggypiglet.test;
 
 import me.piggypiglet.framework.jars.loading.framework.Jar;
-import me.piggypiglet.framework.jars.loading.framework.Loader;
+import me.piggypiglet.framework.jars.loading.framework.ScannableLoader;
 import me.piggypiglet.test.framework.jars.framework.Module;
 
 import java.io.File;
@@ -11,9 +11,9 @@ import java.util.Arrays;
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-public final class TestLoader extends Loader<Module> {
+public final class TestLoader extends ScannableLoader<Module> {
     public TestLoader() {
-        super("modules/", r -> Arrays.asList(r.getInterfaces()).contains(Module.class));
+        super("modules/", c -> Arrays.asList(c.getInterfaces()).contains(Module.class));
     }
 
     @Override
@@ -39,7 +39,7 @@ public final class TestLoader extends Loader<Module> {
     }
 
     @Override
-    protected void init(Module module) {
-        module.start();
+    protected void init(Module instance) {
+        instance.start();
     }
 }

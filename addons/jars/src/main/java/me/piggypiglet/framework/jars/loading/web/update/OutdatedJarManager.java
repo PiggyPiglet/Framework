@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.jars.loading.web.update;
 
+import me.piggypiglet.framework.jars.loading.web.DownloadableJar;
 import me.piggypiglet.framework.logging.LoggerFactory;
 
 import java.io.File;
@@ -14,7 +15,7 @@ public final class OutdatedJarManager {
      * @param dir Directory to look in
      * @param files Current files
      */
-    public static void deleteOutdated(String dir, String... files) {
+    public static void deleteOutdated(String dir, DownloadableJar... files) {
         try {
             OutdatedJarDeleter deleter = new OutdatedJarDeleter(
                     new OutdatedJarScanner(new File(dir), files).scan().getNeedsUpdating()

@@ -13,11 +13,11 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 @Addon(
         startup = {@Startup(
                 value = ClassLoaderRegisterable.class,
-                priority = BootPriority.BEFORE_IMPL
+                priority = BootPriority.AFTER_IMPL
         ),
         @Startup(
                 value = LoaderFinderRegisterable.class,
-                priority = BootPriority.BEFORE_IMPL
+                priority = BootPriority.AFTER_IMPL
         )}
 )
 public final class JarsAddon {

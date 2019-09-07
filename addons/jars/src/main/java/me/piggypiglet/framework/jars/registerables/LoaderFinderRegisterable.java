@@ -16,7 +16,7 @@ public final class LoaderFinderRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        reflections.getSubTypesOf(Loader.class).stream().map(injector::getInstance).forEach(jarManager.getLoaders()::add);
-        jarManager.load(injector);
+        reflections.getSubTypesOf(Loader.class).stream().map(injector::getInstance).forEach(jarManager::add);
+        jarManager.load().scan(injector);
     }
 }

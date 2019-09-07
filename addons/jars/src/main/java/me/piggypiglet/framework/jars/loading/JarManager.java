@@ -5,10 +5,11 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.jars.loading.framework.Jar;
 import me.piggypiglet.framework.jars.loading.framework.Loader;
+import me.piggypiglet.framework.jars.loading.framework.ScannableLoader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 // ------------------------------
@@ -19,26 +20,38 @@ import java.util.concurrent.CompletableFuture;
 public final class JarManager {
     @Inject private JarLoader jarLoader;
 
-    private final List<Loader> loaders = new ArrayList<>();
+    private final Map<Loader, Jar[]> loaders = new HashMap<>();
 
-    public void load(Injector injector) {
-        loaders.forEach(l -> {
-            try {
-                for (Jar jar : l.process(new File(l.getDir()).listFiles((dir, name) -> name.endsWith(".jar")))) {
-                    jarLoader.load(jar);
-                    CompletableFuture<Class<?>> future = new JarScanner(l.getMatch()).scan(new File(jar.getPath()).toURI());
+    public JarManager load() {
+        for (Loader l : loaders.keySet()) {
+            Jar[] jars = l.process(new File(l.getDir()).listFiles((dir, name) -> name.endsWith(".jar")));
+            loaders.put(l, jars);
 
-                    if (future != null) {
-                        future.whenComplete((c, t) -> l.run(injector.getInstance(c)));
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            for (Jar jar : jars) {
+                jarLoader.load(jar);
             }
-        });
+        }
+
+        return this;
     }
 
-    public List<Loader> getLoaders() {
-        return loaders;
+    public void scan(Injector injector) {
+        for (Map.Entry<Loader, Jar[]> entry : loaders.entrySet()) {
+            if (entry.getKey() instanceof ScannableLoader) {
+                ScannableLoader<?> loader = (ScannableLoader<?>) entry.getKey();
+
+                for (Jar jar : entry.getValue()) {
+                    CompletableFuture<Class<?>> future = new JarScanner(loader.getMatch()).scan(new File(jar.getPath()).toURI());
+
+                    if (future != null) {
+                        future.whenComplete((c, t) -> loader.run(injector.getInstance(c)));
+                    }
+                }
+            }
+        }
+    }
+
+    public void add(Loader loader) {
+        loaders.put(loader, null);
     }
 }
