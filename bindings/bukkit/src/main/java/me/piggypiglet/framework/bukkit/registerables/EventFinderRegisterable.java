@@ -25,6 +25,7 @@
 package me.piggypiglet.framework.bukkit.registerables;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import org.bukkit.event.Listener;
@@ -32,10 +33,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class EventFinderRegisterable extends StartupRegisterable {
     @Inject private Reflections reflections;
-    @Inject private JavaPlugin main;
+    @Inject private MainBinding main;
 
     @Override
     protected void execute() {
+        final JavaPlugin main = (JavaPlugin) this.main.getInstance();
         reflections.getSubTypesOf(Listener.class).stream().map(injector::getInstance).forEach(l -> main.getServer().getPluginManager().registerEvents(l, main));
     }
 }

@@ -26,6 +26,7 @@ package me.piggypiglet.framework.bukkit.commands;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -41,7 +42,7 @@ import java.util.Arrays;
 
 public final class BaseCommandHandler {
     @Inject private Framework framework;
-    @Inject private JavaPlugin main;
+    @Inject private MainBinding main;
     @Inject private Logger logger;
 
     private CommandMap commandMap;
@@ -73,7 +74,7 @@ public final class BaseCommandHandler {
         PluginCommand command = getCommand(aliases[0]);
 
         command.setAliases(Arrays.asList(aliases));
-        commandMap.register(main.getDescription().getName(), command);
+        commandMap.register(((JavaPlugin) main.getInstance()).getDescription().getName(), command);
     }
 
     private PluginCommand getCommand(String name) {
@@ -83,7 +84,7 @@ public final class BaseCommandHandler {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
             c.setAccessible(true);
 
-            command = c.newInstance(name, main);
+            command = c.newInstance(name, (JavaPlugin) main.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }

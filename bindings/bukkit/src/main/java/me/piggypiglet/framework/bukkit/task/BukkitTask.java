@@ -25,6 +25,7 @@
 package me.piggypiglet.framework.bukkit.task;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
 import org.bukkit.Bukkit;
@@ -32,7 +33,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sh.okx.timeapi.TimeAPI;
 
 public final class BukkitTask extends Task {
-    @Inject private JavaPlugin main;
+    private final JavaPlugin main;
+
+    @Inject
+    public BukkitTask(MainBinding main) {
+        this.main = (JavaPlugin) main.getInstance();
+    }
 
     @Override
     protected void async(GRunnable task) {

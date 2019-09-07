@@ -25,15 +25,16 @@
 package me.piggypiglet.framework.bungeecord.logging;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BungeeLogger extends Logger<java.util.logging.Logger> {
-    @Inject private Plugin main;
+    @Inject private MainBinding main;
 
     @Override
     protected java.util.logging.Logger init(String name) {
-        return main.getLogger();
+        return ((Plugin) main.getInstance()).getLogger();
     }
 
     @Override

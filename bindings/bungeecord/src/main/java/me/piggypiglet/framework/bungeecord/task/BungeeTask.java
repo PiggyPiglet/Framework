@@ -25,6 +25,7 @@
 package me.piggypiglet.framework.bungeecord.task;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -34,7 +35,12 @@ import sh.okx.timeapi.TimeAPI;
 import java.util.concurrent.TimeUnit;
 
 public final class BungeeTask extends Task {
-    @Inject private Plugin plugin;
+    private final Plugin plugin;
+
+    @Inject
+    public BungeeTask(MainBinding binding) {
+        this.plugin = (Plugin) binding.getInstance();
+    }
 
     @Override
     protected void async(GRunnable task) {
