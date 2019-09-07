@@ -2,7 +2,6 @@ package me.piggypiglet.test.framework;
 
 import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.user.User;
-import me.piggypiglet.test.Test;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -16,7 +15,7 @@ public final class TestCommand extends Command {
     @Override
     protected boolean execute(User user, String[] args) {
         try {
-            new Test().start();
+            /*new Test().start();*/
             return true;
         } catch (Exception e) {
             e.printStackTrace();
