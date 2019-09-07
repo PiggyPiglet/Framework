@@ -37,6 +37,7 @@
 			<groupId>me.piggypiglet</groupId>
 			<artifactId>framework-core</artifactId>
 			<version>LATEST</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
