@@ -33,15 +33,13 @@ import org.hotswap.agent.annotation.Plugin;
 @Plugin(
         name = "RPF-Plugin",
         description = "RPF HotswapAgent plugin",
-        testedVersions = "Tested on RPF"
+        testedVersions = "Tested on RPF 1.0.0"
 )
 public final class HotswapPlugin {
     @Inject private static FrameworkBootstrap main;
     
     @OnClassLoadEvent(classNameRegexp = ".*", events = LoadEvent.REDEFINE)
     public static void onAnyReload() {
-        main.getRegisterables().stream().filter(RedefinableRegisterables::redefinable).forEach(r -> {
-            r.run(main.getInjector());
-        });
+        main.getRegisterables().stream().filter(RedefinableRegisterables::redefinable).forEach(r -> r.run(main.getInjector()));
     }
 }

@@ -29,6 +29,7 @@ import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,10 +37,10 @@ import java.util.stream.Collectors;
  * Reflections wrapper to filter out classes annotated with @Disabled
  */
 public final class Reflections {
-    private final org.reflections.Reflections reflections;
+    private final Set<org.reflections.Reflections> reflections;
 
     public Reflections(org.reflections.Reflections reflections) {
-        this.reflections = reflections;
+        this.reflections = new HashSet<>(Arrays.asList(reflections, new org.reflections.Reflections("me.piggypiglet.framework")));
     }
 
     /**
@@ -49,7 +50,7 @@ public final class Reflections {
      * @return Set of found classes
      */
     public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
-        return reflections.getSubTypesOf(type).stream().filter(this::isDisabled).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getSubTypesOf(type).stream().filter(this::isDisabled)).collect(Collectors.toSet());
     }
 
     /**
@@ -58,7 +59,7 @@ public final class Reflections {
      * @return Set of found classes
      */
     public Set<Class<?>> getTypesAnnotatedWith(Class<? extends Annotation> annotation) {
-        return reflections.getTypesAnnotatedWith(annotation).stream().filter(this::isDisabled).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getTypesAnnotatedWith(annotation).stream().filter(this::isDisabled)).collect(Collectors.toSet());
     }
 
     /**
@@ -67,7 +68,7 @@ public final class Reflections {
      * @return Set of found classes
      */
     public Set<Class<?>> getClassesWithAnnotatedMethods(Class<? extends Annotation> annotation) {
-        return reflections.getMethodsAnnotatedWith(annotation).stream().map(Method::getDeclaringClass).filter(this::isDisabled).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getMethodsAnnotatedWith(annotation).stream().map(Method::getDeclaringClass).filter(this::isDisabled)).collect(Collectors.toSet());
     }
 
     private boolean isDisabled(Class clazz) {
