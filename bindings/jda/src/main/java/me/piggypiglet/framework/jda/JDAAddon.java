@@ -27,6 +27,7 @@ package me.piggypiglet.framework.jda;
 import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.jda.shutdown.JDAShutdown;
+import me.piggypiglet.framework.jda.startup.GuildBindingRegisterable;
 import me.piggypiglet.framework.jda.startup.JDARegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
@@ -38,6 +39,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                         value = JDARegisterable.class,
                         priority = BootPriority.AFTER_IMPL
                 ),
+                @Startup(
+                        value = GuildBindingRegisterable.class,
+                        priority = BootPriority.AFTER_IMPL
+                )
         },
         files = {@File(
                 config = true,

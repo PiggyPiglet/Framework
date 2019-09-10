@@ -1,6 +1,7 @@
 version '1.0.0'
 
 repositories {
+    jcenter()
     maven {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
@@ -10,10 +11,9 @@ repositories {
 }
 
 dependencies {
-    compile project(":core")
+    compile project(":bindings:jda")
     compile project(":addons:console")
     compile project(":addons:logback")
-    compile project(":addons:jars")
 //    compileOnly 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
 }
 

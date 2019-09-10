@@ -25,8 +25,11 @@
 package me.piggypiglet.framework.reflection;
 
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import org.reflections.scanners.Scanner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,8 +42,11 @@ import java.util.stream.Collectors;
 public final class Reflections {
     private final Set<org.reflections.Reflections> reflections;
 
-    public Reflections(org.reflections.Reflections reflections) {
-        this.reflections = new HashSet<>(Arrays.asList(reflections, new org.reflections.Reflections("me.piggypiglet.framework")));
+    public Reflections(String pckg, Scanner... scanners) {
+        this.reflections = new HashSet<>(Arrays.asList(
+                new org.reflections.Reflections(pckg, scanners),
+                new org.reflections.Reflections("me.piggypiglet.framework", scanners)
+        ));
     }
 
     /**
@@ -50,7 +56,7 @@ public final class Reflections {
      * @return Set of found classes
      */
     public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
-        return reflections.stream().flatMap(r -> r.getSubTypesOf(type).stream().filter(this::isDisabled)).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getSubTypesOf(type).stream()).filter(this::isDisabled).collect(Collectors.toSet());
     }
 
     /**
@@ -59,7 +65,7 @@ public final class Reflections {
      * @return Set of found classes
      */
     public Set<Class<?>> getTypesAnnotatedWith(Class<? extends Annotation> annotation) {
-        return reflections.stream().flatMap(r -> r.getTypesAnnotatedWith(annotation).stream().filter(this::isDisabled)).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getTypesAnnotatedWith(annotation).stream()).filter(this::isDisabled).collect(Collectors.toSet());
     }
 
     /**
@@ -68,7 +74,25 @@ public final class Reflections {
      * @return Set of found classes
      */
     public Set<Class<?>> getClassesWithAnnotatedMethods(Class<? extends Annotation> annotation) {
-        return reflections.stream().flatMap(r -> r.getMethodsAnnotatedWith(annotation).stream().map(Method::getDeclaringClass).filter(this::isDisabled)).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getMethodsAnnotatedWith(annotation).stream().map(Method::getDeclaringClass)).filter(this::isDisabled).collect(Collectors.toSet());
+    }
+
+    /**
+     * Get constructors that are annotated with a specific annotation
+     * @param annotation Annotation to search for
+     * @return Set of constructors
+     */
+    public Set<Constructor> getParametersAnnotatedWith(Class<? extends Annotation> annotation) {
+        return reflections.stream().flatMap(r -> r.getConstructorsWithAnyParamAnnotated(annotation).stream()).filter(p -> isDisabled(p.getDeclaringClass())).collect(Collectors.toSet());
+    }
+
+    /**
+     * Get fields that are annotated with a specific annotation
+     * @param annotation Annotation to search for
+     * @return Set of found fields
+     */
+    public Set<Field> getFieldsAnnotatedWith(Class<? extends Annotation> annotation) {
+        return reflections.stream().flatMap(r -> r.getFieldsAnnotatedWith(annotation).stream()).filter(c -> isDisabled(c.getDeclaringClass())).collect(Collectors.toSet());
     }
 
     private boolean isDisabled(Class clazz) {
