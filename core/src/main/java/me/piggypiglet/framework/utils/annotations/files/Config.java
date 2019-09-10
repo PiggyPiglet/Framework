@@ -35,6 +35,6 @@ import java.lang.annotation.Target;
  * Utility annotation you can use for your config file
  */
 @BindingAnnotation
-@Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER}) @Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
 }

@@ -28,23 +28,48 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public final class BuilderRegisterable extends StartupRegisterable {
+import java.util.EventListener;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public final class JDARegisterable extends StartupRegisterable {
     @Inject @Bot private FileConfiguration config;
+    @Inject private Reflections reflections;
 
     @Override
     protected void execute() {
         LoggerFactory.getLogger("JDA").info("Initializing bot and bindings.");
 
-        addBinding(JDABuilder.class, new JDABuilder(AccountType.BOT)
+        JDABuilder builder = new JDABuilder(AccountType.BOT)
                 .setToken(config.getString("token"))
                 .setActivity(Activity.of(
                         Activity.ActivityType.valueOf(config.getString("activity.type", "default").toUpperCase()), config.getString("activity.activity")
-                ))
+                )
         );
+
+        Stream.of(
+                EventListener.class,
+                ListenerAdapter.class
+        ).map(this::getListeners).forEach(l -> l.forEach(builder::addEventListeners));
+
+        try {
+            addBinding(JDA.class, builder.build());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    private <T> List<T> getListeners(Class<T> clazz) {
+        return reflections.getSubTypesOf(clazz).stream().map(injector::getInstance).collect(Collectors.toList());
     }
 }

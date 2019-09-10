@@ -35,6 +35,6 @@ import java.lang.annotation.Target;
  * Default annotation for the application's main class, when set using FrameworkBuilder#main(Object)
  */
 @BindingAnnotation
-@Target(ElementType.FIELD) @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER}) @Retention(RetentionPolicy.RUNTIME)
 public @interface Main {
 }
