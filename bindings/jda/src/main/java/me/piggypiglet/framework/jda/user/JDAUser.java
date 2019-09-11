@@ -28,6 +28,7 @@ import me.piggypiglet.framework.user.User;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public final class JDAUser extends User {
+    private final net.dv8tion.jda.api.entities.User user;
     private final TextChannel channel;
 
     public JDAUser(net.dv8tion.jda.api.entities.User user, TextChannel channel) {
@@ -35,6 +36,7 @@ public final class JDAUser extends User {
                 user.getName(),
                 user.getId()
         );
+        this.user = user;
         this.channel = channel;
     }
 
@@ -46,5 +48,13 @@ public final class JDAUser extends User {
     @Override
     public boolean hasPermission(String permission) {
         return true;
+    }
+
+    public net.dv8tion.jda.api.entities.User getUser() {
+        return user;
+    }
+
+    public TextChannel getChannel() {
+        return channel;
     }
 }
