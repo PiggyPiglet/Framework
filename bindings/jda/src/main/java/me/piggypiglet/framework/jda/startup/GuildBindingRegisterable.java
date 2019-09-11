@@ -1,10 +1,16 @@
 package me.piggypiglet.framework.jda.startup;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.jda.annotation.ID;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.utils.annotations.id.ID;
+import me.piggypiglet.framework.utils.annotations.id.IDInfo;
+import me.piggypiglet.framework.utils.annotations.id.Ids;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class GuildBindingRegisterable extends StartupRegisterable {
     @Inject private Reflections reflections;
@@ -12,31 +18,18 @@ public final class GuildBindingRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
+        final Set<IDInfo> info = reflections.getParametersInConstructorsAnnotatedWith(ID.class).stream()
+                .map(p -> new IDInfo(p.getType(), p.getAnnotation(ID.class)))
+                .collect(Collectors.toSet());
 
+        reflections.getFieldsAnnotatedWith(ID.class).forEach(f -> info.add(new IDInfo(f.getType(), f.getAnnotation(ID.class))));
 
-//        info.forEach(i -> {
-//            switch (i.type.getSimpleName().toLowerCase()) {
-//                case "guild":
-//                    addAnnotatedBinding(Guild.class, Ids.id(i.id.value()), jda.getGuildById(i.id.value()));
-//                    break;
-//            }
-//        });
-    }
-
-    private static class IDInfo {
-        private final Class<?> type;
-        private final ID id;
-
-        private IDInfo(Class<?> type, ID id) {
-            this.type = type;
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            System.out.println(type);
-            System.out.println(id);
-            return String.format("IDInfo(type=%s,id=%s)", type.getSimpleName(), id.value());
-        }
+        info.forEach(i -> {
+            switch (i.getType().getSimpleName().toLowerCase()) {
+                case "guild":
+                    addAnnotatedBinding(Guild.class, Ids.id(i.getId().value()), jda.getGuildById(i.getId().value()));
+                    break;
+            }
+        });
     }
 }

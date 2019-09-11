@@ -2,8 +2,8 @@ package me.piggypiglet.test;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.Command;
-import me.piggypiglet.framework.jda.annotation.ID;
 import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.utils.annotations.id.ID;
 import net.dv8tion.jda.api.entities.Guild;
 
 public final class TestCommand extends Command {

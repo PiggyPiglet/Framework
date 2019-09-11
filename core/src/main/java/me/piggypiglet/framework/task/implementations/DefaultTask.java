@@ -34,12 +34,17 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public final class DefaultTask extends Task {
-    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(15);
-    private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(10);
+    private final ExecutorService executor;
+    private final ScheduledExecutorService scheduler;
+
+    public DefaultTask(int threads) {
+        this.executor = Executors.newFixedThreadPool(threads);
+        this.scheduler = Executors.newScheduledThreadPool(threads);
+    }
 
     @Override
     protected void async(GRunnable task) {
-        EXECUTOR.submit(task);
+        executor.submit(task);
     }
 
     @Override
@@ -47,15 +52,15 @@ public final class DefaultTask extends Task {
         long millis = time.getMilliseconds();
 
         if (repeat) {
-            SCHEDULER.scheduleAtFixedRate(task, millis, millis, TimeUnit.MILLISECONDS);
+            scheduler.scheduleAtFixedRate(task, millis, millis, TimeUnit.MILLISECONDS);
         } else {
-            SCHEDULER.schedule(task, millis, TimeUnit.MILLISECONDS);
+            scheduler.schedule(task, millis, TimeUnit.MILLISECONDS);
         }
     }
 
     @Override
     public void shutdown() {
-        EXECUTOR.shutdownNow();
-        SCHEDULER.shutdownNow();
+        executor.shutdownNow();
+        scheduler.shutdownNow();
     }
 }

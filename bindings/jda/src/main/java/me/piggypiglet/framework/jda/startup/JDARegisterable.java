@@ -30,6 +30,7 @@ import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.task.Task;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -44,6 +45,7 @@ import java.util.stream.Stream;
 public final class JDARegisterable extends StartupRegisterable {
     @Inject @Bot private FileConfiguration config;
     @Inject private Reflections reflections;
+    @Inject private Task task;
 
     @Override
     protected void execute() {
@@ -61,11 +63,31 @@ public final class JDARegisterable extends StartupRegisterable {
                 ListenerAdapter.class
         ).map(this::getListeners).forEach(l -> l.forEach(builder::addEventListeners));
 
+        JDA jda;
+
         try {
-            addBinding(JDA.class, builder.build());
+            jda = builder.build();
+        addBinding(JDA.class, jda);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
+            throw new RuntimeException(e);
+        }
+
+        task.async(r -> {
+            if (jda.getStatus() != JDA.Status.CONNECTED) {
+                LoggerFactory.getLogger("JDA").error("JDA has not connected in over 20 seconds, shutting down.");
+                System.exit(0);
+            }
+        }, "20 seconds", false);
+
+        while (true) {
+            JDA.Status status = jda.getStatus();
+
+            //noinspection SynchronizationOnLocalVariableOrMethodParameter
+            synchronized (status) {
+                if (status == JDA.Status.CONNECTED) {
+                    break;
+                }
+            }
         }
     }
 

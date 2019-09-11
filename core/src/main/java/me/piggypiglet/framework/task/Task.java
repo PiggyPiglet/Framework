@@ -24,13 +24,10 @@
 
 package me.piggypiglet.framework.task;
 
-import com.google.inject.ImplementedBy;
-import me.piggypiglet.framework.task.implementations.DefaultTask;
 import sh.okx.timeapi.TimeAPI;
 
 import java.util.function.Consumer;
 
-@ImplementedBy(DefaultTask.class)
 public abstract class Task {
     /**
      * Implementation of running a runnable async

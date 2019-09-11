@@ -28,9 +28,9 @@ import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import org.reflections.scanners.Scanner;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,12 +78,18 @@ public final class Reflections {
     }
 
     /**
-     * Get constructors that are annotated with a specific annotation
+     * Get parameters in constructors that are annotated with a specific annotation
      * @param annotation Annotation to search for
-     * @return Set of constructors
+     * @return Set of parameters
      */
-    public Set<Constructor> getParametersAnnotatedWith(Class<? extends Annotation> annotation) {
-        return reflections.stream().flatMap(r -> r.getConstructorsWithAnyParamAnnotated(annotation).stream()).filter(p -> isDisabled(p.getDeclaringClass())).collect(Collectors.toSet());
+    public Set<Parameter> getParametersInConstructorsAnnotatedWith(Class<? extends Annotation> annotation) {
+        return reflections.stream().flatMap(r -> r.getConstructorsWithAnyParamAnnotated(annotation).stream())
+                .filter(p -> isDisabled(p.getDeclaringClass()))
+                .flatMap(c -> Arrays.stream(c.getParameters())
+                        .filter(p -> Arrays.stream(p.getAnnotations())
+                                .map(Annotation::annotationType)
+                                .anyMatch(pt -> pt == annotation)))
+                .collect(Collectors.toSet());
     }
 
     /**

@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.jda.annotation;
+package me.piggypiglet.framework.utils.annotations.id;
 
 import com.google.inject.BindingAnnotation;
 

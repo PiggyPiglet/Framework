@@ -29,10 +29,7 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.reflection.Reflections;
-import org.reflections.scanners.FieldAnnotationsScanner;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.scanners.*;
 
 public final class InitialModule extends AbstractModule {
     private final FrameworkBootstrap main;
@@ -82,6 +79,7 @@ public final class InitialModule extends AbstractModule {
     public Reflections providesReflections() {
         return new Reflections(config.getPckg(),
                 new MethodAnnotationsScanner(),
+                new MethodParameterScanner(),
                 new TypeAnnotationsScanner(),
                 new SubTypesScanner(),
                 new FieldAnnotationsScanner());

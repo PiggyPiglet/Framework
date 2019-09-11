@@ -47,8 +47,9 @@ public final class Framework {
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
     private final String commandPrefix;
     private final List<FileData> files;
+    private final int threads;
 
-    private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files) {
+    private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files, int threads) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -56,6 +57,7 @@ public final class Framework {
         this.shutdownRegisterables = shutdownRegisterables;
         this.commandPrefix = commandPrefix;
         this.files = files;
+        this.threads = threads;
     }
 
     /**
@@ -129,6 +131,14 @@ public final class Framework {
         return files;
     }
 
+    /**
+     * Get the amount of threads to be stored in the default task manager's thread pool
+     * @return Amount of threads available in the thread pool
+     */
+    public int getThreads() {
+        return threads;
+    }
+
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
@@ -137,6 +147,7 @@ public final class Framework {
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
         private String commandPrefix = "d-commandPrefix";
         private final List<FileData> files = new ArrayList<>();
+        private int threads = 15;
 
         private FrameworkBuilder() {}
 
@@ -227,6 +238,16 @@ public final class Framework {
         }
 
         /**
+         * Set the amount of threads that will be available via the default task manager's thread pol
+         * @param threads Amount of threads
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder threads(int threads) {
+            this.threads = threads;
+            return this;
+        }
+
+        /**
          * Compile all the user-set options into an instance of Framework
          * NOTE: Will crash if any of the following aren't set:
          * - main
@@ -245,7 +266,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files);
+            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads);
         }
     }
 }
