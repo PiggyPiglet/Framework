@@ -26,13 +26,13 @@ package me.piggypiglet.framework.bungeecord.commands;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.access.AccessManager;
 import me.piggypiglet.framework.bungeecord.user.BungeeUser;
+import me.piggypiglet.framework.commands.CommandHandlers;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 public final class BungeeCommandExecutor {
-    @Inject private AccessManager accessManager;
+    @Inject private CommandHandlers commandHandlers;
     @Inject private Framework framework;
 
     public Command getExecutor() {
@@ -46,7 +46,7 @@ public final class BungeeCommandExecutor {
 
         @Override
         public void execute(CommandSender sender, String[] args) {
-            accessManager.processCommand("bungee", new BungeeUser(sender), framework.getCommandPrefix() + " " + String.join(" ", args));
+            commandHandlers.process("bungee", new BungeeUser(sender), framework.getCommandPrefix() + " " + String.join(" ", args));
         }
     }
 }

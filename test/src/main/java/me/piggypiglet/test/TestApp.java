@@ -25,6 +25,9 @@
 package me.piggypiglet.test;
 
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.jda.JDAAddon;
+import me.piggypiglet.framework.utils.annotations.files.Config;
+import me.piggypiglet.framework.utils.map.KeyValueSet;
 
 public final class TestApp {
     private TestApp() {
@@ -32,6 +35,12 @@ public final class TestApp {
                 .pckg("me.piggypiglet.test")
                 .main(this)
                 .commandPrefix("!")
+                .file(true, "test", "/test.json", "./test.json", Config.class)
+                .config(JDAAddon.class, "test", KeyValueSet.builder()
+                        .key("token").value("token")
+                        .key("activity.type").value("activity.type")
+                        .key("activity.activity").value("activity.activity")
+                        .build().toMap())
                 .build()
                 .init();
     }

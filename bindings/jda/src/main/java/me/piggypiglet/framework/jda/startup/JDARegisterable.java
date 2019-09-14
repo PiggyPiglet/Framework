@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.jda.startup;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
-import me.piggypiglet.framework.jda.annotation.Bot;
+import me.piggypiglet.framework.addon.ConfigManager;
+import me.piggypiglet.framework.jda.JDAAddon;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
@@ -39,11 +39,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class JDARegisterable extends StartupRegisterable {
-    @Inject @Bot private FileConfiguration config;
+    @Inject private ConfigManager configManager;
     @Inject private Reflections reflections;
     @Inject private Task task;
 
@@ -51,10 +52,12 @@ public final class JDARegisterable extends StartupRegisterable {
     protected void execute() {
         LoggerFactory.getLogger("JDA").info("Initializing bot and bindings.");
 
+        final Map<String, Object> items = configManager.getConfigs().get(JDAAddon.class).getItems();
+
         JDABuilder builder = new JDABuilder(AccountType.BOT)
-                .setToken(config.getString("token"))
+                .setToken((String) items.get("token"))
                 .setActivity(Activity.of(
-                        Activity.ActivityType.valueOf(config.getString("activity.type", "default").toUpperCase()), config.getString("activity.activity")
+                        Activity.ActivityType.valueOf(((String) items.getOrDefault("activity.type", "default")).toUpperCase()), (String) items.get("activity.activity")
                 )
         );
 

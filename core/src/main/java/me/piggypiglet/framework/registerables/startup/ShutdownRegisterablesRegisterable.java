@@ -50,7 +50,7 @@ public final class ShutdownRegisterablesRegisterable extends StartupRegisterable
         shutdown.add(TaskShutdownRegisterable.class);
         shutdown.addAll(config.getShutdownRegisterables());
 
-        frameworkBootstrap.getAddons().stream()
+        frameworkBootstrap.getAddons().values().stream()
                 .map(Addon::shutdown)
                 .map(Arrays::stream)
                 .forEach(s -> s.forEach(shutdown::add));

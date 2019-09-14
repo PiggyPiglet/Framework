@@ -30,6 +30,7 @@ import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLShutdown;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLRegisterable;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLSavingRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
@@ -51,7 +52,11 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                 externalPath = "./schema.sql",
                 internalPath = "/schema.sql",
                 annotation = SQL.class
-        )}
+        )},
+        config = @Config(
+                name = "sql-config",
+                keys = {"user", "password", "db", "host", "save-interval", "tables"}
+        )
 )
 public final class MySQLAddon {
 }

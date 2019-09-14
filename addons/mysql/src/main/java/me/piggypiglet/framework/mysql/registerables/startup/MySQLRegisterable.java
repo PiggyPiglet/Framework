@@ -28,20 +28,24 @@ import co.aikar.idb.DB;
 import co.aikar.idb.DatabaseOptions;
 import co.aikar.idb.PooledDatabaseOptions;
 import com.google.inject.Inject;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.mysql.MySQLAddon;
 import me.piggypiglet.framework.mysql.annotations.SQL;
-import me.piggypiglet.framework.mysql.annotations.SQLConfig;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 
+import java.util.List;
+import java.util.Map;
+
 public final class MySQLRegisterable extends StartupRegisterable {
     @Inject private Task task;
-    @Inject @SQLConfig private FileConfiguration config;
+    @Inject private ConfigManager configManager;
     @Inject @SQL private FileWrapper sql;
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void execute() {
         LoggerFactory.getLogger("MySQL").info("Initializing MySQL module.");
@@ -49,14 +53,15 @@ public final class MySQLRegisterable extends StartupRegisterable {
         final String sql = this.sql.getFileContent();
 
         task.async(r -> {
-            final String[] tables = config.getStringList("tables").toArray(new String[]{});
+            final Map<String, Object> items = configManager.getConfigs().get(MySQLAddon.class).getItems();
+            final String[] tables = ((List<String>) items.get("tables")).toArray(new String[]{});
             final String[] schemas = sql.split("-");
 
             final DatabaseOptions options = DatabaseOptions.builder().mysql(
-                    config.getString("user"),
-                    config.getString("password"),
-                    config.getString("db"),
-                    config.getString("host")
+                    (String) items.get("user"),
+                    (String) items.get("password"),
+                    (String) items.get("db"),
+                    (String) items.get("host")
             ).build();
 
             DB.setGlobalDatabase(PooledDatabaseOptions.builder().options(options).createHikariDatabase());

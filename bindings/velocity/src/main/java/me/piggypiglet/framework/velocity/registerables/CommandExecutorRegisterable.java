@@ -27,19 +27,19 @@ package me.piggypiglet.framework.velocity.registerables;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.access.AccessManager;
+import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.velocity.commands.VelocityCommandExecutor;
 
 public final class CommandExecutorRegisterable extends StartupRegisterable {
-    @Inject private AccessManager accessManager;
+    @Inject private CommandHandlers commandHandlers;
     @Inject private CommandManager commandManager;
     @Inject private VelocityCommandExecutor velocityCommandExecutor;
     @Inject private Framework framework;
 
     @Override
     protected void execute() {
-        accessManager.newHandler("velocity", injector);
+        commandHandlers.newHandler("velocity", injector);
         commandManager.register(velocityCommandExecutor, framework.getCommandPrefix());
     }
 }

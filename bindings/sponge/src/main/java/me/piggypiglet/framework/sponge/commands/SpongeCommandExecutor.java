@@ -26,7 +26,7 @@ package me.piggypiglet.framework.sponge.commands;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.access.AccessManager;
+import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.sponge.user.SpongeUser;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -42,12 +42,12 @@ import java.util.List;
 import java.util.Optional;
 
 public final class SpongeCommandExecutor implements CommandCallable {
-    @Inject private AccessManager accessManager;
+    @Inject private CommandHandlers commandHandlers;
     @Inject private Framework framework;
 
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
-        accessManager.processCommand("sponge", new SpongeUser(source), framework.getCommandPrefix() + " " + arguments);
+        commandHandlers.process("sponge", new SpongeUser(source), framework.getCommandPrefix() + " " + arguments);
         return CommandResult.success();
     }
 

@@ -26,6 +26,7 @@ package me.piggypiglet.framework.registerables.startup.file;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
@@ -33,6 +34,7 @@ import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.utils.annotations.addon.File;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,14 +44,22 @@ public final class FilesRegisterable extends StartupRegisterable {
     @Inject private Framework framework;
     @Inject private FileManager fileManager;
     @Inject private FrameworkBootstrap frameworkBootstrap;
+    @Inject private ConfigManager configManager;
 
     @Override
     protected void execute() {
         final List<FileData> files = new ArrayList<>(framework.getFiles());
-        frameworkBootstrap.getAddons().stream()
+
+        frameworkBootstrap.getAddons().values().stream()
                 .map(Addon::files)
                 .map(Arrays::stream)
-                .forEach(s -> s.forEach(f -> files.add(new FileData(f.config(), f.name(), f.internalPath(), f.externalPath(), f.annotation()))));
+                .forEach(s -> {
+                    for (File f : s.toArray(File[]::new)) {
+                        if (f.config() && !configManager.getFilesToBeCreated().contains(f.name())) continue;
+
+                        files.add(new FileData(f.config(), f.name(), f.internalPath(), f.externalPath(), f.annotation()));
+                    }
+                });
 
         files.forEach(f -> {
             try {

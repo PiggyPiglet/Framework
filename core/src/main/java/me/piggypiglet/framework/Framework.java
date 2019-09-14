@@ -24,18 +24,19 @@
 
 package me.piggypiglet.framework;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Injector;
+import me.piggypiglet.framework.addon.objects.ConfigInfo;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.utils.annotations.Main;
+import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,8 +49,11 @@ public final class Framework {
     private final String commandPrefix;
     private final List<FileData> files;
     private final int threads;
+    private final Map<Class<?>, ConfigInfo> configs;
 
-    private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files, int threads) {
+    private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables,
+                      List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files,
+                      int threads, Map<Class<?>, ConfigInfo> configs) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -58,6 +62,7 @@ public final class Framework {
         this.commandPrefix = commandPrefix;
         this.files = files;
         this.threads = threads;
+        this.configs = configs;
     }
 
     /**
@@ -139,6 +144,14 @@ public final class Framework {
         return threads;
     }
 
+    /**
+     * Get user defined configs for addons
+     * @return custom addon configs
+     */
+    public Map<Class<?>, ConfigInfo> getConfigs() {
+        return configs;
+    }
+
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
@@ -148,6 +161,7 @@ public final class Framework {
         private String commandPrefix = "d-commandPrefix";
         private final List<FileData> files = new ArrayList<>();
         private int threads = 15;
+        private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
 
         private FrameworkBuilder() {}
 
@@ -248,6 +262,20 @@ public final class Framework {
         }
 
         /**
+         * Configure a config for an addon that requires configuration. If not done manually, the addon will usually create it's own configuration file.
+         * @param addon Addon to configure
+         * @param config String reference to config in FileManager
+         * @param locations Locations of the values the addon needs
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder config(Class<?> addon, String config, Map<String, String> locations) {
+            Preconditions.checkArgument(addon.getAnnotation(Addon.class) != null, "%s is not a valid addon.", addon.getSimpleName());
+
+            configs.put(addon, new ConfigInfo(config, locations, false));
+            return this;
+        }
+
+        /**
          * Compile all the user-set options into an instance of Framework
          * NOTE: Will crash if any of the following aren't set:
          * - main
@@ -266,7 +294,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads);
+            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs);
         }
     }
 }

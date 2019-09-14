@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.mysql.components.row.objects;
+package me.piggypiglet.framework.utils.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class KeyValueSet {
     private final List<String> keys;
@@ -83,5 +85,15 @@ public final class KeyValueSet {
 
     public Object[] getValues() {
         return values.toArray();
+    }
+
+    public <T> Map<String, T> toMap() {
+        Map<String, T> items = new HashMap<>();
+
+        for (int i = 0, keysSize = keys.size(); i < keysSize; i++) {
+            items.put(keys.get(i), (T) values.get(i));
+        }
+
+        return items;
     }
 }

@@ -30,6 +30,7 @@ import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;
 import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
@@ -51,6 +52,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                 internalPath = "/index.html",
                 annotation = DefaultHTTP.class
         )},
+        config = @Config(
+                name = "http",
+                keys = {"ip", "port"}
+        ),
         shutdown = ShutdownHTTP.class
 )
 public final class HTTPAddon {}

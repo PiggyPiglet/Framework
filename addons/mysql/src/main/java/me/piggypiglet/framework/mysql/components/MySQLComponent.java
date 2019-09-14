@@ -26,8 +26,8 @@ package me.piggypiglet.framework.mysql.components;
 
 import co.aikar.idb.DbRow;
 import com.google.common.collect.Maps;
-import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
+import me.piggypiglet.framework.utils.map.KeyValueSet;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

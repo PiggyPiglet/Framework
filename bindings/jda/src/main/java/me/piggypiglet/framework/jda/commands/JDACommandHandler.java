@@ -25,19 +25,21 @@
 package me.piggypiglet.framework.jda.commands;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.access.AccessManager;
+import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.jda.user.JDAUser;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public final class JDACommandHandler extends ListenerAdapter {
-    @Inject private AccessManager accessManager;
+    @Inject private CommandHandlers commandHandlers;
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent e) {
         if (!e.getAuthor().isBot()) {
-            accessManager.processCommand("main", new JDAUser(e.getAuthor(), e.getChannel()), e.getMessage().getContentRaw());
+            commandHandlers.process("main", new JDAUser(Objects.requireNonNull(e.getMember()), e.getChannel()), e.getMessage().getContentRaw());
         }
     }
 }

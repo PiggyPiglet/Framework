@@ -27,18 +27,19 @@ package me.piggypiglet.framework.http;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
-import me.piggypiglet.framework.http.annotations.HTTP;
+import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.http.responses.ResponseHandler;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Wrapper class for NanoHTTP HTTP server
  */
 @Singleton
 public final class HTTPServer {
-    @Inject @HTTP private FileConfiguration config;
+    @Inject private ConfigManager configManager;
     @Inject private ResponseHandler responseHandler;
 
     private static final Logger LOGGER = LoggerFactory.getLogger("HTTP");
@@ -49,8 +50,9 @@ public final class HTTPServer {
      * Start the HTTP server
      */
     public void start() {
-        String ip = config.getString("ip");
-        int port = config.getInt("port");
+        final Map<String, Object> items = configManager.getConfigs().get(HTTPAddon.class).getItems();
+        String ip = (String) items.get("ip");
+        int port = (int) items.get("port");
 
         try {
             nanoHTTPD = new NestedServer(ip, port);

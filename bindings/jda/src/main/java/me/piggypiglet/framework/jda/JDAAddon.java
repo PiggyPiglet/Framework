@@ -29,6 +29,7 @@ import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.jda.shutdown.JDAShutdown;
 import me.piggypiglet.framework.jda.startup.JDARegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
@@ -50,6 +51,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                 internalPath = "/bot.json",
                 annotation = Bot.class
         )},
+        config = @Config(
+                name = "bot",
+                keys = {"token", "activity.type", "activity.activity"}
+        ),
         shutdown = JDAShutdown.class
 )
 public final class JDAAddon {

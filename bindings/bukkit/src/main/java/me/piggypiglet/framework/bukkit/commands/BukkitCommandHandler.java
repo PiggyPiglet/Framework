@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.bukkit.commands;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.access.AccessManager;
 import me.piggypiglet.framework.bukkit.user.BukkitUser;
+import me.piggypiglet.framework.commands.CommandHandlers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,11 +34,11 @@ import org.bukkit.command.CommandSender;
 import javax.annotation.Nonnull;
 
 public final class BukkitCommandHandler implements CommandExecutor {
-    @Inject private AccessManager accessManager;
+    @Inject private CommandHandlers commandHandlers;
 
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
-        accessManager.processCommand("bukkit", new BukkitUser(sender), label + " " + String.join(" ", args));
+        commandHandlers.process("bukkit", new BukkitUser(sender), label + " " + String.join(" ", args));
 
         return true;
     }

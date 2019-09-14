@@ -29,7 +29,7 @@ import me.piggypiglet.framework.mysql.components.row.RowCreator;
 import me.piggypiglet.framework.mysql.components.row.RowDeleter;
 import me.piggypiglet.framework.mysql.components.row.RowEditor;
 import me.piggypiglet.framework.mysql.components.row.RowGetter;
-import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
+import me.piggypiglet.framework.utils.map.KeyValueSet;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

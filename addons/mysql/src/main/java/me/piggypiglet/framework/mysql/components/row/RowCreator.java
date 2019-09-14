@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.mysql.components.row;
 
 import me.piggypiglet.framework.mysql.components.MySQLComponent;
-import me.piggypiglet.framework.mysql.components.row.objects.KeyValueSet;
+import me.piggypiglet.framework.utils.map.KeyValueSet;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;

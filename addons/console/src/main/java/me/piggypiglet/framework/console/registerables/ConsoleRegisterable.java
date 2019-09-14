@@ -25,7 +25,6 @@
 package me.piggypiglet.framework.console.registerables;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.access.AccessManager;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.console.user.ConsoleUser;
 import me.piggypiglet.framework.logging.LoggerFactory;
@@ -37,7 +36,6 @@ import java.util.Scanner;
 
 public final class ConsoleRegisterable extends StartupRegisterable {
     @Inject private Task task;
-    @Inject private AccessManager accessManager;
     @Inject private CommandHandlers commandHandlers;
 
     private static final User USER = new ConsoleUser();
@@ -52,7 +50,7 @@ public final class ConsoleRegisterable extends StartupRegisterable {
             Scanner input = new Scanner(System.in);
 
             while (true) {
-                accessManager.processCommand("console", USER, input.nextLine().toLowerCase());
+                commandHandlers.process("console", USER, input.nextLine().toLowerCase());
             }
         });
     }

@@ -27,6 +27,7 @@ package me.piggypiglet.framework.bootstrap;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
@@ -37,6 +38,8 @@ import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegist
 import me.piggypiglet.framework.registerables.startup.ManagersRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
 import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import me.piggypiglet.framework.registerables.startup.addon.DefaultConfigsRegisterable;
+import me.piggypiglet.framework.registerables.startup.addon.UserConfigsRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandHandlerRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandsRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
@@ -44,18 +47,16 @@ import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Singleton
 public final class FrameworkBootstrap {
     private final AtomicReference<Injector> injector = new AtomicReference<>();
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
-    private final Set<Addon> addons = new LinkedHashSet<>();
+    private final Map<Class<?>, Addon> addons = new HashMap<>();
 
     private final Framework config;
 
@@ -72,17 +73,24 @@ public final class FrameworkBootstrap {
     }
 
     private void start() {
-        addons.addAll(injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class).stream()
-                .map(c -> c.getAnnotation(Addon.class))
-                .collect(Collectors.toSet()));
+        injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class)
+                .forEach(c -> addons.put(c, c.getAnnotation(Addon.class)));
 
         final Multimap<BootPriority, Class<? extends StartupRegisterable>> registerables = ArrayListMultimap.create();
 
-        registerables.putAll(BootPriority.IMPL, linkedHashSet(ImplementationFinderRegisterable.class, FileTypesRegisterable.class, FilesRegisterable.class));
-        registerables.putAll(BootPriority.COMMANDS, linkedHashSet(CommandsRegisterable.class, CommandHandlerRegisterable.class));
-        registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class));
+        registerables.putAll(BootPriority.IMPL, linkedHashSet(
+                ImplementationFinderRegisterable.class, FileTypesRegisterable.class,
+                DefaultConfigsRegisterable.class, FilesRegisterable.class,
+                UserConfigsRegisterable.class
+        ));
+        registerables.putAll(BootPriority.COMMANDS, linkedHashSet(
+                CommandsRegisterable.class, CommandHandlerRegisterable.class
+        ));
+        registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(
+                ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class
+        ));
 
-        addons.stream()
+        addons.values().stream()
                 .map(Addon::startup)
                 .map(Arrays::stream)
                 .map(s -> s.map(RegisterableData::new))
@@ -141,7 +149,7 @@ public final class FrameworkBootstrap {
      * Get all found addons and their data.
      * @return Set of Addon annotation data objects.
      */
-    public Set<Addon> getAddons() {
+    public Map<Class<?>, Addon> getAddons() {
         return addons;
     }
 }

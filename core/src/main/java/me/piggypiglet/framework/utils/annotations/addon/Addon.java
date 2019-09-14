@@ -54,4 +54,10 @@ public @interface Addon {
      * @return Array of File annotation
      */
     File[] files() default {};
+
+    /**
+     * Default config
+     * @return Default config
+     */
+    Config config() default @Config(name = "null", keys = {});
 }

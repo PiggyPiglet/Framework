@@ -25,15 +25,17 @@
 package me.piggypiglet.framework.jda.user;
 
 import me.piggypiglet.framework.user.User;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public final class JDAUser extends User {
-    private final net.dv8tion.jda.api.entities.User user;
+    private final Member user;
     private final TextChannel channel;
 
-    public JDAUser(net.dv8tion.jda.api.entities.User user, TextChannel channel) {
+    public JDAUser(Member user, TextChannel channel) {
         super(
-                user.getName(),
+                user.getEffectiveName(),
                 user.getId()
         );
         this.user = user;
@@ -50,8 +52,16 @@ public final class JDAUser extends User {
         return true;
     }
 
-    public net.dv8tion.jda.api.entities.User getUser() {
+    public Member getMember() {
         return user;
+    }
+
+    public net.dv8tion.jda.api.entities.User getUser() {
+        return user.getUser();
+    }
+
+    public Guild getGuild() {
+        return channel.getGuild();
     }
 
     public TextChannel getChannel() {
