@@ -12,6 +12,7 @@ include (
         ':bindings:jda',
         ':bindings:velocity',
         ':bindings:bungeecord',
+        ':util:minecraft-common',
         ':samples:bukkit-sample',
         'test'
 )

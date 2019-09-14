@@ -50,6 +50,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>me.piggypiglet</groupId>
+            <artifactId>framework-minecraft-common</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>28.0-jre</version>

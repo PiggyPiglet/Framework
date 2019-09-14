@@ -91,6 +91,7 @@ public final class KeyValueSet {
         Map<String, T> items = new HashMap<>();
 
         for (int i = 0, keysSize = keys.size(); i < keysSize; i++) {
+            //noinspection unchecked
             items.put(keys.get(i), (T) values.get(i));
         }
 

@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>me.piggypiglet</groupId>
+	<artifactId>framework-minecraft-common</artifactId>
+	<version>@VERSION@</version>
+
+	<issueManagement>
+		<url>https://github.com/PiggyPiglet/Framework/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<licenses>
+		<license>
+			<name>MIT-License</name>
+			<url>
+				https://github.com/PiggyPiglet/Framework/blob/master/LICENSE.md
+			</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<repositories>
+		<repository>
+			<id>piggypiglet</id>
+			<name>piggypiglet</name>
+			<url>https://repo.piggypiglet.me/repository/maven-releases/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>me.piggypiglet</groupId>
+			<artifactId>framework-core</artifactId>
+			<version>LATEST</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>

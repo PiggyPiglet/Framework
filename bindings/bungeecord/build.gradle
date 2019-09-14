@@ -1,4 +1,4 @@
-version '1.1.0'
+version '1.1.1'
 
 repositories {
     maven {
@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     compile project(":core")
+    compile project(":util:minecraft-common")
 
     compileOnly 'net.md-5:bungeecord-api:1.14-SNAPSHOT'
 }
