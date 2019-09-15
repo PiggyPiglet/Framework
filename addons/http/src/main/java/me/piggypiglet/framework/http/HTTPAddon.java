@@ -42,13 +42,13 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         files = {@File(
                 config = true,
                 name = "http",
-                externalPath = "./http.json",
+                externalPath = "http.json",
                 internalPath = "/http.json",
                 annotation = HTTP.class
         ), @File(
                 config = false,
                 name = "http-default",
-                externalPath = "./index.html",
+                externalPath = "index.html",
                 internalPath = "/index.html",
                 annotation = DefaultHTTP.class
         )},

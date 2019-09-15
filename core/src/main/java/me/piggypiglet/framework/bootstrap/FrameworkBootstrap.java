@@ -83,12 +83,17 @@ public final class FrameworkBootstrap {
                 DefaultConfigsRegisterable.class, FilesRegisterable.class,
                 UserConfigsRegisterable.class
         ));
-        registerables.putAll(BootPriority.COMMANDS, linkedHashSet(
-                CommandsRegisterable.class, CommandHandlerRegisterable.class
-        ));
+
+        if (config.getCommandPrefix() != null) {
+            registerables.putAll(BootPriority.COMMANDS, linkedHashSet(
+                    CommandsRegisterable.class, CommandHandlerRegisterable.class
+            ));
+        }
+
         registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(
                 ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class
         ));
+
 
         addons.values().stream()
                 .map(Addon::startup)

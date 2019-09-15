@@ -47,7 +47,7 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         files = {@File(
                 config = true,
                 name = "bot",
-                externalPath = "./bot.json",
+                externalPath = "bot.json",
                 internalPath = "/bot.json",
                 annotation = Bot.class
         )},

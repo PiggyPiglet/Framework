@@ -42,6 +42,7 @@ import java.util.Map;
 @Singleton
 public final class FileManager {
     @Inject private FileConfigurationFactory fileConfigurationFactory;
+    @Inject private Framework framework;
 
     private static final Logger LOGGER = LoggerFactory.getLogger("FileManager");
 
@@ -132,7 +133,7 @@ public final class FileManager {
     }
 
     private File createFile(String externalPath, String internalPath) throws Exception {
-        File file = new File(externalPath);
+        File file = new File(framework.getFileDir() + "/" + externalPath);
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();

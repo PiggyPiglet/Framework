@@ -50,10 +50,11 @@ public final class Framework {
     private final List<FileData> files;
     private final int threads;
     private final Map<Class<?>, ConfigInfo> configs;
+    private final String fileDir;
 
     private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables,
                       List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files,
-                      int threads, Map<Class<?>, ConfigInfo> configs) {
+                      int threads, Map<Class<?>, ConfigInfo> configs, String configDir) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -63,6 +64,7 @@ public final class Framework {
         this.files = files;
         this.threads = threads;
         this.configs = configs;
+        this.fileDir = configDir;
     }
 
     /**
@@ -152,16 +154,25 @@ public final class Framework {
         return configs;
     }
 
+    /**
+     * Get the directory files will be put in.
+     * @return directory path
+     */
+    public String getFileDir() {
+        return fileDir;
+    }
+
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
         private Injector injector = null;
         private List<RegisterableData> startupRegisterables = new ArrayList<>();
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
-        private String commandPrefix = "d-commandPrefix";
+        private String commandPrefix = null;
         private final List<FileData> files = new ArrayList<>();
         private int threads = 15;
         private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
+        private String fileDir = ".";
 
         private FrameworkBuilder() {}
 
@@ -276,6 +287,16 @@ public final class Framework {
         }
 
         /**
+         * Set the parent directory configs will be put in. Don't include a file separator (/ or \) at the end.
+         * @param dir Path of the directory
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder fileDir(String dir) {
+            fileDir = dir;
+            return this;
+        }
+
+        /**
          * Compile all the user-set options into an instance of Framework
          * NOTE: Will crash if any of the following aren't set:
          * - main
@@ -284,7 +305,7 @@ public final class Framework {
          * @return Framework instance
          */
         public final Framework build() {
-            String unsetVars = Stream.of(main, pckg, commandPrefix).filter(o -> {
+            String unsetVars = Stream.of(main, pckg).filter(o -> {
                 try {
                     return ((String) o).startsWith("d-");
                 } catch (Exception e) {
@@ -294,7 +315,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs);
+            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs, fileDir);
         }
     }
 }

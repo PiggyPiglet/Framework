@@ -43,7 +43,7 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         files = {@File(
                 config = true,
                 name = "sql-config",
-                externalPath = "./mysql.json",
+                externalPath = "mysql.json",
                 internalPath = "/mysql.json",
                 annotation = SQLConfig.class
         ), @File(
