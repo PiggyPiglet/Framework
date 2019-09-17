@@ -8,6 +8,7 @@ import me.piggypiglet.framework.addon.objects.ConfigInfo;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.utils.annotations.addon.Addon;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -23,7 +24,12 @@ public final class UserConfigsRegisterable extends StartupRegisterable {
     protected void execute() {
         Map<Class<?>, ConfigInfo> configs = framework.getConfigs();
 
-        bootstrap.getAddons().forEach((c, a) -> {
+        for (Map.Entry<Class<?>, Addon> entry : bootstrap.getAddons().entrySet()) {
+            Class<?> c = entry.getKey();
+            Addon a = entry.getValue();
+
+            if (a.config().name().equals("null")) continue;
+
             ConfigInfo info;
 
             if (configs.containsKey(c)) {
@@ -33,9 +39,9 @@ public final class UserConfigsRegisterable extends StartupRegisterable {
             }
 
             final Map<String, Object> items = info.getLocations().entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getValue, e -> fileManager.getConfig(info.getConfig()).get(e.getKey())));
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> fileManager.getConfig(info.getConfig()).get(e.getValue())));
 
             configManager.getConfigs().put(c, new Config(items));
-        });
+        }
     }
 }
