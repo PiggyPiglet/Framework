@@ -1,4 +1,4 @@
-version '1.1.1'
+version '1.1.2'
 
 dependencies {
     compile 'com.google.inject:guice:4.2.2'

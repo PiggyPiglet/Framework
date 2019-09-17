@@ -133,7 +133,8 @@ public final class FileManager {
     }
 
     private File createFile(String externalPath, String internalPath) throws Exception {
-        File file = new File(framework.getFileDir() + "/" + externalPath);
+        externalPath = framework.getFileDir() + "/" + externalPath;
+        File file = new File(externalPath);
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
