@@ -37,7 +37,7 @@
         <dependency>
             <groupId>me.piggypiglet</groupId>
             <artifactId>framework-core</artifactId>
-            <version>LATEST</version>
+            <version>@CORE@</version>
             <exclusions>
                 <exclusion>
                     <artifactId>gson</artifactId>

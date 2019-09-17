@@ -37,7 +37,7 @@
         <dependency>
             <groupId>me.piggypiglet</groupId>
             <artifactId>framework-core</artifactId>
-            <version>LATEST</version>
+            <version>@CORE@</version>
             <exclusions>
                 <exclusion>
                     <artifactId>gson</artifactId>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>me.piggypiglet</groupId>
             <artifactId>framework-minecraft-common</artifactId>
-            <version>LATEST</version>
+            <version>@CORE@</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
