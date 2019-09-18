@@ -31,6 +31,9 @@ import me.piggypiglet.framework.utils.SearchUtils;
 
 public abstract class MySQLManager<S extends SearchUtils.Searchable> extends SearchableManager<S> {
     private final Table<S> table;
+    private boolean autoPopulate = true;
+
+    protected final Options options = new Options();
 
     protected MySQLManager(Table<S> table) {
         this.table = table;
@@ -38,6 +41,8 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
 
     @Override
     public void setup() {
+        if (!autoPopulate) return;
+
         MySQLUtils.isReady().whenComplete((b, t) -> {
             if (b) {
                 table.getAll().whenComplete((s, th) -> {
@@ -50,5 +55,12 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
 
     public Table<S> getTable() {
         return table;
+    }
+
+    protected class Options {
+        protected Options autoPopulate(boolean autoPopulate) {
+            MySQLManager.this.autoPopulate = autoPopulate;
+            return this;
+        }
     }
 }
