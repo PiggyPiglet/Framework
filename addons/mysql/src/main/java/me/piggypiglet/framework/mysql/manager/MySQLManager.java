@@ -58,7 +58,7 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
     }
 
     protected class Options {
-        protected Options autoPopulate(boolean autoPopulate) {
+        public Options autoPopulate(boolean autoPopulate) {
             MySQLManager.this.autoPopulate = autoPopulate;
             return this;
         }
