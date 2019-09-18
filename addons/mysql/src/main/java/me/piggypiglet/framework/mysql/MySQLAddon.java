@@ -26,6 +26,7 @@ package me.piggypiglet.framework.mysql;
 
 import me.piggypiglet.framework.mysql.annotations.SQL;
 import me.piggypiglet.framework.mysql.annotations.SQLConfig;
+import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLFinalSave;
 import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLShutdown;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLRegisterable;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLSavingRegisterable;
@@ -39,7 +40,7 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                 @Startup(MySQLRegisterable.class),
                 @Startup(MySQLSavingRegisterable.class)
         },
-        shutdown = MySQLShutdown.class,
+        shutdown = {MySQLFinalSave.class, MySQLShutdown.class},
         files = {@File(
                 config = true,
                 name = "sql-config",
