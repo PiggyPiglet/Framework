@@ -31,8 +31,6 @@ import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 
-import java.lang.reflect.Modifier;
-
 public final class ManagersRegisterable extends StartupRegisterable {
     @Inject private Task task;
     @Inject private Reflections reflections;
@@ -40,7 +38,7 @@ public final class ManagersRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        reflections.getSubTypesOf(Manager.class).stream().filter(c -> !Modifier.isAbstract(c.getModifiers())).map(injector::getInstance).forEach(managersManager.getManagers()::add);
+        reflections.getSubTypesOf(Manager.class).stream().map(injector::getInstance).forEach(managersManager.getManagers()::add);
         task.async(r -> managersManager.setup());
     }
 }

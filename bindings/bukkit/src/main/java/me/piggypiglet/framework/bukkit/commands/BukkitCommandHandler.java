@@ -1,44 +1,23 @@
-/*
- * MIT License
- *
- * Copyright (c) 2019 PiggyPiglet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package me.piggypiglet.framework.bukkit.commands;
 
-import com.google.inject.Inject;
 import me.piggypiglet.framework.bukkit.user.BukkitUser;
-import me.piggypiglet.framework.commands.CommandHandlers;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import me.piggypiglet.framework.commands.Command;
+import me.piggypiglet.framework.commands.CommandHandler;
+import me.piggypiglet.framework.user.User;
 
-import javax.annotation.Nonnull;
-
-public final class BukkitCommandHandler implements CommandExecutor {
-    @Inject private CommandHandlers commandHandlers;
-
+public final class BukkitCommandHandler extends CommandHandler {
     @Override
-    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
-        commandHandlers.process("bukkit", new BukkitUser(sender), label + " " + String.join(" ", args));
+    protected boolean process(User user, Command command) {
+        if (user instanceof BukkitUser && command instanceof BukkitCommand) {
+            if (((BukkitCommand) command).isPlayerOnly()) {
+                if (((BukkitUser) user).isPlayer()) {
+                    return true;
+                } else {
+                    user.sendMessage("Only player's can execute this command.");
+                    return false;
+                }
+            }
+        }
 
         return true;
     }

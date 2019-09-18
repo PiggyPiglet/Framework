@@ -31,7 +31,7 @@ import me.piggypiglet.framework.user.User;
 
 import java.util.List;
 
-public final class CommandHandler {
+public class CommandHandler {
     @Inject private Framework framework;
     @Inject private HelpCommand defHelpCommand;
 
@@ -43,7 +43,7 @@ public final class CommandHandler {
      * @param user User to run the command on
      * @param message String user input
      */
-    public void process(User user, String message) {
+    public void handle(User user, String message) {
         if (message.startsWith(framework.getCommandPrefix())) {
             message = message.replaceFirst(framework.getCommandPrefix(), "").trim();
 
@@ -61,6 +61,8 @@ public final class CommandHandler {
                     if (permissions.size() == 0 || permissions.stream().anyMatch(user::hasPermission)) {
                         String[] args = args(message.replaceFirst(cmd, "").trim());
 
+                        if (!process(user, c)) return;
+
                         if (!c.run(user, args)) {
                             user.sendMessage("Incorrect usage, correct usage is: %s %s", cmd, c.getUsage());
                         }
@@ -74,6 +76,16 @@ public final class CommandHandler {
 
             user.sendMessage("Unknown command.");
         }
+    }
+
+    /**
+     * Handle any extra processing the default method doesn't provide in sub classes. Custom messages will need to be handled here.
+     * @param user User
+     * @param command Command
+     * @return boolean on whether to execute or not
+     */
+    protected boolean process(User user, Command command) {
+        return true;
     }
 
     /**

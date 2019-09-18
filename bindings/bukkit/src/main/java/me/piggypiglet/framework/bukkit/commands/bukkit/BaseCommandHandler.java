@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.bukkit.commands;
+package me.piggypiglet.framework.bukkit.commands.bukkit;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;

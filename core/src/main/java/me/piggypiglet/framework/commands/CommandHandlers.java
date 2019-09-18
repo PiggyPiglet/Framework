@@ -50,7 +50,7 @@ public final class CommandHandlers {
      * @param message Message, including command prefix, command, and arguments.
      */
     public void process(String commandHandler, User user, String message) {
-        task.async(r -> commandHandlers.get(commandHandler).process(user, message));
+        task.async(r -> commandHandlers.get(commandHandler).handle(user, message));
     }
 
     /**
@@ -59,7 +59,17 @@ public final class CommandHandlers {
      * @param injector Instance of the applications injector.
      */
     public void newHandler(String name, Injector injector) {
-        CommandHandler commandHandler = injector.getInstance(CommandHandler.class);
+        newHandler(name, CommandHandler.class, injector);
+    }
+
+    /**
+     * Create a new command handler, with a custom type
+     * @param name String the command handler will be referenced by
+     * @param handler Class of the command handler
+     * @param injector Instance of the application's injector
+     */
+    public void newHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
+        CommandHandler commandHandler = injector.getInstance(handler);
 
         commandHandlers.put(name, commandHandler);
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toList()));

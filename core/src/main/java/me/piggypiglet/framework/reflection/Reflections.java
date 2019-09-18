@@ -30,6 +30,7 @@ import org.reflections.scanners.Scanner;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -56,7 +57,7 @@ public final class Reflections {
      * @return Set of found classes
      */
     public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
-        return reflections.stream().flatMap(r -> r.getSubTypesOf(type).stream()).filter(this::isDisabled).collect(Collectors.toSet());
+        return reflections.stream().flatMap(r -> r.getSubTypesOf(type).stream()).filter(this::isDisabled).filter(c -> !Modifier.isAbstract(c.getModifiers())).collect(Collectors.toSet());
     }
 
     /**
