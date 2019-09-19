@@ -27,9 +27,12 @@ package me.piggypiglet.framework.managers.implementations;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.utils.SearchUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SearchableManager<S extends SearchUtils.Searchable> extends Manager<S> {
+    protected final List<S> items = new ArrayList<>();
+
     /**
      * Search the manager with a query, uses levenshtein weighted ratio.
      * @param query Query string

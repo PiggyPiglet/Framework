@@ -24,38 +24,48 @@
 
 package me.piggypiglet.framework.managers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public abstract class Manager<S> {
-    protected final List<S> items = new ArrayList<>();
-
     /**
-     * Code to populate the provided variable
-     * @param items List that needs to be populated
+     * Handle initial population here
      */
-    protected abstract void populate(final List<S> items);
+    protected void populate() {};
 
     /**
-     * Populate the manager
+     * Populate the manager.
      */
     public void setup() {
-        populate(items);
+        populate();
     }
+
+    /**
+     * Process a key value and return it's result. Usually will look like a getClass switch statement with a bunch of streams.
+     * @param key Key value
+     * @param <T> Key type
+     * @return Value
+     */
+    protected abstract <T> S processKey(T key);
 
     /**
      * Add an item to a manager.
      * @param item Item to add
      */
-    public void add(S item) {
-        items.add(item);
-    }
+    public abstract void add(S item);
 
     /**
-     * Get all stored items
-     * @return List of items
+     * Get all items stored in this manager.
+     * @return Collection of items
      */
-    public List<S> getAll() {
-        return new ArrayList<>(items);
+    public abstract Collection<S> getAll();
+
+    /**
+     * Get a value based on configured key types
+     * @param key Key value
+     * @param <T> Key type
+     * @return Value
+     */
+    public <T> S get(T key) {
+        return processKey(key);
     }
 }
