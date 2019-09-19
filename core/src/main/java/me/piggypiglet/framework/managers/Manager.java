@@ -24,9 +24,21 @@
 
 package me.piggypiglet.framework.managers;
 
+import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
+
 import java.util.Collection;
+import java.util.function.Function;
 
 public abstract class Manager<S> {
+    private KeyTypeInfo keyTypes;
+
+    /**
+     * Configure acceptable key types
+     * @param builder Instance of KeyTypeInfo builder
+     * @return Built KeyTypeInfo
+     */
+    protected abstract KeyTypeInfo configure(KeyTypeInfo.Builder builder);
+
     /**
      * Handle initial population here
      */
@@ -36,16 +48,9 @@ public abstract class Manager<S> {
      * Populate the manager.
      */
     public void setup() {
+        keyTypes = configure(KeyTypeInfo.builder());
         populate();
     }
-
-    /**
-     * Process a key value and return it's result. Usually will look like a getClass switch statement with a bunch of streams.
-     * @param key Key value
-     * @param <T> Key type
-     * @return Value
-     */
-    protected abstract <T> S processKey(T key);
 
     /**
      * Add an item to a manager.
@@ -65,7 +70,8 @@ public abstract class Manager<S> {
      * @param <T> Key type
      * @return Value
      */
+    @SuppressWarnings("unchecked")
     public <T> S get(T key) {
-        return processKey(key);
+        return (S) ((Function<T, Object>) keyTypes.getKeys().getOrDefault(key.getClass(), null)).apply(key);
     }
 }
