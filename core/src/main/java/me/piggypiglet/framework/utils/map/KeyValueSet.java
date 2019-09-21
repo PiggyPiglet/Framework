@@ -24,18 +24,14 @@
 
 package me.piggypiglet.framework.utils.map;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class KeyValueSet {
-    private final List<String> keys;
-    private final List<Object> values;
+    private final Map<String, Object> map;
 
-    private KeyValueSet(List<String> keys, List<Object> values) {
-        this.keys = keys;
-        this.values = values;
+    private KeyValueSet(Map<String, Object> map) {
+        this.map = map;
     }
 
     /**
@@ -47,27 +43,33 @@ public final class KeyValueSet {
     }
 
     public static class Builder {
-        private final List<String> keys = new ArrayList<>();
-        private final List<Object> values = new ArrayList<>();
+        Map<String, Object> values = new HashMap<>();
 
         /**
          * Key for values
          * @param key Key
          * @return Builder instance
          */
-        public Builder key(String key) {
-            keys.add(key);
-            return this;
+        public ValueBuilder key(String key) {
+            return new ValueBuilder(key);
         }
 
-        /**
-         * Value for keys, in order
-         * @param value Value
-         * @return Builder instance
-         */
-        public Builder value(Object value) {
-            values.add(value);
-            return this;
+        public class ValueBuilder {
+            private final String key;
+
+            private ValueBuilder(String key) {
+                this.key = key;
+            }
+
+            /**
+             * Value for keys, in order
+             * @param value Value
+             * @return Builder instance
+             */
+            public Builder value(Object value) {
+                values.put(key, value);
+                return Builder.this;
+            }
         }
 
         /**
@@ -75,26 +77,19 @@ public final class KeyValueSet {
          * @return KeyValueSet
          */
         public KeyValueSet build() {
-            return new KeyValueSet(keys, values);
+            return new KeyValueSet(values);
         }
     }
 
     public String[] getKeys() {
-        return keys.toArray(new String[]{});
+        return map.keySet().toArray(new String[]{});
     }
 
     public Object[] getValues() {
-        return values.toArray();
+        return map.values().toArray();
     }
 
-    public <T> Map<String, T> toMap() {
-        Map<String, T> items = new HashMap<>();
-
-        for (int i = 0, keysSize = keys.size(); i < keysSize; i++) {
-            //noinspection unchecked
-            items.put(keys.get(i), (T) values.get(i));
-        }
-
-        return items;
+    public Map<String, Object> getMap() {
+        return map;
     }
 }

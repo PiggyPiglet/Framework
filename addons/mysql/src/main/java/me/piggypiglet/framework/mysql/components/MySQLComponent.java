@@ -25,7 +25,6 @@
 package me.piggypiglet.framework.mysql.components;
 
 import co.aikar.idb.DbRow;
-import com.google.common.collect.Maps;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.utils.map.KeyValueSet;
 
@@ -34,11 +33,11 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class MySQLComponent {
     protected CompletableFuture<Boolean> create(String table, KeyValueSet data) {
-        return MySQLUtils.create(table, data.getKeys(), data.getValues());
+        return MySQLUtils.create(table, data.getMap());
     }
 
     protected CompletableFuture<DbRow> get(String table, KeyValueSet location) {
-        return MySQLUtils.getRow(table, location.getKeys(), location.getValues());
+        return MySQLUtils.getRow(table, location.getMap());
     }
 
     protected CompletableFuture<List<DbRow>> getAll(String table) {
@@ -46,14 +45,14 @@ public abstract class MySQLComponent {
     }
 
     protected CompletableFuture<Boolean> exists(String table, KeyValueSet location) {
-        return MySQLUtils.exists(table, location.getKeys(), location.getValues());
+        return MySQLUtils.exists(table, location.getMap());
     }
 
     protected CompletableFuture<Boolean> delete(String table, KeyValueSet location) {
-        return MySQLUtils.remove(table, location.getKeys(), location.getValues());
+        return MySQLUtils.remove(table, location.getMap());
     }
 
     protected CompletableFuture<Boolean> edit(String table, KeyValueSet location, KeyValueSet changes) {
-        return MySQLUtils.set(table, Maps.immutableEntry(location.getKeys(), location.getValues()), Maps.immutableEntry(changes.getKeys(), changes.getValues()));
+        return MySQLUtils.set(table, location.getMap(), changes.getMap());
     }
 }

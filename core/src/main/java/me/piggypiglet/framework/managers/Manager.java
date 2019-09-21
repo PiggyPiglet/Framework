@@ -116,4 +116,6 @@ public abstract class Manager<S> {
 
         return null;
     }
+
+    //todo: exists impl
 }

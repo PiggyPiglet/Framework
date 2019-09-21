@@ -106,7 +106,7 @@ public class CommandHandler {
     }
 
     private String[] args(String text) {
-        String[] args = text.trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+        String[] args = CommandHandlers.ARGUMENT_PATTERN.split(text.trim());
 
         return args[0].isEmpty() ? new String[]{} : args;
     }
