@@ -24,8 +24,10 @@
 
 package me.piggypiglet.framework.managers;
 
+import me.piggypiglet.framework.managers.objects.KeyFunction;
 import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -72,6 +74,16 @@ public abstract class Manager<S> {
      */
     @SuppressWarnings("unchecked")
     public <T> S get(T key) {
-        return (S) ((Function<T, Object>) keyTypes.getKeys().getOrDefault(key.getClass(), null)).apply(key);
+        for (KeyFunction<?> f : keyTypes.getKeys()) {
+            Function<T, Object> function = (Function<T, Object>) f.getFunction();
+
+            if (f.isClazz()) {
+                if (f.getType() == key.getClass()) return (S) function.apply(key);
+            } else {
+                if (Arrays.asList(key.getClass().getInterfaces()).contains(f.getType())) return (S) function.apply(key);
+            }
+        }
+
+        return null;
     }
 }

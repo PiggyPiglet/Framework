@@ -24,14 +24,14 @@
 
 package me.piggypiglet.framework.managers.objects;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public final class KeyTypeInfo {
-    private final Map<Class<?>, Function<?, Object>> keys;
+    private final List<KeyFunction<?>> keys;
 
-    private KeyTypeInfo(Map<Class<?>, Function<?, Object>> keys) {
+    private KeyTypeInfo(List<KeyFunction<?>> keys) {
         this.keys = keys;
     }
 
@@ -39,17 +39,22 @@ public final class KeyTypeInfo {
         return new Builder();
     }
 
-    public Map<Class<?>, Function<?, Object>> getKeys() {
+    public List<KeyFunction<?>> getKeys() {
         return keys;
     }
 
     public static class Builder {
-        private final Map<Class<?>, Function<?, Object>> keys = new HashMap<>();
+        private final List<KeyFunction<?>> keys = new ArrayList<>();
 
         private Builder() {}
 
-        public final <T> Builder key(Class<T> type, Function<T, Object> get) {
-            keys.put(type, get);
+        public final <T> Builder clazz(Class<T> clazz, Function<T, Object> getter) {
+            keys.add(new KeyFunction<>(clazz, getter, true));
+            return this;
+        }
+
+        public final <T> Builder interfaze(Class<T> interfaze, Function<T, Object> getter) {
+            keys.add(new KeyFunction<>(interfaze, getter, false));
             return this;
         }
 
