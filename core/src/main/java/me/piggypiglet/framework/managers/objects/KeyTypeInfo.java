@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.function.Function;
 
 public final class KeyTypeInfo {
-    private final List<KeyFunction<?>> keys;
+    private final List<KeyFunction<?, ?>> keys;
 
-    private KeyTypeInfo(List<KeyFunction<?>> keys) {
+    private KeyTypeInfo(List<KeyFunction<?, ?>> keys) {
         this.keys = keys;
     }
 
@@ -39,23 +39,56 @@ public final class KeyTypeInfo {
         return new Builder();
     }
 
-    public List<KeyFunction<?>> getKeys() {
+    public List<KeyFunction<?, ?>> getKeys() {
         return keys;
     }
 
     public static class Builder {
-        private final List<KeyFunction<?>> keys = new ArrayList<>();
+        private final List<KeyFunction<?, ?>> keys = new ArrayList<>();
 
         private Builder() {}
 
-        public final <T> Builder clazz(Class<T> clazz, Function<T, Object> getter) {
-            keys.add(new KeyFunction<>(clazz, getter, true));
-            return this;
+        public final <T> KeyFunctionBuilder<T, T> clazz(Class<T> clazz) {
+            return clazz(clazz, s -> s);
         }
 
-        public final <T> Builder interfaze(Class<T> interfaze, Function<T, Object> getter) {
-            keys.add(new KeyFunction<>(interfaze, getter, false));
-            return this;
+        public final <T, U> KeyFunctionBuilder<T, U> clazz(Class<T> clazz, Function<T, U> mapper) {
+            return new KeyFunctionBuilder<>(clazz, mapper);
+        }
+
+        public final <T> KeyFunctionBuilder<T, T> interfaze(Class<T> interfaze) {
+            return interfaze(interfaze, s -> s);
+        }
+
+        public final <T, U> KeyFunctionBuilder<T, U> interfaze(Class<T> interfaze, Function<T, U> mapper) {
+            return new KeyFunctionBuilder<>(interfaze, mapper);
+        }
+
+        public class KeyFunctionBuilder<T, U> {
+            private final Class<T> clazz;
+            private final Function<T, U> mapper;
+            private Function<U, Object> getter;
+            private Function<U, Boolean> exists;
+
+            private KeyFunctionBuilder(Class<T> clazz, Function<T, U> mapper) {
+                this.clazz = clazz;
+                this.mapper = mapper;
+            }
+
+            public final KeyFunctionBuilder<T, U> getter(Function<U, Object> getter) {
+                this.getter = getter;
+                return this;
+            }
+
+            public final KeyFunctionBuilder<T, U> exists(Function<U, Boolean> exists) {
+                this.exists = exists;
+                return this;
+            }
+
+            public final Builder bundle() {
+                keys.add(new KeyFunction<>(clazz, mapper, getter, exists));
+                return Builder.this;
+            }
         }
 
         public KeyTypeInfo build() {
