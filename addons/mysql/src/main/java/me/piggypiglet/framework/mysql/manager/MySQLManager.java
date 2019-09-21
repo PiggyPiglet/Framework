@@ -59,9 +59,8 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
         });
     }
 
-    @Override
-    public void remove(S item) {
-        super.remove(item);
+    public void completeRemove(S item) {
+        remove(item);
         needsDeleting.add(item);
     }
 

@@ -27,17 +27,24 @@ package me.piggypiglet.framework.mysql.manager;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.managers.ManagersManager;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class MySQLManagers {
     @Inject private ManagersManager managersManager;
 
     @SuppressWarnings("unchecked")
     public void saveAll() {
-        managersManager.getManagers()
+        List<MySQLManager> managers = managersManager.getManagers()
                 .stream()
                 .filter(m -> m instanceof MySQLManager).map(m -> (MySQLManager) m)
-                .forEach(m -> {
-                    m.getAll().forEach(m.getTable()::save);
-                    m.getNeedsDeleting().forEach(m.getTable()::delete);
-                });
+                .collect(Collectors.toList());
+
+        managers.forEach(m -> {
+            m.getAll().forEach(m.getTable()::save);
+            m.getNeedsDeleting().forEach(m.getTable()::delete);
+        });
+
+        managers.forEach(m -> m.getNeedsDeleting().clear());
     }
 }
