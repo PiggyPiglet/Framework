@@ -27,7 +27,6 @@ package me.piggypiglet.framework.mysql.components.row;
 import me.piggypiglet.framework.mysql.components.MySQLComponent;
 import me.piggypiglet.framework.utils.map.KeyValueSet;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public final class RowCreator extends MySQLComponent {
@@ -51,24 +50,36 @@ public final class RowCreator extends MySQLComponent {
             this.table = table;
         }
 
-        /**
-         * Specify the column names for this row
-         * @param keys Column names
-         * @return Builder instance
-         */
-        public Builder key(String... keys) {
-            Arrays.stream(keys).forEach(builder::key);
+        public Builder set(KeyValueSet set) {
+            set.getMap().forEach((k, v) -> builder.key(k).value(v));
             return this;
         }
 
         /**
-         * Values for keys, in order
-         * @param values Values
+         * Specify the column names for this row
+         * @param key Column name
          * @return Builder instance
          */
-        public Builder value(Object... values) {
-            Arrays.stream(values).forEach(builder::value);
-            return this;
+        public ValueBuilder key(String key) {
+            return new ValueBuilder(key);
+        }
+
+        public class ValueBuilder {
+            private final String key;
+
+            private ValueBuilder(String key) {
+                this.key = key;
+            }
+
+            /**
+             * Key value
+             * @param value Value
+             * @return Builder instance
+             */
+            public RowCreator.Builder value(Object value) {
+                builder.key(key).value(value);
+                return RowCreator.Builder.this;
+            }
         }
 
         /**

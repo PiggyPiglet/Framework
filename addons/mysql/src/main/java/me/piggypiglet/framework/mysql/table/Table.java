@@ -120,7 +120,7 @@ public abstract class Table<T> {
             final KeyValueSet row = typeToRow(t);
 
             if (!b) {
-                future.set(creator().key(row.getKeys()).value(row.getValues()).build().execute());
+                future.set(creator().set(row).build().execute());
             } else {
                 getter().location(location).build().get().whenComplete((r, th_) -> {
                    if (Arrays.stream(row.getValues()).anyMatch(o -> !r.containsValue(o))) {
