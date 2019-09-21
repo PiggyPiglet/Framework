@@ -1,3 +1,4 @@
+
 /*
  * MIT License
  *
@@ -183,7 +184,10 @@ public final class MySQLUtils {
         final StringBuilder keys = new StringBuilder("(`id`");
         final StringBuilder values = new StringBuilder("('0'");
 
-        map.forEach((k, v) -> keys.append(", ").append(k).append("`=").append(format(v)));
+        map.forEach((k, v) -> {
+            keys.append(", `").append(k).append("`");
+            values.append(", ").append(format(v));
+        });
         keys.append(")");
         values.append(")");
 
@@ -193,9 +197,9 @@ public final class MySQLUtils {
     private static String whereFormat(Map<String, Object> location) {
         final StringBuilder builder = new StringBuilder();
 
-        location.forEach((key, value) -> builder.append("`").append(key).append("`=").append(format(value)).append(", "));
+        location.forEach((key, value) -> builder.append(", ").append("`").append(key).append("`=").append(format(value)));
 
-        return builder.toString();
+        return builder.toString().replaceFirst(", ", "");
     }
 
     private static String format(Object variable) {
