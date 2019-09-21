@@ -31,8 +31,10 @@ import me.piggypiglet.framework.mysql.components.row.RowEditor;
 import me.piggypiglet.framework.mysql.components.row.RowGetter;
 import me.piggypiglet.framework.utils.map.KeyValueSet;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public abstract class Table<T> {
@@ -111,15 +113,23 @@ public abstract class Table<T> {
      * @return CompletableFuture of whether the save was successful.
      */
     public CompletableFuture<Boolean> save(T t) {
-        final CompletableFuture<Boolean> future = new CompletableFuture<>();
+        final KeyValueSet location = saveLocations(t);
+        final AtomicReference<CompletableFuture<Boolean>> future = new AtomicReference<>();
 
-        getter().location(saveLocations(t)).build().exists().whenComplete((b, th) -> {
+        getter().location(location).build().exists().whenComplete((b, th) -> {
+            final KeyValueSet row = typeToRow(t);
+
             if (!b) {
-                final KeyValueSet row = typeToRow(t);
-                creator().key(row.getKeys()).value(row.getValues()).build().execute().whenComplete((b_, th_) -> future.complete(b_));
+                future.set(creator().key(row.getKeys()).value(row.getValues()).build().execute());
+            } else {
+                getter().location(location).build().get().whenComplete((r, th_) -> {
+                   if (Arrays.stream(row.getValues()).anyMatch(o -> !r.containsValue(o))) {
+                       future.set(editor().location(location).changes(row).build().execute());
+                   }
+                });
             }
         });
 
-        return future;
+        return future.get();
     }
 }
