@@ -89,7 +89,8 @@ public final class KeyValueSet {
         return map.values().toArray();
     }
 
-    public Map<String, Object> getMap() {
-        return map;
+    @SuppressWarnings("unchecked")
+    public <T> Map<String, T> getMap() {
+        return (Map<String, T>) map;
     }
 }
