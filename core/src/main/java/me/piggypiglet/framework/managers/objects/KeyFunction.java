@@ -26,26 +26,32 @@ package me.piggypiglet.framework.managers.objects;
 
 import java.util.function.Function;
 
-public final class KeyFunction<T> {
+public final class KeyFunction<T, U> {
     private final Class<T> type;
-    private final Function<T, Object> function;
-    private final boolean clazz;
+    private final Function<T, U> mapper;
+    private final Function<U, Object> getter;
+    private final Function<U, Boolean> exists;
 
-    public KeyFunction(Class<T> type, Function<T, Object> function, boolean clazz) {
+    public KeyFunction(Class<T> type, Function<T, U> mapper, Function<U, Object> getter, Function<U, Boolean> exists) {
         this.type = type;
-        this.function = function;
-        this.clazz = clazz;
+        this.mapper = mapper;
+        this.getter = getter;
+        this.exists = exists;
     }
 
     public Class<T> getType() {
         return type;
     }
 
-    public Function<T, Object> getFunction() {
-        return function;
+    public Function<T, U> getMapper() {
+        return mapper;
     }
 
-    public boolean isClazz() {
-        return clazz;
+    public Function<U, Object> getGetter() {
+        return getter;
+    }
+
+    public Function<U, Boolean> getExists() {
+        return exists;
     }
 }

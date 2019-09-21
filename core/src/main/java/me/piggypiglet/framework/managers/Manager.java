@@ -103,19 +103,45 @@ public abstract class Manager<S> {
      * @return Value
      */
     @SuppressWarnings("unchecked")
-    public <T> S get(T key) {
-        for (KeyFunction<?> f : keyTypes.getKeys()) {
-            Function<T, Object> function = (Function<T, Object>) f.getFunction();
+    public <T, U> S get(T key) {
+        KeyFunction<T, U> function = findFunc(key);
 
-            if (f.isClazz()) {
-                if (f.getType() == key.getClass()) return (S) function.apply(key);
-            } else {
-                if (Arrays.asList(key.getClass().getInterfaces()).contains(f.getType())) return (S) function.apply(key);
-            }
+        if (function != null) {
+            return (S) function.getGetter().apply(map(function, key));
         }
 
         return null;
     }
 
-    //todo: exists impl
+    public <T, U> boolean exists(T key) {
+        KeyFunction<T, U> function = findFunc(key);
+
+        if (function != null) {
+            return function.getExists().apply(map(function, key));
+        }
+
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T, U> U map(KeyFunction<T, U> function, T key) {
+        Function<T, U> mapper = function.getMapper();
+
+        if (mapper != null) {
+            return mapper.apply(key);
+        }
+
+        return (U) key;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T, U> KeyFunction<T, U> findFunc(T key) {
+        for (KeyFunction<?, ?> f : keyTypes.getKeys()) {
+            if (f.getType() == key.getClass() || Arrays.asList(key.getClass().getInterfaces()).contains(f.getType())) {
+                return (KeyFunction<T, U>) f;
+            }
+        }
+
+        return null;
+    }
 }
