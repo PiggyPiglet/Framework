@@ -33,6 +33,18 @@ import java.util.List;
 public abstract class SearchableManager<S extends SearchUtils.Searchable> extends Manager<S> {
     protected final List<S> items = new ArrayList<>();
 
+    @Override
+    public void add(S item) {
+        super.add(item);
+        items.add(item);
+    }
+
+    @Override
+    public void remove(S item) {
+        super.remove(item);
+        items.remove(item);
+    }
+
     /**
      * Search the manager with a query, uses levenshtein weighted ratio.
      * @param query Query string

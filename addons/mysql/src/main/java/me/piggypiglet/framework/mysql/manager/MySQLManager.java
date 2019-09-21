@@ -30,8 +30,12 @@ import me.piggypiglet.framework.mysql.table.Table;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class MySQLManager<S extends SearchUtils.Searchable> extends SearchableManager<S> {
     private final Table<S> table;
+    private final List<S> needsDeleting = new ArrayList<>();
     private boolean autoPopulate = true;
 
     protected final Options options = new Options();
@@ -55,8 +59,18 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
         });
     }
 
+    @Override
+    public void remove(S item) {
+        super.remove(item);
+        needsDeleting.add(item);
+    }
+
     public Table<S> getTable() {
         return table;
+    }
+
+    public List<S> getNeedsDeleting() {
+        return needsDeleting;
     }
 
     protected class Options {

@@ -63,7 +63,7 @@ public abstract class Table<T> {
      * @param t Type
      * @return KeyValueSet
      */
-    protected KeyValueSet saveLocations(T t) {
+    protected KeyValueSet saveLocation(T t) {
         return typeToRow(t);
     }
 
@@ -113,7 +113,7 @@ public abstract class Table<T> {
      * @return CompletableFuture of whether the save was successful.
      */
     public CompletableFuture<Boolean> save(T t) {
-        final KeyValueSet location = saveLocations(t);
+        final KeyValueSet location = saveLocation(t);
         final AtomicReference<CompletableFuture<Boolean>> future = new AtomicReference<>();
 
         getter().location(location).build().exists().whenComplete((b, th) -> {
@@ -131,5 +131,9 @@ public abstract class Table<T> {
         });
 
         return future.get();
+    }
+
+    public CompletableFuture<Boolean> delete(T t) {
+        return deleter().location(typeToRow(t)).build().execute();
     }
 }

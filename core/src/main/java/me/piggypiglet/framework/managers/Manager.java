@@ -55,16 +55,46 @@ public abstract class Manager<S> {
     }
 
     /**
-     * Add an item to a manager.
-     * @param item Item to add
+     * Handle inserting an item into underlying data structures
+     * @param item Item to insert
      */
-    public abstract void add(S item);
+    protected abstract void insert(S item);
 
     /**
-     * Get all items stored in this manager.
-     * @return Collection of items
+     * Handle deleting an item from underlying data structures
+     * @param item Item to delete
      */
-    public abstract Collection<S> getAll();
+    protected abstract void delete(S item);
+
+    /**
+     * Retrieve values from any data structures in this manager
+     * @return Collection of values
+     */
+    protected abstract Collection<S> retrieveAll();
+
+    /**
+     * Store an item to this manager
+     * @param item Item
+     */
+    public void add(S item) {
+        insert(item);
+    }
+
+    /**
+     * Remove an item from this manager
+     * @param item Item
+     */
+    public void remove(S item) {
+        delete(item);
+    }
+
+    /**
+     * Get everything stored in this manager.
+     * @return Collection of values
+     */
+    public Collection<S> getAll() {
+        return retrieveAll();
+    }
 
     /**
      * Get a value based on configured key types
