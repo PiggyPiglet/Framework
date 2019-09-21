@@ -25,6 +25,7 @@
 package me.piggypiglet.framework.mysql.manager;
 
 import me.piggypiglet.framework.managers.implementations.SearchableManager;
+import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
 import me.piggypiglet.framework.mysql.table.Table;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
@@ -41,6 +42,7 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
 
     @Override
     public void setup() {
+        keyTypes = configure(KeyTypeInfo.builder());
         if (!autoPopulate) return;
 
         MySQLUtils.isReady().whenComplete((b, t) -> {

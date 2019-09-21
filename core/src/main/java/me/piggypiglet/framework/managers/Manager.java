@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 public abstract class Manager<S> {
-    private KeyTypeInfo keyTypes;
+    protected KeyTypeInfo keyTypes;
 
     /**
      * Configure acceptable key types
