@@ -106,7 +106,7 @@ public abstract class Table<T> {
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         getter().location(row).build().exists().whenComplete((b, th) -> {
-            if (b) {
+            if (!b) {
                 creator().key(row.getKeys()).value(row.getValues()).build().execute().whenComplete((b_, th_) -> future.complete(b_));
             }
         });

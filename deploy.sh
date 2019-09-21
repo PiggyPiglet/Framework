@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -ne 2 ]; then
-  echo "name and version not supplied"
+  echo "name and/or version not supplied"
   exit 1
 fi
 
@@ -8,6 +8,7 @@ gradle clean
 gradle jar
 
 cd /e/Documents/Github/Framework/
+rm -r maven/tmp/
 mkdir maven/tmp/
 
 names=$1

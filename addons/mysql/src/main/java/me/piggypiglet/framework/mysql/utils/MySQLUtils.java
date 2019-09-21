@@ -176,7 +176,23 @@ public final class MySQLUtils {
     public static CompletableFuture<Boolean> exists(String table, String[] keys, Object[] values) {
         Preconditions.checkArgument(keys.length == values.length, "Key and value length don't match.");
 
-        return DB.getFirstRowAsync("SELECT * FROM `" + table + "` WHERE " + whereFormat(keys, values) + ";").thenApply(r -> !r.isEmpty());
+        CompletableFuture<Boolean> exists = new CompletableFuture<>();
+
+        EXECUTOR.submit(() -> {
+            try {
+                DbRow row = DB.getFirstRow("SELECT * FROM `" + table + "` WHERE " + whereFormat(keys, values) + ";");
+
+                if (row == null) {
+                    exists.complete(false);
+                } else {
+                    exists.complete(true);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return exists;
     }
 
     private static String keyFormat(String[] keys) {
@@ -194,7 +210,7 @@ public final class MySQLUtils {
     }
 
     private static String whereFormat(String[] keys, Object[] values) {
-        return "`" + format(String.join("=%s AND `", keys) + "`=%s", values);
+        return "`" + format(String.join("`=%s AND `", keys) + "`=%s", values);
     }
 
     private static String format(String str, Object... variables) {
