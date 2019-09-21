@@ -57,6 +57,15 @@ public abstract class Table<T> {
     protected abstract KeyValueSet typeToRow(T t);
 
     /**
+     * Optionally configure which locations will be checked when using #save. Will use typeToRow by default.
+     * @param t Type
+     * @return KeyValueSet
+     */
+    protected KeyValueSet saveLocations(T t) {
+        return typeToRow(t);
+    }
+
+    /**
      * Get a new instance of RowCreator Builder
      * @return RowCreator Builder
      */
@@ -102,11 +111,11 @@ public abstract class Table<T> {
      * @return CompletableFuture of whether the save was successful.
      */
     public CompletableFuture<Boolean> save(T t) {
-        final KeyValueSet row = typeToRow(t);
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        getter().location(row).build().exists().whenComplete((b, th) -> {
+        getter().location(saveLocations(t)).build().exists().whenComplete((b, th) -> {
             if (!b) {
+                final KeyValueSet row = typeToRow(t);
                 creator().key(row.getKeys()).value(row.getValues()).build().execute().whenComplete((b_, th_) -> future.complete(b_));
             }
         });
