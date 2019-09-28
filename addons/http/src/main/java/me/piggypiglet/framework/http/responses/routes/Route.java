@@ -26,22 +26,23 @@ package me.piggypiglet.framework.http.responses.routes;
 
 import me.piggypiglet.framework.http.responses.routes.objects.Header;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public abstract class Route {
     private final String route;
-    protected final List<Header> headers;
+    protected static final List<Header> HEADERS = new ArrayList<>();
 
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
      * @param route Route
-     * @param headers Optional headers to append to the page
+     * @param HEADERS Optional headers to append to the page
      */
-    protected Route(String route, Header... headers) {
+    protected Route(String route, Header... HEADERS) {
         this.route = route;
-        this.headers = Arrays.asList(headers);
+        Route.HEADERS.addAll(Arrays.asList(HEADERS));
     }
 
     /**
@@ -76,6 +77,6 @@ public abstract class Route {
      * @return List of headers
      */
     public List<Header> getHeaders() {
-        return headers;
+        return HEADERS;
     }
 }

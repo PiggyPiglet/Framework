@@ -27,9 +27,12 @@ package me.piggypiglet.framework.http.responses;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
+import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.file.objects.FileWrapper;
+import me.piggypiglet.framework.http.HTTPAddon;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
 import me.piggypiglet.framework.http.responses.routes.Route;
+import me.piggypiglet.framework.http.responses.routes.mixins.Authenticated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ import java.util.List;
 @Singleton
 public final class ResponseHandler {
     @Inject @DefaultHTTP private FileWrapper def;
+    @Inject private ConfigManager configManager;
 
     private final List<Route> routes = new ArrayList<>();
 
@@ -48,13 +52,19 @@ public final class ResponseHandler {
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
         for (Route route : routes) {
             if (session.getUri().toLowerCase().replace("/", "").startsWith(route.getRoute())) {
+                if (route.getClass().getAnnotation(Authenticated.class) != null) {
+                    if (!session.getHeaders().getOrDefault("auth", "test").equals(configManager.getConfigs().get(HTTPAddon.class).getItems().get("authentication.token"))) {
+                        return NanoHTTPD.newFixedLengthResponse("<p>Invalid auth token provided.</p>");
+                    }
+                }
+
                 NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(session.getParameters()).toString());
                 route.getHeaders().forEach(h -> response.addHeader(h.getKey(), h.getValue()));
                 return response;
             }
         }
 
-        return NanoHTTPD.newFixedLengthResponse(def.getFileContent());
+        return NanoHTTPD.newFixedLengthResponse(this.def.getFileContent());
     }
 
     /**

@@ -54,7 +54,7 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         )},
         config = @Config(
                 name = "http",
-                keys = {"ip", "port"}
+                keys = {"ip", "port", "ssl.enabled", "ssl.path", "ssl.password", "authentication.token"}
         ),
         shutdown = ShutdownHTTP.class
 )

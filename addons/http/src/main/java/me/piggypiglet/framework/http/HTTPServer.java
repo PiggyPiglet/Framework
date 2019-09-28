@@ -32,6 +32,10 @@ import me.piggypiglet.framework.http.responses.ResponseHandler;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 
+import javax.net.ssl.KeyManagerFactory;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.Map;
 
 /**
@@ -52,10 +56,24 @@ public final class HTTPServer {
     public void start() {
         final Map<String, Object> items = configManager.getConfigs().get(HTTPAddon.class).getItems();
         String ip = (String) items.get("ip");
-        int port = (int) items.get("port");
+        int port = (int) (double) items.get("port");
 
         try {
             nanoHTTPD = new NestedServer(ip, port);
+
+            if ((boolean) items.get("ssl.enabled")) {
+                char[] password = ((String) items.get("ssl.password")).toCharArray();
+                KeyStore ks = KeyStore.getInstance("JKS");
+                InputStream in = new FileInputStream((String) items.get("ssl.path"));
+                ks.load(in, password);
+                in.close();
+                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+                keyManagerFactory.init(ks, password);
+                password = null; // not redundant, "clears" the password from memory
+
+                nanoHTTPD.makeSecure(NanoHTTPD.makeSSLSocketFactory(ks, keyManagerFactory), null);
+            }
+
             nanoHTTPD.start();
             LOGGER.info("HTTP Server started at %s:%s", ip, port);
         } catch (Exception e) {

@@ -11,6 +11,10 @@ import java.util.Map;
 public abstract class JsonRoute extends Route {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    static {
+        HEADERS.add(new Header("Content-Type", "application/json"));
+    }
+
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
      * @param route Route
@@ -18,7 +22,6 @@ public abstract class JsonRoute extends Route {
      */
     protected JsonRoute(String route, Header... headers) {
         super(route, headers);
-        this.headers.add(new Header("Content-Type", "application/json"));
     }
 
     @Override
