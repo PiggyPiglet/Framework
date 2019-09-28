@@ -73,6 +73,12 @@ public abstract class User {
      * @param vars Vars to replace in the message (uses String#format)
      */
     public void sendMessage(String message, Object... vars) {
-        sendMessage(String.format(message, vars));
+        String clone = message;
+
+        if (vars != null) {
+            clone = String.format(message, vars);
+        }
+
+        sendMessage(clone);
     }
 }
