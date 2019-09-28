@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.annotations;
+package me.piggypiglet.framework.http.files;
 
 import com.google.inject.BindingAnnotation;
 
@@ -32,9 +32,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for the HTTP config binding
+ * Annotation for the default html filewrapper binding
  */
 @BindingAnnotation
 @Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME)
-public @interface HTTP {
+public @interface DefaultHTTP {
 }

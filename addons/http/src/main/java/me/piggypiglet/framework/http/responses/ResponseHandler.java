@@ -28,7 +28,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
 import me.piggypiglet.framework.file.objects.FileWrapper;
-import me.piggypiglet.framework.http.annotations.DefaultHTTP;
+import me.piggypiglet.framework.http.files.DefaultHTTP;
+import me.piggypiglet.framework.http.responses.routes.Route;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,8 @@ public final class ResponseHandler {
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
         for (Route route : routes) {
             if (session.getUri().toLowerCase().replace("/", "").startsWith(route.getRoute())) {
-                NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(session.getParameters()));
-                response.addHeader("Content-Type", "application/json");
+                NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(session.getParameters()).toString());
+                route.getHeaders().forEach(h -> response.addHeader(h.getKey(), h.getValue()));
                 return response;
             }
         }

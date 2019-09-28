@@ -63,7 +63,7 @@ public final class HelpCommand extends Command {
             return true;
         }
 
-        final StringBuilder builder = new StringBuilder("&7Help menu");
+        final StringBuilder builder = new StringBuilder("&7Help menu\n");
 
         commands.forEach(c -> {
             builder.append("&c/").append(framework.getCommandPrefix()).append(" ").append(c.getCommand());

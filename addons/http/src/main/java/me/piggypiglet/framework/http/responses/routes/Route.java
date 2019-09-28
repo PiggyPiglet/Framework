@@ -22,36 +22,34 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses;
+package me.piggypiglet.framework.http.responses.routes;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import me.piggypiglet.framework.http.responses.routes.objects.Header;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public abstract class Route {
-    /**
-     * GSON instance for returning json
-     */
-    protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
     private final String route;
+    protected final List<Header> headers;
 
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
      * @param route Route
+     * @param headers Optional headers to append to the page
      */
-    protected Route(String route) {
+    protected Route(String route, Header... headers) {
         this.route = route;
+        this.headers = Arrays.asList(headers);
     }
 
     /**
      * Process user-inputted params and return a string response
      * @param params User input
-     * @return String
+     * @return Object, will be converted to string
      */
-    protected abstract String provide(Map<String, List<String>> params);
+    protected abstract Object provide(Map<String, List<String>> params);
 
     /**
      * Process parameters and return a string based on them &amp; the route
@@ -59,9 +57,9 @@ public abstract class Route {
      *               url/route?test=oof&amp;test=oof2&amp;oof=test
      *               which would result in:
      *               {test:["oof", "oof2"],oof:["test"]}
-     * @return String (JSON)
+     * @return Object, will be converted to string
      */
-    public String run(Map<String, List<String>> params) {
+    public Object run(Map<String, List<String>> params) {
         return provide(params);
     }
 
@@ -71,5 +69,13 @@ public abstract class Route {
      */
     public String getRoute() {
         return route;
+    }
+
+    /**
+     * Get headers that this route should declare
+     * @return List of headers
+     */
+    public List<Header> getHeaders() {
+        return headers;
     }
 }

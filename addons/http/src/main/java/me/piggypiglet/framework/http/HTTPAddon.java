@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.http;
 
-import me.piggypiglet.framework.http.annotations.DefaultHTTP;
-import me.piggypiglet.framework.http.annotations.HTTP;
+import me.piggypiglet.framework.http.files.DefaultHTTP;
+import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;
 import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;

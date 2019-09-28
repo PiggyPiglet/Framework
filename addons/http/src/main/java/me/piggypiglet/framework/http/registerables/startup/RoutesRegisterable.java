@@ -26,7 +26,7 @@ package me.piggypiglet.framework.http.registerables.startup;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.http.responses.ResponseHandler;
-import me.piggypiglet.framework.http.responses.Route;
+import me.piggypiglet.framework.http.responses.routes.Route;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
