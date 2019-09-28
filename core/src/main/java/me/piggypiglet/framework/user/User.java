@@ -75,7 +75,7 @@ public abstract class User {
     public void sendMessage(String message, Object... vars) {
         String clone = message;
 
-        if (vars != null) {
+        if (vars.length > 0) {
             clone = String.format(message, vars);
         }
 
