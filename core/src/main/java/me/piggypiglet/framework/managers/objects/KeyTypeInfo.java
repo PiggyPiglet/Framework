@@ -94,8 +94,8 @@ public final class KeyTypeInfo {
                         .bundle();
             }
 
-            public final <O> Builder list(List<O> list, BiPredicate<T, O> filter, O def) {
-                return new KeyFunctionBuilder<>(clazz, t -> list.stream().filter(o -> filter.test(t, o)).findAny())
+            public final <O> Builder list(List<O> list, BiPredicate<U, O> filter, O def) {
+                return new KeyFunctionBuilder<>(clazz, t -> list.stream().filter(o -> filter.test(mapper.apply(t), o)).findAny())
                         .getter(o -> o.orElse(def))
                         .exists(Optional::isPresent)
                         .bundle();
