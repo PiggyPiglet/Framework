@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.bukkit;
 
+import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.bukkit.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.bukkit.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bukkit.registerables.LoggerRegisterable;
@@ -31,7 +32,10 @@ import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(startup = {
-        @Startup(LoggerRegisterable.class),
+        @Startup(
+                value = LoggerRegisterable.class,
+                priority = BootPriority.AFTER_IMPL
+        ),
         @Startup(CommandExecutorRegisterable.class),
         @Startup(EventFinderRegisterable.class)
 })

@@ -26,6 +26,9 @@ package me.piggypiglet.framework.managers.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 public final class KeyTypeInfo {
@@ -83,6 +86,19 @@ public final class KeyTypeInfo {
             public final KeyFunctionBuilder<T, U> exists(Function<U, Boolean> exists) {
                 this.exists = exists;
                 return this;
+            }
+
+            public final <O> Builder map(Map<U, O> map, O def) {
+                return getter(o -> map.getOrDefault(o, def))
+                        .exists(map::containsKey)
+                        .bundle();
+            }
+
+            public final <O> Builder list(List<O> list, BiPredicate<T, O> filter, O def) {
+                return new KeyFunctionBuilder<>(clazz, t -> list.stream().filter(o -> filter.test(t, o)).findAny())
+                        .getter(o -> o.orElse(def))
+                        .exists(Optional::isPresent)
+                        .bundle();
             }
 
             public final Builder bundle() {

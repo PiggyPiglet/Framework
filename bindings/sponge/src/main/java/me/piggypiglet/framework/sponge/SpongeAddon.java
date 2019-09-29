@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.sponge;
 
+import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.sponge.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.sponge.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.sponge.registerables.LoggerRegisterable;
@@ -32,7 +33,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(
         startup = {
-                @Startup(LoggerRegisterable.class),
+                @Startup(
+                        value = LoggerRegisterable.class,
+                        priority = BootPriority.AFTER_IMPL
+                ),
                 @Startup(CommandExecutorRegisterable.class),
                 @Startup(EventFinderRegisterable.class)
         }
