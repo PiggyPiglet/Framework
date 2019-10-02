@@ -56,6 +56,13 @@ public final class ClassUtils {
         }
     }
 
+    /**
+     * Convert a primitive to it's wrapper, with a default value.<br/>
+     * Kudos to devs behind apache commons lang, they're the original author of this method.<br/>
+     * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/ClassUtils.java
+     * @param clazz primitive
+     * @return Wrapper
+     */
     public static Class<?> primitiveToWrapper(final Class<?> clazz) {
         Class<?> convertedClass = clazz;
 
@@ -66,6 +73,12 @@ public final class ClassUtils {
         return convertedClass;
     }
 
+    /**
+     * Convert a wrapper into a primitive with a default value, likely either 0, false, or 'a'.
+     * @param clazz Wrapper class
+     * @return Primitive object
+     * @throws Exception Unlikely, but possible
+     */
     public static Object wrapperToPrimitive(final Class<?> clazz) throws Exception {
         return Primitives.fromClass(clazz).getDefaultInstance();
     }

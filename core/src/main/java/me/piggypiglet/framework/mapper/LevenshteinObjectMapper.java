@@ -36,10 +36,15 @@ import java.util.stream.Collectors;
 public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<String, Object>, T> {
     private final Constructor<T> constructor;
     private final Object[] params;
+    private final Map<String, Class<?>> types = new LinkedHashMap<>();
+    private final List<SearchUtils.Searchable> searchables;
+    private final Map<String, Field> fields = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper() {
-        constructor = (Constructor<T>) Arrays.stream(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getConstructors())
+        final Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+
+        constructor = (Constructor<T>) Arrays.stream(clazz.getConstructors())
                 .max(Comparator.comparing(Constructor::getParameterCount))
                 .orElseThrow(RuntimeException::new);
         params = Arrays.stream(constructor.getParameterTypes()).map(p -> {
@@ -49,19 +54,28 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
                 throw new RuntimeException(e);
             }
         }).toArray();
-    }
-
-    @Override
-    public final T dataToType(Map<String, Object> data) {
-        final Map<String, Class<?>> types = new LinkedHashMap<>();
-        final Map<String, Object> result = new LinkedHashMap<>();
-        T instance;
 
         Arrays.stream(constructor.getDeclaringClass().getDeclaredFields()).forEach(
                 f -> types.put(f.getName(), f.getType().isPrimitive() ? ClassUtils.primitiveToWrapper(f.getType()) : f.getType())
         );
 
-        final List<SearchUtils.Searchable> searchables = types.keySet().stream().map(StringSearchable::new).collect(Collectors.toList());
+        searchables = types.keySet().stream().map(StringSearchable::new).collect(Collectors.toList());
+
+        types.keySet().forEach(s -> {
+            try {
+                final Field f = clazz.getDeclaredField(s);
+                f.setAccessible(true);
+                fields.put(s, f);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public final T dataToType(Map<String, Object> data) {
+        final Map<String, Object> result = new LinkedHashMap<>();
+        T instance;
 
         data.forEach((s, o) -> {
             String key;
@@ -83,13 +97,10 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             }
         } else {
             instance = createInstance();
-            final Class<T> clazz = constructor.getDeclaringClass();
 
             result.forEach((s, o) -> {
                 try {
-                    final Field field = clazz.getDeclaredField(s);
-                    field.setAccessible(true);
-                    field.set(instance, o);
+                    fields.get(s).set(instance, o);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
