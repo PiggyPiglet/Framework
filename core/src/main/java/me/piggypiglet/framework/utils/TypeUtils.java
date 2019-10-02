@@ -22,34 +22,19 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes.types;
+package me.piggypiglet.framework.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import me.piggypiglet.framework.http.responses.routes.Route;
-import me.piggypiglet.framework.http.responses.routes.objects.Header;
-
-import java.util.List;
-import java.util.Map;
-
-public abstract class JsonRoute extends Route {
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    static {
-        HEADERS.add(new Header("Content-Type", "application/json"));
-    }
-
+public final class TypeUtils {
     /**
-     * Provide the path of this route, do not include a forward slash at the beginning.
-     * @param route Route
-     * @param headers Optional headers to append to the page
+     * Check if a value is null, if it is, return an optional def, if def isn't provided, return a configurable null value
+     * @param value     Value
+     * @param nullValue Default null value if def & value is null
+     * @param def       Default value if null
+     * @param <T>       Type of value
+     * @return value, nullValue, or def
      */
-    protected JsonRoute(String route, Header... headers) {
-        super(route, headers);
-    }
-
-    @Override
-    public Object run(Map<String, List<String>> params) {
-        return gson.toJson(super.run(params));
+    @SafeVarargs
+    public static <T> T valueNullDef(T value, T nullValue, T... def) {
+        return value == null ? def.length >= 1 ? def[0] : nullValue : value;
     }
 }

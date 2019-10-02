@@ -42,6 +42,10 @@ public final class KeyValueSet {
         return new Builder();
     }
 
+    public static KeyValueSet fromMap(Map<String, Object> map) {
+        return new KeyValueSet(map);
+    }
+
     public static class Builder {
         Map<String, Object> values = new HashMap<>();
 

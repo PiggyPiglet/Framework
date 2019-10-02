@@ -32,8 +32,8 @@ import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.utils.type.GenericException;
-import me.piggypiglet.framework.utils.type.TypeUtils;
+import me.piggypiglet.framework.utils.clazz.ClassUtils;
+import me.piggypiglet.framework.utils.clazz.GenericException;
 
 public final class EventFinderRegisterable extends StartupRegisterable {
     @Inject private Reflections reflections;
@@ -48,7 +48,7 @@ public final class EventFinderRegisterable extends StartupRegisterable {
         reflections.getClassesWithAnnotatedMethods(Subscribe.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> eventManager.register(main, l));
         reflections.getSubTypesOf(EventHandler.class).forEach(l -> {
             try {
-                eventManager.register(main, TypeUtils.getClassGeneric(l), injector.getInstance(l));
+                eventManager.register(main, ClassUtils.getImplementedGeneric(l), injector.getInstance(l));
             } catch (GenericException e) {
                 logger.warning("Could not find valid event on %s.", l.getName());
             }

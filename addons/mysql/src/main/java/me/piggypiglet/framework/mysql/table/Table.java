@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.mysql.table;
 
-import co.aikar.idb.DbRow;
+import me.piggypiglet.framework.mapper.ObjectMapper;
 import me.piggypiglet.framework.mysql.components.row.RowCreator;
 import me.piggypiglet.framework.mysql.components.row.RowDeleter;
 import me.piggypiglet.framework.mysql.components.row.RowEditor;
@@ -37,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public abstract class Table<T> {
+public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
     private final String table;
 
     protected Table(String table) {
@@ -45,26 +45,12 @@ public abstract class Table<T> {
     }
 
     /**
-     * Convert a row to the table's type
-     * @param row Row to convert
-     * @return T
-     */
-    protected abstract T rowToType(DbRow row);
-
-    /**
-     * Convert a KeyValueSet to the table's type
-     * @param t Type
-     * @return KeyValueSet
-     */
-    protected abstract KeyValueSet typeToRow(T t);
-
-    /**
      * Optionally configure which locations will be checked when using #save. Will use typeToRow by default.
      * @param t Type
      * @return KeyValueSet
      */
     protected KeyValueSet saveLocation(T t) {
-        return typeToRow(t);
+        return typeToData(t);
     }
 
     /**
@@ -104,7 +90,7 @@ public abstract class Table<T> {
      * @return CompletableFuture of list of table type
      */
     public CompletableFuture<List<T>> getAll() {
-        return getter().build().getAll().thenApply(rows -> rows.stream().map(this::rowToType).collect(Collectors.toList()));
+        return getter().build().getAll().thenApply(rows -> rows.stream().map(KeyValueSet::fromMap).map(this::dataToType).collect(Collectors.toList()));
     }
 
     /**
@@ -117,7 +103,7 @@ public abstract class Table<T> {
         final AtomicReference<CompletableFuture<Boolean>> future = new AtomicReference<>();
 
         getter().location(location).build().exists().whenComplete((b, th) -> {
-            final KeyValueSet row = typeToRow(t);
+            final KeyValueSet row = typeToData(t);
 
             if (!b) {
                 future.set(creator().set(row).build().execute());
@@ -134,6 +120,6 @@ public abstract class Table<T> {
     }
 
     public CompletableFuture<Boolean> delete(T t) {
-        return deleter().location(typeToRow(t)).build().execute();
+        return deleter().location(typeToData(t)).build().execute();
     }
 }
