@@ -7,12 +7,13 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 - Manager API (including levenshtein searching)
 - Configuration system (JSON Default)
 - File manager
+- Intelligent Object Mapper (similarity based variable comparisons)
 - Plenty of addons
   - MySQL API
   - Logback Implementation
   - Serve HTTP JSON
   - Console interaction
-  - Runtime Jar Loader (WIP)
+  - Runtime Jar Loader
 - Loads of pre-made bindings for popular apis
   - Bukkit
   - Sponge
