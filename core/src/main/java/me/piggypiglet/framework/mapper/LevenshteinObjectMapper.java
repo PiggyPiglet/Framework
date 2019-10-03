@@ -29,6 +29,7 @@ import me.piggypiglet.framework.utils.clazz.ClassUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,16 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
     private final Map<String, Class<?>> types = new LinkedHashMap<>();
     private final List<SearchUtils.Searchable> searchables;
     private final Map<String, Field> fields = new HashMap<>();
+
+    @SuppressWarnings("unchecked")
+    protected LevenshteinObjectMapper() {
+        final LevenshteinObjectMapper<T> mapper = new LevenshteinObjectMapper<T>((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]){};
+        constructor = mapper.constructor;
+        params = mapper.params;
+        types.putAll(mapper.types);
+        searchables = mapper.searchables;
+        fields.putAll(mapper.fields);
+    }
 
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper(Class<T> clazz) {
