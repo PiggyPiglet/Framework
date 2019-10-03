@@ -5,9 +5,9 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 - Platform independent command API
 - Task manager
 - Manager API (including levenshtein searching)
-- Configuration system (JSON Default)
-- File manager
 - Intelligent Object Mapper (similarity based variable comparisons)
+- Configuration system (JSON Default, supports object mapping)
+- File manager
 - Plenty of addons
   - MySQL API
   - Logback Implementation
@@ -56,4 +56,4 @@ More info can be found on their respective pages.
 
 | Core  | Console | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity |
 |-------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|
-| 1.3.1 | 1.3.0   | 1.3.0 | 1.3.0 | 1.3.0   | 1.3.0 | 1.3.1  | 1.3.1      | 1.3.1 | 1.3.1  | 1.3.1    |
+| 1.3.2 | 1.3.0   | 1.3.0 | 1.3.0 | 1.3.0   | 1.3.0 | 1.3.2  | 1.3.2      | 1.3.2 | 1.3.2  | 1.3.2    |
