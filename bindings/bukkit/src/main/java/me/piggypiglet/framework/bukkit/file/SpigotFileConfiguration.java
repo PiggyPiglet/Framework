@@ -32,6 +32,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public final class SpigotFileConfiguration extends AbstractFileConfiguration {
     private FileConfiguration config;
@@ -105,6 +106,11 @@ public final class SpigotFileConfiguration extends AbstractFileConfiguration {
     @Override
     public List<?> getList(String path) {
         return config.getList(path);
+    }
+
+    @Override
+    protected Map<String, Object> retrieveAll() {
+        return config.getValues(true);
     }
 
     private me.piggypiglet.framework.file.framework.FileConfiguration configSectionToFileConfiguration(ConfigurationSection section) {

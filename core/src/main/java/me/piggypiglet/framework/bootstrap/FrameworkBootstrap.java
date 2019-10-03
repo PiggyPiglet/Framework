@@ -42,6 +42,7 @@ import me.piggypiglet.framework.registerables.startup.addon.DefaultConfigsRegist
 import me.piggypiglet.framework.registerables.startup.addon.UserConfigsRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandHandlerRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandsRegisterable;
+import me.piggypiglet.framework.registerables.startup.file.FileMappingRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
@@ -81,7 +82,7 @@ public final class FrameworkBootstrap {
         registerables.putAll(BootPriority.IMPL, linkedHashSet(
                 ImplementationFinderRegisterable.class, FileTypesRegisterable.class,
                 DefaultConfigsRegisterable.class, FilesRegisterable.class,
-                UserConfigsRegisterable.class
+                FileMappingRegisterable.class, UserConfigsRegisterable.class
         ));
 
         if (config.getCommandPrefix() != null) {

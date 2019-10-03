@@ -29,7 +29,6 @@ import me.piggypiglet.framework.utils.clazz.ClassUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,9 +40,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
     private final Map<String, Field> fields = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    protected LevenshteinObjectMapper() {
-        final Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-
+    protected LevenshteinObjectMapper(Class<T> clazz) {
         constructor = (Constructor<T>) Arrays.stream(clazz.getConstructors())
                 .max(Comparator.comparing(Constructor::getParameterCount))
                 .orElseThrow(RuntimeException::new);
@@ -89,9 +86,38 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             result.put(key, o);
         });
 
-        if (new ArrayList<>(types.values()).equals(new ArrayList<>(result.values().stream().map(Object::getClass).collect(Collectors.toList())))) {
+        if (new ArrayList<>(types.values().stream().map(t -> {
+            if (t == Integer.class || t == Long.class) {
+                return Double.class;
+            }
+
+            return t;
+        }).collect(Collectors.toList())).equals(new ArrayList<>(result.values().stream().map(Object::getClass).collect(Collectors.toList())))) {
             try {
-                instance = constructor.newInstance(result.values().toArray());
+                List<Class<?>> typeValues = new ArrayList<>(types.values());
+                List<Object> resultValues = new ArrayList<>(result.values());
+                List<Object> values = new ArrayList<>();
+
+                for (int i = 0; i < resultValues.size(); i++) {
+                    final Object value = resultValues.get(i);
+                    final Class clazz = value.getClass();
+
+                    if (clazz == Double.class) {
+                        switch (typeValues.get(i).getSimpleName().toLowerCase()) {
+                            case "integer":
+                                values.add(((Double) value).intValue());
+                                continue;
+
+                            case "long":
+                                values.add(((Double) value).longValue());
+                                continue;
+                        }
+                    }
+
+                    values.add(value);
+                }
+
+                instance = constructor.newInstance(values.toArray());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

@@ -28,7 +28,9 @@ import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class BlankFileConfiguration extends AbstractFileConfiguration {
     public BlankFileConfiguration() {
@@ -83,5 +85,10 @@ public final class BlankFileConfiguration extends AbstractFileConfiguration {
     @Override
     public List<?> getList(String path) {
         return new ArrayList<>();
+    }
+
+    @Override
+    protected Map<String, Object> retrieveAll() {
+        return new HashMap<>();
     }
 }

@@ -24,14 +24,14 @@
 
 package me.piggypiglet.framework.bungeecord.file;
 
+import me.piggypiglet.framework.bungeecord.file.api.Configuration;
+import me.piggypiglet.framework.bungeecord.file.api.YamlConfiguration;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public final class BungeeFileConfiguration extends AbstractFileConfiguration {
     private Configuration config;
@@ -49,7 +49,7 @@ public final class BungeeFileConfiguration extends AbstractFileConfiguration {
     @Override
     protected void internalLoad(File file, String fileContent) {
         try {
-            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+            config = YamlConfiguration.load(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,6 +109,11 @@ public final class BungeeFileConfiguration extends AbstractFileConfiguration {
     @Override
     public List<?> getList(String path) {
         return config.getList(path);
+    }
+
+    @Override
+    protected Map<String, Object> retrieveAll() {
+        return config.getAll();
     }
 
     private FileConfiguration configSectionToFileConfiguration(Configuration section) {

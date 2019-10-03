@@ -111,4 +111,9 @@ public final class JsonFileConfiguration extends AbstractFileConfiguration {
     public final List<?> getList(String path) {
         return parser.getList(path);
     }
+
+    @Override
+    protected Map<String, Object> retrieveAll() {
+        return parser.getAll();
+    }
 }

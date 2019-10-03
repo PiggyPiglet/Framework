@@ -224,6 +224,10 @@ public final class JsonParser {
         return null;
     }
 
+    public Map<String, Object> getAll() {
+        return items;
+    }
+
     private boolean isConfigSection(Object object) {
         if (object instanceof Map<?, ?>) {
             Map<?, ?> map = (Map<?, ?>) object;

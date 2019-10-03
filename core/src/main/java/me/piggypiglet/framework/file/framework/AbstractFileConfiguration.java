@@ -28,7 +28,9 @@ import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public abstract class AbstractFileConfiguration implements FileConfiguration {
@@ -136,5 +138,27 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
     @Override
     public List<?> getList(String path, List<?> def) {
         return value(getList(path), new ArrayList<>(), def);
+    }
+
+    protected abstract Map<String, Object> retrieveAll();
+
+    public Map<String, Object> getAll() {
+        Map<String, Object> unprocessed = retrieveAll();
+        Map<String, Object> processed = new HashMap<>();
+
+        iterate("", unprocessed, processed);
+        return processed;
+    }
+
+    private void iterate(String currentKey, Map<String, Object> map, Map<String, Object> out) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            currentKey = currentKey.isEmpty() ? entry.getKey() : currentKey + "." + entry.getKey();
+
+            if (entry.getValue() instanceof Map) {
+                iterate(currentKey, (Map<String, Object>) entry.getValue(), out);
+            } else {
+                out.put(currentKey, entry.getValue());
+            }
+        }
     }
 }
