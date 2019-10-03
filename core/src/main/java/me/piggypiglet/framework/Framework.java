@@ -77,9 +77,10 @@ public final class Framework {
 
     /**
      * Start the bootstrap process with the current framework configuration.
+     * @return FrameworkBootstrap instance
      */
-    public void init() {
-        new FrameworkBootstrap(this);
+    public FrameworkBootstrap init() {
+        return new FrameworkBootstrap(this);
     }
 
     /**
