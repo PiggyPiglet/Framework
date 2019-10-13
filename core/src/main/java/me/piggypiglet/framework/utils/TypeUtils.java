@@ -28,7 +28,7 @@ public final class TypeUtils {
     /**
      * Check if a value is null, if it is, return an optional def, if def isn't provided, return a configurable null value
      * @param value     Value
-     * @param nullValue Default null value if def & value is null
+     * @param nullValue Default null value if def &amp; value is null
      * @param def       Default value if null
      * @param <T>       Type of value
      * @return value, nullValue, or def

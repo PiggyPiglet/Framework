@@ -45,7 +45,7 @@ public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
     }
 
     /**
-     * Optionally configure which locations will be checked when using #save. Will use typeToRow by default.
+     * Optionally configure which columns will be checked when using #save. Will use typeToRow by default.
      * @param t Type
      * @return KeyValueSet
      */

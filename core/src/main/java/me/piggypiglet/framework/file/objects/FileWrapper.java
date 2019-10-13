@@ -28,7 +28,7 @@ import java.io.File;
 
 public final class FileWrapper {
     private final File file;
-    private final String fileContent;
+    private String fileContent;
 
     public FileWrapper(File file, String fileContent) {
         this.file = file;
@@ -49,5 +49,12 @@ public final class FileWrapper {
      */
     public String getFileContent() {
         return fileContent;
+    }
+
+    /**
+     * Used for updating via FileManager#update, I don't recommend messing with this manually.
+     */
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
     }
 }

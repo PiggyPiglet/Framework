@@ -30,6 +30,7 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
 public final class SearchUtils {
@@ -44,8 +45,14 @@ public final class SearchUtils {
     public static <T extends Searchable> ImmutableList<T> search(List<Searchable> items, String query) {
         List<SearchPair> pairs = items.stream().map(i -> new SearchPair(i, query)).sorted().collect(Collectors.toList());
         Collections.reverse(pairs);
+        
+        Stream<SearchPair> stream = pairs.stream();
 
-        return pairs.stream()
+        if (pairs.size() > 5000) {
+            stream = stream.parallel();
+        }
+
+        return stream
                 .map(i -> (T) i.item)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
     }

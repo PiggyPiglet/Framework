@@ -46,6 +46,7 @@ public final class ClassUtils {
      * @param clazz Class to get the generic from
      * @param <T> Type
      * @return Class of the generic type, with the type as the classes generic
+     * @throws GenericException when it can't find the generic on the class
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getImplementedGeneric(Class clazz) throws GenericException {
@@ -57,8 +58,8 @@ public final class ClassUtils {
     }
 
     /**
-     * Convert a primitive to it's wrapper, with a default value.<br/>
-     * Kudos to devs behind apache commons lang, they're the original author of this method.<br/>
+     * Convert a primitive to it's wrapper, with a default value.<br>
+     * Kudos to devs behind apache commons lang, they're the original author of this method.<br>
      * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/ClassUtils.java
      * @param clazz primitive
      * @return Wrapper

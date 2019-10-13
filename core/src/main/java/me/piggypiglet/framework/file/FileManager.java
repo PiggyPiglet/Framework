@@ -115,15 +115,18 @@ public final class FileManager {
     }
 
     /**
-     * Update instances of an AbstractFileConfiguration with physical user changes
-     * @param name Name of the config
+     * Update instances of AbstractFileConfigurations or FileWrappers with physical changes to their respective files by the user.
+     * @param name Reference to the stored object
      */
     public void update(String name) {
-        FileConfiguration config = getConfig(name);
+        Object item = get(name);
 
-        if (config instanceof AbstractFileConfiguration) {
-            AbstractFileConfiguration ac = (AbstractFileConfiguration) config;
-            ac.load(ac.getFile(), FileUtils.readFileToString(ac.getFile()));
+        if (item instanceof AbstractFileConfiguration) {
+            AbstractFileConfiguration config = (AbstractFileConfiguration) item;
+            config.load(config.getFile(), FileUtils.readFileToString(config.getFile()));
+        } else {
+            FileWrapper file = (FileWrapper) item;
+            file.setFileContent(FileUtils.readFileToString(file.getFile()));
         }
     }
 

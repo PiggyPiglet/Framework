@@ -100,6 +100,7 @@ public abstract class Manager<S> {
      * Get a value based on configured key types
      * @param key Key value
      * @param <T> Key type
+     * @param <U> Raw type before mapping
      * @return Value
      */
     @SuppressWarnings("unchecked")
