@@ -22,30 +22,26 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.registerables.startup.file;
+package me.piggypiglet.framework.nukkit.commands;
 
-import com.google.inject.Inject;
-import me.piggypiglet.framework.file.FileManager;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.mapping.Maps;
-import me.piggypiglet.framework.mapper.LevenshteinObjectMapper;
-import me.piggypiglet.framework.reflection.Reflections;
-import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.commands.Command;
 
-public final class FileMappingRegisterable extends StartupRegisterable {
-    @Inject private FileManager fileManager;
-    @Inject private Reflections reflections;
+public abstract class NukkitCommand extends Command {
+    protected Options options = new Options();
+    protected boolean playerOnly = false;
 
-    @Override
-    protected void execute() {
-        reflections.getTypesAnnotatedWith(Maps.class).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
+    protected NukkitCommand(String command) {
+        super(command);
     }
 
-    private <T> void add(Class<T> clazz, String name) {
-        AbstractFileConfiguration config = (AbstractFileConfiguration) fileManager.getConfig(name);
+    public boolean isPlayerOnly() {
+        return playerOnly;
+    }
 
-        if (config != null) {
-            addBinding(clazz, new LevenshteinObjectMapper<T>(clazz){}.dataToType(config.getAll()));
+    protected class Options extends Command.Options {
+        public Options playerOnly(boolean playerOnly) {
+            NukkitCommand.this.playerOnly = playerOnly;
+            return this;
         }
     }
 }

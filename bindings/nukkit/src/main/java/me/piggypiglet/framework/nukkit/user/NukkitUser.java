@@ -22,30 +22,45 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.registerables.startup.file;
+package me.piggypiglet.framework.nukkit.user;
 
-import com.google.inject.Inject;
-import me.piggypiglet.framework.file.FileManager;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.mapping.Maps;
-import me.piggypiglet.framework.mapper.LevenshteinObjectMapper;
-import me.piggypiglet.framework.reflection.Reflections;
-import me.piggypiglet.framework.registerables.StartupRegisterable;
+import cn.nukkit.Player;
+import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.ConsoleCommandSender;
+import me.piggypiglet.framework.user.User;
 
-public final class FileMappingRegisterable extends StartupRegisterable {
-    @Inject private FileManager fileManager;
-    @Inject private Reflections reflections;
+public final class NukkitUser extends User {
+    private final CommandSender sender;
 
-    @Override
-    protected void execute() {
-        reflections.getTypesAnnotatedWith(Maps.class).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
+    public NukkitUser(CommandSender sender) {
+        super(
+                sender.getName(),
+                sender instanceof Player ? ((Player) sender).getUniqueId().toString() : "console"
+        );
+
+        this.sender = sender;
     }
 
-    private <T> void add(Class<T> clazz, String name) {
-        AbstractFileConfiguration config = (AbstractFileConfiguration) fileManager.getConfig(name);
+    //todo Handle color formatting
+    @Override
+    protected void sendMessage(String message) {
+        sender.sendMessage(message);
+    }
 
-        if (config != null) {
-            addBinding(clazz, new LevenshteinObjectMapper<T>(clazz){}.dataToType(config.getAll()));
-        }
+    @Override
+    public boolean hasPermission(String permission) {
+        return sender.hasPermission(permission);
+    }
+
+    public boolean isPlayer() {
+        return sender instanceof Player;
+    }
+
+    public ConsoleCommandSender getAsConsole() {
+        return (ConsoleCommandSender) sender;
+    }
+
+    public Player getAsPlayer() {
+        return (Player) sender;
     }
 }

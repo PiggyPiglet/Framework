@@ -65,7 +65,8 @@ def exportedProjects = [
         ":bindings:sponge",
         ":bindings:jda",
         ":bindings:velocity",
-        ":bindings:bungeecord"
+        ":bindings:bungeecord",
+        ":bindings:nukkit",
 ]
 
 task allJavadoc(type: Javadoc) {
