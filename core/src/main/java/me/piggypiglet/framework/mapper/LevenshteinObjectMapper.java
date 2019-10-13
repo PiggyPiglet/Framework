@@ -37,7 +37,6 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
     private final Constructor<T> constructor;
     private final Object[] params;
     private final Map<String, Class<?>> types = new LinkedHashMap<>();
-    private final List<SearchUtils.Searchable> searchables;
     private final Map<String, Field> fields = new HashMap<>();
 
     @SuppressWarnings("unchecked")
@@ -46,7 +45,6 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         constructor = mapper.constructor;
         params = mapper.params;
         types.putAll(mapper.types);
-        searchables = mapper.searchables;
         fields.putAll(mapper.fields);
     }
 
@@ -63,11 +61,9 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             }
         }).toArray();
 
-        Arrays.stream(constructor.getDeclaringClass().getDeclaredFields()).forEach(
+        Arrays.stream(clazz.getDeclaredFields()).forEach(
                 f -> types.put(f.getName(), f.getType().isPrimitive() ? ClassUtils.primitiveToWrapper(f.getType()) : f.getType())
         );
-
-        searchables = types.keySet().stream().map(StringSearchable::new).collect(Collectors.toList());
 
         types.keySet().forEach(s -> {
             try {
@@ -85,16 +81,18 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         final Map<String, Object> result = new LinkedHashMap<>();
         T instance;
 
-        data.forEach((s, o) -> {
+        final List<SearchUtils.Searchable> searchables = data.keySet().stream().map(StringSearchable::new).collect(Collectors.toList());
+
+        types.keySet().forEach(s -> {
             String key;
 
-            if (types.containsKey(s)) {
+            if (data.containsKey(s)) {
                 key = s;
             } else {
                 key = SearchUtils.search(searchables, s).get(0).getName();
             }
 
-            result.put(key, o);
+            result.put(s, data.get(key));
         });
 
         final List<Class<?>> required = new ArrayList<>(types.values().stream().map(t -> {
