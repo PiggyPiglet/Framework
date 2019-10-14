@@ -22,30 +22,27 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.registerables.startup.file;
+package me.piggypiglet.framework.nukkit.commands;
 
-import com.google.inject.Inject;
-import me.piggypiglet.framework.file.FileManager;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.mapping.Maps;
-import me.piggypiglet.framework.mapper.LevenshteinObjectMapper;
-import me.piggypiglet.framework.reflection.Reflections;
-import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.commands.Command;
+import me.piggypiglet.framework.commands.CommandHandler;
+import me.piggypiglet.framework.nukkit.user.NukkitUser;
+import me.piggypiglet.framework.user.User;
 
-public final class FileMappingRegisterable extends StartupRegisterable {
-    @Inject private FileManager fileManager;
-    @Inject private Reflections reflections;
-
+public final class NukkitCommandHandler extends CommandHandler {
     @Override
-    protected void execute() {
-        reflections.getTypesAnnotatedWith(Maps.class).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
-    }
-
-    private <T> void add(Class<T> clazz, String name) {
-        AbstractFileConfiguration config = (AbstractFileConfiguration) fileManager.getConfig(name);
-
-        if (config != null) {
-            addBinding(clazz, new LevenshteinObjectMapper<T>(clazz){}.dataToType(config.getAll()));
+    protected boolean process(User user, Command command) {
+        if (user instanceof NukkitUser && command instanceof NukkitCommand) {
+            if (((NukkitCommand) command).isPlayerOnly()) {
+                if (((NukkitUser) user).isPlayer()) {
+                    return true;
+                } else {
+                    user.sendMessage("Only player's can execute this command.");
+                    return false;
+                }
+            }
         }
+        return true;
     }
+
 }

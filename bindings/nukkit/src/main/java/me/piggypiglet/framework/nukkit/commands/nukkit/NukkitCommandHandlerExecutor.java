@@ -22,30 +22,24 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.registerables.startup.file;
+package me.piggypiglet.framework.nukkit.commands.nukkit;
 
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandExecutor;
+import cn.nukkit.command.CommandSender;
 import com.google.inject.Inject;
-import me.piggypiglet.framework.file.FileManager;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.mapping.Maps;
-import me.piggypiglet.framework.mapper.LevenshteinObjectMapper;
-import me.piggypiglet.framework.reflection.Reflections;
-import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.commands.CommandHandlers;
+import me.piggypiglet.framework.nukkit.user.NukkitUser;
 
-public final class FileMappingRegisterable extends StartupRegisterable {
-    @Inject private FileManager fileManager;
-    @Inject private Reflections reflections;
+import javax.annotation.Nonnull;
+
+public class NukkitCommandHandlerExecutor implements CommandExecutor {
+    @Inject private CommandHandlers commandHandlers;
 
     @Override
-    protected void execute() {
-        reflections.getTypesAnnotatedWith(Maps.class).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
-    }
+    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
+        commandHandlers.process("nukkit", new NukkitUser(sender), label + " " + String.join(" ", args));
 
-    private <T> void add(Class<T> clazz, String name) {
-        AbstractFileConfiguration config = (AbstractFileConfiguration) fileManager.getConfig(name);
-
-        if (config != null) {
-            addBinding(clazz, new LevenshteinObjectMapper<T>(clazz){}.dataToType(config.getAll()));
-        }
+        return true;
     }
 }
