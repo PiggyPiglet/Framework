@@ -47,6 +47,6 @@ public final class CommandExecutorRegisterable extends StartupRegisterable {
     protected void execute() {
         baseCommandHandler.registerCommands();
         //todo: do a proper null check, throw custom exception if null
-        Objects.requireNonNull(((PluginBase) main.getInstance()).getCommand(framework.getCommandPrefix());
+        Objects.requireNonNull(((PluginBase) main.getInstance()).getCommand(framework.getCommandPrefix()));
     }
 }

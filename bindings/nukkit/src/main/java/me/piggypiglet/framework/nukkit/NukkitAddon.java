@@ -27,6 +27,7 @@ package me.piggypiglet.framework.nukkit;
 import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
+import me.piggypiglet.framework.nukkit.registerables.*;
 
 @Addon(startup = {
         @Startup(

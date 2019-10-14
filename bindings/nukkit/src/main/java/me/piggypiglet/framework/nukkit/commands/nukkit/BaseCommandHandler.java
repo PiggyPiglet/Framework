@@ -72,7 +72,7 @@ public class BaseCommandHandler {
     private void registerCommand(String... aliases) {
         PluginCommand command = getCommand(aliases[0]);
 
-        command.setAliases(Arrays.asList(aliases));
+        command.setAliases(aliases);
         commandMap.register(((PluginBase) main.getInstance()).getDescription().getName(), command);
     }
 
