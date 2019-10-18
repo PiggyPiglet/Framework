@@ -31,13 +31,11 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.nukkit.user.NukkitUser;
 
-import javax.annotation.Nonnull;
-
-public class NukkitCommandHandlerExecutor implements CommandExecutor {
+public class NukkitCommandExecutor implements CommandExecutor {
     @Inject private CommandHandlers commandHandlers;
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         commandHandlers.process("nukkit", new NukkitUser(sender), label + " " + String.join(" ", args));
 
         return true;

@@ -28,17 +28,16 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.plugin.PluginBase;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 
 public final class EventFinderRegisterable extends StartupRegisterable {
-    @Inject
-    private Reflections reflections;
+    @Inject private Scanner scanner;
     @Inject private MainBinding main;
 
     @Override
     protected void execute() {
         final PluginBase main = (PluginBase) this.main.getInstance();
-        reflections.getSubTypesOf(Listener.class).stream().map(injector::getInstance).forEach(l -> main.getServer().getPluginManager().registerEvents(l, main));
+        scanner.getSubTypesOf(Listener.class).stream().map(injector::getInstance).forEach(l -> main.getServer().getPluginManager().registerEvents(l, main));
     }
 }

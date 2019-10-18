@@ -17,10 +17,13 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 - Loads of pre-made bindings for popular apis
   - Bukkit
   - Sponge
-  - JDA
   - Velocity
   - BungeeCord
-  - Nukkit (Soon)
+  - Nukkit (WIP)
+  - Fabric (Soon)
+  - JDA
+  - Discord4J (Soon)
+  - Javacord (Soon)
 - More to come
 
 Alone with these, there are also implementations for popular apis, such as Bukkit and JDA. In these, you can expect things that you'd normally have to do manually, to be done automatically, for example event registering.
@@ -54,6 +57,6 @@ More info can be found on their respective pages.
 ![Jenkins](https://img.shields.io/jenkins/build/https/ci.piggypiglet.me/Framework)
 <br/>Versions:
 
-| Core  | Console | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity |
-|-------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|
-| 1.3.4 | 1.3.0   | 1.3.0 | 1.3.0 | 1.3.0   | 1.3.0 | 1.3.4  | 1.3.4      | 1.3.4 | 1.3.4  | 1.3.4    |
+| Core  | Console | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity | Nukkit |
+|-------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|--------|
+| 1.4.0 | 1.4.0   | 1.4.0 | 1.4.0 | 1.4.0   | 1.4.0 | 1.4.0  | 1.4.0      | 1.4.0 | 1.4.0  | 1.4.0    | 1.4.0  |

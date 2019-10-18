@@ -11,6 +11,5 @@ dependencies {
     }
     compile project(":util:minecraft-common")
 
-    compileOnly 'com.google.guava:guava:28.0-jre'
     compileOnly 'cn.nukkit:nukkit:1.0-SNAPSHOT'
 }
