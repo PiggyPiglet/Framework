@@ -28,7 +28,8 @@ import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.reflection.Reflections;
+import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.implementations.Reflections;
 import org.reflections.scanners.*;
 
 public final class InitialModule extends AbstractModule {
@@ -76,7 +77,7 @@ public final class InitialModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public Reflections providesReflections() {
+    public Scanner providesScanner() {
         return new Reflections(config.getPckg(),
                 new MethodAnnotationsScanner(),
                 new MethodParameterScanner(),

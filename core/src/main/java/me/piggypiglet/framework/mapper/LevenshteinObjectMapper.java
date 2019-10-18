@@ -33,12 +33,21 @@ import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Intelligent object mapper that utilises the levenshtein distance algorithm via a port of python's
+ * fuzzywuzzy library to map values to fields based on "roughly the same" field names. There's no
+ * limit on how similar/unsimilar a name must be for it to be mapped, the mapper will simply pick the
+ * closest match.
+ */
 public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<String, Object>, T> {
     private final Constructor<T> constructor;
     private final Object[] params;
     private final Map<String, Class<?>> types = new LinkedHashMap<>();
     private final Map<String, Field> fields = new HashMap<>();
 
+    /**
+     * Same as LevenshteinObjectMapper(Class&lt;T&gt;) but uses reflection to fetch the class from the generic.
+     */
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper() {
         final LevenshteinObjectMapper<T> mapper = new LevenshteinObjectMapper<T>((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]){};
@@ -48,6 +57,11 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         fields.putAll(mapper.fields);
     }
 
+    /**
+     * Create an instance of LevenshteinObjectMapper and cache important data. Provide the class reference to save time on initialisation.
+     * 
+     * @param clazz Class data will be mapped to and from
+     */
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper(Class<T> clazz) {
         constructor = (Constructor<T>) Arrays.stream(clazz.getConstructors())
@@ -76,6 +90,12 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         });
     }
 
+    /**
+     * Convert a map (String, Object) into an instance of T. Uses the levenshtein algorithm to find the field names that are the closest to the ones provided.
+     *
+     * @param data Map of field names (rough) and values
+     * @return instance of T
+     */
     @Override
     public final T dataToType(Map<String, Object> data) {
         final Map<String, Object> result = new LinkedHashMap<>();
@@ -162,9 +182,21 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         return instance;
     }
 
+    /**
+     * Convert an instance of T to a map with KV String, Object, with K representing field names and V their respective values.
+     *
+     * @param type Value of type T
+     * @return Map - Key: String, Value: Object
+     */
     @Override
     public final Map<String, Object> typeToData(T type) {
-        return null;
+        return fields.values().stream().collect(Collectors.toMap(f -> f.getName(), f -> {
+            try {
+                return f.get(type);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
     private T createInstance() {

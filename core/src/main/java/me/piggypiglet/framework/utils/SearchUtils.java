@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 public final class SearchUtils {
     /**
      * Use the levenshtein algorithm, via a java fuzzy wuzzy port (python library), to order a list of items based on string similarity.
+     * Will leverage multithreading if items size exceeds 5000.
      * @param items Items to re order
      * @param query Search query
      * @param <T> Searchable types

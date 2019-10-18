@@ -47,10 +47,25 @@ public enum Primitives {
         this.defaultInstance = defaultInstance;
     }
 
+    /**
+     * Initialise a default instance of a primitive wrapper.
+     * <ul>
+     *  <li>Boolean: false
+     *  <li>Number: 0
+     *  <li>Character: 0
+     * </ul>
+     * @return Wrapper instance with populated value field
+     * @throws Exception
+     */
     public Object getDefaultInstance() throws Exception {
         return defaultInstance.apply(clazz.getConstructors()[0]);
     }
 
+    /**
+     * Find a wrapper from a primitive class
+     * @param clazz primitive class
+     * @return Wrapper Primitives enum
+     */
     public static Primitives fromClass(Class clazz) {
         for (Primitives primitive : values()) {
             if (primitive.clazz == ClassUtils.primitiveToWrapper(clazz)) {

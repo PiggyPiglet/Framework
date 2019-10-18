@@ -38,6 +38,10 @@ public final class KeyTypeInfo {
         this.keys = keys;
     }
 
+    /**
+     * Get an instance of KeyTypeInfo.Builder
+     * @return Builder instance
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -51,62 +55,101 @@ public final class KeyTypeInfo {
 
         private Builder() {}
 
-        public final <T> KeyFunctionBuilder<T, T> clazz(Class<T> clazz) {
-            return clazz(clazz, s -> s);
+        /**
+         * Begin the process of creating a keyfunction with a class/interface as the key
+         * @param key Key class
+         * @param <T> Type generic of key class
+         * @return KeyFunctionBuilder
+         */
+        public final <T> KeyFunctionBuilder<T, T> key(Class<T> key) {
+            return key(key, s -> s);
         }
 
-        public final <T, U> KeyFunctionBuilder<T, U> clazz(Class<T> clazz, Function<T, U> mapper) {
-            return new KeyFunctionBuilder<>(clazz, mapper);
-        }
-
-        public final <T> KeyFunctionBuilder<T, T> interfaze(Class<T> interfaze) {
-            return interfaze(interfaze, s -> s);
-        }
-
-        public final <T, U> KeyFunctionBuilder<T, U> interfaze(Class<T> interfaze, Function<T, U> mapper) {
-            return new KeyFunctionBuilder<>(interfaze, mapper);
+        /**
+         * Begin the process of creating a keyfunction with a class/interface as the key, and a mapper to convert the key to something else
+         * @param key Key class
+         * @param mapper Optional mapping of key
+         * @param <T> Type generic of key class
+         * @param <U> Type generic of the mapped key
+         * @return KeyFunctionBuilder
+         */
+        public final <T, U> KeyFunctionBuilder<T, U> key(Class<T> key, Function<T, U> mapper) {
+            return new KeyFunctionBuilder<>(key, mapper);
         }
 
         public class KeyFunctionBuilder<T, U> {
-            private final Class<T> clazz;
+            private final Class<T> key;
             private final Function<T, U> mapper;
             private Function<U, Object> getter;
             private Function<U, Boolean> exists;
 
-            private KeyFunctionBuilder(Class<T> clazz, Function<T, U> mapper) {
-                this.clazz = clazz;
+            private KeyFunctionBuilder(Class<T> key, Function<T, U> mapper) {
+                this.key = key;
                 this.mapper = mapper;
             }
 
+            /**
+             * Set the function to get from a data structure via the mapped key
+             * @param getter Function to get from data structure
+             * @return Current instance of KeyFunctionBuilder
+             */
             public final KeyFunctionBuilder<T, U> getter(Function<U, Object> getter) {
                 this.getter = getter;
                 return this;
             }
 
+            /**
+             * Set the function to check if something exists in a data structure via the mapped key
+             * @param exists Function to check if &lt;U&gt; exists (or what it represents) in a data structure
+             * @return Current instance of KeyFunctionBuilder
+             */
             public final KeyFunctionBuilder<T, U> exists(Function<U, Boolean> exists) {
                 this.exists = exists;
                 return this;
             }
 
+            /**
+             * Util to build a KeyFunction based on the map data structure
+             * @param map Map instance
+             * @param def Default value
+             * @param <O> Unknown value type of map
+             * @return Parent KeyTypeInfo.Builder instance
+             */
             public final <O> Builder map(Map<U, O> map, O def) {
                 return getter(o -> map.getOrDefault(o, def))
                         .exists(map::containsKey)
                         .bundle();
             }
 
+            /**
+             * Util to build a KeyFunction based on the list data structure
+             * @param list List instance
+             * @param filter Filter to find the relevant value based on U
+             * @param def Default value
+             * @param <O> Unknown value type of list
+             * @return Parent KeyTypeInfo.Builder instance
+             */
             public final <O> Builder list(List<O> list, BiPredicate<U, O> filter, O def) {
-                return new KeyFunctionBuilder<>(clazz, t -> list.stream().filter(o -> filter.test(mapper.apply(t), o)).findAny())
+                return new KeyFunctionBuilder<>(key, t -> list.stream().filter(o -> filter.test(mapper.apply(t), o)).findAny())
                         .getter(o -> o.orElse(def))
                         .exists(Optional::isPresent)
                         .bundle();
             }
 
+            /**
+             * Bundle the getter &amp; exists functions into a KeyFunction
+             * @return Parent KeyTypeInfo.Builder instance
+             */
             public final Builder bundle() {
-                keys.add(new KeyFunction<>(clazz, mapper, getter, exists));
+                keys.add(new KeyFunction<>(key, mapper, getter, exists));
                 return Builder.this;
             }
         }
 
+        /**
+         * Build the KeyTypeInfo instance from the data submitted into the builder.
+         * @return KeyTypeInfo instance
+         */
         public KeyTypeInfo build() {
             return new KeyTypeInfo(keys);
         }

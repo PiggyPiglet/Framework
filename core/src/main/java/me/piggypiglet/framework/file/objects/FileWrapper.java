@@ -53,6 +53,7 @@ public final class FileWrapper {
 
     /**
      * Used for updating via FileManager#update, I don't recommend messing with this manually.
+     * @param fileContent updated file content to replace the current
      */
     public void setFileContent(String fileContent) {
         this.fileContent = fileContent;

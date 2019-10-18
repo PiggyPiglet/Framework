@@ -33,6 +33,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Default task manager for RPF. Uses a Fixed Thread Pool and Scheduled Thread Pool to provision async and scheduled async tasks.
+ */
 public final class DefaultTask extends Task {
     private final ExecutorService executor;
     private final ScheduledExecutorService scheduler;

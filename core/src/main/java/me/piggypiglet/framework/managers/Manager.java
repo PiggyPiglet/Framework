@@ -114,6 +114,13 @@ public abstract class Manager<S> {
         return null;
     }
 
+    /**
+     * Check if a key is set based on configured key types.
+     * @param key Key value
+     * @param <T> Key type
+     * @param <U> Raw type before mapping
+     * @return boolean of whether it exists or not in the underlying data structure(s)
+     */
     public <T, U> boolean exists(T key) {
         KeyFunction<T, U> function = findFunc(key);
 

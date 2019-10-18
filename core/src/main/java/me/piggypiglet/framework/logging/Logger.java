@@ -72,7 +72,7 @@ public abstract class Logger<T> {
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
     public void info(String message, Object... vars) {
-        info(String.format(message, vars));
+        info(format(message, vars));
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class Logger<T> {
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
     public void warning(String message, Object... vars) {
-        warning(String.format(message, vars));
+        warning(format(message, vars));
     }
 
     /**
@@ -90,6 +90,10 @@ public abstract class Logger<T> {
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
     public void error(String message, Object... vars) {
-        error(String.format(message, vars));
+        error(format(message, vars));
+    }
+
+    private String format(String message, Object... vars) {
+        return vars.length == 0 ? message : String.format(message, vars);
     }
 }

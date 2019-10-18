@@ -199,7 +199,7 @@ public final class Framework {
         }
 
         /**
-         * Set the application's package
+         * Set the application's package.
          * @param pckg Application's package
          * @return FrameworkBuilder
          */
@@ -301,8 +301,7 @@ public final class Framework {
          * Compile all the user-set options into an instance of Framework
          * NOTE: Will crash if any of the following aren't set:
          * - main
-         * - package
-         * - command prefix
+         * - pckg
          * @return Framework instance
          */
         public final Framework build() {

@@ -27,15 +27,15 @@ package me.piggypiglet.framework.http.registerables.startup;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.http.responses.ResponseHandler;
 import me.piggypiglet.framework.http.responses.routes.Route;
-import me.piggypiglet.framework.reflection.Reflections;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
 public final class RoutesRegisterable extends StartupRegisterable {
-    @Inject private Reflections reflections;
+    @Inject private Scanner scanner;
     @Inject private ResponseHandler responseHandler;
 
     @Override
     protected void execute() {
-        reflections.getSubTypesOf(Route.class).stream().map(injector::getInstance).forEach(responseHandler.getRoutes()::add);
+        scanner.getSubTypesOf(Route.class).stream().map(injector::getInstance).forEach(responseHandler.getRoutes()::add);
     }
 }

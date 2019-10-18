@@ -30,7 +30,7 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
-import me.piggypiglet.framework.reflection.Reflections;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.task.implementations.DefaultTask;
@@ -38,7 +38,7 @@ import me.piggypiglet.framework.task.implementations.DefaultTask;
 import java.util.Optional;
 
 public final class ImplementationFinderRegisterable extends StartupRegisterable {
-    @Inject private Reflections reflections;
+    @Inject private Scanner scanner;
     @Inject private Framework framework;
 
     @SuppressWarnings("unchecked")
@@ -50,6 +50,6 @@ public final class ImplementationFinderRegisterable extends StartupRegisterable 
     }
 
     private <T> Optional<Class<? extends T>> find(Class<T> interfaze, Class<? extends T> defaultClass) {
-        return reflections.getSubTypesOf(interfaze).stream().filter(c -> c != defaultClass).findFirst();
+        return scanner.getSubTypesOf(interfaze).stream().filter(c -> c != defaultClass).findFirst();
     }
 }

@@ -32,7 +32,7 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.logging.LoggerFactory;
-import me.piggypiglet.framework.reflection.Reflections;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
 import me.piggypiglet.framework.registerables.startup.ManagersRegisterable;
@@ -74,7 +74,7 @@ public final class FrameworkBootstrap {
     }
 
     private void start() {
-        injector.get().getInstance(Reflections.class).getTypesAnnotatedWith(Addon.class)
+        injector.get().getInstance(Scanner.class).getTypesAnnotatedWith(Addon.class)
                 .forEach(c -> addons.put(c, c.getAnnotation(Addon.class)));
 
         final Multimap<BootPriority, Class<? extends StartupRegisterable>> registerables = ArrayListMultimap.create();

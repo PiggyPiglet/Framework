@@ -41,7 +41,7 @@ public final class HelpCommand extends Command {
 
     @Override
     protected boolean execute(User user, String[] args) {
-        StringBuilder message = new StringBuilder();
+        StringBuilder message = new StringBuilder("\n");
 
         commandHandlers.getCommands().forEach(c -> {
                     message.append(framework.getCommandPrefix()).append(c.getCommand());

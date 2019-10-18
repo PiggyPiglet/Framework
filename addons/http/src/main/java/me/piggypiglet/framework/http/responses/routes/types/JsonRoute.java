@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class JsonRoute extends Route {
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     static {
         HEADERS.add(new Header("Content-Type", "application/json"));

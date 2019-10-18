@@ -33,6 +33,7 @@ import java.util.Map;
 
 public abstract class Route {
     private final String route;
+    
     protected static final List<Header> HEADERS = new ArrayList<>();
 
     /**

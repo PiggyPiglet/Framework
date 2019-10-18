@@ -1,14 +1,20 @@
 {
-  "ip": "127.0.0.1",
-  "port": 8080,
+  "host": "127.0.0.1",
+  "port": 8080, // Keep in mind, any port below 1024 on unix systems will need sudo privilege to run.
 
   "ssl": {
     "enabled": false,
-    "path": "",
+    "path": "", // This needs to point to a java keystore file (.jks). It's not difficult to add your existing certs to one, look it up.
     "password": ""
   },
 
-  "authentication": {
+  /*
+  * Standard authentication, with the token being supplied by the client via the `auth` header, unencoded.
+  * If an authenticated route is pinged without the token in the auth header, a simple error message will be returned.
+  * Not to be confused with the basic authentication type defined by the HTTP protocol.
+  */
+  "basic-authentication": {
+    "enabled": false,
     "token": ""
   }
 }
