@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":bindings:bukkit")
+    compile project(":bindings:minecraft:bukkit")
     compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
 }
 

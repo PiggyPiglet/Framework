@@ -61,12 +61,13 @@ def exportedProjects = [
         ":addons:logback",
         ":addons:http",
         ":addons:jars",
-        ":bindings:bukkit",
-        ":bindings:sponge",
-        ":bindings:jda",
-        ":bindings:velocity",
-        ":bindings:bungeecord",
-        ":bindings:nukkit",
+        ":bindings:minecraft:common",
+        ":bindings:minecraft:bukkit",
+        ":bindings:minecraft:sponge",
+        ":bindings:minecraft:velocity",
+        ":bindings:minecraft:bungeecord",
+        ":bindings:minecraft:nukkit",
+        ":bindings:discord:jda"
 ]
 
 task allJavadoc(type: Javadoc) {

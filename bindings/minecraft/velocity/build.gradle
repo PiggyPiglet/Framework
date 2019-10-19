@@ -1,0 +1,17 @@
+repositories {
+    maven {
+        url = 'https://repo.velocitypowered.com/snapshots/'
+    }
+}
+
+dependencies {
+    compile(project(":core")) {
+        exclude group: 'com.google.inject', module: 'guice'
+        exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    compile project(":bindings:minecraft:common")
+
+    compileOnly 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:1.0.0-SNAPSHOT'
+}
