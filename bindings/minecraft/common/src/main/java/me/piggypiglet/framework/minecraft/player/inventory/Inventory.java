@@ -4,28 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Inventory {
-    private final Map<Integer, String> armor = new HashMap<>(4);
-    private final Map<Integer, String> items = new HashMap<>(27);
-    private final Map<Integer, String> hotbar = new HashMap<>(9);
-    private String offHand;
+    private final Map<Integer, Item> armor = new HashMap<>(4);
+    private final Map<Integer, Item> items = new HashMap<>(27);
+    private final Map<Integer, Item> hotbar = new HashMap<>(9);
+    private Item offHand;
 
-    public Map<Integer, String> getArmor() {
+    public Map<Integer, Item> getArmor() {
         return armor;
     }
 
-    public Map<Integer, String> getItems() {
+    public Map<Integer, Item> getItems() {
         return items;
     }
 
-    public Map<Integer, String> getHotbar() {
+    public Map<Integer, Item> getHotbar() {
         return hotbar;
     }
 
-    public String getOffHand() {
+    public Item getOffHand() {
         return offHand;
     }
 
-    public void setOffHand(String offHand) {
+    public void setOffHand(Item offHand) {
         this.offHand = offHand;
     }
 }
