@@ -30,13 +30,13 @@ import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.Subscribe;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
-import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;
 import me.piggypiglet.framework.utils.clazz.GenericException;
 
 public final class EventFinderRegisterable extends StartupRegisterable {
-    @Inject private Reflections reflections;
+    @Inject private Scanner scanner;
     @Inject private EventManager eventManager;
     @Inject private MainBinding main;
     @Inject private Logger logger;
@@ -45,8 +45,8 @@ public final class EventFinderRegisterable extends StartupRegisterable {
     @SuppressWarnings("unchecked")
     protected void execute() {
         final Object main = this.main.getInstance();
-        reflections.getClassesWithAnnotatedMethods(Subscribe.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> eventManager.register(main, l));
-        reflections.getSubTypesOf(EventHandler.class).forEach(l -> {
+        scanner.getClassesWithAnnotatedMethods(Subscribe.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> eventManager.register(main, l));
+        scanner.getSubTypesOf(EventHandler.class).forEach(l -> {
             try {
                 eventManager.register(main, ClassUtils.getImplementedGeneric(l), injector.getInstance(l));
             } catch (GenericException e) {

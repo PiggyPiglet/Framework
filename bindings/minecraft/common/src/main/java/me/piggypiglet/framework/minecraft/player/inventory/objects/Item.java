@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.minecraft.player.inventory;
+package me.piggypiglet.framework.minecraft.player.inventory.objects;
 
 import java.util.List;
 import java.util.Map;

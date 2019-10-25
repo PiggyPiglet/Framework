@@ -27,8 +27,8 @@ package me.piggypiglet.framework.sponge.registerables;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
-import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;
 import me.piggypiglet.framework.utils.clazz.GenericException;
 import org.spongepowered.api.Sponge;
@@ -36,7 +36,7 @@ import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Listener;
 
 public final class EventFinderRegisterable extends StartupRegisterable {
-    @Inject private Reflections reflections;
+    @Inject private Scanner scanner;
     @Inject private MainBinding main;
     @Inject private Logger logger;
 
@@ -44,8 +44,8 @@ public final class EventFinderRegisterable extends StartupRegisterable {
     @SuppressWarnings("unchecked")
     protected void execute() {
         final Object main = this.main.getInstance();
-        reflections.getClassesWithAnnotatedMethods(Listener.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> Sponge.getEventManager().registerListeners(main, l));
-        reflections.getSubTypesOf(EventListener.class).forEach(l -> {
+        scanner.getClassesWithAnnotatedMethods(Listener.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> Sponge.getEventManager().registerListeners(main, l));
+        scanner.getSubTypesOf(EventListener.class).forEach(l -> {
             try {
                 Sponge.getEventManager().registerListener(main, ClassUtils.getImplementedGeneric(l), injector.getInstance(l));
             } catch (GenericException e) {

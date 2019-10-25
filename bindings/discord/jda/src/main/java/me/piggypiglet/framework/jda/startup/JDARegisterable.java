@@ -28,8 +28,8 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.jda.JDAAddon;
 import me.piggypiglet.framework.logging.LoggerFactory;
-import me.piggypiglet.framework.reflection.Reflections;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.task.Task;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 
 public final class JDARegisterable extends StartupRegisterable {
     @Inject private ConfigManager configManager;
-    @Inject private Reflections reflections;
+    @Inject private Scanner scanner;
     @Inject private Task task;
 
     @Override
@@ -95,6 +95,6 @@ public final class JDARegisterable extends StartupRegisterable {
     }
 
     private <T> List<T> getListeners(Class<T> clazz) {
-        return reflections.getSubTypesOf(clazz).stream().map(injector::getInstance).collect(Collectors.toList());
+        return scanner.getSubTypesOf(clazz).stream().map(injector::getInstance).collect(Collectors.toList());
     }
 }
