@@ -26,13 +26,12 @@ package me.piggypiglet.framework.bootstrap;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
+import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.logging.LoggerFactory;
-import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
 import me.piggypiglet.framework.registerables.startup.ManagersRegisterable;
@@ -45,6 +44,7 @@ import me.piggypiglet.framework.registerables.startup.commands.CommandsRegistera
 import me.piggypiglet.framework.registerables.startup.file.FileMappingRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
@@ -65,9 +65,9 @@ public final class FrameworkBootstrap {
         this.config = config;
 
         if (config.getInjector() == null) {
-            injector.set(new InitialModule(this, config).createInjector());
+            injector.set(new Injector(new InitialModule(this, config).createInjector()));
         } else {
-            injector.set(config.getInjector().createChildInjector(new InitialModule(this, config)));
+            injector.set(new Injector(config.getInjector().createChildInjector(new InitialModule(this, config))));
         }
 
         start();
@@ -112,11 +112,11 @@ public final class FrameworkBootstrap {
                 registerable.run(injector.get());
 
                 if (registerable.getBindings().size() > 0 || registerable.getAnnotatedBindings().size() > 0 || registerable.getStaticInjections().size() > 0) {
-                    injector.set(injector.get().createChildInjector(new BindingSetterModule(
+                    injector.set(new Injector(injector.get().getReal().createChildInjector(new BindingSetterModule(
                             registerable.getBindings(),
                             registerable.getAnnotatedBindings(),
                             registerable.getStaticInjections().toArray(new Class[]{})
-                    )));
+                    ))));
                 }
 
                 this.registerables.add(registerable);

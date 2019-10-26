@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public final class Item {
+public class Item {
     private String type;
     private int amount;
     private short durability;

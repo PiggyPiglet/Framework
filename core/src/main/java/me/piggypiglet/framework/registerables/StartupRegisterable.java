@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.registerables;
 
-import com.google.inject.Injector;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
+import me.piggypiglet.framework.guice.objects.Injector;
 
 import java.lang.annotation.Annotation;
 import java.util.*;

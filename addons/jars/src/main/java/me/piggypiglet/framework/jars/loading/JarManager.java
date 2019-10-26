@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.jars.loading;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.jars.loading.framework.Jar;
 import me.piggypiglet.framework.jars.loading.framework.Loader;
 import me.piggypiglet.framework.jars.loading.framework.ScannableLoader;

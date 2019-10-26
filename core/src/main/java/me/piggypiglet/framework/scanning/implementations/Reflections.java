@@ -25,15 +25,14 @@
 package me.piggypiglet.framework.scanning.implementations;
 
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import me.piggypiglet.framework.scanning.Scanner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.util.HashSet;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,7 @@ public final class Reflections extends Scanner {
     public Reflections(String pckg, org.reflections.scanners.Scanner... scanners) {
         this.reflections = new HashSet<>(Arrays.asList(
                 new org.reflections.Reflections(pckg, scanners),
-                new org.reflections.Reflections(Framework.class.getPackage(), scanners)
+                new org.reflections.Reflections(Framework.class.getPackage().getName(), scanners)
         ));
     }
 
