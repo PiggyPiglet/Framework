@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.minecraft.player.inventory.objects;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,21 +9,21 @@ import java.util.Set;
 public class Item {
     private String type;
     private int amount;
-    private short durability;
-    private int getMaxStackSize;
+    private int durability;
+    private int maxStackSize;
     private List<String> lore;
     private String displayName;
     private Map<String, Integer> enchants;
     private boolean unbreakable;
     private Set<String> itemFlags;
 
-    public Item(String type, int amount, short durability,
-                int getMaxStackSize, List<String> lore, String displayName,
+    public Item(String type, int amount, int durability,
+                int maxStackSize, List<String> lore, String displayName,
                 Map<String, Integer> enchants, boolean unbreakable, Set<String> itemFlags) {
         this.type = type;
         this.amount = amount;
         this.durability = durability;
-        this.getMaxStackSize = getMaxStackSize;
+        this.maxStackSize = maxStackSize;
         this.lore = lore;
         this.displayName = displayName;
         this.enchants = enchants;
@@ -46,22 +47,23 @@ public class Item {
         this.amount = amount;
     }
 
-    public short getDurability() {
+    public int getDurability() {
         return durability;
     }
 
-    public void setDurability(short durability) {
+    public void setDurability(int durability) {
         this.durability = durability;
     }
 
-    public int getGetMaxStackSize() {
-        return getMaxStackSize;
+    public int getMaxStackSize() {
+        return maxStackSize;
     }
 
-    public void setGetMaxStackSize(int getMaxStackSize) {
-        this.getMaxStackSize = getMaxStackSize;
+    public void setMaxStackSize(int maxStackSize) {
+        this.maxStackSize = maxStackSize;
     }
 
+    @Nullable
     public List<String> getLore() {
         return lore;
     }
@@ -70,6 +72,7 @@ public class Item {
         this.lore = lore;
     }
 
+    @Nullable
     public String getDisplayName() {
         return displayName;
     }
@@ -100,5 +103,11 @@ public class Item {
 
     public void setItemFlags(Set<String> itemFlags) {
         this.itemFlags = itemFlags;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Item(type=%s,amount=%s,durability=%s,max-stack-size=%s,lore=%s,display-name=%s,enchants=%s,unbreakable=%s,item-flags=%s)",
+                type, amount, durability, maxStackSize, lore, displayName, enchants, unbreakable, itemFlags);
     }
 }

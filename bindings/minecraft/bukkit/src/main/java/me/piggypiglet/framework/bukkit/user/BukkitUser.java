@@ -24,13 +24,14 @@
 
 package me.piggypiglet.framework.bukkit.user;
 
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.bukkit.binding.BukkitPlayer;
+import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public final class BukkitUser extends User {
+public final class BukkitUser extends MinecraftUser {
     private final CommandSender sender;
 
     public BukkitUser(CommandSender sender) {
@@ -52,6 +53,7 @@ public final class BukkitUser extends User {
         return sender.hasPermission(permission);
     }
 
+    @Override
     public boolean isPlayer() {
         return sender instanceof Player;
     }
@@ -60,7 +62,8 @@ public final class BukkitUser extends User {
         return (ConsoleCommandSender) sender;
     }
 
-    public Player getAsPlayer() {
-        return (Player) sender;
+    @Override
+    public me.piggypiglet.framework.minecraft.player.Player<Player> getAsPlayer() {
+        return new BukkitPlayer((Player) sender);
     }
 }

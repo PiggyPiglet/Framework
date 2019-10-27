@@ -2,16 +2,22 @@ package me.piggypiglet.framework.bukkit.binding;
 
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
+import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     private static Method handleMethod;
@@ -216,10 +222,62 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     public Inventory getInventory() {
         final PlayerInventory inventory = player.getInventory();
 
-//        return new Inventory(getUuid()) {{
-//            setOffHand(inventory.getItemInOffHand());
-//        }};
-        return null;
+        return new Inventory(getUuid()) {
+            {
+                setHand(fromItemStack(inventory.getItemInMainHand()));
+                setOffHand(fromItemStack(inventory.getItemInOffHand()));
+
+                new HashMap<Integer, Supplier<ItemStack>>() {{
+                    put(0, inventory::getHelmet);
+                    put(1, inventory::getChestplate);
+                    put(2, inventory::getLeggings);
+                    put(3, inventory::getBoots);
+                }}.forEach((k, v) -> {
+                    final ItemStack stack = v.get();
+
+                    if (stack != null) {
+                        getArmor().put(k, fromItemStack(stack));
+                    }
+                });
+
+                putFromInventory(getHotbar(), 0, 9);
+                putFromInventory(getItems(), 9, 36);
+            }
+
+            private void putFromInventory(Map<Integer, Item> map, int initial, int size) {
+                for (int i = initial; i < size; i++) {
+                    final ItemStack stack = inventory.getItem(i);
+
+                    if (stack != null) {
+                        map.put(i, fromItemStack(stack));
+                    }
+                }
+            }
+
+            private Item fromItemStack(ItemStack itemStack) {
+                ItemMeta meta = itemStack.getItemMeta();
+
+                int durability = -1;
+                List<String> lore = new ArrayList<>();
+                String displayName = "null";
+                Map<String, Integer> enchants = new HashMap<>();
+                boolean unbreakable = false;
+                Set<String> itemFlags = new HashSet<>();
+
+                if (meta != null) {
+                    durability = ((Damageable) meta).getDamage();
+                    lore = meta.getLore();
+                    displayName = meta.getDisplayName();
+                    meta.getEnchants().forEach((k, v) -> enchants.put(k.getKey().getKey(), v));
+                    unbreakable = meta.isUnbreakable();
+                    itemFlags = meta.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toSet());
+                }
+
+                return new Item(itemStack.getType().name(), itemStack.getAmount(), durability,
+                        itemStack.getMaxStackSize(), lore, displayName, enchants, unbreakable, itemFlags
+                );
+            }
+        };
     }
 
     @Override
@@ -236,13 +294,4 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     public String getName() {
         return player.getName();
     }
-
-//    private Item fromItemStack(ItemStack itemStack) {
-//        ItemMeta meta = itemStack.getItemMeta();
-//
-//        return new Item(itemStack.getType().name(), itemStack.getAmount(), (short) ((Damageable) itemStack).getDamage(),
-//                itemStack.getMaxStackSize(), meta.getLore(), meta.getDisplayName(),
-//                meta.getEnchants().entrySet().stream().collect(Collectors.toMap(e -> ((Map.Entry<Enchantment, Integer>) e).getKey().get, 0)),
-//                meta.isUnbreakable(), meta.getItemFlags());
-//    }
 }

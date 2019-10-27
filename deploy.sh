@@ -13,8 +13,8 @@ mkdir maven/tmp/
 
 names=$1
 
-if [[ $names == "everything" ]]; then
-  nameArray=["core,addons/console,addons/http,addons/jars,addons/logback,addons/mysql,bindings/discord/jda,bindings/minecraft/common,bindings/minecraft/bukkit,bindings/minecraft/sponge,bindings/minecraft/bungeecord,bindings/minecraft/velocity"]
+if [[ $names == "*" ]]; then
+  nameArray=(core addons/console addons/http addons/jars addons/logback addons/mysql bindings/discord/jda bindings/minecraft/common bindings/minecraft/bukkit bindings/minecraft/sponge bindings/minecraft/bungeecord bindings/minecraft/velocity)
 else
   IFS="," read -ra nameArray <<< "$names"
 fi
