@@ -35,7 +35,7 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         startup = {
                 @Startup(
                         value = LoggerRegisterable.class,
-                        priority = BootPriority.AFTER_IMPL
+                        priority = BootPriority.IMPL
                 ),
                 @Startup(EventFinderRegisterable.class),
                 @Startup(CommandExecutorRegisterable.class)

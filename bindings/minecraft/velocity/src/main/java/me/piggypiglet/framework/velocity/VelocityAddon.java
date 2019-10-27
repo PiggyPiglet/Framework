@@ -35,7 +35,7 @@ import me.piggypiglet.framework.velocity.registerables.LoggerRegisterable;
         startup = {
                 @Startup(
                         value = LoggerRegisterable.class,
-                        priority = BootPriority.AFTER_IMPL
+                        priority = BootPriority.IMPL
                 ),
                 @Startup(CommandExecutorRegisterable.class),
                 @Startup(EventFinderRegisterable.class)
