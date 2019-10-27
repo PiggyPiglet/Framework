@@ -47,7 +47,11 @@ public final class JarManager {
             final File dir = new File(l.getDir());
             dir.getParentFile().mkdirs();
 
-            Jar[] jars = l.process(dir.listFiles((d, name) -> name.endsWith(".jar")));
+            final File[] files = dir.listFiles((d, name) -> name.endsWith(".jar"));
+
+            if (files == null) return this;
+
+            Jar[] jars = l.process(files);
             loaders.put(l, jars);
 
             for (Jar jar : jars) {
@@ -62,6 +66,8 @@ public final class JarManager {
         for (Map.Entry<Loader, Jar[]> entry : loaders.entrySet()) {
             if (entry.getKey() instanceof ScannableLoader) {
                 ScannableLoader<?> loader = (ScannableLoader<?>) entry.getKey();
+
+                if (entry.getValue() == null) continue;
 
                 for (Jar jar : entry.getValue()) {
                     CompletableFuture<Class<?>> future = new JarScanner(loader.getMatch()).scan(new File(jar.getPath()).toURI());
