@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class PlayerInventoryManager extends Manager<Inventory> {
     private static final Inventory DEF = new Inventory(UUID.nameUUIDFromBytes("null".getBytes())) {{
         setOffHand(new Item("null", -1, (short) -1, -1,
-                new ArrayList<>(), "null", new ArrayList<>(), false,
-                new ArrayList<>(), new HashMap<>()));
+                new ArrayList<>(), "null", new HashMap<>(), false,
+                new HashSet<>()));
     }};
 
     private final Map<UUID, Inventory> inventories = new ConcurrentHashMap<>();

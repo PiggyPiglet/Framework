@@ -28,6 +28,7 @@ import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.utils.SearchUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class SearchableManager<S extends SearchUtils.Searchable> extends Manager<S> {
@@ -43,6 +44,11 @@ public abstract class SearchableManager<S extends SearchUtils.Searchable> extend
     public void remove(S item) {
         super.remove(item);
         items.remove(item);
+    }
+
+    @Override
+    protected Collection<S> retrieveAll() {
+        return items;
     }
 
     /**

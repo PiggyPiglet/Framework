@@ -1,77 +1,80 @@
 package me.piggypiglet.framework.minecraft.player;
 
+import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
 import me.piggypiglet.framework.utils.SearchUtils;
 
 import java.util.UUID;
 
-public abstract class Player<T> implements SearchUtils.Searchable {
-    public abstract int getPing();
+public interface Player<T> extends SearchUtils.Searchable {
+    int getPing();
 
-    public abstract String getIp();
+    String getIp();
 
-    public abstract boolean isPlayedBefore();
+    boolean hasPlayedBefore();
 
-    public abstract UUID getUuid();
+    UUID getUuid();
 
-    public abstract boolean isOp();
+    boolean isOp();
 
-    public abstract boolean isWhitelisted();
+    boolean isWhitelisted();
 
-    public abstract long getFirstPlayed();
+    long getFirstPlayed();
 
-    public abstract long getLastPlayed();
+    long getLastPlayed();
 
-    public abstract boolean isFly();
+    boolean canFly();
 
-    public abstract boolean isFlying();
+    boolean isFlying();
 
-    public abstract float getFlySpeed();
+    float getFlySpeed();
 
-    public abstract float getWalkSpeed();
+    float getWalkSpeed();
 
-    public abstract int getViewDistance();
+    int getViewDistance();
 
-    public abstract int getFoodLevel();
+    int getFoodLevel();
 
-    public abstract double getHealth();
+    double getHealth();
 
-    public abstract double getHealthScale();
+    double getHealthScale();
 
-    public abstract int getMaximumAir();
+    int getMaximumAir();
 
-    public abstract int getRemainingAir();
+    int getRemainingAir();
 
-    public abstract float getExp();
+    float getExp();
 
-    public abstract int getTotalExperience();
+    int getTotalExperience();
 
-    public abstract int getLevel();
+    int getLevel();
 
-    public abstract String getLocale();
+    String getLocale();
 
-    public abstract long getPlayerTime();
+    long getPlayerTime();
 
-    public abstract long getPlayerTimeOffset();
+    long getPlayerTimeOffset();
 
-    public abstract String getPlayerWeather();
+    String getPlayerWeather();
 
-    public abstract float getSaturation();
+    float getSaturation();
 
-    public abstract boolean isPickupItems();
+    boolean canPickupItems();
 
-    public abstract int getMaxHealth();
+    double getMaxHealth();
 
-    public abstract double getLastDamage();
+    double getLastDamage();
 
-    public abstract int getMaximumNoDamageTicks();
+    int getMaximumNoDamageTicks();
 
-    public abstract int getNoDamageTicks();
+    int getNoDamageTicks();
 
-    public abstract int getSleepTicks();
+    int getSleepTicks();
 
-    public abstract int getTicksLived();
+    int getTicksLived();
 
-    public abstract T getHandle();
+    Inventory getInventory();
 
-    public abstract boolean hasPermission(String permission);
+    T getHandle();
+
+    boolean hasPermission(String permission);
 }

@@ -44,7 +44,10 @@ public final class JarManager {
 
     public JarManager load() {
         for (Loader l : loaders.keySet()) {
-            Jar[] jars = l.process(new File(l.getDir()).listFiles((dir, name) -> name.endsWith(".jar")));
+            final File dir = new File(l.getDir());
+            dir.getParentFile().mkdirs();
+
+            Jar[] jars = l.process(dir.listFiles((d, name) -> name.endsWith(".jar")));
             loaders.put(l, jars);
 
             for (Jar jar : jars) {

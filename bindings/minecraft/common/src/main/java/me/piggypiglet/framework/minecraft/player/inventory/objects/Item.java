@@ -2,6 +2,7 @@ package me.piggypiglet.framework.minecraft.player.inventory.objects;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public class Item {
@@ -11,15 +12,13 @@ public class Item {
     private int getMaxStackSize;
     private List<String> lore;
     private String displayName;
-    private List<String> enchants;
+    private Map<String, Integer> enchants;
     private boolean unbreakable;
-    private List<String> itemFlags;
-    private Map<String, Integer> attributes;
+    private Set<String> itemFlags;
 
     public Item(String type, int amount, short durability,
                 int getMaxStackSize, List<String> lore, String displayName,
-                List<String> enchants, boolean unbreakable, List<String> itemFlags,
-                Map<String, Integer> attributes) {
+                Map<String, Integer> enchants, boolean unbreakable, Set<String> itemFlags) {
         this.type = type;
         this.amount = amount;
         this.durability = durability;
@@ -29,7 +28,6 @@ public class Item {
         this.enchants = enchants;
         this.unbreakable = unbreakable;
         this.itemFlags = itemFlags;
-        this.attributes = attributes;
     }
 
     public String getType() {
@@ -80,11 +78,11 @@ public class Item {
         this.displayName = displayName;
     }
 
-    public List<String> getEnchants() {
+    public Map<String, Integer> getEnchants() {
         return enchants;
     }
 
-    public void setEnchants(List<String> enchants) {
+    public void setEnchants(Map<String, Integer> enchants) {
         this.enchants = enchants;
     }
 
@@ -96,19 +94,11 @@ public class Item {
         this.unbreakable = unbreakable;
     }
 
-    public List<String> getItemFlags() {
+    public Set<String> getItemFlags() {
         return itemFlags;
     }
 
-    public void setItemFlags(List<String> itemFlags) {
+    public void setItemFlags(Set<String> itemFlags) {
         this.itemFlags = itemFlags;
-    }
-
-    public Map<String, Integer> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, Integer> attributes) {
-        this.attributes = attributes;
     }
 }
