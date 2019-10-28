@@ -1,11 +1,12 @@
-package me.piggypiglet.framework.http.responses.routes.types;
+package me.piggypiglet.framework.http.responses.routes.types.json;
 
-import me.piggypiglet.framework.http.responses.routes.Route;
+import me.piggypiglet.framework.http.responses.routes.mixins.json.manager.Removable;
+import me.piggypiglet.framework.http.responses.routes.objects.Header;
 import me.piggypiglet.framework.managers.implementations.SearchableManager;
 import me.piggypiglet.framework.utils.SearchUtils;
-import me.piggypiglet.framework.http.responses.routes.objects.Header;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends JsonRoute {
@@ -48,13 +49,15 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
                     break;
 
                 case "remove":
-                    if (manager.exists(value)) {
-                        manager.remove(manager.get(value));
-                        obj = true;
-                        break;
-                    }
+                    if (getClass().isAnnotationPresent(Removable.class)) {
+                        if (manager.exists(value)) {
+                            manager.remove(manager.get(value));
+                            obj = true;
+                            break;
+                        }
 
-                    obj = false;
+                        obj = false;
+                    }
                     break;
             }
 

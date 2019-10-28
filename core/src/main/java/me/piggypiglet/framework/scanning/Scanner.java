@@ -3,11 +3,7 @@ package me.piggypiglet.framework.scanning;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,6 +72,6 @@ public abstract class Scanner {
     }
 
     private boolean notDisabled(Class clazz) {
-        return Arrays.stream(clazz.getAnnotations()).noneMatch(a -> a instanceof Disabled);
+        return !clazz.isAnnotationPresent(Disabled.class);
     }
 }

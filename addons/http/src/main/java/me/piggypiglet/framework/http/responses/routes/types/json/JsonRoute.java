@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes.types;
+package me.piggypiglet.framework.http.responses.routes.types.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
