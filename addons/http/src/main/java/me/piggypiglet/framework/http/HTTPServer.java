@@ -55,7 +55,7 @@ public final class HTTPServer {
      */
     public void start() {
         final Map<String, Object> items = configManager.getConfigs().get(HTTPAddon.class).getItems();
-        String ip = (String) items.get("ip");
+        String ip = (String) items.get("host");
         int port = (int) (double) items.get("port");
 
         try {
