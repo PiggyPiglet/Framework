@@ -33,10 +33,12 @@ import me.piggypiglet.framework.http.HTTPAddon;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
 import me.piggypiglet.framework.http.responses.routes.Route;
 import me.piggypiglet.framework.http.responses.routes.mixins.Authenticated;
+import me.piggypiglet.framework.http.responses.routes.objects.Header;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Singleton
 public final class ResponseHandler {
@@ -62,7 +64,10 @@ public final class ResponseHandler {
                     }
                 }
 
-                NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(session.getParameters()).toString());
+                NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(
+                        session.getParameters(),
+                        session.getHeaders().entrySet().stream().map(e -> new Header(e.getKey(), e.getValue())).collect(Collectors.toList())
+                ).toString());
                 route.getHeaders().forEach(h -> response.addHeader(h.getKey(), h.getValue()));
                 return response;
             }

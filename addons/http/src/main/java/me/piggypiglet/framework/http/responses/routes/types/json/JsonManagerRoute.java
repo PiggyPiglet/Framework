@@ -22,7 +22,7 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
     }
 
     @Override
-    public Object run(Map<String, List<String>> params) {
+    public Object run(Map<String, List<String>> params, List<Header> headers) {
         if (params.size() > 0) {
             final Map.Entry<String, List<String>> entry = params.entrySet().iterator().next();
             final String key = entry.getKey();
@@ -67,7 +67,7 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
 
         }
 
-        return provide(params);
+        return provide(params, headers);
     }
 
     protected class Options {

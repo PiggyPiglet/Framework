@@ -49,7 +49,7 @@ public abstract class JsonRoute extends Route {
     }
 
     @Override
-    public Object run(Map<String, List<String>> params) {
-        return gson.toJson(super.run(params));
+    public Object run(Map<String, List<String>> params, List<Header> headers) {
+        return gson.toJson(super.run(params, headers));
     }
 }

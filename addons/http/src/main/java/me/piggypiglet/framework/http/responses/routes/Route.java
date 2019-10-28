@@ -48,10 +48,11 @@ public abstract class Route {
 
     /**
      * Process user-inputted params and return a string response
-     * @param params User input
+     * @param params Query parameters on the URL
+     * @param headers Any headers that were supplied in the request
      * @return Object, will be converted to string
      */
-    protected abstract Object provide(Map<String, List<String>> params);
+    protected abstract Object provide(Map<String, List<String>> params, List<Header> headers);
 
     /**
      * Process parameters and return a string based on them &amp; the route
@@ -61,8 +62,8 @@ public abstract class Route {
      *               {test:["oof", "oof2"],oof:["test"]}
      * @return Object, will be converted to string
      */
-    public Object run(Map<String, List<String>> params) {
-        return provide(params);
+    public Object run(Map<String, List<String>> params, List<Header> headers) {
+        return provide(params, headers);
     }
 
     /**
