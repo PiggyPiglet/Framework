@@ -36,6 +36,7 @@ import me.piggypiglet.framework.http.responses.routes.mixins.Authenticated;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public final class ResponseHandler {
@@ -53,7 +54,10 @@ public final class ResponseHandler {
         for (Route route : routes) {
             if (session.getUri().toLowerCase().replace("/", "").startsWith(route.getRoute())) {
                 if (route.getClass().getAnnotation(Authenticated.class) != null) {
-                    if (!session.getHeaders().getOrDefault("auth", "test").equals(configManager.getConfigs().get(HTTPAddon.class).getItems().get("authentication.token"))) {
+                    Map<String, Object> config = configManager.getConfigs().get(HTTPAddon.class).getItems();
+
+                    if ((boolean) config.get("basic-authentication.enabled") &&
+                            !session.getHeaders().getOrDefault("auth", "test").equals(config.get("basic-authentication.token"))) {
                         return NanoHTTPD.newFixedLengthResponse("<p>Invalid auth token provided.</p>");
                     }
                 }
