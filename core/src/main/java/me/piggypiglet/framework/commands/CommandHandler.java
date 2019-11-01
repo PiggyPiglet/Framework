@@ -38,11 +38,6 @@ public class CommandHandler {
     private List<Command> commands;
     private Command helpCommand;
 
-    /**
-     * Find a matching command accessible to this command handler, and run it with the user's input
-     * @param user User to run the command on
-     * @param message String user input
-     */
     public void handle(User user, String message) {
         if (message.startsWith(framework.getCommandPrefix())) {
             message = message.replaceFirst(framework.getCommandPrefix(), "").trim();
@@ -61,7 +56,7 @@ public class CommandHandler {
                     if (permissions.size() == 0 || permissions.stream().anyMatch(user::hasPermission)) {
                         String[] args = args(message.replaceFirst(cmd, "").trim());
 
-                        if (!process(user, c)) return;
+                        if (!run(user, c)) return;
 
                         if (!c.run(user, args)) {
                             user.sendMessage("Incorrect usage, correct usage is: %s %s", cmd, c.getUsage());
@@ -76,6 +71,10 @@ public class CommandHandler {
 
             user.sendMessage("Unknown command.");
         }
+    }
+
+    protected boolean run(User user, Command command) {
+        return process(user, command);
     }
 
     /**
@@ -94,6 +93,7 @@ public class CommandHandler {
      */
     public void setCommands(List<Command> commands) {
         this.commands = commands;
+        System.out.println(commands);
         helpCommand = commands.stream().filter(Command::isDefault).findFirst().orElse(defHelpCommand);
     }
 

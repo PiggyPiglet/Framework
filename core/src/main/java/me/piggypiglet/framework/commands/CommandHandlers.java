@@ -78,6 +78,15 @@ public final class CommandHandlers {
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toList()));
     }
 
+    public void overrideHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
+        if (commandHandlers.containsKey(name)) {
+            CommandHandler commandHandler = injector.getInstance(handler);
+
+            commandHandler.setCommands(commandHandlers.get(name).getCommands());
+            commandHandlers.put(name, commandHandler);
+        }
+    }
+
     /**
      * Get the commands from a specific handler
      * @param handler Handler name

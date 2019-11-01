@@ -29,13 +29,13 @@ import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.commands.CommandHandler;
 import me.piggypiglet.framework.user.User;
 
-public final class BukkitCommandHandler extends CommandHandler {
+public class BukkitCommandHandler extends CommandHandler {
     @Override
-    protected boolean process(User user, Command command) {
+    protected final boolean run(User user, Command command) {
         if (user instanceof BukkitUser && command instanceof BukkitCommand) {
             if (((BukkitCommand) command).isPlayerOnly()) {
                 if (((BukkitUser) user).isPlayer()) {
-                    return true;
+                    return super.run(user, command);
                 } else {
                     user.sendMessage("Only player's can execute this command.");
                     return false;
@@ -43,6 +43,6 @@ public final class BukkitCommandHandler extends CommandHandler {
             }
         }
 
-        return true;
+        return super.run(user, command);
     }
 }

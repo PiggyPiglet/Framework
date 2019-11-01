@@ -31,18 +31,19 @@ import me.piggypiglet.framework.user.User;
 
 public final class NukkitCommandHandler extends CommandHandler {
     @Override
-    protected boolean process(User user, Command command) {
+    protected final boolean run(User user, Command command) {
         if (user instanceof NukkitUser && command instanceof NukkitCommand) {
             if (((NukkitCommand) command).isPlayerOnly()) {
                 if (((NukkitUser) user).isPlayer()) {
-                    return true;
+                    return super.run(user, command);
                 } else {
                     user.sendMessage("Only player's can execute this command.");
                     return false;
                 }
             }
         }
-        return true;
+
+        return super.run(user, command);
     }
 
 }
