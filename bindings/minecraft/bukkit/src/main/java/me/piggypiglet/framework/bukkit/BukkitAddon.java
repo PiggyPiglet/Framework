@@ -36,7 +36,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                 value = LoggerRegisterable.class,
                 priority = BootPriority.IMPL
         ),
-        @Startup(CommandExecutorRegisterable.class),
+        @Startup(
+                value = CommandExecutorRegisterable.class,
+                priority = BootPriority.COMMANDS
+        ),
         @Startup(EventFinderRegisterable.class)
 })
 public final class BukkitAddon {

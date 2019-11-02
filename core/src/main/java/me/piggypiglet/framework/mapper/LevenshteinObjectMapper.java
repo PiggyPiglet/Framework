@@ -115,24 +115,27 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             result.put(s, data.get(key));
         });
 
-        final List<Class<?>> required = new ArrayList<>(types.values().stream().map(t -> {
+        final List<Class<?>> required = types.values().stream().map(t -> {
             if (t == Integer.class || t == Long.class) {
                 return Double.class;
             }
 
             return t;
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toList());
         
-        final List<Class<?>> inputted = new ArrayList<>(result.values().stream().map(Object::getClass).collect(Collectors.toList()));
+        final List<Class<?>> inputted = result.values().stream().map(Object::getClass).collect(Collectors.toList());
 
-        boolean canUseConstructor = true;
+        boolean canUseConstructor = false;
 
-        for (int i = 0; i < inputted.size(); i++) {
-            Class<?> require = required.get(i);
-            Class<?> input = inputted.get(i);
+        if (constructor.getParameterCount() == inputted.size()) {
+            for (int i = 0; i < inputted.size(); i++) {
+                Class<?> require = required.get(i);
+                Class<?> input = inputted.get(i);
 
-            if (!input.equals(require) && !require.isAssignableFrom(input)) {
-                canUseConstructor = false;
+                if (input.equals(require) || require.isAssignableFrom(input)) {
+                    canUseConstructor = true;
+                    break;
+                }
             }
         }
 
@@ -190,7 +193,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
      */
     @Override
     public final Map<String, Object> typeToData(T type) {
-        return fields.values().stream().collect(Collectors.toMap(f -> f.getName(), f -> {
+        return fields.values().stream().collect(Collectors.toMap(Field::getName, f -> {
             try {
                 return f.get(type);
             } catch (Exception e) {

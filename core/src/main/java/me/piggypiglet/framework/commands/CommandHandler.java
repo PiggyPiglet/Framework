@@ -93,8 +93,7 @@ public class CommandHandler {
      */
     public void setCommands(List<Command> commands) {
         this.commands = commands;
-        System.out.println(commands);
-        helpCommand = commands.stream().filter(Command::isDefault).findFirst().orElse(defHelpCommand);
+        helpCommand = commands.stream().filter(c -> !(c instanceof HelpCommand)).filter(Command::isDefault).findFirst().orElse(defHelpCommand);
     }
 
     /**

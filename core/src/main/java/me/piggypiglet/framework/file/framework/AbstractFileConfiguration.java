@@ -27,11 +27,13 @@ package me.piggypiglet.framework.file.framework;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 
 import java.io.File;
+import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractFileConfiguration implements FileConfiguration {
     private final Predicate<String> match;
@@ -143,22 +145,18 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
     protected abstract Map<String, Object> retrieveAll();
 
     public Map<String, Object> getAll() {
-        Map<String, Object> unprocessed = retrieveAll();
-        Map<String, Object> processed = new HashMap<>();
-
-        iterate("", unprocessed, processed);
-        return processed;
+        return retrieveAll().entrySet().stream()
+                .flatMap(this::flatten)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private void iterate(String currentKey, Map<String, Object> map, Map<String, Object> out) {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            currentKey = currentKey.isEmpty() ? entry.getKey() : currentKey + "." + entry.getKey();
-
-            if (entry.getValue() instanceof Map) {
-                iterate(currentKey, (Map<String, Object>) entry.getValue(), out);
-            } else {
-                out.put(currentKey, entry.getValue());
-            }
+    private Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry) {
+        if (entry.getValue() instanceof Map) {
+            return ((Map<String, Object>) entry.getValue()).entrySet().stream()
+                    .map(e -> new AbstractMap.SimpleEntry<>(entry.getKey() + "." + e.getKey(), e.getValue()))
+                    .flatMap(this::flatten);
         }
+
+        return Stream.of(entry);
     }
 }

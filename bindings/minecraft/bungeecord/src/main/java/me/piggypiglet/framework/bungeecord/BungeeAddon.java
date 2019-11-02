@@ -38,7 +38,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                         priority = BootPriority.IMPL
                 ),
                 @Startup(EventFinderRegisterable.class),
-                @Startup(CommandExecutorRegisterable.class)
+                @Startup(
+                        value = CommandExecutorRegisterable.class,
+                        priority = BootPriority.COMMANDS
+                )
         }
 )
 public final class BungeeAddon {
