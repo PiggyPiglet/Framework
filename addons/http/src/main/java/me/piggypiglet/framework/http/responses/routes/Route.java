@@ -32,9 +32,11 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Route {
-    private final String route;
-    
     protected static final List<Header> HEADERS = new ArrayList<>();
+
+    private final String route;
+
+    private String requestIp;
 
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
@@ -62,7 +64,8 @@ public abstract class Route {
      *               {test:["oof", "oof2"],oof:["test"]}
      * @return Object, will be converted to string
      */
-    public Object run(Map<String, List<String>> params, List<Header> headers) {
+    public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
+        this.requestIp = ip;
         return provide(params, headers);
     }
 

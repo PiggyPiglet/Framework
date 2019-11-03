@@ -66,7 +66,8 @@ public final class ResponseHandler {
 
                 NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(
                         session.getParameters(),
-                        session.getHeaders().entrySet().stream().map(e -> new Header(e.getKey(), e.getValue())).collect(Collectors.toList())
+                        session.getHeaders().entrySet().stream().map(e -> new Header(e.getKey(), e.getValue())).collect(Collectors.toList()),
+                        session.getRemoteIpAddress()
                 ).toString());
                 route.getHeaders().forEach(h -> response.addHeader(h.getKey(), h.getValue()));
                 return response;
