@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.http.responses.routes.types.json;
 
+import com.google.gson.Gson;
 import me.piggypiglet.framework.http.responses.routes.mixins.json.manager.Removable;
 import me.piggypiglet.framework.http.responses.routes.objects.Header;
 import me.piggypiglet.framework.managers.implementations.SearchableManager;
@@ -21,8 +22,13 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
         this.manager = manager;
     }
 
+    protected JsonManagerRoute(String route, SearchableManager<T> manager, Gson gson, Header... headers) {
+        super(route, gson, headers);
+        this.manager = manager;
+    }
+
     @Override
-    public Object run(Map<String, List<String>> params, List<Header> headers) {
+    public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
         if (params.size() > 0) {
             final Map.Entry<String, List<String>> entry = params.entrySet().iterator().next();
             final String key = entry.getKey();

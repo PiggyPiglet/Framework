@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class JsonRoute extends Route {
-    protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    protected final Gson gson;
 
     static {
         HEADERS.add(new Header("Content-Type", "application/json"));
@@ -45,11 +45,16 @@ public abstract class JsonRoute extends Route {
      * @param headers Optional headers to append to the page
      */
     protected JsonRoute(String route, Header... headers) {
+        this(route, new GsonBuilder().setPrettyPrinting().create(), headers);
+    }
+
+    protected JsonRoute(String route, Gson gson, Header... headers) {
         super(route, headers);
+        this.gson = gson;
     }
 
     @Override
-    public Object run(Map<String, List<String>> params, List<Header> headers) {
-        return gson.toJson(super.run(params, headers));
+    public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
+        return gson.toJson(super.run(params, headers, ip));
     }
 }
