@@ -120,6 +120,6 @@ public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
     }
 
     public CompletableFuture<Boolean> delete(T t) {
-        return deleter().location(typeToData(t)).build().execute();
+        return deleter().location(saveLocation(t)).build().execute();
     }
 }
