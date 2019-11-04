@@ -28,8 +28,11 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.implementations.HelpCommand;
 import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.utils.annotations.reflection.Default;
 
 import java.util.List;
+
+import static me.piggypiglet.framework.lang.Lang.Values.*;
 
 public class CommandHandler {
     @Inject private Framework framework;
@@ -59,17 +62,17 @@ public class CommandHandler {
                         if (!run(user, c)) return;
 
                         if (!c.run(user, args)) {
-                            user.sendMessage("Incorrect usage, correct usage is: %s %s", cmd, c.getUsage());
+                            user.sendMessage(INCORRECT_USAGE, cmd, c.getUsage());
                         }
                     } else {
-                        user.sendMessage("You do not have permission for that command.");
+                        user.sendMessage(NO_PERMISSION);
                     }
 
                     return;
                 }
             }
 
-            user.sendMessage("Unknown command.");
+            user.sendMessage(UNKNOWN_COMMAND);
         }
     }
 
@@ -93,7 +96,7 @@ public class CommandHandler {
      */
     public void setCommands(List<Command> commands) {
         this.commands = commands;
-        helpCommand = commands.stream().filter(c -> !(c instanceof HelpCommand)).filter(Command::isDefault).findFirst().orElse(defHelpCommand);
+        helpCommand = commands.stream().filter(c -> !(c.getClass().isAnnotationPresent(Default.class))).filter(Command::isDefault).findFirst().orElse(defHelpCommand);
     }
 
     /**

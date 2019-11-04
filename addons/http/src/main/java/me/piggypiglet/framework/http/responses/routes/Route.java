@@ -36,8 +36,6 @@ public abstract class Route {
 
     private final String route;
 
-    protected String requestIp;
-
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
      * @param route Route
@@ -54,7 +52,7 @@ public abstract class Route {
      * @param headers Any headers that were supplied in the request
      * @return Object, will be converted to string
      */
-    protected abstract Object provide(Map<String, List<String>> params, List<Header> headers);
+    protected abstract Object provide(Map<String, List<String>> params, List<Header> headers, String ip);
 
     /**
      * Process parameters and return a string based on them &amp; the route
@@ -65,8 +63,7 @@ public abstract class Route {
      * @return Object, will be converted to string
      */
     public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
-        this.requestIp = ip == null ? "127.0.0.1" : ip;
-        return provide(params, headers);
+        return provide(params, headers, ip);
     }
 
     /**

@@ -30,6 +30,7 @@ import me.piggypiglet.framework.addon.objects.ConfigInfo;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.guice.objects.MainBinding;
+import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.utils.annotations.Main;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
@@ -51,10 +52,14 @@ public final class Framework {
     private final int threads;
     private final Map<Class<?>, ConfigInfo> configs;
     private final String fileDir;
+    private final boolean useLangFile;
+    private final ConfigInfo langConfig;
+    private final LangEnum[] customLang;
 
     private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables,
                       List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files,
-                      int threads, Map<Class<?>, ConfigInfo> configs, String configDir) {
+                      int threads, Map<Class<?>, ConfigInfo> configs, String configDir, boolean useLangFile, ConfigInfo langConfig,
+                      LangEnum[] customLang) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -65,6 +70,9 @@ public final class Framework {
         this.threads = threads;
         this.configs = configs;
         this.fileDir = configDir;
+        this.useLangFile = useLangFile;
+        this.langConfig = langConfig;
+        this.customLang = customLang;
     }
 
     /**
@@ -163,6 +171,18 @@ public final class Framework {
         return fileDir;
     }
 
+    public boolean isUseLangFile() {
+        return useLangFile;
+    }
+
+    public ConfigInfo getLangConfig() {
+        return langConfig;
+    }
+
+    public LangEnum[] getCustomLang() {
+        return customLang;
+    }
+
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
@@ -174,6 +194,9 @@ public final class Framework {
         private int threads = 15;
         private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
         private String fileDir = ".";
+        private boolean useLangFile = false;
+        private ConfigInfo langConfig = null;
+        private LangEnum[] customLang = null;
 
         private FrameworkBuilder() {}
 
@@ -298,6 +321,37 @@ public final class Framework {
         }
 
         /**
+         * Declare whether a lang file will be used over hardcoded values.
+         * @param value True or false
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder useLangFile(boolean value) {
+            this.useLangFile = value;
+            return this;
+        }
+
+        /**
+         * If useLangFile is set to true, optionally use your own config with mappings.
+         * @param config Config name
+         * @param locations Mapping
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder langConfig(String config, Map<String, String> locations) {
+            this.langConfig = new ConfigInfo(config, locations, false);
+            return this;
+        }
+
+        /**
+         * Specify a custom language enum
+         * @param values Values of the enum
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder customLang(LangEnum[] values) {
+            customLang = values;
+            return this;
+        }
+
+        /**
          * Compile all the user-set options into an instance of Framework
          * NOTE: Will crash if any of the following aren't set:
          * - main
@@ -315,7 +369,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs, fileDir);
+            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs, fileDir, useLangFile, langConfig, customLang);
         }
     }
 }

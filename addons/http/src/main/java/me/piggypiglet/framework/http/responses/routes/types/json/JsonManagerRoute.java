@@ -73,7 +73,7 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
 
         }
 
-        return provide(params, headers);
+        return provide(params, headers, ip);
     }
 
     protected class Options {

@@ -24,6 +24,9 @@
 
 package me.piggypiglet.framework.user;
 
+import me.piggypiglet.framework.lang.Lang;
+import me.piggypiglet.framework.lang.LangEnum;
+
 public abstract class User {
     private final String name;
     private final String id;
@@ -72,11 +75,11 @@ public abstract class User {
      * @param message Message to send
      * @param vars Vars to replace in the message (uses String#format)
      */
-    public void sendMessage(String message, Object... vars) {
-        String clone = message;
+    public void sendMessage(Object message, Object... vars) {
+        String clone = message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
 
         if (vars.length > 0) {
-            clone = String.format(message, vars);
+            clone = String.format(clone, vars);
         }
 
         sendMessage(clone);

@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.utils.annotations.addon;
 
+import me.piggypiglet.framework.lang.Lang;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
@@ -60,4 +61,6 @@ public @interface Addon {
      * @return Default config
      */
     Config config() default @Config(name = "null", keys = {});
+
+    Langs lang() default @Langs(clazz = Lang.Values.class, values = {});
 }

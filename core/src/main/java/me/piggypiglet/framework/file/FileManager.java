@@ -30,8 +30,6 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
-import me.piggypiglet.framework.logging.Logger;
-import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.utils.FileUtils;
 
 import java.io.File;
@@ -44,8 +42,6 @@ public final class FileManager {
     @Inject private FileConfigurationFactory fileConfigurationFactory;
     @Inject private Framework framework;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("FileManager");
-
     private final Map<String, Object> files = new HashMap<>();
 
     /**
@@ -57,8 +53,6 @@ public final class FileManager {
      * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
     public FileWrapper loadFile(String name, String internalPath, String externalPath) throws Exception {
-        LOGGER.info("Loading %s.", name);
-
         if (externalPath == null) {
             return putAndGet(name, new FileWrapper(null, FileUtils.readEmbedToString(internalPath)));
         }
@@ -77,8 +71,6 @@ public final class FileManager {
      * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
     public FileConfiguration loadConfig(String name, String internalPath, String externalPath) throws Exception {
-        LOGGER.info("Loading %s.", name);
-
         if (externalPath == null) {
             return putAndGet(name, fileConfigurationFactory.get(internalPath, FileUtils.readEmbedToString(internalPath)));
         }

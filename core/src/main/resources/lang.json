@@ -1,0 +1,7 @@
+{
+  "commands": {
+    "incorrect_usage": "Incorrect usage, correct usage is: %s %s",
+    "no_permission": "You do not have permission for that command.",
+    "unknown_command": "Unknown command."
+  }
+}
