@@ -78,7 +78,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
         try {
             doConfig(
                     this.lang.getValues().stream().collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)),
-                    fileManager.loadConfig("lang", "lang/lang.json", external ? "lang/lang.json" : null)
+                    fileManager.loadConfig("lang", "/lang.json", external ? "lang.json" : null)
             );
         } catch (Exception e) {
             throw new RuntimeException("Something went dreadfully wrong when loading the default language file. How disappointing :(\n" + e);
