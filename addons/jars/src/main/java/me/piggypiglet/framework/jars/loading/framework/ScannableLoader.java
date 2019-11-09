@@ -26,11 +26,18 @@ package me.piggypiglet.framework.jars.loading.framework;
 
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 @Disabled
 public abstract class ScannableLoader<T> extends Loader {
     private final Predicate<Class<?>> match;
+
+    private final List<T> predefined = new ArrayList<>();
+
+    protected final Options options = new Options();
 
     protected ScannableLoader(String dir, Predicate<Class<?>> match) {
         super(dir);
@@ -44,7 +51,19 @@ public abstract class ScannableLoader<T> extends Loader {
         init((T) instance);
     }
 
+    public void preRun() {
+        predefined.forEach(this::init);
+    }
+
     public Predicate<Class<?>> getMatch() {
         return match;
+    }
+
+    protected class Options {
+        @SafeVarargs
+        public final Options predefined(T... predefined) {
+            ScannableLoader.this.predefined.addAll(Arrays.asList(predefined));
+            return this;
+        }
     }
 }

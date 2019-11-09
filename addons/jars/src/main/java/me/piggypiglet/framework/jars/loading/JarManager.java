@@ -66,6 +66,7 @@ public final class JarManager {
         for (Map.Entry<Loader, Jar[]> entry : loaders.entrySet()) {
             if (entry.getKey() instanceof ScannableLoader) {
                 ScannableLoader<?> loader = (ScannableLoader<?>) entry.getKey();
+                loader.preRun();
 
                 if (entry.getValue() == null) continue;
 

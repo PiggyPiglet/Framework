@@ -33,8 +33,6 @@ public abstract class Loader {
         this.dir = dir;
     }
 
-    public void preProcess(String dir) {}
-
     public abstract Jar[] process(File[] files);
 
     public String getDir() {
