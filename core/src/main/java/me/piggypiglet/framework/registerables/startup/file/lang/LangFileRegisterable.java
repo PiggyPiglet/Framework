@@ -9,7 +9,6 @@ import me.piggypiglet.framework.lang.Lang;
 import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.lang.objects.LangConfig;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.utils.annotations.addon.Langs;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -58,21 +57,31 @@ public final class LangFileRegisterable extends StartupRegisterable {
     }
 
     private void useDefaultLang(boolean external) {
-        main.getAddons().forEach((c, a) -> {
-            final Langs lang = a.lang();
+//        main.getAddons().forEach((c, a) -> {
+//            final Langs lang = a.lang();
+//
+//            if (lang.clazz() != Lang.Values.class) {
+//                try {
+//                    final String name = c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file().re
+//                    final String file = "lang/" + c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file();
+//
+//                    doConfig(
+//                            this.lang.getValues().stream().collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)),
+//                            fileManager.loadConfig("lang", file, external ? file : null)
+//                    );
+//                } catch (Exception e) {
+//                    throw new RuntimeException("Something went dreadfully wrong when loading the default language file. How disappointing :(\n" + e);
+//                }
+//            }
+//        });
 
-            if (lang.clazz() != Lang.Values.class) {
-                try {
-                    final String file = "lang/" + c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file();
-
-                    doConfig(
-                            this.lang.getValues().stream().collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)),
-                            fileManager.loadConfig("lang", file, external ? file : null)
-                    );
-                } catch (Exception e) {
-                    throw new RuntimeException("Something went dreadfully wrong when loading the default language file. How disappointing :(\n" + e);
-                }
-            }
-        });
+        try {
+            doConfig(
+                    this.lang.getValues().stream().collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)),
+                    fileManager.loadConfig("lang", "lang/lang.json", external ? "lang/lang.json" : null)
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Something went dreadfully wrong when loading the default language file. How disappointing :(\n" + e);
+        }
     }
 }
