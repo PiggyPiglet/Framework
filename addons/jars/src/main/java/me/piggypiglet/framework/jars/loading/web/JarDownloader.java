@@ -70,16 +70,16 @@ public final class JarDownloader {
             }
 
             if (!file.exists()) {
-                LOGGER.error("Unable to download %s", name);
+                LOGGER.debug("Unable to download %s", name);
                 return;
             }
 
             if (!FileUtils.md5Checksum(file).equals(hash)) {
-                LOGGER.error("Hash doesn't match on %s", name);
+                LOGGER.debug("Hash doesn't match on %s", name);
                 return;
             }
 
-            LOGGER.info("Successfully downloaded %s", name);
+            LOGGER.debug("Successfully downloaded %s", name);
         }
     }
 }

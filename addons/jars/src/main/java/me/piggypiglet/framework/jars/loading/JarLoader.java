@@ -53,10 +53,10 @@ public final class JarLoader {
         String name = jar.getName();
         File file = new File(jar.getPath());
 
-        LOGGER.info("Loading jar %s.", name);
+        LOGGER.debug("Loading jar %s.", name);
 
         if (!file.exists()) {
-            LOGGER.error("Jar doesn't exist for %s.", name);
+            LOGGER.debug("Jar doesn't exist for %s.", name);
             return;
         }
 
@@ -66,6 +66,6 @@ public final class JarLoader {
             e.printStackTrace();
         }
 
-        LOGGER.info("Successfully loaded jar %s", name);
+        LOGGER.debug("Successfully loaded jar %s", name);
     }
 }

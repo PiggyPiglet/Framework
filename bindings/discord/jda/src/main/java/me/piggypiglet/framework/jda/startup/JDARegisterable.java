@@ -50,7 +50,7 @@ public final class JDARegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        LoggerFactory.getLogger("JDA").info("Initializing bot and bindings.");
+        LoggerFactory.getLogger("JDA").debug("Initializing bot and bindings.");
 
         final Map<String, Object> items = configManager.getConfigs().get(JDAAddon.class).getItems();
 
@@ -77,7 +77,7 @@ public final class JDARegisterable extends StartupRegisterable {
 
         task.async(r -> {
             if (jda.getStatus() != JDA.Status.CONNECTED) {
-                LoggerFactory.getLogger("JDA").error("JDA has not connected in over 20 seconds, shutting down.");
+                LoggerFactory.getLogger("JDA").debug("JDA has not connected in over 20 seconds, shutting down.");
                 System.exit(0);
             }
         }, "20 seconds", false);

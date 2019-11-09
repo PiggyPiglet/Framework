@@ -47,4 +47,9 @@ public final class LogbackLogger extends Logger<org.slf4j.Logger> {
     protected void error(String message) {
         logger.error(message);
     }
+
+    @Override
+    protected void debug(String message) {
+        logger.debug(message);
+    }
 }

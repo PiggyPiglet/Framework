@@ -60,7 +60,7 @@ public final class BaseCommandHandler {
                 e.printStackTrace();
             }
         } else {
-            logger.error("PluginManager is not an instance of SimplePluginManager.");
+            logger.debug("PluginManager is not an instance of SimplePluginManager.");
         }
     }
 

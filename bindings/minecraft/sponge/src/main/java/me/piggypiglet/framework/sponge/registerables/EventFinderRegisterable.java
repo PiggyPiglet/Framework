@@ -49,7 +49,7 @@ public final class EventFinderRegisterable extends StartupRegisterable {
             try {
                 Sponge.getEventManager().registerListener(main, ClassUtils.getImplementedGeneric(l), injector.getInstance(l));
             } catch (GenericException e) {
-                logger.warning("Could not find valid event on %s.", l.getName());
+                logger.debug("Could not find valid event on %s.", l.getName());
             }
         });
     }

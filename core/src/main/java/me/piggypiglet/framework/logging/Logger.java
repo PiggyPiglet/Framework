@@ -29,6 +29,8 @@ import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 
 @ImplementedBy(DefaultLogger.class)
 public abstract class Logger<T> {
+    private boolean debug;
+
     protected T logger;
 
     /**
@@ -57,12 +59,19 @@ public abstract class Logger<T> {
     protected abstract void error(String message);
 
     /**
+     * Implementation of sending a debug message through a third-party logger.
+     * @param message Message to be logged.
+     */
+    protected abstract void debug(String message);
+
+    /**
      * Create a logger instance with a name
      * @param name Name that will appear when logging.
      * @return Logger instance
      */
-    public Logger create(String name) {
+    public Logger create(String name, boolean debug) {
         logger = init(name);
+        this.debug = debug;
         return this;
     }
 
@@ -91,6 +100,17 @@ public abstract class Logger<T> {
      */
     public void error(String message, Object... vars) {
         error(format(message, vars));
+    }
+
+    /**
+     * Log a debug message.
+     * @param message Message to be logged.
+     * @param vars Any variables to be replaced in the message (uses String#format)
+     */
+    public void debug(String message, Object... vars) {
+        if (debug) {
+            debug(format(message, vars));
+        }
     }
 
     private String format(String message, Object... vars) {

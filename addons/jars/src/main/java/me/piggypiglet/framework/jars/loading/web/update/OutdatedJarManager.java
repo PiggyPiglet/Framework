@@ -42,7 +42,7 @@ public final class OutdatedJarManager {
             );
 
             if (deleter.needsUpdating()) {
-                LoggerFactory.getLogger("OutdatedJarManager").info("Deleting outdated/irrelevant jars in %s.", dir);
+                LoggerFactory.getLogger("OutdatedJarManager").debug("Deleting outdated/irrelevant jars in %s.", dir);
                 deleter.deleteAll();
             }
         } catch (Exception e) {

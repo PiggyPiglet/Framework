@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME)
 public @interface Langs {
+    String file();
+
     Class<? extends Enum<? extends LangEnum>> clazz();
 
     String[] values();

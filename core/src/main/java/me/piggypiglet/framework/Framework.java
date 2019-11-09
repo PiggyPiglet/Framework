@@ -55,11 +55,12 @@ public final class Framework {
     private final boolean useLangFile;
     private final ConfigInfo langConfig;
     private final LangEnum[] customLang;
+    private final boolean debug;
 
     private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables,
                       List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files,
                       int threads, Map<Class<?>, ConfigInfo> configs, String configDir, boolean useLangFile, ConfigInfo langConfig,
-                      LangEnum[] customLang) {
+                      LangEnum[] customLang, boolean debug) {
         this.main = main;
         this.pckg = pckg;
         this.injector = injector;
@@ -73,6 +74,7 @@ public final class Framework {
         this.useLangFile = useLangFile;
         this.langConfig = langConfig;
         this.customLang = customLang;
+        this.debug = debug;
     }
 
     /**
@@ -183,6 +185,10 @@ public final class Framework {
         return customLang;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
@@ -197,6 +203,7 @@ public final class Framework {
         private boolean useLangFile = false;
         private ConfigInfo langConfig = null;
         private LangEnum[] customLang = null;
+        private boolean debug = false;
 
         private FrameworkBuilder() {}
 
@@ -352,6 +359,16 @@ public final class Framework {
         }
 
         /**
+         * Should debug messages be logged?
+         * @param debug True/false
+         * @return FrameworkBuilder
+         */
+        public final FrameworkBuilder debug(boolean debug) {
+            this.debug = debug;
+            return this;
+        }
+
+        /**
          * Compile all the user-set options into an instance of Framework
          * NOTE: Will crash if any of the following aren't set:
          * - main
@@ -369,7 +386,7 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs, fileDir, useLangFile, langConfig, customLang);
+            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs, fileDir, useLangFile, langConfig, customLang, debug);
         }
     }
 }

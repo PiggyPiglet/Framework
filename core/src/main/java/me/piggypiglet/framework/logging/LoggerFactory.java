@@ -25,12 +25,14 @@
 package me.piggypiglet.framework.logging;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.name.Named;
+import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 
 public final class LoggerFactory {
-    @Inject private static Injector injector;
+    @Inject private static FrameworkBootstrap main;
+    @Inject private static Framework framework;
     @Inject @Named("logger") private static Class logger;
 
     /**
@@ -40,10 +42,12 @@ public final class LoggerFactory {
      */
     @SuppressWarnings("unchecked")
     public static Logger getLogger(String name) {
+        final boolean debug = framework.isDebug();
+
         try {
-            return ((Logger) injector.getInstance(logger)).create(name);
+            return ((Logger) main.getInjector().getInstance(logger)).create(name, debug);
         } catch (Exception ignored) {}
 
-        return new DefaultLogger().create(name);
+        return new DefaultLogger().create(name, debug);
     }
 }

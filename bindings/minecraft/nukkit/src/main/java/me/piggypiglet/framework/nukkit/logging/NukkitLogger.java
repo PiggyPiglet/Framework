@@ -28,4 +28,9 @@ public final class NukkitLogger extends Logger<PluginLogger> {
     protected void error(String message) {
         logger.error(message);
     }
+
+    @Override
+    protected void debug(String message) {
+        logger.debug(message);
+    }
 }

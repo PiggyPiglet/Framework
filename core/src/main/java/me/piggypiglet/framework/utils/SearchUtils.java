@@ -30,8 +30,8 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class SearchUtils {
     /**
@@ -56,6 +56,10 @@ public final class SearchUtils {
         return stream
                 .map(i -> (T) i.item)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
+    }
+
+    public static Searchable stringSearchable(String str) {
+        return () -> str;
     }
 
     private static final class SearchPair implements Comparable {

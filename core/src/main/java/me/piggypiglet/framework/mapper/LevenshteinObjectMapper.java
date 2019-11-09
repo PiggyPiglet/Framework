@@ -44,6 +44,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
     private final Object[] params;
     private final Map<String, Class<?>> types = new LinkedHashMap<>();
     private final Map<String, Field> fields = new HashMap<>();
+    private final List<Class<?>> required;
 
     /**
      * Same as LevenshteinObjectMapper(Class&lt;T&gt;) but uses reflection to fetch the class from the generic.
@@ -55,6 +56,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         params = mapper.params;
         types.putAll(mapper.types);
         fields.putAll(mapper.fields);
+        required = mapper.required;
     }
 
     /**
@@ -88,6 +90,14 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
                 throw new RuntimeException(e);
             }
         });
+
+        required = types.values().stream().map(t -> {
+            if (t == Integer.class || t == Long.class) {
+                return Double.class;
+            }
+
+            return t;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -101,7 +111,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         final Map<String, Object> result = new LinkedHashMap<>();
         T instance;
 
-        final List<SearchUtils.Searchable> searchables = data.keySet().stream().map(StringSearchable::new).collect(Collectors.toList());
+        final List<SearchUtils.Searchable> searchables = data.keySet().stream().map(SearchUtils::stringSearchable).collect(Collectors.toList());
 
         types.keySet().forEach(s -> {
             String key;
@@ -114,14 +124,6 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
             result.put(s, data.get(key));
         });
-
-        final List<Class<?>> required = types.values().stream().map(t -> {
-            if (t == Integer.class || t == Long.class) {
-                return Double.class;
-            }
-
-            return t;
-        }).collect(Collectors.toList());
         
         final List<Class<?>> inputted = result.values().stream().map(Object::getClass).collect(Collectors.toList());
 
@@ -207,19 +209,6 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             return constructor.newInstance(params);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static class StringSearchable implements SearchUtils.Searchable {
-        private final String str;
-
-        private StringSearchable(String str) {
-            this.str = str;
-        }
-
-        @Override
-        public String getName() {
-            return str;
         }
     }
 }

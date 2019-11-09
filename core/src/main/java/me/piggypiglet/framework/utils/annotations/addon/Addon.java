@@ -62,5 +62,5 @@ public @interface Addon {
      */
     Config config() default @Config(name = "null", keys = {});
 
-    Langs lang() default @Langs(clazz = Lang.Values.class, values = {});
+    Langs lang() default @Langs(file = "", clazz = Lang.Values.class, values = {});
 }

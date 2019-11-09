@@ -46,4 +46,9 @@ public final class DefaultLogger extends Logger<java.util.logging.Logger> {
     protected void error(String message) {
         logger.severe(message);
     }
+
+    @Override
+    protected void debug(String message) {
+        info(message);
+    }
 }

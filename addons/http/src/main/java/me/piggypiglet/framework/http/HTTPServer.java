@@ -75,7 +75,7 @@ public final class HTTPServer {
             }
 
             nanoHTTPD.start();
-            LOGGER.info("HTTP Server started at %s:%s", ip, port);
+            LOGGER.debug("HTTP Server started at %s:%s", ip, port);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public final class HTTPServer {
      * Stop the HTTP Server
      */
     public void stop() {
-        LOGGER.info("Shutting down HTTP server.");
+        LOGGER.debug("Shutting down HTTP server.");
         nanoHTTPD.stop();
     }
 

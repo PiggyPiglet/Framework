@@ -42,7 +42,7 @@ public final class ConsoleRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        LoggerFactory.getLogger("Console").info("Initializing console module.");
+        LoggerFactory.getLogger("Console").debug("Initializing console module.");
 
         commandHandlers.newHandler("console", injector);
 

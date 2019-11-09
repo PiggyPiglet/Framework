@@ -58,7 +58,7 @@ public class BaseCommandHandler {
                 e.printStackTrace();
             }
         } else {
-            logger.error("PluginManager is null.");
+            logger.debug("PluginManager is null.");
         }
     }
 

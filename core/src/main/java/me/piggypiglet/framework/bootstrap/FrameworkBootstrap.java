@@ -126,7 +126,7 @@ public final class FrameworkBootstrap {
             });
         }
 
-        LoggerFactory.getLogger("RPF").info("Bootstrap process completed.");
+        LoggerFactory.getLogger("RPF").debug("Bootstrap process completed.");
     }
 
     @SafeVarargs
