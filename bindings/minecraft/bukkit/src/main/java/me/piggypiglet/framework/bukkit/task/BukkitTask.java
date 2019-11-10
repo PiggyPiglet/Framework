@@ -30,9 +30,12 @@ import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import sh.okx.timeapi.TimeAPI;
 
 public final class BukkitTask extends Task {
+    private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
+
     private final JavaPlugin main;
 
     @Inject
@@ -47,6 +50,12 @@ public final class BukkitTask extends Task {
 
     @Override
     protected void scheduleAsync(GRunnable task, TimeAPI time, boolean repeat) {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(main, task, time.getTicks(), time.getTicks());
+        final long ticks = time.getTicks();
+
+        if (repeat) {
+            SCHEDULER.runTaskTimerAsynchronously(main, task, ticks, ticks);
+        } else {
+            SCHEDULER.runTaskLaterAsynchronously(main, task, ticks);
+        }
     }
 }
