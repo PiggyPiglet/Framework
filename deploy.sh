@@ -14,16 +14,15 @@ mkdir maven/tmp/
 names=$1
 
 if [[ $names == "all" ]]; then
-  nameArray=(core addons/console addons/http addons/jars addons/logback addons/mysql bindings/discord/jda bindings/minecraft/common bindings/minecraft/bukkit bindings/minecraft/sponge bindings/minecraft/bungeecord bindings/minecraft/velocity)
+  nameArray=(core addons/console addons/http addons/jars addons/logback addons/mysql bindings/discord/jda bindings/minecraft/common bindings/minecraft/bukkit bindings/minecraft/sponge bindings/minecraft/bungeecord bindings/minecraft/velocity bindings/minecraft/nukkit)
 elif [[ $names == "bindings" ]]; then
-  nameArray=(core bindings/discord/jda bindings/minecraft/common bindings/minecraft/bukkit bindings/minecraft/sponge bindings/minecraft/bungeecord bindings/minecraft/velocity)
+  nameArray=(core bindings/discord/jda bindings/minecraft/common bindings/minecraft/bukkit bindings/minecraft/sponge bindings/minecraft/bungeecord bindings/minecraft/velocity bindings/minecraft/nukkit)
 else
   IFS="," read -ra nameArray <<< "$names"
 fi
 
-for i in "${nameArray[@]}"
-do
-  IFS="/" read -ra cutName <<< "$i"
+deploy() {
+  IFS="/" read -ra cutName <<< "$1"
 
   name=${cutName[-1]}
 
@@ -31,9 +30,20 @@ do
     name="${cutName[-2]}-common"
   fi
 
-  cp maven/${name}/pom.xml maven/tmp/pom.xml
-  sed -i "s/@VERSION@/$2/g" maven/tmp/pom.xml
-  sed -i "s/@CORE@/$2/g" maven/tmp/pom.xml
-  mvn deploy:deploy-file -DgroupId=me.piggypiglet -DartifactId=framework-$name -Dversion=$2 -Dpackaging=jar -Dfile=$i/build/libs/${cutName[-1]}-$2.jar -DpomFile=maven/tmp/pom.xml -DrepositoryId=piggypiglet -Durl=https://repo.piggypiglet.me/repository/maven-releases
-  rm maven/tmp/pom.xml
+  pomDir="maven/tmp/${name}"
+  pom="${pomDir}/pom.xml"
+
+  mkdir -p $pomDir
+  cp maven/${name}/pom.xml $pom
+  sed -i "s/@VERSION@/$2/g" $pom
+  sed -i "s/@CORE@/$2/g" $pom
+  mvn deploy:deploy-file -DgroupId=me.piggypiglet -DartifactId=framework-$name -Dversion=$2 -Dpackaging=jar -Dfile=$i/build/libs/${cutName[-1]}-$2.jar -DpomFile=${pom} -DrepositoryId=piggypiglet -Durl=https://repo.piggypiglet.me/repository/maven-releases
+  rm $pom
+}
+
+for i in "${nameArray[@]}"
+do
+  deploy $i $2 &
 done
+
+wait

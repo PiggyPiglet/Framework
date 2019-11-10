@@ -8,3 +8,4 @@ test/server/
 samples/bukkit-sample/server/
 *.sublime-*
 .DS_Store
+maven/tmp/
