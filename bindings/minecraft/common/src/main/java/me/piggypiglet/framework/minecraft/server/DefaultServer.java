@@ -2,7 +2,9 @@ package me.piggypiglet.framework.minecraft.server;
 
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Disabled
 public final class DefaultServer implements Server<DefaultServer> {
@@ -57,8 +59,8 @@ public final class DefaultServer implements Server<DefaultServer> {
     }
 
     @Override
-    public List<UUID> getWorlds() {
-        return new ArrayList<>();
+    public Set<UUID> getWorlds() {
+        return new HashSet<>();
     }
 
     @Override

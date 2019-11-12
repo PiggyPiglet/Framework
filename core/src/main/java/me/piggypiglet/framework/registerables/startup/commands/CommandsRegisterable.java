@@ -27,8 +27,8 @@ package me.piggypiglet.framework.registerables.startup.commands;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.commands.CommandHandlers;
-import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 
 import java.util.stream.Collectors;
 
@@ -39,6 +39,6 @@ public final class CommandsRegisterable extends StartupRegisterable {
     @Override
     protected void execute() {
         commandHandlers.clearCommands();
-        commandHandlers.getCommands().addAll(scanner.getSubTypesOf(Command.class).stream().map(injector::getInstance).collect(Collectors.toList()));
+        commandHandlers.getCommands().addAll(scanner.getSubTypesOf(Command.class).stream().map(injector::getInstance).collect(Collectors.toSet()));
     }
 }

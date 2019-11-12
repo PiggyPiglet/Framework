@@ -1,30 +1,38 @@
-package me.piggypiglet.framework.minecraft.player;
+package me.piggypiglet.framework.bungeecord.binding.player;
 
+import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
 import me.piggypiglet.framework.minecraft.world.World;
 import me.piggypiglet.framework.minecraft.world.location.Location;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
 
-public final class DefaultPlayer implements Player<Player> {
+public final class BungeeCordPlayer implements Player<ProxiedPlayer> {
+    private final ProxiedPlayer player;
+
+    public BungeeCordPlayer(ProxiedPlayer player) {
+        this.player = player;
+    }
+
     @Override
     public int getPing() {
-        return -1;
+        return player.getPing();
     }
 
     @Override
     public String getIp() {
-        return "null";
+        return player.getAddress().getHostName();
     }
 
     @Override
     public boolean hasPlayedBefore() {
-        return false;
+        throw new UnsupportedOperationException("BungeeCord does not store whether a player has played before.");
     }
 
     @Override
     public UUID getUuid() {
-        return null;
+        return player.getUniqueId();
     }
 
     @Override
@@ -39,12 +47,12 @@ public final class DefaultPlayer implements Player<Player> {
 
     @Override
     public long getFirstPlayed() {
-        return -1;
+        return 0;
     }
 
     @Override
     public long getLastPlayed() {
-        return -1;
+        return 0;
     }
 
     @Override
@@ -59,82 +67,82 @@ public final class DefaultPlayer implements Player<Player> {
 
     @Override
     public float getFlySpeed() {
-        return -1;
+        return 0;
     }
 
     @Override
     public float getWalkSpeed() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getViewDistance() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getFoodLevel() {
-        return -1;
+        return 0;
     }
 
     @Override
     public double getHealth() {
-        return -1;
+        return 0;
     }
 
     @Override
     public double getHealthScale() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getMaximumAir() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getRemainingAir() {
-        return -1;
+        return 0;
     }
 
     @Override
     public float getExp() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getTotalExperience() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getLevel() {
-        return -1;
+        return 0;
     }
 
     @Override
     public String getLocale() {
-        return "null";
+        return null;
     }
 
     @Override
     public long getPlayerTime() {
-        return -1;
+        return 0;
     }
 
     @Override
     public long getPlayerTimeOffset() {
-        return -1;
+        return 0;
     }
 
     @Override
     public String getPlayerWeather() {
-        return "null";
+        return null;
     }
 
     @Override
     public float getSaturation() {
-        return -1;
+        return 0;
     }
 
     @Override
@@ -144,32 +152,32 @@ public final class DefaultPlayer implements Player<Player> {
 
     @Override
     public double getMaxHealth() {
-        return -1;
+        return 0;
     }
 
     @Override
     public double getLastDamage() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getMaximumNoDamageTicks() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getNoDamageTicks() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getSleepTicks() {
-        return -1;
+        return 0;
     }
 
     @Override
     public int getTicksLived() {
-        return -1;
+        return 0;
     }
 
     @Override
@@ -188,8 +196,8 @@ public final class DefaultPlayer implements Player<Player> {
     }
 
     @Override
-    public Player getHandle() {
-        return this;
+    public ProxiedPlayer getHandle() {
+        return player;
     }
 
     @Override
@@ -199,6 +207,6 @@ public final class DefaultPlayer implements Player<Player> {
 
     @Override
     public String getName() {
-        return "null";
+        return null;
     }
 }

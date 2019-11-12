@@ -1,6 +1,5 @@
 package me.piggypiglet.framework.minecraft.server;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public interface Server<T> {
 
     Set<UUID> getPlayers();
 
-    List<UUID> getWorlds();
+    Set<UUID> getWorlds();
 
     T getHandle();
 }

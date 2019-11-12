@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.utils.annotations.reflection;
+package me.piggypiglet.framework.utils.annotations.reflection.def;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

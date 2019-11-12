@@ -30,20 +30,18 @@ import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.user.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
 public final class CommandHandlers {
-    public static final Pattern ARGUMENT_PATTERN = Pattern.compile("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
     @Inject private Task task;
 
-    private final List<Command> commands = new ArrayList<>();
+    private final Set<Command> commands = new HashSet<>();
     private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
 
     /**
@@ -75,7 +73,7 @@ public final class CommandHandlers {
         CommandHandler commandHandler = injector.getInstance(handler);
 
         commandHandlers.put(name, commandHandler);
-        commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toList()));
+        commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toSet()));
     }
 
     public void overrideHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
@@ -90,9 +88,9 @@ public final class CommandHandlers {
     /**
      * Get the commands from a specific handler
      * @param handler Handler name
-     * @return List of commands that handler can process
+     * @return Set of commands that handler can process
      */
-    public List<Command> getCommands(String handler) {
+    public Set<Command> getCommands(String handler) {
         return commandHandlers.get(handler).getCommands();
     }
 
@@ -100,7 +98,7 @@ public final class CommandHandlers {
      * Get all commands registered in RPF
      * @return List of commands
      */
-    public List<Command> getCommands() {
+    public Set<Command> getCommands() {
         return commands;
     }
 
@@ -109,6 +107,6 @@ public final class CommandHandlers {
      */
     public void clearCommands() {
         commands.clear();
-        commandHandlers.values().stream().map(CommandHandler::getCommands).forEach(List::clear);
+        commandHandlers.values().stream().map(CommandHandler::getCommands).forEach(Set::clear);
     }
 }

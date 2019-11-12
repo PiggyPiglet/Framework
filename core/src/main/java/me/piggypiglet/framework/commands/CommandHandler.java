@@ -28,17 +28,31 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.implementations.HelpCommand;
 import me.piggypiglet.framework.user.User;
-import me.piggypiglet.framework.utils.annotations.reflection.Default;
+import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
+import me.piggypiglet.framework.utils.annotations.reflection.def.UltraDefault;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static me.piggypiglet.framework.lang.Lang.Values.*;
 
 public class CommandHandler {
+    public static final Pattern ARGUMENT_PATTERN = Pattern.compile("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
+    private static final BiFunction<Command, Class<? extends Annotation>, Boolean> HAS_ANNOTATION = (c, a) -> c.getClass().isAnnotationPresent(a);
+    private static final Predicate<Command> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.apply(c, UltraDefault.class);
+    private static final Predicate<Command> IS_DEFAULT = c -> HAS_ANNOTATION.apply(c, Default.class);
+
     @Inject private Framework framework;
     @Inject private HelpCommand defHelpCommand;
 
-    private List<Command> commands;
+    private Set<Command> commands;
     private Command helpCommand;
 
     public void handle(User user, String message) {
@@ -94,21 +108,37 @@ public class CommandHandler {
      * Set this commandhandler's commands.
      * @param commands Commands to set
      */
-    public void setCommands(List<Command> commands) {
-        this.commands = commands;
-        helpCommand = commands.stream().filter(c -> !(c.getClass().isAnnotationPresent(Default.class))).filter(Command::isDefault).findFirst().orElse(defHelpCommand);
+    public void setCommands(Set<Command> commands) {
+        Set<Command> clone = new HashSet<>(commands);
+
+        Set<Command> defs = clone.stream()
+                .filter(Command::isDefault)
+                .filter(c -> !IS_ULTRA_DEFAULT.test(c))
+                .collect(Collectors.toSet());
+
+        if (defs.size() > 1 && !defs.stream().allMatch(IS_DEFAULT)) {
+            defs = defs.stream().filter(c -> !IS_DEFAULT.test(c)).collect(Collectors.toSet());
+        }
+
+        helpCommand = defs.stream().findFirst().orElse(defHelpCommand);
+
+        if (!helpCommand.equals(defHelpCommand)) {
+            clone = clone.stream().filter(c -> !IS_ULTRA_DEFAULT.test(c)).filter(c -> !IS_DEFAULT.test(c)).collect(Collectors.toSet());
+            clone.add(helpCommand);
+            this.commands = clone;
+        }
     }
 
     /**
      * Get commands this command handler can process
      * @return List of commands
      */
-    public List<Command> getCommands() {
+    public Set<Command> getCommands() {
         return commands;
     }
 
     private String[] args(String text) {
-        String[] args = CommandHandlers.ARGUMENT_PATTERN.split(text.trim());
+        String[] args = ARGUMENT_PATTERN.split(text.trim());
 
         return args[0].isEmpty() ? new String[]{} : args;
     }

@@ -6,7 +6,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,8 +65,8 @@ public final class BukkitServer implements Server<org.bukkit.Server> {
     }
 
     @Override
-    public List<UUID> getWorlds() {
-        return HANDLE.getWorlds().stream().map(World::getUID).collect(Collectors.toList());
+    public Set<UUID> getWorlds() {
+        return HANDLE.getWorlds().stream().map(World::getUID).collect(Collectors.toSet());
     }
 
     @Override

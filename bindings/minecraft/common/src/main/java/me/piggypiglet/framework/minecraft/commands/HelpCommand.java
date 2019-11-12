@@ -29,10 +29,10 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.user.User;
-import me.piggypiglet.framework.utils.annotations.reflection.Default;
+import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Default
 public final class HelpCommand extends Command {
@@ -46,7 +46,7 @@ public final class HelpCommand extends Command {
 
     @Override
     protected boolean execute(User user, String[] args) {
-        final List<Command> commands = commandHandlers.getCommands();
+        final Set<Command> commands = commandHandlers.getCommands();
 
         if (args.length > 0) {
             final Optional<Command> command = commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(args[0])).findAny();
