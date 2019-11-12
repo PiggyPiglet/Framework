@@ -26,6 +26,7 @@ package me.piggypiglet.framework.task.implementations;
 
 import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
+import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import sh.okx.timeapi.TimeAPI;
 
 import java.util.concurrent.ExecutorService;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Default task manager for RPF. Uses a Fixed Thread Pool and Scheduled Thread Pool to provision async and scheduled async tasks.
  */
+@Disabled
 public final class DefaultTask extends Task {
     private final ExecutorService executor;
     private final ScheduledExecutorService scheduler;

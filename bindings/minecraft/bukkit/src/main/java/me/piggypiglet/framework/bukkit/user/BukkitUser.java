@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.bukkit.user;
 
-import me.piggypiglet.framework.bukkit.binding.BukkitPlayer;
+import me.piggypiglet.framework.bukkit.binding.player.BukkitPlayer;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

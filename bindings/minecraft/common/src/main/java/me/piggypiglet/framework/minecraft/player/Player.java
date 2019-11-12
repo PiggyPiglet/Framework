@@ -1,6 +1,8 @@
 package me.piggypiglet.framework.minecraft.player;
 
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
+import me.piggypiglet.framework.minecraft.world.World;
+import me.piggypiglet.framework.minecraft.world.location.Location;
 import me.piggypiglet.framework.utils.SearchUtils;
 
 import java.util.UUID;
@@ -73,6 +75,10 @@ public interface Player<T> extends SearchUtils.Searchable {
     int getTicksLived();
 
     Inventory getInventory();
+
+    Location getLocation();
+
+    World getWorld();
 
     T getHandle();
 

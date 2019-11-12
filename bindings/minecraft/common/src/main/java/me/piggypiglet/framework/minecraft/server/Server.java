@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public interface Server {
+public interface Server<T> {
     String getIP();
 
     int getPort();
@@ -25,5 +25,7 @@ public interface Server {
 
     Set<UUID> getPlayers();
 
-    List<String> getWorlds();
+    List<UUID> getWorlds();
+
+    T getHandle();
 }

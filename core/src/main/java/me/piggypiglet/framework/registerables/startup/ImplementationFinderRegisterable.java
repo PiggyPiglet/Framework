@@ -30,8 +30,8 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
-import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.task.implementations.DefaultTask;
 
@@ -44,12 +44,12 @@ public final class ImplementationFinderRegisterable extends StartupRegisterable 
     @SuppressWarnings("unchecked")
     @Override
     protected void execute() {
-        addBinding(Task.class, ((Optional<Task>) find(Task.class, DefaultTask.class).map(injector::getInstance)).orElse(new DefaultTask(framework.getThreads())));
-        addAnnotatedBinding(Class.class, Names.named("logger"), find(Logger.class, DefaultLogger.class).orElse(DefaultLogger.class));
+        addBinding(Task.class, ((Optional<Task>) find(Task.class).map(injector::getInstance)).orElse(new DefaultTask(framework.getThreads())));
+        addAnnotatedBinding(Class.class, Names.named("logger"), find(Logger.class).orElse(DefaultLogger.class));
         requestStaticInjections(LoggerFactory.class);
     }
 
-    private <T> Optional<Class<? extends T>> find(Class<T> interfaze, Class<? extends T> defaultClass) {
-        return scanner.getSubTypesOf(interfaze).stream().filter(c -> c != defaultClass).findFirst();
+    private <T> Optional<Class<? extends T>> find(Class<T> interfaze) {
+        return scanner.getSubTypesOf(interfaze).stream().findFirst();
     }
 }

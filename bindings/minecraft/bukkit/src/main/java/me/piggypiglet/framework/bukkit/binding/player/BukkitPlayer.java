@@ -1,23 +1,25 @@
-package me.piggypiglet.framework.bukkit.binding;
+package me.piggypiglet.framework.bukkit.binding.player;
 
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
-import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
+import me.piggypiglet.framework.minecraft.world.World;
+import me.piggypiglet.framework.minecraft.world.location.Location;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import static me.piggypiglet.framework.bukkit.binding.player.BukkitPlayerUtils.fromItemStack;
+import static me.piggypiglet.framework.bukkit.binding.player.BukkitPlayerUtils.putFromInventory;
 
 public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     private static Method handleMethod;
@@ -240,44 +242,27 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
                     }
                 });
 
-                putFromInventory(getHotbar(), 0, 9);
-                putFromInventory(getItems(), 9, 36);
-            }
-
-            private void putFromInventory(Map<Integer, Item> map, int initial, int size) {
-                for (int i = initial; i < size; i++) {
-                    final ItemStack stack = inventory.getItem(i);
-
-                    if (stack != null) {
-                        map.put(i, fromItemStack(stack));
-                    }
-                }
-            }
-
-            private Item fromItemStack(ItemStack itemStack) {
-                ItemMeta meta = itemStack.getItemMeta();
-
-                int durability = -1;
-                List<String> lore = new ArrayList<>();
-                String displayName = "null";
-                Map<String, Integer> enchants = new HashMap<>();
-                boolean unbreakable = false;
-                Set<String> itemFlags = new HashSet<>();
-
-                if (meta != null) {
-                    durability = ((Damageable) meta).getDamage();
-                    lore = meta.getLore();
-                    displayName = meta.getDisplayName();
-                    meta.getEnchants().forEach((k, v) -> enchants.put(k.getKey().getKey(), v));
-                    unbreakable = meta.isUnbreakable();
-                    itemFlags = meta.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toSet());
-                }
-
-                return new Item(itemStack.getType().name(), itemStack.getAmount(), durability,
-                        itemStack.getMaxStackSize(), lore, displayName, enchants, unbreakable, itemFlags
-                );
+                putFromInventory(inventory, getHotbar(), 0, 9);
+                putFromInventory(inventory, getItems(), 9, 36);
             }
         };
+    }
+
+    @Override
+    public Location getLocation() {
+        final org.bukkit.Location location = player.getLocation();
+        return new Location(getWorld(), location.getBlock().getBiome().name(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+    }
+
+    @Override
+    public World getWorld() {
+        final org.bukkit.World world = player.getLocation().getWorld();
+
+        if (world != null) {
+            return new World(world.getUID(), world.getName(), world.getTime());
+        }
+
+        return null;
     }
 
     @Override

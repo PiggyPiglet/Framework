@@ -25,7 +25,9 @@
 package me.piggypiglet.framework.logging.implementations;
 
 import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
+@Disabled
 public final class DefaultLogger extends Logger<java.util.logging.Logger> {
     @Override
     protected java.util.logging.Logger init(String name) {
