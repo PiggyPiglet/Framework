@@ -1,6 +1,8 @@
-package me.piggypiglet.framework.minecraft.inventory;
+package me.piggypiglet.framework.minecraft.versions.material.implementations;
 
-public enum Material1132 {
+import me.piggypiglet.framework.minecraft.versions.material.Material;
+
+public enum Material1132 implements Material {
     AIR(0),
     STONE(1),
     GRANITE(2),
@@ -793,19 +795,20 @@ public enum Material1132 {
     HEART_OF_THE_SEA(789),
     UNKNOWN(-1);
 
-    private final int protocolId;
+    private final int id;
 
-    Material1132(int protocolId) {
-        this.protocolId = protocolId;
+    Material1132(int id) {
+        this.id = id;
     }
 
-    public int getProtocolId() {
-        return protocolId;
+    @Override
+    public int getId() {
+        return id;
     }
 
-    public static Material1132 fromId(int protocolId) {
+    public static Material1132 fromId(int id) {
         for (Material1132 mat : values()) {
-            if (mat.protocolId == protocolId) {
+            if (mat.id == id) {
                 return mat;
             }
         }

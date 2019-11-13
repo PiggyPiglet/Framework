@@ -1,6 +1,8 @@
-package me.piggypiglet.framework.minecraft.inventory;
+package me.piggypiglet.framework.minecraft.versions.material.implementations;
 
-public enum Material1710 {
+import me.piggypiglet.framework.minecraft.versions.material.Material;
+
+public enum Material1710 implements Material {
     AIR(0, 0),
     STONE(1, 0),
     GRANITE(1, 1),
@@ -48,7 +50,7 @@ public enum Material1710 {
     CHISELED_SANDSTONE(24, 1),
     SMOOTH_SANDSTONE(24, 2),
     NOTE_BLOCK(25, 0),
-    BED_UNKNOWN(26, 0),
+    BED(26, 0),
     POWERED_RAIL(27, 0),
     DETECTOR_RAIL(28, 0),
     STICKY_PISTON(29, 0),
@@ -131,7 +133,7 @@ public enum Material1710 {
     WALL_SIGN(68, 0),
     LEVER(69, 0),
     STONE_PRESSURE_PLATE(70, 0),
-    IRON_DOOR_BLOCK(71, 0),
+    IRON_DOOR(71, 0),
     WOODEN_PRESSURE_PLATE(72, 0),
     REDSTONE_ORE(73, 0),
     REDSTONE_ORE_ON(74, 0),
@@ -324,12 +326,12 @@ public enum Material1710 {
     BIRCH_FENCE_GATE(184, 0),
     JUNGLE_FENCE_GATE(185, 0),
     DARK_OAK_FENCE_(186, 0),
-    ACACIA_FENCE_GATE(187, 0),
+    ACACIA_FENCE(187, 0),
     SPRUCE_FENCE(188, 0),
     BIRCH_FENCE(189, 0),
     JUNGLE_FENCE(190, 0),
     DARK_OAK_FENCE(191, 0),
-    ACACIA_FENCE(192, 0),
+    ACACIA_FENCE_GATE(192, 0),
     SPRUCE_DOOR_BLOCK(193, 0),
     BIRCH_DOOR_BLOCK(194, 0),
     JUNGLE_DOOR_BLOCK(195, 0),
@@ -410,7 +412,7 @@ public enum Material1710 {
     BUCKET_LAVA(327, 0),
     MINECART(328, 0),
     SADDLE(329, 0),
-    IRON_DOOR(330, 0),
+    IRON_DOOR_2(330, 0),
     REDSTONE_DUST(331, 0),
     SNOWBALL(332, 0),
     BOAT(333, 0),
@@ -450,7 +452,7 @@ public enum Material1710 {
     BONE(352, 0),
     SUGAR(353, 0),
     CAKE(354, 0),
-    BED(355, 0),
+    BED_2(355, 0),
     REDSTONE_REPEATER(356, 0),
     COOKIE(357, 0),
     MAP(358, 0),
@@ -507,13 +509,13 @@ public enum Material1710 {
     HEALING_POTION_2(373, 8229),
     STRENGTH_POTION_2(373, 8233),
     HARMING_POTION_2(373, 8236),
-    REGENERATION_POTION_UNKNOWN(373, 8257),
-    SWIFTNESS_POTION_UNKNOWN(373, 8258),
-    FIRE_RESISTANCE_POTION_UNKNOWN(373, 8259),
-    POISON_POTION_UNKNOWN(373, 8260),
-    WEAKNESS_POTION_UNKNOWN(373, 8264),
-    STRENGTH_POTION_UNKNOWN(373, 8265),
-    SLOWNESS_POTION_UNKNOWN(373, 8266),
+    REGENERATION_POTION_NA(373, 8257),
+    SWIFTNESS_POTION_NA(373, 8258),
+    FIRE_RESISTANCE_POTION_NA(373, 8259),
+    POISON_POTION_NA(373, 8260),
+    WEAKNESS_POTION_NA(373, 8264),
+    STRENGTH_POTION_NA(373, 8265),
+    SLOWNESS_POTION_NA(373, 8266),
     FIRE_RESISTANCE_SPLASH(373, 16378),
     REGENERATION_SPLASH(373, 16385),
     SWIFTNESS_SPLASH(373, 16386),
@@ -528,13 +530,13 @@ public enum Material1710 {
     HEALING_SPLASH_2(373, 16421),
     STRENGTH_SPLASH_2(373, 16425),
     HARMING_SPLASH_2(373, 16428),
-    REGENERATION_SPLASH_UNKNOWN(373, 16449),
-    SWIFTNESS_SPLASH_UNKNOWN(373, 16450),
-    FIRE_RESISTANCE_SPLASH_UNKNOWN(373, 16451),
-    POISON_SPLASH_UNKNOWN(373, 16452),
-    WEAKNESS_SPLASH_UNKNOWN(373, 16456),
-    STRENGTH_SPLASH_UNKNOWN(373, 16457),
-    SLOWNESS_SPLASH_UNKNOWN(373, 16458),
+    REGENERATION_SPLASH_NA(373, 16449),
+    SWIFTNESS_SPLASH_NA(373, 16450),
+    FIRE_RESISTANCE_SPLASH_NA(373, 16451),
+    POISON_SPLASH_NA(373, 16452),
+    WEAKNESS_SPLASH_NA(373, 16456),
+    STRENGTH_SPLASH_NA(373, 16457),
+    SLOWNESS_SPLASH_NA(373, 16458),
     REGENERATION_SPLASH_2(373, 16471),
     UNKNOWN(-1, -1);
 
@@ -546,10 +548,12 @@ public enum Material1710 {
         this.data = data;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public int getData() {
         return data;
     }

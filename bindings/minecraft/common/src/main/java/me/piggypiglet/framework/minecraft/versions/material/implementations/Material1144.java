@@ -1,6 +1,8 @@
-package me.piggypiglet.framework.minecraft.inventory;
+package me.piggypiglet.framework.minecraft.versions.material.implementations;
 
-public enum Material1144 {
+import me.piggypiglet.framework.minecraft.versions.material.Material;
+
+public enum Material1144 implements Material {
     AIR(0),
     STONE(1),
     GRANITE(2),
@@ -880,19 +882,20 @@ public enum Material1144 {
     CAMPFIRE(87),
     UNKNOWN(-1);
 
-    private final int protocolId;
+    private final int id;
 
-    Material1144(int protocolId) {
-        this.protocolId = protocolId;
+    Material1144(int id) {
+        this.id = id;
     }
 
-    public int getProtocolId() {
-        return protocolId;
+    @Override
+    public int getId() {
+        return id;
     }
 
-    public static Material1144 fromId(int protocolId) {
+    public static Material1144 fromId(int id) {
         for (Material1144 mat : values()) {
-            if (mat.protocolId == protocolId) {
+            if (mat.id == id) {
                 return mat;
             }
         }
