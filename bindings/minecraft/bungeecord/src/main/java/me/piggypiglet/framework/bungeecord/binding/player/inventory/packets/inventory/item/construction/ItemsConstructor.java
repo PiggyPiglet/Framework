@@ -3,8 +3,10 @@ package me.piggypiglet.framework.bungeecord.binding.player.inventory.packets.inv
 import io.netty.buffer.ByteBuf;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 
-public interface ItemConstructor {
-    Item from(ByteBuf buf);
+import java.util.Map;
 
-    void to(ByteBuf buf, Item item);
+public interface ItemsConstructor {
+    Map<Integer, Item> from(ByteBuf buf);
+
+    void to(ByteBuf buf, Map<Integer, Item> items);
 }

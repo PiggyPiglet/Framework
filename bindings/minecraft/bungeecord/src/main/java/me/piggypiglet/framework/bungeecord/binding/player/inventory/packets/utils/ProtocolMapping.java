@@ -1,16 +1,18 @@
 package me.piggypiglet.framework.bungeecord.binding.player.inventory.packets.utils;
 
+import me.piggypiglet.framework.minecraft.versions.ProtocolVersions;
+
 public final class ProtocolMapping {
-    private final int protocolVersion;
+    private final ProtocolVersions version;
     private final int packetId;
 
-    public ProtocolMapping(int protocolVersion, int packetId) {
-        this.protocolVersion = protocolVersion;
+    public ProtocolMapping(ProtocolVersions version, int packetId) {
+        this.version = version;
         this.packetId = packetId;
     }
 
-    public int getProtocolVersion() {
-        return protocolVersion;
+    public ProtocolVersions getVersion() {
+        return version;
     }
 
     public int getPacketId() {

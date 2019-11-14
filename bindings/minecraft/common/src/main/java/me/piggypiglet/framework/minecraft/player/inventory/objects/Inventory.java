@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public class Inventory {
     private final UUID uuid;
+    private final Map<Integer, Item> crafting = new HashMap<>(5);
     private final Map<Integer, Item> armor = new HashMap<>(4);
     private final Map<Integer, Item> items = new HashMap<>(27);
     private final Map<Integer, Item> hotbar = new HashMap<>(9);
@@ -18,6 +19,10 @@ public class Inventory {
 
     public UUID getOwner() {
         return uuid;
+    }
+
+    public Map<Integer, Item> getCrafting() {
+        return crafting;
     }
 
     public Map<Integer, Item> getArmor() {
@@ -50,6 +55,9 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return String.format("Inventory(uuid=%s,armor=%s,items=%s,hotbar=%s,hand=%s,off-hand=%s)", uuid, armor, items, hotbar, hand, offHand);
+        return String.format(
+                "Inventory(uuid=%s,crafting=%s,armor=%s,items=%s,hotbar=%s,hand=%s,off-hand=%s)",
+                uuid, crafting, armor, items, hotbar, hand, offHand
+        );
     }
 }

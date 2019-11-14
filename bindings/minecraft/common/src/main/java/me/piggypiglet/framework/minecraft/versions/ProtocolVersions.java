@@ -1,8 +1,7 @@
 package me.piggypiglet.framework.minecraft.versions;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public enum ProtocolVersions {
     V1_14(472, 498),
@@ -15,10 +14,12 @@ public enum ProtocolVersions {
     V1_7(3, 5),
     UNKNOWN(-1, -1);
 
-    private final Set<Integer> ids;
+    private final Set<Integer> ids = new HashSet<>();
 
     ProtocolVersions(int begin, int end) {
-        ids = IntStream.rangeClosed(begin, end-begin).boxed().collect(Collectors.toSet());
+        for (int i = begin; i <= end; ++i) {
+            ids.add(i);
+        }
     }
 
     public Set<Integer> getIds() {

@@ -28,6 +28,7 @@ import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.bungeecord.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.LoggerRegisterable;
+import me.piggypiglet.framework.bungeecord.registerables.PacketRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
@@ -41,6 +42,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
                 @Startup(
                         value = CommandExecutorRegisterable.class,
                         priority = BootPriority.COMMANDS
+                ),
+                @Startup(
+                        value = PacketRegisterable.class,
+                        priority = BootPriority.IMPL
                 )
         }
 )
