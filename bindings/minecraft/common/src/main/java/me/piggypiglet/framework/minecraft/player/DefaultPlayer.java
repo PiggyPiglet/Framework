@@ -48,11 +48,6 @@ public final class DefaultPlayer implements Player<Player> {
     }
 
     @Override
-    public boolean canFly() {
-        return false;
-    }
-
-    @Override
     public boolean isFlying() {
         return false;
     }
@@ -98,7 +93,7 @@ public final class DefaultPlayer implements Player<Player> {
     }
 
     @Override
-    public float getExp() {
+    public float getExperienceSinceLevel() {
         return -1;
     }
 

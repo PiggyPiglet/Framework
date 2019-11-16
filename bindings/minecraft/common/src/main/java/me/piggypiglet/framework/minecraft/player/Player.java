@@ -24,8 +24,6 @@ public interface Player<T> extends SearchUtils.Searchable {
 
     long getLastPlayed();
 
-    boolean canFly();
-
     boolean isFlying();
 
     float getFlySpeed();
@@ -44,7 +42,7 @@ public interface Player<T> extends SearchUtils.Searchable {
 
     int getRemainingAir();
 
-    float getExp();
+    float getExperienceSinceLevel();
 
     int getTotalExperience();
 

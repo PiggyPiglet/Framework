@@ -11,9 +11,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 final class BukkitPlayerUtils {
-    static void putFromInventory(Inventory inventory, Map<Integer, Item> map, int initial, int size) {
-        for (int i = initial; i < size; i++) {
-            final ItemStack stack = inventory.getItem(i);
+    static void putFromInventory(Inventory inventory, Map<Integer, Item> map, int initial, int end) {
+        for (int i = 0; i < end - initial; i++) {
+            final ItemStack stack = inventory.getItem(i + initial);
 
             if (stack != null) {
                 map.put(i, fromItemStack(stack));

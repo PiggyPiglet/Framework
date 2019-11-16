@@ -29,7 +29,6 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.sponge.user.SpongeUser;
 import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
@@ -46,13 +45,13 @@ public final class SpongeCommandExecutor implements CommandCallable {
     @Inject private Framework framework;
 
     @Override
-    public CommandResult process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) {
         commandHandlers.process("sponge", new SpongeUser(source), framework.getCommandPrefix() + " " + arguments);
         return CommandResult.success();
     }
 
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) throws CommandException {
+    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) {
         return Collections.emptyList();
     }
 

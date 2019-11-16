@@ -9,8 +9,9 @@ import java.util.Map;
 public final class ItemsConstructor1132 implements ItemsConstructor {
     @Override
     public Map<Integer, Item> from(ByteBuf buf) {
+        short count = buf.readShort();
 
-        boolean present;
+
 
         return null;
     }

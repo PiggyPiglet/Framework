@@ -94,11 +94,6 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     }
 
     @Override
-    public boolean canFly() {
-        return player.getAllowFlight();
-    }
-
-    @Override
     public boolean isFlying() {
         return player.isFlying();
     }
@@ -144,7 +139,7 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     }
 
     @Override
-    public float getExp() {
+    public float getExperienceSinceLevel() {
         return player.getExp();
     }
 
@@ -230,10 +225,10 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
                 setOffHand(fromItemStack(inventory.getItemInOffHand()));
 
                 new HashMap<Integer, Supplier<ItemStack>>() {{
-                    put(0, inventory::getHelmet);
-                    put(1, inventory::getChestplate);
-                    put(2, inventory::getLeggings);
-                    put(3, inventory::getBoots);
+                    put(0, inventory::getBoots);
+                    put(1, inventory::getLeggings);
+                    put(2, inventory::getChestplate);
+                    put(3, inventory::getHelmet);
                 }}.forEach((k, v) -> {
                     final ItemStack stack = v.get();
 

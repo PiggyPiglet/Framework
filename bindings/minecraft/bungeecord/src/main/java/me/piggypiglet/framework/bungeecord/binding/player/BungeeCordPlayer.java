@@ -56,11 +56,6 @@ public final class BungeeCordPlayer implements Player<ProxiedPlayer> {
     }
 
     @Override
-    public boolean canFly() {
-        return false;
-    }
-
-    @Override
     public boolean isFlying() {
         return false;
     }
@@ -106,7 +101,7 @@ public final class BungeeCordPlayer implements Player<ProxiedPlayer> {
     }
 
     @Override
-    public float getExp() {
+    public float getExperienceSinceLevel() {
         return 0;
     }
 

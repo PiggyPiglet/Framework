@@ -15,15 +15,19 @@ public final class WindowItems extends Packet {
 
     @Override
     protected void read(ByteBuf buf, ProtocolConstants.Direction direction, ProtocolVersions version) {
+        System.out.println("test");
+
         id = buf.readUnsignedByte();
 
-        if (id == 0) {
+        if (id == 106) {
             items = ItemsUtils.fromBuf(buf, version);
         }
     }
 
     @Override
     protected void write(ByteBuf buf, ProtocolConstants.Direction direction, ProtocolVersions version) {
+        System.out.println("test2");
+
         buf.writeByte(id);
         ItemsUtils.toBuf(buf, items, version);
     }

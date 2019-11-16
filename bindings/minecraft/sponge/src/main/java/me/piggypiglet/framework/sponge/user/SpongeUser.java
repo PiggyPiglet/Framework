@@ -24,11 +24,13 @@
 
 package me.piggypiglet.framework.sponge.user;
 
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.minecraft.player.Player;
+import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import me.piggypiglet.framework.sponge.binding.player.SpongePlayer;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-public final class SpongeUser extends User {
+public final class SpongeUser extends MinecraftUser {
     private final CommandSource src;
 
     public SpongeUser(CommandSource src) {
@@ -48,5 +50,19 @@ public final class SpongeUser extends User {
     @Override
     public boolean hasPermission(String permission) {
         return src.hasPermission(permission);
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return src instanceof org.spongepowered.api.entity.living.player.Player;
+    }
+
+    @Override
+    public Player getAsPlayer() {
+        return new SpongePlayer((org.spongepowered.api.entity.living.player.Player) src);
+    }
+
+    public CommandSource getSrc() {
+        return src;
     }
 }
