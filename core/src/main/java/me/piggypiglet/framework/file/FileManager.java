@@ -110,7 +110,7 @@ public final class FileManager {
      * Update instances of AbstractFileConfigurations or FileWrappers with physical changes to their respective files by the user.
      * @param name Reference to the stored object
      */
-    public void update(String name) {
+    public void update(String name) throws Exception {
         Object item = get(name);
 
         if (item instanceof AbstractFileConfiguration) {

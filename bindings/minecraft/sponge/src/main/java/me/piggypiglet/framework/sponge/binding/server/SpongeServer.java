@@ -2,14 +2,13 @@ package me.piggypiglet.framework.sponge.binding.server;
 
 import me.piggypiglet.framework.json.JsonParser;
 import me.piggypiglet.framework.minecraft.server.Server;
-import org.apache.commons.io.IOUtils;
+import me.piggypiglet.framework.utils.FileUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.world.World;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -24,7 +23,7 @@ public final class SpongeServer implements Server {
 
         try {
             version = new JsonParser(
-                    "{\"data\":" + IOUtils.toString(Sponge.class.getResource("/mcmod.info"), StandardCharsets.UTF_8) + "}"
+                    "{\"data\":" + FileUtils.readEmbedToString("/mcmod.info", Sponge.class) + "}"
             ).getJsonList("data").get(0).getString("version");
         } catch (Exception e) {
             version = "null";

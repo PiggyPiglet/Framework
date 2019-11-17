@@ -14,7 +14,7 @@ buildscript {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'maven'
+
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'net.minecrell.licenser'
 

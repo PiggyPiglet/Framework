@@ -2,10 +2,10 @@ package me.piggypiglet.framework.nukkit.file;
 
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
+import com.google.common.io.Files;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.utils.StringUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -19,11 +19,13 @@ public final class NukkitFileConfiguration extends AbstractFileConfiguration {
         super(s -> StringUtils.anyEndWith(s, ".properties", ".con", ".conf", ".config", ".yml", ".yaml", ".txt", ".list", ".enum"));
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private NukkitFileConfiguration(Map<String, Object> map) {
         this();
+
         config = new Config(
                 getFile(),
-                Config.format.get(FilenameUtils.getExtension(getFile().getName())),
+                Config.format.get(Files.getFileExtension(getFile().getName())),
                 new ConfigSection((LinkedHashMap<String, Object>) map)
         );
     }

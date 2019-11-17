@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.utils;
 
+import com.google.common.io.Resources;
 import me.piggypiglet.framework.Framework;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,35 +57,36 @@ public final class FileUtils {
     }
 
     /**
-     * Wrapper for commons-io FileUtils#readFileToString, automatically uses UTF-8.
      * Gets the raw plaintext content of a file
      * @param file File to read
      * @return String
+     * @throws Exception when read process errors
      */
-    public static String readFileToString(File file) {
-        try {
-            return org.apache.commons.io.FileUtils.readFileToString(file, "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    @SuppressWarnings("UnstableApiUsage")
+    public static String readFileToString(File file) throws Exception {
+        return com.google.common.io.Files.asCharSource(file, StandardCharsets.UTF_8).read();
     }
 
     /**
-     * Wrapper for commons-io IOUtils#toString, automatically uses UTF-8.
      * Gets the raw plaintext content of an embedded file.
      * @param path Path of the file
      * @return String
+     * @throws Exception when read process errors
      */
-    public static String readEmbedToString(String path) {
-        try {
-            return IOUtils.toString(Framework.class.getResourceAsStream(path), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static String readEmbedToString(String path) throws Exception {
+        return readEmbedToString(path, Framework.class);
+    }
 
-        return null;
+    /**
+     * Gets the raw plaintext content of an embedded file.
+     * @param path Path of the file
+     * @param clazz Class to get the resource from.
+     * @return String
+     * @throws Exception when read process errors
+     */
+    @SuppressWarnings("UnstableApiUsage")
+    public static String readEmbedToString(String path, Class clazz) throws Exception {
+        return Resources.toString(clazz.getResource(path), StandardCharsets.UTF_8);
     }
 
     /**
