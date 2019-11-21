@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.utils.clazz;
 
-import me.piggypiglet.framework.utils.function.CheckedFunction;
+import me.piggypiglet.framework.utils.lambda.CheckedFunction;
 
 import java.lang.reflect.Constructor;
 

@@ -13,6 +13,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
 
+import static me.piggypiglet.framework.utils.ReflectionUtils.getAccessible;
+
 @SuppressWarnings("unchecked")
 public final class PacketUtils {
     private static final Class PROTOCOL = net.md_5.bungee.protocol.Protocol.class;
@@ -35,14 +37,9 @@ public final class PacketUtils {
         Field constructors = null;
 
         try {
-            protocols = Class.forName("net.md_5.bungee.protocol.Protocol$DirectionData").getDeclaredField("protocols");
-            protocols.setAccessible(true);
-
-            mapGet = TIntObjectMap.class.getMethod("get", int.class);
-            mapGet.setAccessible(true);
-
-            mapPut = TObjectIntMap.class.getMethod("put", Object.class, int.class);
-            mapPut.setAccessible(true);
+            protocols = getAccessible(Class.forName("net.md_5.bungee.protocol.Protocol$DirectionData").getDeclaredField("protocols"));
+            mapGet = getAccessible(TIntObjectMap.class.getMethod("get", int.class));
+            mapPut = getAccessible(TObjectIntMap.class.getMethod("put", Object.class, int.class));
         } catch (Exception ignored) {}
 
         PROTOCOLS = protocols;
@@ -54,10 +51,8 @@ public final class PacketUtils {
             toClient = directionData("TO_CLIENT");
 
             final Class protocolData = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolData");
-            packetMap = protocolData.getDeclaredField("packetMap");
-            packetMap.setAccessible(true);
-            constructors = protocolData.getDeclaredField("packetConstructors");
-            constructors.setAccessible(true);
+            packetMap = getAccessible(protocolData.getDeclaredField("packetMap"));
+            constructors = getAccessible(protocolData.getDeclaredField("packetConstructors"));
         } catch (Exception ignored) {}
 
         TO_SERVER = toServer;
@@ -128,8 +123,6 @@ public final class PacketUtils {
     }
 
     private static Object directionData(String field) throws Exception {
-        final Field protocolField = PROTOCOL.getDeclaredField(field);
-        protocolField.setAccessible(true);
-        return protocolField.get(GAME);
+        return getAccessible(PROTOCOL.getDeclaredField(field)).get(GAME);
     }
 }

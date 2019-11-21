@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.mapper;
 
+import me.piggypiglet.framework.utils.ReflectionUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;
 
@@ -83,9 +84,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
         types.keySet().forEach(s -> {
             try {
-                final Field f = clazz.getDeclaredField(s);
-                f.setAccessible(true);
-                fields.put(s, f);
+                fields.put(s, ReflectionUtils.getAccessible(clazz.getDeclaredField(s)));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.utils.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
@@ -52,9 +53,7 @@ public final class BaseCommandHandler {
 
         if (server.getPluginManager() instanceof SimplePluginManager) {
             try {
-                Field f = SimplePluginManager.class.getDeclaredField("commandMap");
-                f.setAccessible(true);
-
+                final Field f = ReflectionUtils.getAccessible(SimplePluginManager.class.getDeclaredField("commandMap"));
                 commandMap = (CommandMap) f.get(server.getPluginManager());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -81,9 +80,7 @@ public final class BaseCommandHandler {
         PluginCommand command = null;
 
         try {
-            Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-            c.setAccessible(true);
-
+            final Constructor<PluginCommand> c = ReflectionUtils.getAccessible(PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class));
             command = c.newInstance(name, (JavaPlugin) main.getInstance());
         } catch (Exception e) {
             e.printStackTrace();

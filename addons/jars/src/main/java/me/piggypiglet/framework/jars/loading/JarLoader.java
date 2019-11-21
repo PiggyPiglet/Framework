@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.jars.loading.framework.Jar;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.utils.ReflectionUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -42,8 +43,7 @@ public final class JarLoader {
 
     static {
         try {
-            ADD_URL_METHOD = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            ADD_URL_METHOD.setAccessible(true);
+            ADD_URL_METHOD = ReflectionUtils.getAccessible(URLClassLoader.class.getDeclaredMethod("addURL", URL.class));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

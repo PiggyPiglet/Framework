@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.utils.function;
+package me.piggypiglet.framework.utils.lambda;
 
 /**
  * Function that can throw an exception catchable outside of the lambda
