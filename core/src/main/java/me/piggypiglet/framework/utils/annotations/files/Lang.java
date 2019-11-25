@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * For internal use only, do not attempt to use this for a binding.
+ * Util lang annotation for bindings
  */
 @BindingAnnotation
 @Target({ElementType.FIELD, ElementType.PARAMETER}) @Retention(RetentionPolicy.RUNTIME)

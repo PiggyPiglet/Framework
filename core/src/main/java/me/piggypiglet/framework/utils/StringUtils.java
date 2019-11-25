@@ -1,5 +1,7 @@
 package me.piggypiglet.framework.utils;
 
+import me.piggypiglet.framework.utils.annotations.addon.Addon;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,5 +25,11 @@ public final class StringUtils {
 
     private static Stream<String> lowercaseStream(List<String> elements) {
         return elements.stream().map(String::toLowerCase);
+    }
+
+    public static String formatAddon(Class<?> addon) {
+        if (!addon.isAnnotationPresent(Addon.class)) throw new UnsupportedOperationException("Class provided is not an addon class.");
+
+        return "addon_" + addon.getSimpleName().toLowerCase().replace("addon", "");
     }
 }

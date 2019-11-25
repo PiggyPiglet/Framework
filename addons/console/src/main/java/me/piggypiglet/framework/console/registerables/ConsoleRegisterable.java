@@ -50,7 +50,8 @@ public final class ConsoleRegisterable extends StartupRegisterable {
             Scanner input = new Scanner(System.in);
 
             while (true) {
-                commandHandlers.process("console", USER, input.nextLine().toLowerCase());
+                final String str = input.nextLine().toLowerCase();
+                commandHandlers.process("console", USER, str);
             }
         });
     }

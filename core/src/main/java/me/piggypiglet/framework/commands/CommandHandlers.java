@@ -70,7 +70,7 @@ public final class CommandHandlers {
      * @param injector Instance of the application's injector
      */
     public void newHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
-        CommandHandler commandHandler = injector.getInstance(handler);
+        final CommandHandler commandHandler = injector.getInstance(handler);
 
         commandHandlers.put(name, commandHandler);
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toSet()));

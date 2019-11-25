@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.registerables.startup.file.lang;
 
+import com.google.common.io.Files;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.objects.ConfigInfo;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
@@ -7,27 +8,35 @@ import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.lang.Lang;
 import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.objects.CustomLang;
 import me.piggypiglet.framework.lang.objects.LangConfig;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.utils.StringUtils;
+import me.piggypiglet.framework.utils.annotations.addon.Langs;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public final class LangFileRegisterable extends StartupRegisterable {
-    @Inject
-    private Framework framework;
-    @Inject
-    private FileManager fileManager;
-    @Inject
-    private FrameworkBootstrap main;
-    @Inject
-    private Lang lang;
+    @Inject private Framework framework;
+    @Inject private FileManager fileManager;
+    @Inject private FrameworkBootstrap main;
+    @Inject private Lang lang;
 
     @Override
     protected void execute() {
-        if (framework.isUseLangFile()) {
+        final CustomLang customLang = framework.getCustomLang();
+        final Map<String, String> map = new HashMap<>();
+
+        if (customLang != null) {
+            map.putAll(doConfig(Arrays.stream(customLang.getValues()).collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)), fileManager.getConfig(customLang.getConfig())));
+        }
+
+        if (framework.overrideLangFile()) {
             final ConfigInfo langConfig = framework.getLangConfig();
             boolean langSuccess = false;
 
@@ -35,53 +44,60 @@ public final class LangFileRegisterable extends StartupRegisterable {
                 final FileConfiguration lang = fileManager.getConfig(langConfig.getConfig());
 
                 if (lang != null) {
-                    doConfig(langConfig.getLocations(), lang);
+                    map.putAll(doConfig(langConfig.getLocations(), lang));
                     langSuccess = true;
                 }
             }
 
             if (!langSuccess) {
-                useDefaultLang(true);
+                map.putAll(useDefaultLang(true));
             }
         } else {
-            useDefaultLang(false);
+            map.putAll(useDefaultLang(false));
         }
 
+        addBinding(new LangConfig(map));
         requestStaticInjections(me.piggypiglet.framework.lang.Lang.LanguageGetter.class);
     }
 
-    private void doConfig(Map<String, String> locations, FileConfiguration config) {
-        final Map<String, String> map = new HashMap<>();
-        locations.forEach((k, v) -> map.put(k, config.getString(v)));
-        addBinding(new LangConfig(map));
+    private Map<String, String> doConfig(Map<String, String> locations, FileConfiguration config) {
+        return locations.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> config.getString(e.getValue(), "null")));
     }
 
-    private void useDefaultLang(boolean external) {
-//        main.getAddons().forEach((c, a) -> {
-//            final Langs lang = a.lang();
-//
-//            if (lang.clazz() != Lang.Values.class) {
-//                try {
-//                    final String name = c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file().re
-//                    final String file = "lang/" + c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file();
-//
-//                    doConfig(
-//                            this.lang.getValues().stream().collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)),
-//                            fileManager.loadConfig("lang", file, external ? file : null)
-//                    );
-//                } catch (Exception e) {
-//                    throw new RuntimeException("Something went dreadfully wrong when loading the default language file. How disappointing :(\n" + e);
-//                }
-//            }
-//        });
+    private Map<String, String> useDefaultLang(boolean external) {
+        final String exception = "Something went dreadfully wrong when loading the default language file. How disappointing :(";
+        final Collector<? super LangEnum, ?, Map<String, String>> collector = Collectors.toMap(LangEnum::getPath, LangEnum::getPath);
+        final Map<String, String> map = new HashMap<>();
+
+        main.getAddons().forEach((c, a) -> {
+            final Langs lang = a.lang();
+
+            if (lang.clazz() != Lang.Values.class) {
+                try {
+                    final String file = c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file();
+
+                    //noinspection UnstableApiUsage
+                    map.putAll(doConfig(
+                            this.lang.getSpecificValues().get(StringUtils.formatAddon(c)).stream().collect(collector),
+                            fileManager.loadConfig(file.replace(Files.getFileExtension(file), ""), "/" + file, external ? "lang/" + file : null)
+                    ));
+                } catch (Exception e) {
+                    throw new RuntimeException(exception + ":\n" + e);
+                }
+            }
+        });
 
         try {
-            doConfig(
-                    this.lang.getValues().stream().collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)),
-                    fileManager.loadConfig("lang", "/lang.json", external ? "lang.json" : null)
+            final Map<String, String> m = doConfig(
+                    this.lang.getSpecificValues().get("core").stream().collect(collector),
+                    fileManager.loadConfig("def_lang", "/core_lang.json", external ? "lang/core_lang.json" : null)
             );
+
+            map.putAll(m);
         } catch (Exception e) {
-            throw new RuntimeException("Something went dreadfully wrong when loading the default language file. How disappointing :(\n" + e);
+            throw new RuntimeException(exception + ":\n" + e);
         }
+
+        return map;
     }
 }

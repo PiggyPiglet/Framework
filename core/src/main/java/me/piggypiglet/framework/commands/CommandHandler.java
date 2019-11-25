@@ -125,8 +125,9 @@ public class CommandHandler {
         if (!helpCommand.equals(defHelpCommand)) {
             clone = clone.stream().filter(c -> !IS_ULTRA_DEFAULT.test(c)).filter(c -> !IS_DEFAULT.test(c)).collect(Collectors.toSet());
             clone.add(helpCommand);
-            this.commands = clone;
         }
+
+        this.commands = clone;
     }
 
     /**
