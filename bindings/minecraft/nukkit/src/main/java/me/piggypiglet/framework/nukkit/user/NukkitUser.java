@@ -24,12 +24,14 @@
 
 package me.piggypiglet.framework.nukkit.user;
 
+
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import me.piggypiglet.framework.nukkit.binding.player.NukkitPlayer;
 
-public final class NukkitUser extends User {
+public final class NukkitUser extends MinecraftUser {
     private final CommandSender sender;
 
     public NukkitUser(CommandSender sender) {
@@ -60,7 +62,8 @@ public final class NukkitUser extends User {
         return (ConsoleCommandSender) sender;
     }
 
-    public Player getAsPlayer() {
-        return (Player) sender;
+    @Override
+    public me.piggypiglet.framework.minecraft.player.Player getAsPlayer() {
+        return new NukkitPlayer((Player) sender);
     }
 }
