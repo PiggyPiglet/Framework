@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static me.piggypiglet.framework.nukkit.binding.player.NukkitInventoryUtils.fromItem;
+import static me.piggypiglet.framework.nukkit.binding.player.NukkitInventoryUtils.*;
 
 public final class NukkitPlayer implements Player<cn.nukkit.Player> {
     private final cn.nukkit.Player handle;
@@ -195,14 +195,13 @@ public final class NukkitPlayer implements Player<cn.nukkit.Player> {
         final PlayerInventory inventory = handle.getInventory();
         final Map<Integer, Item> slots = handle.getInventory().slots.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> fromItem(e.getValue())));
 
-        System.out.println(slots);
-
         return new Inventory(getUuid()) {
             {
                 setHand(fromItem(inventory.getItemInHand()));
 
-//                transferMap(slots, getArmor(), 0, 4);
-//                transferMap(slots, getHotbar(), 4, 13);
+                transferMap(slots, getArmor(), 36, 39);
+                transferMap(slots, getHotbar(), 0, 8);
+                transferMap(slots, getItems(), 9, 35);
             }
         };
     }
