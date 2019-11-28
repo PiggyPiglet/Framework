@@ -22,30 +22,31 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.commands;
+package me.piggypiglet.framework.minecraft.commands.implementations;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.commands.CommandHandlers;
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.commands.framework.Command;
+import me.piggypiglet.framework.minecraft.commands.MinecraftCommand;
+import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
 
 import java.util.Optional;
 import java.util.Set;
 
 @Default
-public final class HelpCommand extends Command {
+public final class HelpCommand extends MinecraftCommand {
     @Inject private CommandHandlers commandHandlers;
     @Inject private Framework framework;
 
     public HelpCommand() {
         super("help");
-        options.description("Get a description of all commands or a specific one.").usage("[command]").def(true);
+        options.root().description("Get a description of all commands or a specific one.").usage("[command]").def(true);
     }
 
     @Override
-    protected boolean execute(User user, String[] args) {
+    protected boolean execute(MinecraftUser user, String[] args) {
         final Set<Command> commands = commandHandlers.getCommands();
 
         if (args.length > 0) {

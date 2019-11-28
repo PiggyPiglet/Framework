@@ -58,6 +58,11 @@ public final class NukkitUser extends MinecraftUser {
         return sender instanceof Player;
     }
 
+    @Override
+    public boolean isConsole() {
+        return sender instanceof ConsoleCommandSender;
+    }
+
     public ConsoleCommandSender getAsConsole() {
         return (ConsoleCommandSender) sender;
     }

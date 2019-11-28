@@ -1,0 +1,7 @@
+{
+  "commands": {
+    "player-only": "This command can only be executed by players.",
+    "console-only": "&cThis command can only be executed by console.",
+    "not-minecraft-user": "You cannot run a minecraft command if you're not a minecraft user."
+  }
+}

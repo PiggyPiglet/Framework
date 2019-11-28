@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.commands;
+package me.piggypiglet.framework.commands.framework;
 
 import me.piggypiglet.framework.user.User;
 
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Command {
+public abstract class Command<T extends User> {
     private final String command;
 
     private List<String> handlers = new ArrayList<>();
@@ -54,9 +54,9 @@ public abstract class Command {
      * @param args Message, excluding the prefix and command, split via space. Multiple word arguments can be achieved by using double quotes in the user's input. For example, test "multi word" would only be two arguments.
      * @return Whether the command's usage method should be sent or not. Returning false will send the message.
      */
-    protected abstract boolean execute(User user, String[] args);
+    protected abstract boolean execute(T user, String[] args);
 
-    public boolean run(User user, String[] args) {
+    public boolean run(T user, String[] args) {
         return execute(user, args);
     }
 

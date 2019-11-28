@@ -76,12 +76,8 @@ public abstract class User {
      * @param vars Vars to replace in the message (uses String#format)
      */
     public void sendMessage(Object message, Object... vars) {
-        String clone = message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
+        final String clone = message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
 
-        if (vars.length > 0) {
-            clone = String.format(clone, vars);
-        }
-
-        sendMessage(clone);
+        sendMessage(vars.length > 0 ? String.format(clone, vars) : clone);
     }
 }

@@ -46,7 +46,7 @@ public final class SpongeCommandExecutor implements CommandCallable {
 
     @Override
     public CommandResult process(CommandSource source, String arguments) {
-        commandHandlers.process("sponge", new SpongeUser(source), framework.getCommandPrefix() + " " + arguments);
+        commandHandlers.process("minecraft", new SpongeUser(source), framework.getCommandPrefix() + " " + arguments);
         return CommandResult.success();
     }
 

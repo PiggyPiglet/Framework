@@ -24,24 +24,20 @@
 
 package me.piggypiglet.framework.nukkit.commands;
 
-import me.piggypiglet.framework.commands.Command;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandExecutor;
+import cn.nukkit.command.CommandSender;
+import com.google.inject.Inject;
+import me.piggypiglet.framework.commands.CommandHandlers;
+import me.piggypiglet.framework.nukkit.user.NukkitUser;
 
-public abstract class NukkitCommand extends Command {
-    protected Options options = new Options();
-    protected boolean playerOnly = false;
+public class NukkitCommandExecutor implements CommandExecutor {
+    @Inject private CommandHandlers commandHandlers;
 
-    protected NukkitCommand(String command) {
-        super(command);
-    }
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        commandHandlers.process("minecraft", new NukkitUser(sender), label + " " + String.join(" ", args));
 
-    public boolean isPlayerOnly() {
-        return playerOnly;
-    }
-
-    protected class Options extends Command.Options {
-        public Options playerOnly(boolean playerOnly) {
-            NukkitCommand.this.playerOnly = playerOnly;
-            return this;
-        }
+        return true;
     }
 }

@@ -24,12 +24,25 @@
 
 package me.piggypiglet.framework.bungeecord.user;
 
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.bungeecord.binding.player.BungeeCordPlayer;
+import me.piggypiglet.framework.minecraft.player.Player;
+import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public final class BungeeUser extends User {
+public final class BungeeUser extends MinecraftUser {
+    private static final Class<? extends CommandSender> CONSOLE_COMMAND_SENDER;
+
+    static {
+        try {
+            //noinspection unchecked
+            CONSOLE_COMMAND_SENDER = (Class<? extends CommandSender>) Class.forName("net.md_5.bungee.command.ConsoleCommandSender");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final CommandSender sender;
 
     public BungeeUser(CommandSender sender) {
@@ -49,5 +62,21 @@ public final class BungeeUser extends User {
     @Override
     public boolean hasPermission(String permission) {
         return sender.hasPermission(permission);
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return sender instanceof ProxiedPlayer;
+    }
+
+    //todo: test this
+    @Override
+    public boolean isConsole() {
+        return sender.getClass().isAssignableFrom(CONSOLE_COMMAND_SENDER);
+    }
+
+    @Override
+    public Player getAsPlayer() {
+        return new BungeeCordPlayer((ProxiedPlayer) sender);
     }
 }

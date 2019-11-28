@@ -22,42 +22,44 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.nukkit.commands.nukkit;
+package me.piggypiglet.framework.bukkit.commands;
 
-import cn.nukkit.Server;
-import cn.nukkit.command.CommandMap;
-import cn.nukkit.command.PluginCommand;
-import cn.nukkit.plugin.Plugin;
-import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.plugin.PluginManager;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.utils.ReflectionUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
-public class BaseCommandHandler {
+public final class BukkitCommandRegistrar {
     @Inject private Framework framework;
     @Inject private MainBinding main;
     @Inject private Logger logger;
 
     private CommandMap commandMap;
 
-    public BaseCommandHandler() {
-        final Server server = Server.getInstance();
+    public BukkitCommandRegistrar() {
+        final Server server = Bukkit.getServer();
 
-        if (server.getPluginManager() != null) {
+        if (server.getPluginManager() instanceof SimplePluginManager) {
             try {
-                final Field f = ReflectionUtils.getAccessible(PluginManager.class.getDeclaredField("commandMap"));
+                final Field f = ReflectionUtils.getAccessible(SimplePluginManager.class.getDeclaredField("commandMap"));
                 commandMap = (CommandMap) f.get(server.getPluginManager());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            logger.debug("PluginManager is null.");
+            logger.debug("PluginManager is not an instance of SimplePluginManager.");
         }
     }
 
@@ -70,8 +72,8 @@ public class BaseCommandHandler {
     private void registerCommand(String... aliases) {
         PluginCommand command = getCommand(aliases[0]);
 
-        command.setAliases(aliases);
-        commandMap.register(((PluginBase) main.getInstance()).getDescription().getName(), command);
+        command.setAliases(Arrays.asList(aliases));
+        commandMap.register(((JavaPlugin) main.getInstance()).getDescription().getName(), command);
     }
 
     private PluginCommand getCommand(String name) {
@@ -79,7 +81,7 @@ public class BaseCommandHandler {
 
         try {
             final Constructor<PluginCommand> c = ReflectionUtils.getAccessible(PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class));
-            command = c.newInstance(name, (PluginBase) main.getInstance());
+            command = c.newInstance(name, (JavaPlugin) main.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }

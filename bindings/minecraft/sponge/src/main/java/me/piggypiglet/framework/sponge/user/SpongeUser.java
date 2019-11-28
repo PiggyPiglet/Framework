@@ -28,6 +28,7 @@ import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.sponge.binding.player.SpongePlayer;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 public final class SpongeUser extends MinecraftUser {
@@ -55,6 +56,11 @@ public final class SpongeUser extends MinecraftUser {
     @Override
     public boolean isPlayer() {
         return src instanceof org.spongepowered.api.entity.living.player.Player;
+    }
+
+    @Override
+    public boolean isConsole() {
+        return src instanceof ConsoleSource;
     }
 
     @Override

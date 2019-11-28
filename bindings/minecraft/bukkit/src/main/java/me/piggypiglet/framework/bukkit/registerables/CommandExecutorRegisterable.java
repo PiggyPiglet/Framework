@@ -26,10 +26,8 @@ package me.piggypiglet.framework.bukkit.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.bukkit.commands.BukkitCommandHandler;
-import me.piggypiglet.framework.bukkit.commands.bukkit.BaseCommandHandler;
-import me.piggypiglet.framework.bukkit.commands.bukkit.BukkitCommandHandlerExecutor;
-import me.piggypiglet.framework.commands.CommandHandlers;
+import me.piggypiglet.framework.bukkit.commands.BukkitCommandExecutor;
+import me.piggypiglet.framework.bukkit.commands.BukkitCommandRegistrar;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,17 +35,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 
 public final class CommandExecutorRegisterable extends StartupRegisterable {
-    @Inject private BaseCommandHandler baseCommandHandler;
+    @Inject private BukkitCommandRegistrar bukkitCommandRegistrar;
     @Inject private MainBinding main;
     @Inject private Framework framework;
-    @Inject private BukkitCommandHandlerExecutor commandHandler;
-    @Inject private CommandHandlers commandHandlers;
+    @Inject private BukkitCommandExecutor commandHandler;
 
     @Override
     protected void execute() {
-        baseCommandHandler.registerCommands();
+        bukkitCommandRegistrar.registerCommands();
         //todo: do a proper null check, throw custom exception if null
         Objects.requireNonNull(((JavaPlugin) main.getInstance()).getCommand(framework.getCommandPrefix())).setExecutor(commandHandler);
-        commandHandlers.newHandler("bukkit", BukkitCommandHandler.class, injector);
     }
 }

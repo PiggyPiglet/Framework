@@ -16,5 +16,7 @@ public abstract class MinecraftUser extends User {
 
     public abstract boolean isPlayer();
 
+    public abstract boolean isConsole();
+
     public abstract Player getAsPlayer();
 }

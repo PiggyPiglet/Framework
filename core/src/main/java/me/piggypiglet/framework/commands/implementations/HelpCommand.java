@@ -26,8 +26,8 @@ package me.piggypiglet.framework.commands.implementations;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.commands.Command;
 import me.piggypiglet.framework.commands.CommandHandlers;
+import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.reflection.def.UltraDefault;
 

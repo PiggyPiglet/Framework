@@ -46,7 +46,7 @@ public final class BungeeCommandExecutor {
 
         @Override
         public void execute(CommandSender sender, String[] args) {
-            commandHandlers.process("bungee", new BungeeUser(sender), framework.getCommandPrefix() + " " + String.join(" ", args));
+            commandHandlers.process("minecraft", new BungeeUser(sender), framework.getCommandPrefix() + " " + String.join(" ", args));
         }
     }
 }

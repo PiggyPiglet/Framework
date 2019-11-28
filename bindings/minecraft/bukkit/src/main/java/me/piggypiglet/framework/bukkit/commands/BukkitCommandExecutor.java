@@ -24,25 +24,22 @@
 
 package me.piggypiglet.framework.bukkit.commands;
 
+import com.google.inject.Inject;
 import me.piggypiglet.framework.bukkit.user.BukkitUser;
-import me.piggypiglet.framework.commands.Command;
-import me.piggypiglet.framework.commands.CommandHandler;
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.commands.CommandHandlers;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
-public class BukkitCommandHandler extends CommandHandler {
+import javax.annotation.Nonnull;
+
+public final class BukkitCommandExecutor implements CommandExecutor {
+    @Inject private CommandHandlers commandHandlers;
+
     @Override
-    protected final boolean run(User user, Command command) {
-        if (user instanceof BukkitUser && command instanceof BukkitCommand) {
-            if (((BukkitCommand) command).isPlayerOnly()) {
-                if (((BukkitUser) user).isPlayer()) {
-                    return super.run(user, command);
-                } else {
-                    user.sendMessage("Only player's can execute this command.");
-                    return false;
-                }
-            }
-        }
+    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
+        commandHandlers.process("minecraft", new BukkitUser(sender), label + " " + String.join(" ", args));
 
-        return super.run(user, command);
+        return true;
     }
 }

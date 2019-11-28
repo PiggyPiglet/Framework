@@ -25,7 +25,7 @@
 package me.piggypiglet.demo.commands;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.commands.Command;
+import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.files.Config;

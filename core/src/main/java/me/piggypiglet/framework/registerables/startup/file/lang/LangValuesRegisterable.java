@@ -20,7 +20,6 @@ public final class LangValuesRegisterable extends StartupRegisterable {
     @Inject private Lang lang;
     @Inject private Framework framework;
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void execute() {
         final Set<LangEnum> values = lang.getValues();
@@ -35,8 +34,8 @@ public final class LangValuesRegisterable extends StartupRegisterable {
             if (lang.clazz() != Lang.Values.class) {
                 final Set<LangEnum> tempValues = new HashSet<>();
 
-                for (String val : lang.values()) {
-                    tempValues.add((LangEnum) Enum.valueOf((Class) lang.clazz(), val));
+                for (Enum val : lang.clazz().getEnumConstants()) {
+                    tempValues.add((LangEnum) val);
                 }
 
                 values.addAll(tempValues);

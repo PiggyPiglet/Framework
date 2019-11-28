@@ -12,6 +12,4 @@ public @interface Langs {
     String file();
 
     Class<? extends Enum<? extends LangEnum>> clazz();
-
-    String[] values();
 }

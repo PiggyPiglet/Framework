@@ -27,10 +27,10 @@ package me.piggypiglet.framework.velocity.user;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
-import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
-public final class VelocityUser extends User {
+public final class VelocityUser extends MinecraftUser {
     private final CommandSource source;
 
     public VelocityUser(CommandSource source) {
@@ -50,5 +50,20 @@ public final class VelocityUser extends User {
     @Override
     public boolean hasPermission(String permission) {
         return source.hasPermission(permission);
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return source instanceof Player;
+    }
+
+    @Override
+    public boolean isConsole() {
+        return source instanceof ConsoleCommandSource;
+    }
+
+    @Override
+    public me.piggypiglet.framework.minecraft.player.Player getAsPlayer() {
+        return null;
     }
 }

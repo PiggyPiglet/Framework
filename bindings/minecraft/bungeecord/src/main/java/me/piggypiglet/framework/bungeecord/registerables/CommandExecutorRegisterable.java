@@ -26,21 +26,17 @@ package me.piggypiglet.framework.bungeecord.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.bungeecord.commands.BungeeCommandExecutor;
-import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class CommandExecutorRegisterable extends StartupRegisterable {
-    @Inject private CommandHandlers commandHandlers;
     @Inject private MainBinding main;
     @Inject private BungeeCommandExecutor commandExecutor;
 
     @Override
     protected void execute() {
         final Plugin plugin = (Plugin) main.getInstance();
-
-        commandHandlers.newHandler("bungee", injector);
         plugin.getProxy().getPluginManager().registerCommand(plugin, commandExecutor.getExecutor());
     }
 }

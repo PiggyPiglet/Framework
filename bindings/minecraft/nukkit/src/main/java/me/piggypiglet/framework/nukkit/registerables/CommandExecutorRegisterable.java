@@ -28,26 +28,21 @@ import cn.nukkit.command.PluginCommand;
 import cn.nukkit.plugin.PluginBase;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.nukkit.commands.NukkitCommandHandler;
-import me.piggypiglet.framework.nukkit.commands.nukkit.BaseCommandHandler;
-import me.piggypiglet.framework.nukkit.commands.nukkit.NukkitCommandExecutor;
+import me.piggypiglet.framework.nukkit.commands.NukkitCommandExecutor;
+import me.piggypiglet.framework.nukkit.commands.NukkitCommandRegistrar;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
 //todo Figure out the issue here. It seems like you don't actually have to register commands in Nukkit
 public final class CommandExecutorRegisterable extends StartupRegisterable {
-    @Inject private BaseCommandHandler baseCommandHandler;
+    @Inject private NukkitCommandRegistrar nukkitCommandRegistrar;
     @Inject private MainBinding main;
     @Inject private Framework framework;
     @Inject private NukkitCommandExecutor commandExecutor;
-    @Inject private CommandHandlers commandHandlers;
 
     @Override
     protected void execute() {
-        baseCommandHandler.registerCommands();
-        //todo: do a proper null check, throw custom exception if null
+        nukkitCommandRegistrar.registerCommands();
         ((PluginCommand) ((PluginBase) main.getInstance()).getCommand(framework.getCommandPrefix())).setExecutor(commandExecutor);
-        commandHandlers.newHandler("nukkit", NukkitCommandHandler.class, injector);
     }
 }

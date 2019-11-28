@@ -25,6 +25,8 @@
 package me.piggypiglet.framework.logging;
 
 import com.google.inject.ImplementedBy;
+import me.piggypiglet.framework.lang.Lang;
+import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 
 @ImplementedBy(DefaultLogger.class)
@@ -80,7 +82,7 @@ public abstract class Logger<T> {
      * @param message Message to be logged
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
-    public void info(String message, Object... vars) {
+    public void info(Object message, Object... vars) {
         info(format(message, vars));
     }
 
@@ -89,7 +91,7 @@ public abstract class Logger<T> {
      * @param message Message to be logged
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
-    public void warning(String message, Object... vars) {
+    public void warning(Object message, Object... vars) {
         warning(format(message, vars));
     }
 
@@ -98,7 +100,7 @@ public abstract class Logger<T> {
      * @param message Message to be logged
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
-    public void error(String message, Object... vars) {
+    public void error(Object message, Object... vars) {
         error(format(message, vars));
     }
 
@@ -107,13 +109,15 @@ public abstract class Logger<T> {
      * @param message Message to be logged.
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
-    public void debug(String message, Object... vars) {
+    public void debug(Object message, Object... vars) {
         if (debug) {
             debug(format(message, vars));
         }
     }
 
-    private String format(String message, Object... vars) {
-        return vars.length == 0 ? message : String.format(message, vars);
+    private String format(Object message, Object... vars) {
+        final String clone = message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
+
+        return vars.length == 0 ? clone : String.format(clone, vars);
     }
 }

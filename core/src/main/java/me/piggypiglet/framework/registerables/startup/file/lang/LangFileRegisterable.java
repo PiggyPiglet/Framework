@@ -1,6 +1,5 @@
 package me.piggypiglet.framework.registerables.startup.file.lang;
 
-import com.google.common.io.Files;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.objects.ConfigInfo;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
@@ -74,12 +73,12 @@ public final class LangFileRegisterable extends StartupRegisterable {
 
             if (lang.clazz() != Lang.Values.class) {
                 try {
-                    final String file = c.getSimpleName().toLowerCase().replace("addon", "").trim() + "_" + lang.file();
+                    final String file = lang.file();
+                    final String name = StringUtils.formatAddon(c);
 
-                    //noinspection UnstableApiUsage
                     map.putAll(doConfig(
-                            this.lang.getSpecificValues().get(StringUtils.formatAddon(c)).stream().collect(collector),
-                            fileManager.loadConfig(file.replace(Files.getFileExtension(file), ""), "/" + file, external ? "lang/" + file : null)
+                            this.lang.getSpecificValues().get(name).stream().collect(collector),
+                            fileManager.loadConfig(name, "/" + file, external ? "lang/" + file : null)
                     ));
                 } catch (Exception e) {
                     throw new RuntimeException(exception + ":\n" + e);
