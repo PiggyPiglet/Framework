@@ -7,7 +7,6 @@ import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.yaml.snakeyaml.DumperOptions;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,26 +17,22 @@ public final class SpongeYamlFileConfiguration extends AbstractFileConfiguration
         super(s -> s.endsWith(".yml") || s.endsWith(".yaml"));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void internalLoad(File file, String fileContent) {
         try {
-            Object obj = YAMLConfigurationLoader.builder()
+            config = new JsonFileConfiguration((Map<String, Object>) YAMLConfigurationLoader.builder()
                     .setFile(file)
                     .setFlowStyle(DumperOptions.FlowStyle.BLOCK)
-                    .build().load().getValue();
-
-            System.out.println(obj);
-
-            config = new JsonFileConfiguration((Map<String, Object>) obj);
+                    .build().load().getValue());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    // todo: implement this
     @Override
     protected Map<String, Object> retrieveAll() {
-        return new HashMap<>();
+        return config.getAll();
     }
 
     @Override
