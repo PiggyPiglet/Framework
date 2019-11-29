@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.commands.framework.Command;
-import me.piggypiglet.framework.minecraft.commands.MinecraftCommand;
+import me.piggypiglet.framework.minecraft.commands.framework.MinecraftCommand;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
 
