@@ -37,7 +37,7 @@
         <dependency>
             <groupId>me.piggypiglet</groupId>
             <artifactId>framework-core</artifactId>
-            <version>@CORE@</version>
+            <version>@VERSION@</version>
             <exclusions>
                 <exclusion>
                     <artifactId>gson</artifactId>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>me.piggypiglet</groupId>
             <artifactId>framework-minecraft-common</artifactId>
-            <version>1.4.7</version>
+            <version>@VERSION@</version>
         </dependency>
         <dependency>
             <groupId>cn.nukkit</groupId>
