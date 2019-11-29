@@ -26,33 +26,33 @@ package me.piggypiglet.framework.mysql.components;
 
 import co.aikar.idb.DbRow;
 import me.piggypiglet.framework.mysql.utils.MySQLUtils;
-import me.piggypiglet.framework.utils.map.KeyValueSet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class MySQLComponent {
-    protected CompletableFuture<Boolean> create(String table, KeyValueSet data) {
-        return MySQLUtils.create(table, data.getMap());
+    protected CompletableFuture<Boolean> create(String table, Map<String, Object> data) {
+        return MySQLUtils.create(table, data);
     }
 
-    protected CompletableFuture<DbRow> get(String table, KeyValueSet location) {
-        return MySQLUtils.getRow(table, location.getMap());
+    protected CompletableFuture<DbRow> get(String table, Map<String, Object> location) {
+        return MySQLUtils.getRow(table, location);
     }
 
     protected CompletableFuture<List<DbRow>> getAll(String table) {
         return MySQLUtils.getRows(table);
     }
 
-    protected CompletableFuture<Boolean> exists(String table, KeyValueSet location) {
-        return MySQLUtils.exists(table, location.getMap());
+    protected CompletableFuture<Boolean> exists(String table, Map<String, Object> location) {
+        return MySQLUtils.exists(table, location);
     }
 
-    protected CompletableFuture<Boolean> delete(String table, KeyValueSet location) {
-        return MySQLUtils.remove(table, location.getMap());
+    protected CompletableFuture<Boolean> delete(String table, Map<String, Object> location) {
+        return MySQLUtils.remove(table, location);
     }
 
-    protected CompletableFuture<Boolean> edit(String table, KeyValueSet location, KeyValueSet changes) {
-        return MySQLUtils.set(table, location.getMap(), changes.getMap());
+    protected CompletableFuture<Boolean> edit(String table, Map<String, Object> location, Map<String, Object> changes) {
+        return MySQLUtils.set(table, location, changes);
     }
 }

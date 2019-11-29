@@ -25,15 +25,17 @@
 package me.piggypiglet.framework.mysql.components.row;
 
 import me.piggypiglet.framework.mysql.components.MySQLComponent;
-import me.piggypiglet.framework.utils.map.KeyValueSet;
+import me.piggypiglet.framework.utils.map.Maps;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public final class RowDeleter extends MySQLComponent {
     private final String table;
-    private final KeyValueSet location;
+    private final Map<String, Object> location;
 
-    private RowDeleter(String table, KeyValueSet location) {
+    private RowDeleter(String table, Map<String, Object> location) {
         this.table = table;
         this.location = location;
     }
@@ -44,7 +46,7 @@ public final class RowDeleter extends MySQLComponent {
 
     public static class Builder {
         private final String table;
-        private KeyValueSet location;
+        private Map<String, Object> location;
 
         private Builder(String table) {
             this.table = table;
@@ -52,10 +54,18 @@ public final class RowDeleter extends MySQLComponent {
 
         /**
          * Specify a location for the row
-         * @param location Location
          * @return Builder instance
          */
-        public Builder location(KeyValueSet location) {
+        public Maps.Builder<String, Object, Builder> location() {
+            return Maps.builder(new LinkedHashMap<>(), this, m -> location = m);
+        }
+
+        /**
+         * Location of the row(s) to find
+         * @param location Row location
+         * @return Builder instance
+         */
+        public Builder location(Map<String, Object> location) {
             this.location = location;
             return this;
         }

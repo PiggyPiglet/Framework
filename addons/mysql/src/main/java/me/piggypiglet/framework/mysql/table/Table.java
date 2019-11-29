@@ -29,15 +29,14 @@ import me.piggypiglet.framework.mysql.components.row.RowCreator;
 import me.piggypiglet.framework.mysql.components.row.RowDeleter;
 import me.piggypiglet.framework.mysql.components.row.RowEditor;
 import me.piggypiglet.framework.mysql.components.row.RowGetter;
-import me.piggypiglet.framework.utils.map.KeyValueSet;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
+public abstract class Table<T> implements ObjectMapper<Map<String, Object>, T> {
     private final String table;
 
     protected Table(String table) {
@@ -47,9 +46,9 @@ public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
     /**
      * Optionally configure which columns will be checked when using #save. Will use typeToRow by default.
      * @param t Type
-     * @return KeyValueSet
+     * @return Map of String and Object
      */
-    protected KeyValueSet saveLocation(T t) {
+    protected Map<String, Object> saveLocation(T t) {
         return typeToData(t);
     }
 
@@ -90,7 +89,7 @@ public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
      * @return CompletableFuture of list of table type
      */
     public CompletableFuture<List<T>> getAll() {
-        return getter().build().getAll().thenApply(rows -> rows.stream().map(KeyValueSet::fromMap).map(this::dataToType).collect(Collectors.toList()));
+        return getter().build().getAll().thenApply(rows -> rows.stream().map(this::dataToType).collect(Collectors.toList()));
     }
 
     /**
@@ -99,17 +98,17 @@ public abstract class Table<T> implements ObjectMapper<KeyValueSet, T> {
      * @return CompletableFuture of whether the save was successful.
      */
     public CompletableFuture<Boolean> save(T t) {
-        final KeyValueSet location = saveLocation(t);
+        final Map<String, Object> location = saveLocation(t);
         final AtomicReference<CompletableFuture<Boolean>> future = new AtomicReference<>();
 
         getter().location(location).build().exists().whenComplete((b, th) -> {
-            final KeyValueSet row = typeToData(t);
+            final Map<String, Object> row = typeToData(t);
 
             if (!b) {
-                future.set(creator().set(row).build().execute());
+                future.set(creator().data(row).build().execute());
             } else {
                 getter().location(location).build().get().whenComplete((r, th_) -> {
-                   if (Arrays.stream(row.getValues()).anyMatch(o -> !r.containsValue(o))) {
+                   if (row.values().stream().anyMatch(o -> !r.containsValue(o))) {
                        future.set(editor().location(location).changes(row).build().execute());
                    }
                 });

@@ -25,15 +25,17 @@
 package me.piggypiglet.framework.mysql.components.row;
 
 import me.piggypiglet.framework.mysql.components.MySQLComponent;
-import me.piggypiglet.framework.utils.map.KeyValueSet;
+import me.piggypiglet.framework.utils.map.Maps;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public final class RowCreator extends MySQLComponent {
     private final String table;
-    private final KeyValueSet data;
+    private final Map<String, Object> data;
 
-    private RowCreator(String table, KeyValueSet data) {
+    private RowCreator(String table, Map<String, Object> data) {
         this.table = table;
         this.data = data;
     }
@@ -44,42 +46,20 @@ public final class RowCreator extends MySQLComponent {
 
     public static class Builder {
         private final String table;
-        private final KeyValueSet.Builder builder = KeyValueSet.builder();
+
+        private Map<String, Object> data = null;
 
         private Builder(String table) {
             this.table = table;
         }
 
-        public Builder set(KeyValueSet set) {
-            set.getMap().forEach((k, v) -> builder.key(k).value(v));
+        public Maps.Builder<String, Object, Builder> data() {
+            return Maps.builder(new LinkedHashMap<>(), this, m -> data = m);
+        }
+
+        public Builder data(Map<String, Object> data) {
+            this.data = data;
             return this;
-        }
-
-        /**
-         * Specify the column names for this row
-         * @param key Column name
-         * @return Builder instance
-         */
-        public ValueBuilder key(String key) {
-            return new ValueBuilder(key);
-        }
-
-        public class ValueBuilder {
-            private final String key;
-
-            private ValueBuilder(String key) {
-                this.key = key;
-            }
-
-            /**
-             * Key value
-             * @param value Value
-             * @return Builder instance
-             */
-            public RowCreator.Builder value(Object value) {
-                builder.key(key).value(value);
-                return RowCreator.Builder.this;
-            }
         }
 
         /**
@@ -87,7 +67,7 @@ public final class RowCreator extends MySQLComponent {
          * @return RowCreator
          */
         public RowCreator build() {
-            return new RowCreator(table, builder.build());
+            return new RowCreator(table, data);
         }
     }
 
