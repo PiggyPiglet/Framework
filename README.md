@@ -14,12 +14,12 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
   - Serve HTTP JSON
   - Console interaction
   - Runtime Jar Loader
-- Loads of pre-made bindings for popular apis
+- Loads of pre-made bindings for popular apis (with platform independent common libraries)
   - Bukkit
   - Sponge
   - Velocity
   - BungeeCord
-  - Nukkit (WIP)
+  - Nukkit
   - Fabric (Soon)
   - JDA
   - Discord4J (Soon)
