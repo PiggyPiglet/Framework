@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.utils.clazz;
+package me.piggypiglet.framework.utils.number;
 
 import me.piggypiglet.framework.utils.lambda.CheckedFunction;
 
@@ -68,7 +68,7 @@ public enum Primitives {
      */
     public static Primitives fromClass(Class clazz) {
         for (Primitives primitive : values()) {
-            if (primitive.clazz == ClassUtils.primitiveToWrapper(clazz)) {
+            if (primitive.clazz == NumberUtils.primitiveToWrapper(clazz)) {
                 return primitive;
             }
         }

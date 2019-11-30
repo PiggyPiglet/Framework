@@ -26,7 +26,7 @@ package me.piggypiglet.framework.mapper;
 
 import me.piggypiglet.framework.utils.ReflectionUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
-import me.piggypiglet.framework.utils.clazz.ClassUtils;
+import me.piggypiglet.framework.utils.number.NumberUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -72,14 +72,14 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
                 .orElseThrow(RuntimeException::new);
         params = Arrays.stream(constructor.getParameterTypes()).map(p -> {
             try {
-                return p.isPrimitive() ? ClassUtils.wrapperToPrimitive(p) : null;
+                return p.isPrimitive() ? NumberUtils.wrapperToPrimitive(p) : null;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }).toArray();
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(
-                f -> types.put(f.getName(), f.getType().isPrimitive() ? ClassUtils.primitiveToWrapper(f.getType()) : f.getType())
+                f -> types.put(f.getName(), f.getType().isPrimitive() ? NumberUtils.primitiveToWrapper(f.getType()) : f.getType())
         );
 
         types.keySet().forEach(s -> {
