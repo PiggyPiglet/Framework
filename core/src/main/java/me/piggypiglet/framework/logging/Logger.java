@@ -25,9 +25,8 @@
 package me.piggypiglet.framework.logging;
 
 import com.google.inject.ImplementedBy;
-import me.piggypiglet.framework.lang.Lang;
-import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
+import me.piggypiglet.framework.utils.StringUtils;
 
 @ImplementedBy(DefaultLogger.class)
 public abstract class Logger<T> {
@@ -115,9 +114,7 @@ public abstract class Logger<T> {
         }
     }
 
-    private String format(Object message, Object... vars) {
-        final String clone = message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
-
-        return vars.length == 0 ? clone : String.format(clone, vars);
+    private String format(Object message, Object... concatenations) {
+        return StringUtils.format(message, concatenations);
     }
 }

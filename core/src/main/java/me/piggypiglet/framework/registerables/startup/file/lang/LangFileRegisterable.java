@@ -74,7 +74,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
             if (lang.clazz() != Lang.Values.class) {
                 try {
                     final String file = lang.file();
-                    final String name = StringUtils.formatAddon(c);
+                    final String name = StringUtils.addonName(c);
 
                     map.putAll(doConfig(
                             this.lang.getSpecificValues().get(name).stream().collect(collector),

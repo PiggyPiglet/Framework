@@ -24,21 +24,9 @@
 
 package me.piggypiglet.framework.user;
 
-import me.piggypiglet.framework.lang.Lang;
-import me.piggypiglet.framework.lang.LangEnum;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import me.piggypiglet.framework.utils.StringUtils;
 
 public abstract class User {
-    private static final Pattern SPECIFIC_FORMAT_REGEX = Pattern.compile("/%\\d\\$s/g");
-    private static final Pattern INDEX_FORMAT_REGEX = Pattern.compile("/%s/g");
-
     private final String name;
     private final String id;
 
@@ -87,54 +75,6 @@ public abstract class User {
      * @param concatenations Concatenations to main message & variables
      */
     public void sendMessage(Object message, Object... concatenations) {
-        if (concatenations.length == 0) {
-            sendMessage(message(message));
-            return;
-        }
-
-        final List<Object> items = new ArrayList<>();
-        items.add(message);
-        items.addAll(Arrays.asList(concatenations));
-
-        final List<String> messages = items.stream()
-                .map(this::message)
-                .collect(Collectors.toList());
-        final String joined = String.join("", messages);
-
-        final Matcher specificMatcher = SPECIFIC_FORMAT_REGEX.matcher(joined);
-
-        int count = INDEX_FORMAT_REGEX.split(joined, -1).length;
-
-        if (SPECIFIC_FORMAT_REGEX.matcher(joined).matches()) {
-            final List<Integer> nums = new ArrayList<>();
-
-            while (specificMatcher.find()) {
-                nums.add(Integer.valueOf(specificMatcher.group(1).replace("%", "").replace("$s", "")));
-                specificMatcher.group(2);
-            }
-
-            final int highest = Collections.max(nums);
-
-            if (highest > count) {
-                count = highest;
-            }
-        }
-
-        if (concatenations.length == 1) {
-            sendMessage(String.format(messages.get(0), concatenations[0]));
-            return;
-        }
-
-        int midIndex = messages.size() - count;
-        midIndex = midIndex > 2 ? midIndex : midIndex - 1;
-
-        final String msg = String.join("", messages.subList(0, midIndex));
-        final Object[] vars = messages.subList(midIndex, messages.size()).toArray();
-
-        sendMessage(String.format(msg, vars));
-    }
-
-    private String message(Object message) {
-        return message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
+        sendMessage(StringUtils.format(message, concatenations));
     }
 }

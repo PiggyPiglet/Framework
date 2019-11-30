@@ -39,7 +39,7 @@ public final class LangValuesRegisterable extends StartupRegisterable {
                 }
 
                 values.addAll(tempValues);
-                specificValues.put(StringUtils.formatAddon(c), tempValues);
+                specificValues.put(StringUtils.addonName(c), tempValues);
             }
         });
 
