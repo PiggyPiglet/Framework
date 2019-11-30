@@ -52,7 +52,7 @@ public final class CommandHandlers {
      * @param message Message, including command prefix, command, and arguments.
      */
     public void process(String commandHandler, User user, String message) {
-        task.async(r -> commandHandlers.get(commandHandler).handle(user, message));
+        task.async(r -> commandHandlers.get(commandHandler).handle(user, message, commandHandler));
     }
 
     /**

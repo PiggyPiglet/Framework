@@ -39,6 +39,8 @@ public abstract class Command<T extends User> {
     private List<String> permissions = new ArrayList<>();
     private boolean def = false;
 
+    private String handler;
+
     /**
      * Configure options for this command.
      */
@@ -56,7 +58,8 @@ public abstract class Command<T extends User> {
      */
     protected abstract boolean execute(T user, String[] args);
 
-    public boolean run(T user, String[] args) {
+    public boolean run(T user, String[] args, String handler) {
+        this.handler = handler;
         return execute(user, args);
     }
 
@@ -82,6 +85,10 @@ public abstract class Command<T extends User> {
 
     public boolean isDefault() {
         return def;
+    }
+
+    protected String getHandler() {
+        return handler;
     }
 
     protected class Options {

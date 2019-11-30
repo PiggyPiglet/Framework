@@ -56,12 +56,12 @@ public class CommandHandler {
     private Set<Command> commands;
     private Command helpCommand;
 
-    public void handle(User user, String message) {
+    public void handle(User user, String message, String handler) {
         if (message.startsWith(framework.getCommandPrefix())) {
             message = message.replaceFirst(framework.getCommandPrefix(), "").trim();
 
             if (message.isEmpty()) {
-                helpCommand.run(user, new String[]{});
+                helpCommand.run(user, new String[]{}, handler);
                 return;
             }
 
@@ -76,7 +76,7 @@ public class CommandHandler {
 
                         if (!run(user, c)) return;
 
-                        if (!c.run(user, args)) {
+                        if (!c.run(user, args, handler)) {
                             user.sendMessage(INCORRECT_USAGE, cmd, c.getUsage());
                         }
                     } else {
