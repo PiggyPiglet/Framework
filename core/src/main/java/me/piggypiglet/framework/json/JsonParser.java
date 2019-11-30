@@ -26,11 +26,11 @@ package me.piggypiglet.framework.json;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import me.piggypiglet.framework.utils.map.Maps;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * JsonParser class, used for parsing json, as the name suggests. Use . as a path separator when receiving nested objects, for example
@@ -68,18 +68,7 @@ public final class JsonParser {
      * @return Object
      */
     public Object get(String path) {
-        Object object = items.getOrDefault(path, null);
-
-        if (path.contains(".") && !path.startsWith(".") && !path.endsWith(".")) {
-            String[] areas = path.split("\\.");
-            object = items.getOrDefault(areas[0], null);
-
-            if (areas.length >= 2 && object != null) {
-                object = getBuriedObject(areas);
-            }
-        }
-
-        return object;
+        return Maps.recursiveGet(items, path);
     }
 
     /**
@@ -235,28 +224,6 @@ public final class JsonParser {
             if (map.size() >= 1) {
                 return map.keySet().toArray()[0] instanceof String && map.values().toArray()[0] != null;
             }
-        }
-
-        return false;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Object getBuriedObject(String[] keys) {
-        int i = 1;
-        Map<String, Object> endObject = (Map<String, Object>) items.get(keys[0]);
-
-        while (instanceOfMap(endObject.get(keys[i]))) {
-            endObject = (Map<String, Object>) endObject.get(keys[i++]);
-        }
-
-        return endObject.get(keys[i]);
-    }
-
-    private boolean instanceOfMap(Object object) {
-        if (object instanceof Map) {
-            Set<?> keys = ((Map<?, ?>) object).keySet();
-
-            return keys.size() >= 1 && keys.toArray()[0] instanceof String;
         }
 
         return false;

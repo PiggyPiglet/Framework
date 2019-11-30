@@ -28,8 +28,8 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.file.FileConfigurationFactory;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
-import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 
 public final class FileTypesRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;
@@ -37,6 +37,9 @@ public final class FileTypesRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        scanner.getSubTypesOf(AbstractFileConfiguration.class).stream().filter(c -> c != BlankFileConfiguration.class).map(injector::getInstance).forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));
+        scanner.getSubTypesOf(AbstractFileConfiguration.class).stream()
+                .filter(c -> c != BlankFileConfiguration.class)
+                .map(injector::getInstance)
+                .forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));
     }
 }
