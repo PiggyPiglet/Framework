@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.file.framework;
 
+import me.piggypiglet.framework.file.framework.objects.Flattener;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
-import me.piggypiglet.framework.utils.map.Maps;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractFileConfiguration implements FileConfiguration {
     private final Predicate<String> match;
+    private final Flattener flattener;
 
     protected static final String NULL_STRING = "null";
     protected static final int NULL_NUM = 0;
@@ -48,7 +49,12 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
      * @param match Predicate
      */
     protected AbstractFileConfiguration(Predicate<String> match) {
+        this(match, Flattener.builder(null).build());
+    }
+
+    protected AbstractFileConfiguration(Predicate<String> match, Flattener flattener) {
         this.match = match;
+        this.flattener = flattener;
     }
 
     /**
@@ -145,7 +151,8 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
 
     public Map<String, Object> getAll() {
         return retrieveAll().entrySet().stream()
-                .flatMap(Maps::flatten)
+                .flatMap(flattener::flatten)
+                .distinct()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

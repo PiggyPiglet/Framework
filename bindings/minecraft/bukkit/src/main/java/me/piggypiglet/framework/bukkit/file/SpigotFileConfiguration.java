@@ -25,6 +25,8 @@
 package me.piggypiglet.framework.bukkit.file;
 
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.file.framework.objects.Flattener;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -33,7 +35,7 @@ import java.util.Map;
 
 public final class SpigotFileConfiguration extends MapFileConfiguration {
     public SpigotFileConfiguration() {
-        super(s -> s.endsWith(".yml"));
+        super(s -> s.endsWith(".yml"), Flattener.builder(MemorySection.class).flattener(m -> m.getValues(true)).build());
     }
 
     @Override

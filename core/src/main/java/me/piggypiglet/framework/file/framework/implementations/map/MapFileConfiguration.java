@@ -2,6 +2,7 @@ package me.piggypiglet.framework.file.framework.implementations.map;
 
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.objects.Flattener;
 import me.piggypiglet.framework.utils.map.Maps;
 
 import java.io.File;
@@ -21,6 +22,10 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration {
      */
     protected MapFileConfiguration(Predicate<String> match) {
         super(match);
+    }
+
+    protected MapFileConfiguration(Predicate<String> match, Flattener flattener) {
+        super(match, flattener);
     }
 
     protected abstract Map<String, Object> provide(File file, String fileContent);

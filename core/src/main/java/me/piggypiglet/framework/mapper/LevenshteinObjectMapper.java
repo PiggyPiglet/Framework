@@ -112,7 +112,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
         final List<SearchUtils.Searchable> searchables = data.keySet().stream().map(SearchUtils::stringSearchable).collect(Collectors.toList());
 
-        types.keySet().forEach(s -> {
+        types.forEach((s, c) -> {
             String key;
 
             if (data.containsKey(s)) {
@@ -121,7 +121,15 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
                 key = SearchUtils.search(searchables, s).get(0).getName();
             }
 
-            result.put(s, data.get(key));
+            final Object o = data.get(key);
+
+            if (Map.class.isAssignableFrom(c) && !(o instanceof Map)) {
+                result.put(s, data.entrySet().stream()
+                        .filter(e -> e.getKey().startsWith(key))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+            } else {
+                result.put(s, o);
+            }
         });
         
         final List<Class<?>> inputted = result.values().stream().map(Object::getClass).collect(Collectors.toList());

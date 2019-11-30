@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class Maps {
@@ -70,10 +71,15 @@ public class Maps {
 
     @SuppressWarnings("unchecked")
     public static Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry) {
-        if (entry.getValue() instanceof Map) {
-            return ((Map<String, Object>) entry.getValue()).entrySet().stream()
+        return flatten(entry, Map.class, f -> f);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry, Class<T> clazz, Function<T, Map<String, Object>> flatten) {
+        if (clazz.isInstance(entry.getValue())) {
+            return flatten.apply((T) entry.getValue()).entrySet().stream()
                     .map(e -> new AbstractMap.SimpleEntry<>(entry.getKey() + "." + e.getKey(), e.getValue()))
-                    .flatMap(Maps::flatten);
+                    .flatMap(e -> flatten(e, clazz, flatten));
         }
 
         return Stream.of(entry);
