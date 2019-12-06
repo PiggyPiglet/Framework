@@ -8,13 +8,15 @@
     "password": ""
   },
 
-  /*
-  * Standard authentication, with the token being supplied by the client via the `auth` header, unencoded.
-  * If an authenticated route is pinged without the token in the auth header, a simple error message will be returned.
-  * Not to be confused with the basic authentication type defined by the HTTP protocol.
-  */
-  "basic-authentication": {
+  "standard-authentication": {
     "enabled": false,
-    "token": ""
+    "tokens": [
+      {
+        "token": "",
+        "permissions": [
+          "*"
+        ]
+      }
+    ]
   }
 }

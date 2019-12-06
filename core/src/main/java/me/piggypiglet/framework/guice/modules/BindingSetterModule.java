@@ -25,6 +25,7 @@
 package me.piggypiglet.framework.guice.modules;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
@@ -34,11 +35,13 @@ import java.util.Map;
 
 public final class BindingSetterModule extends AbstractModule {
     private final Map<Class<?>, Object> providers;
+    private final Map<TypeLiteral<?>, Object> genericBindings;
     private final List<AnnotatedBinding<?>> annotatedBindings;
     private final Class<?>[] staticInjections;
 
-    public BindingSetterModule(Map<Class<?>, Object> providers, List<AnnotatedBinding<?>> annotatedBindings, Class<?>... staticInjections) {
+    public BindingSetterModule(Map<Class<?>, Object> providers, Map<TypeLiteral<?>, Object> genericBindings, List<AnnotatedBinding<?>> annotatedBindings, Class<?>... staticInjections) {
         this.providers = providers;
+        this.genericBindings = genericBindings;
         this.annotatedBindings = annotatedBindings;
         this.staticInjections = staticInjections;
     }
@@ -46,6 +49,7 @@ public final class BindingSetterModule extends AbstractModule {
     @Override
     public void configure() {
         providers.forEach(this::bind);
+        genericBindings.forEach(this::bindGeneric);
         annotatedBindings.forEach(this::bindAnnotation);
         requestStaticInjection(staticInjections);
     }
@@ -53,6 +57,11 @@ public final class BindingSetterModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     private <T> void bind(Class<?> clazz, T instance) {
         bind((Class<? super T>) clazz).toInstance(instance);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void bindGeneric(TypeLiteral<?> interfaze, T instance) {
+        bind((TypeLiteral<? super T>) interfaze).toInstance(instance);
     }
 
     private <T> void bindAnnotation(AnnotatedBinding<T> binding) {

@@ -22,39 +22,22 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes.types.json;
+package me.piggypiglet.framework.http.routes.objects;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import me.piggypiglet.framework.http.responses.routes.Route;
-import me.piggypiglet.framework.http.responses.routes.objects.Header;
+public final class Header {
+    private final String key;
+    private final String value;
 
-import java.util.List;
-import java.util.Map;
-
-public abstract class JsonRoute extends Route {
-    protected final Gson gson;
-
-    static {
-        HEADERS.add(new Header("Content-Type", "application/json"));
+    public Header(String key, String value) {
+        this.key = key;
+        this.value = value;
     }
 
-    /**
-     * Provide the path of this route, do not include a forward slash at the beginning.
-     * @param route Route
-     * @param headers Optional headers to append to the page
-     */
-    protected JsonRoute(String route, Header... headers) {
-        this(route, new GsonBuilder().setPrettyPrinting().create(), headers);
+    public String getKey() {
+        return key;
     }
 
-    protected JsonRoute(String route, Gson gson, Header... headers) {
-        super(route, headers);
-        this.gson = gson;
-    }
-
-    @Override
-    public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
-        return gson.toJson(super.run(params, headers, ip));
+    public String getValue() {
+        return value;
     }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes.mixins.json.manager;
+package me.piggypiglet.framework.http.routes.mixins;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,5 +30,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME)
-public @interface Removable {
+public @interface Authenticated {
+    String permission() default "";
 }

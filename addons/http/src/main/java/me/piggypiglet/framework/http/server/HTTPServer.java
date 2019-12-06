@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http;
+package me.piggypiglet.framework.http.server;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
 import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.http.responses.ResponseHandler;
+import me.piggypiglet.framework.http.HTTPAddon;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 
@@ -63,7 +63,7 @@ public final class HTTPServer {
 
             if ((boolean) items.get("ssl.enabled")) {
                 char[] password = ((String) items.get("ssl.password")).toCharArray();
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
                 InputStream in = new FileInputStream((String) items.get("ssl.path"));
                 ks.load(in, password);
                 in.close();

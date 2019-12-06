@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes.types.json;
+package me.piggypiglet.framework.http.routes.types.json;
 
 import com.google.gson.Gson;
-import me.piggypiglet.framework.http.responses.routes.mixins.json.manager.Removable;
-import me.piggypiglet.framework.http.responses.routes.objects.Header;
+import me.piggypiglet.framework.http.routes.mixins.json.manager.Removable;
+import me.piggypiglet.framework.http.routes.objects.Header;
 import me.piggypiglet.framework.managers.implementations.SearchableManager;
 import me.piggypiglet.framework.utils.SearchUtils;
 

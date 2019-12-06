@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes;
+package me.piggypiglet.framework.http.routes;
 
-import me.piggypiglet.framework.http.responses.routes.objects.Header;
+import me.piggypiglet.framework.http.routes.objects.Header;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.registerables;
 
+import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
 import me.piggypiglet.framework.guice.objects.Injector;
 
@@ -34,6 +35,7 @@ public abstract class StartupRegisterable {
     protected Injector injector;
 
     private final Map<Class<?>, Object> bindings = new HashMap<>();
+    private final Map<TypeLiteral<?>, Object> genericBindings = new HashMap<>();
     private final List<AnnotatedBinding<?>> annotatedBindings = new ArrayList<>();
     private final List<Class<?>> staticInjections = new ArrayList<>();
 
@@ -57,6 +59,10 @@ public abstract class StartupRegisterable {
      */
     protected void addBinding(Object instance) {
         bindings.put(instance.getClass(), instance);
+    }
+
+    protected <T> void addBinding(TypeLiteral<? super T> interfaze, T instance) {
+        genericBindings.put(interfaze, instance);
     }
 
     /**
@@ -106,6 +112,10 @@ public abstract class StartupRegisterable {
      */
     public Map<Class<?>, Object> getBindings() {
         return bindings;
+    }
+
+    public Map<TypeLiteral<?>, Object> getGenericBindings() {
+        return genericBindings;
     }
 
     /**

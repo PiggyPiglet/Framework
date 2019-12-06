@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses;
+package me.piggypiglet.framework.http.server;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,11 +31,14 @@ import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.http.HTTPAddon;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
-import me.piggypiglet.framework.http.responses.routes.Route;
-import me.piggypiglet.framework.http.responses.routes.mixins.Authenticated;
-import me.piggypiglet.framework.http.responses.routes.objects.Header;
+import me.piggypiglet.framework.http.routes.Route;
+import me.piggypiglet.framework.http.routes.auth.permissions.Permission;
+import me.piggypiglet.framework.http.routes.mixins.Authenticated;
+import me.piggypiglet.framework.http.routes.objects.Header;
+import me.piggypiglet.framework.managers.Manager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +47,7 @@ import java.util.stream.Collectors;
 public final class ResponseHandler {
     @Inject @DefaultHTTP private FileWrapper def;
     @Inject private ConfigManager configManager;
+    @Inject private Manager<Permission> permStore;
 
     private final List<Route> routes = new ArrayList<>();
 
@@ -58,9 +62,11 @@ public final class ResponseHandler {
                 if (route.getClass().getAnnotation(Authenticated.class) != null) {
                     Map<String, Object> config = configManager.getConfigs().get(HTTPAddon.class).getItems();
 
-                    if ((boolean) config.get("basic-authentication.enabled") &&
-                            !session.getHeaders().getOrDefault("auth", "test").equals(config.get("basic-authentication.token"))) {
-                        return NanoHTTPD.newFixedLengthResponse("<p>Invalid auth token provided.</p>");
+                    final Collection<String> perms = permStore.get(session.getHeaders().getOrDefault("auth", "test")).getPermissions();
+
+                    if ((boolean) config.get("standard-authentication.enabled") &&
+                            (!perms.contains(route.getClass().getAnnotation(Authenticated.class).permission()) && !perms.contains("*"))) {
+                        return NanoHTTPD.newFixedLengthResponse("<p>No permission.</p>");
                     }
                 }
 

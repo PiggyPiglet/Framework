@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.http.registerables.shutdown;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.http.HTTPServer;
+import me.piggypiglet.framework.http.server.HTTPServer;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 
 public final class ShutdownHTTP extends ShutdownRegisterable {

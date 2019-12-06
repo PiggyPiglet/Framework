@@ -22,22 +22,13 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.http.responses.routes.objects;
+package me.piggypiglet.framework.http.routes.mixins.json.manager;
 
-public final class Header {
-    private final String key;
-    private final String value;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    public Header(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getValue() {
-        return value;
-    }
+@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME)
+public @interface Removable {
 }
