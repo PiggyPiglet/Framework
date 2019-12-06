@@ -3,10 +3,13 @@ RPF, as the name suggests, is a reflection based Java project framework. What is
 ### Features:
 - Child injector based startup system
 - Platform independent command API
+- Extensive configurability (boot order, values throughout several components)
 - Task manager
-- Manager API (including levenshtein searching)
-- Intelligent Object Mapper (similarity based variable comparisons)
+- Classpath scanning
+- Manager API (implementations for MySQL, Web, Levenshtein search)
+- Intelligent Object Mapper (similarity based key/variable comparisons)
 - Configuration system (JSON Default, supports object mapping)
+- Language System
 - File manager
 - Plenty of addons
   - MySQL API
