@@ -78,7 +78,7 @@ public final class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public Scanner providesScanner() {
-        return new Reflections(config.getPckg(),
+        return new Reflections(config.getPckg(), config.getPckgExclusions(),
                 new MethodAnnotationsScanner(),
                 new MethodParameterScanner(),
                 new TypeAnnotationsScanner(),

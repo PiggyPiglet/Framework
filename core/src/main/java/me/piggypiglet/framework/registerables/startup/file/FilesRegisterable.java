@@ -39,6 +39,7 @@ import me.piggypiglet.framework.utils.annotations.addon.File;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class FilesRegisterable extends StartupRegisterable {
@@ -50,6 +51,7 @@ public final class FilesRegisterable extends StartupRegisterable {
     @Override
     protected void execute() {
         final List<FileData> files = new ArrayList<>(framework.getFiles());
+        Collections.sort(files);
 
         frameworkBootstrap.getAddons().values().stream()
                 .map(Addon::files)
@@ -65,7 +67,22 @@ public final class FilesRegisterable extends StartupRegisterable {
         files.forEach(f -> {
             try {
                 final String name = f.getName();
-                final String internalPath = f.getInternalPath();
+                final String internalPath;
+
+                if (f.getInternalConfigPathReference() != null) {
+                    final FileData.ConfigPathReference path = f.getInternalConfigPathReference();
+
+                    String value = fileManager.getConfig(path.getConfig()).getString(path.getPath(), path.getDef());
+
+                    if (path.getMapper() != null) {
+                        value = path.getMapper().apply(value);
+                    }
+
+                    internalPath = "/" + value;
+                } else {
+                    internalPath = f.getInternalPath();
+                }
+
                 final String externalPath = f.getExternalPath();
                 final Class<? extends Annotation> annotation = f.getAnnotation();
 

@@ -24,19 +24,32 @@
 
 package me.piggypiglet.framework.file.objects;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
+import java.util.function.Function;
 
-public final class FileData {
+public final class FileData implements Comparable<FileData> {
     private final boolean config;
     private final String name;
     private final String internalPath;
+    private final ConfigPathReference internalConfigPathReference;
     private final String externalPath;
     private final Class<? extends Annotation> annotation;
 
-    public FileData(boolean config, String name, String internalPath, String externalPath, Class<? extends Annotation> annotation) {
+    public FileData(boolean config, String name, @Nonnull String internalPath, String externalPath, Class<? extends Annotation> annotation) {
         this.config = config;
         this.name = name;
         this.internalPath = internalPath;
+        this.internalConfigPathReference = null;
+        this.externalPath = externalPath;
+        this.annotation = annotation;
+    }
+
+    public FileData(boolean config, String name, @Nonnull ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
+        this.config = config;
+        this.name = name;
+        this.internalPath = null;
+        this.internalConfigPathReference = internalPath;
         this.externalPath = externalPath;
         this.annotation = annotation;
     }
@@ -49,6 +62,10 @@ public final class FileData {
         return internalPath;
     }
 
+    public ConfigPathReference getInternalConfigPathReference() {
+        return internalConfigPathReference;
+    }
+
     public String getExternalPath() {
         return externalPath;
     }
@@ -59,5 +76,48 @@ public final class FileData {
 
     public boolean isConfig() {
         return config;
+    }
+
+    @Override
+    public int compareTo(@Nonnull FileData fileData) {
+        if (fileData.internalPath == null) {
+            return -1;
+        }
+
+        return 1;
+    }
+
+    public static class ConfigPathReference {
+        private final String config;
+        private final String path;
+        private final String def;
+        private final Function<String, String> mapper;
+
+        public ConfigPathReference(String config, String path, String def) {
+            this(config, path, def, null);
+        }
+
+        public ConfigPathReference(String config, String path, String def, Function<String, String> mapper) {
+            this.config = config;
+            this.path = path;
+            this.def = def;
+            this.mapper = mapper;
+        }
+
+        public String getConfig() {
+            return config;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public String getDef() {
+            return def;
+        }
+
+        public Function<String, String> getMapper() {
+            return mapper;
+        }
     }
 }

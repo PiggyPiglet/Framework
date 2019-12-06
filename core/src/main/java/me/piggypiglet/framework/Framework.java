@@ -45,6 +45,7 @@ import java.util.stream.Stream;
 public final class Framework {
     private final MainBinding main;
     private final String pckg;
+    private final String[] pckgExclusions;
     private final Injector injector;
     private final List<RegisterableData> startupRegisterables;
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
@@ -58,12 +59,13 @@ public final class Framework {
     private final CustomLang customLang;
     private final boolean debug;
 
-    private Framework(MainBinding main, String pckg, Injector injector, List<RegisterableData> startupRegisterables,
+    private Framework(MainBinding main, String pckg, String[] pckgExclusions, Injector injector, List<RegisterableData> startupRegisterables,
                       List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files,
                       int threads, Map<Class<?>, ConfigInfo> configs, String configDir, boolean overrideLangFile, ConfigInfo langConfig,
                       CustomLang customLang, boolean debug) {
         this.main = main;
         this.pckg = pckg;
+        this.pckgExclusions = pckgExclusions;
         this.injector = injector;
         this.startupRegisterables = startupRegisterables;
         this.shutdownRegisterables = shutdownRegisterables;
@@ -108,6 +110,14 @@ public final class Framework {
      */
     public String getPckg() {
         return pckg;
+    }
+
+    /**
+     * Get any packages that should be excluded when scanning
+     * @return String array
+     */
+    public String[] getPckgExclusions() {
+        return pckgExclusions;
     }
 
     /**
@@ -193,6 +203,7 @@ public final class Framework {
     public static final class FrameworkBuilder {
         private Object main = "d-main";
         private String pckg = "d-pckg";
+        private String[] pckgExclusions = new String[]{};
         private Injector injector = null;
         private List<RegisterableData> startupRegisterables = new ArrayList<>();
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
@@ -234,8 +245,9 @@ public final class Framework {
          * @param pckg Application's package
          * @return FrameworkBuilder
          */
-        public final FrameworkBuilder pckg(String pckg) {
+        public final FrameworkBuilder pckg(String pckg, String... exclusions) {
             this.pckg = pckg;
+            this.pckgExclusions = exclusions;
             return this;
         }
 
@@ -290,6 +302,11 @@ public final class Framework {
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Class<? extends Annotation> annotation) {
+            files.add(new FileData(config, name, internalPath, externalPath, annotation));
+            return this;
+        }
+
+        public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
             files.add(new FileData(config, name, internalPath, externalPath, annotation));
             return this;
         }
@@ -388,7 +405,8 @@ public final class Framework {
 
             if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
 
-            return new Framework((MainBinding) main, pckg, injector, startupRegisterables, shutdownRegisterables, commandPrefix, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
+            return new Framework((MainBinding) main, pckg, pckgExclusions, injector, startupRegisterables, shutdownRegisterables,
+                    commandPrefix, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
         }
     }
 }

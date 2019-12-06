@@ -95,7 +95,7 @@ public abstract class Scanner {
         return provideFieldsAnnotatedWith(annotation).stream().filter(c -> notDisabled(c.getDeclaringClass())).collect(Collectors.toSet());
     }
 
-    private boolean notDisabled(Class clazz) {
+    private boolean notDisabled(Class<?> clazz) {
         return !clazz.isAnnotationPresent(Disabled.class);
     }
 }

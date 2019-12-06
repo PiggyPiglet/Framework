@@ -26,14 +26,19 @@ package me.piggypiglet.framework.scanning.implementations;
 
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.scanning.Scanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -42,11 +47,16 @@ import java.util.stream.Collectors;
 public final class Reflections extends Scanner {
     private final Set<org.reflections.Reflections> reflections;
 
-    public Reflections(String pckg, org.reflections.scanners.Scanner... scanners) {
-        this.reflections = new HashSet<>(Arrays.asList(
-                new org.reflections.Reflections(pckg, scanners),
-                new org.reflections.Reflections(Framework.class.getPackage().getName(), scanners)
+    public Reflections(String pckg, String[] exclusions, org.reflections.scanners.Scanner... scanners) {
+        this.reflections = new HashSet<>(Collections.singletonList(
+            reflections(pckg, exclusions, scanners)
         ));
+
+        final String frameworkPackage = Framework.class.getPackage().getName();
+
+        if (!frameworkPackage.startsWith(pckg)) {
+            reflections.add(reflections(frameworkPackage, exclusions, scanners));
+        }
     }
 
     @Override
@@ -72,5 +82,18 @@ public final class Reflections extends Scanner {
     @Override
     protected Set<Field> provideFieldsAnnotatedWith(Class<? extends Annotation> annotation) {
         return reflections.stream().flatMap(r -> r.getFieldsAnnotatedWith(annotation).stream()).collect(Collectors.toSet());
+    }
+
+    private org.reflections.Reflections reflections(String pckg, String[] exclusions, org.reflections.scanners.Scanner... scanners) {
+        return new org.reflections.Reflections(new ConfigurationBuilder()
+                .useParallelExecutor()
+                .setUrls(ClasspathHelper.forPackage(pckg))
+                .setScanners(scanners)
+                .filterInputsBy(Arrays.stream(exclusions).collect(Collector.of(
+                        FilterBuilder::new,
+                        FilterBuilder::excludePackage,
+                        (b, e) -> b
+                )))
+        );
     }
 }
