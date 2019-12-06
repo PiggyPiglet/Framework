@@ -26,27 +26,27 @@ package me.piggypiglet.framework.guice.objects;
 
 import java.lang.annotation.Annotation;
 
-public final class AnnotatedBinding {
-    private final Class clazz;
+public final class AnnotatedBinding<T> {
+    private final Class<? super T> clazz;
     private final Object annotation;
-    private final Object instance;
+    private final T instance;
     private boolean object;
 
-    public AnnotatedBinding(Class clazz, Annotation annotation, Object instance) {
+    public AnnotatedBinding(Class<? super T> clazz, Annotation annotation, T instance) {
         this.object = true;
         this.clazz = clazz;
         this.annotation = annotation;
         this.instance = instance;
     }
 
-    public AnnotatedBinding(Class clazz, Class<? extends Annotation> annotation, Object instance) {
+    public AnnotatedBinding(Class<? super T> clazz, Class<? extends Annotation> annotation, T instance) {
         this.object = false;
         this.clazz = clazz;
         this.annotation = annotation;
         this.instance = instance;
     }
 
-    public Class getClazz() {
+    public Class<? super T> getClazz() {
         return clazz;
     }
 
@@ -59,7 +59,7 @@ public final class AnnotatedBinding {
         return (Annotation) annotation;
     }
 
-    public Object getInstance() {
+    public T getInstance() {
         return instance;
     }
 

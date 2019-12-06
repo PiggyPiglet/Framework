@@ -36,7 +36,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public final class JarLoader {
-    @Inject private URLClassLoader urlClassLoader;
+    private final URLClassLoader urlClassLoader;
+
+    @Inject
+    public JarLoader(ClassLoader loader) {
+        urlClassLoader = (URLClassLoader) loader;
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger("JarLoader");
     private static final Method ADD_URL_METHOD;

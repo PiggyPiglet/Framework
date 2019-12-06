@@ -33,9 +33,9 @@ import java.util.*;
 public abstract class StartupRegisterable {
     protected Injector injector;
 
-    private final Map<Class, Object> bindings = new HashMap<>();
-    private final List<AnnotatedBinding> annotatedBindings = new ArrayList<>();
-    private final List<Class> staticInjections = new ArrayList<>();
+    private final Map<Class<?>, Object> bindings = new HashMap<>();
+    private final List<AnnotatedBinding<?>> annotatedBindings = new ArrayList<>();
+    private final List<Class<?>> staticInjections = new ArrayList<>();
 
     /**
      * Code to be ran on the registerable's execution.
@@ -47,7 +47,7 @@ public abstract class StartupRegisterable {
      * @param interfaze Class the object will be referenced by
      * @param instance Object that will be binded to the class
      */
-    protected void addBinding(Class interfaze, Object instance) {
+    protected <T> void addBinding(Class<? super T> interfaze, T instance) {
         bindings.put(interfaze, instance);
     }
 
@@ -65,9 +65,9 @@ public abstract class StartupRegisterable {
      * @param annotation Class extending annotation
      * @param instance Instance of the object to be binded.
      */
-    protected void addAnnotatedBinding(Class interfaze, Class<? extends Annotation> annotation, Object instance) {
+    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Class<? extends Annotation> annotation, T instance) {
         annotatedBindings.add(
-                new AnnotatedBinding(interfaze, annotation, instance)
+                new AnnotatedBinding<>(interfaze, annotation, instance)
         );
     }
 
@@ -77,9 +77,9 @@ public abstract class StartupRegisterable {
      * @param annotation Annotation instance
      * @param instance Instance of the object to be binded
      */
-    protected void addAnnotatedBinding(Class interfaze, Annotation annotation, Object instance) {
+    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Annotation annotation, T instance) {
         annotatedBindings.add(
-                new AnnotatedBinding(interfaze, annotation, instance)
+                new AnnotatedBinding<>(interfaze, annotation, instance)
         );
     }
 
@@ -87,7 +87,7 @@ public abstract class StartupRegisterable {
      * Request classes to have their static injection honoured
      * @param classes Varargs of classes
      */
-    protected void requestStaticInjections(Class... classes) {
+    protected void requestStaticInjections(Class<?>... classes) {
         staticInjections.addAll(Arrays.asList(classes));
     }
 
@@ -104,7 +104,7 @@ public abstract class StartupRegisterable {
      * Get a map of bindings to be made
      * @return Map with Class as key, Object as value
      */
-    public Map<Class, Object> getBindings() {
+    public Map<Class<?>, Object> getBindings() {
         return bindings;
     }
 
@@ -112,7 +112,7 @@ public abstract class StartupRegisterable {
      * Get a list of annotated binding objects set by the registerable
      * @return List of annotatedbinding data objects
      */
-    public List<AnnotatedBinding> getAnnotatedBindings() {
+    public List<AnnotatedBinding<?>> getAnnotatedBindings() {
         return annotatedBindings;
     }
 
@@ -120,7 +120,7 @@ public abstract class StartupRegisterable {
      * Get any static injections requested by the registerable
      * @return List of classes
      */
-    public List<Class> getStaticInjections() {
+    public List<Class<?>> getStaticInjections() {
         return staticInjections;
     }
 }

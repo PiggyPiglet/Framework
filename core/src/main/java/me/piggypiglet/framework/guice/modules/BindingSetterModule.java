@@ -33,32 +33,38 @@ import java.util.List;
 import java.util.Map;
 
 public final class BindingSetterModule extends AbstractModule {
-    private final Map<Class, Object> providers;
-    private final List<AnnotatedBinding> annotatedBindings;
-    private final Class[] staticInjections;
+    private final Map<Class<?>, Object> providers;
+    private final List<AnnotatedBinding<?>> annotatedBindings;
+    private final Class<?>[] staticInjections;
 
-    public BindingSetterModule(Map<Class, Object> providers, List<AnnotatedBinding> annotatedBindings, Class... staticInjections) {
+    public BindingSetterModule(Map<Class<?>, Object> providers, List<AnnotatedBinding<?>> annotatedBindings, Class<?>... staticInjections) {
         this.providers = providers;
         this.annotatedBindings = annotatedBindings;
         this.staticInjections = staticInjections;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void configure() {
-        providers.forEach((c, o) -> bind(c).toInstance(o));
-        annotatedBindings.forEach(b -> {
-            AnnotatedBindingBuilder bind = bind(b.getClazz());
-            LinkedBindingBuilder link;
-
-            if (b.isObject()) {
-                link = bind.annotatedWith(b.getObjectAnnotation());
-            } else {
-                link = bind.annotatedWith(b.getClassAnnotation());
-            }
-
-            link.toInstance(b.getInstance());
-        });
+        providers.forEach(this::bind);
+        annotatedBindings.forEach(this::bindAnnotation);
         requestStaticInjection(staticInjections);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void bind(Class<?> clazz, T instance) {
+        bind((Class<? super T>) clazz).toInstance(instance);
+    }
+
+    private <T> void bindAnnotation(AnnotatedBinding<T> binding) {
+        final AnnotatedBindingBuilder<? super T> bind = bind(binding.getClazz());
+        final LinkedBindingBuilder<? super T> link;
+
+        if (binding.isObject()) {
+            link = bind.annotatedWith(binding.getObjectAnnotation());
+        } else {
+            link = bind.annotatedWith(binding.getClassAnnotation());
+        }
+
+        link.toInstance(binding.getInstance());
     }
 }

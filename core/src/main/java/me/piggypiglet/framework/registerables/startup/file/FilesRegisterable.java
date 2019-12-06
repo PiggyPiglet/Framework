@@ -36,6 +36,7 @@ import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,11 +64,16 @@ public final class FilesRegisterable extends StartupRegisterable {
 
         files.forEach(f -> {
             try {
-                addAnnotatedBinding(
-                        f.isConfig() ? FileConfiguration.class : FileWrapper.class,
-                        f.getAnnotation(),
-                        f.isConfig() ? fileManager.loadConfig(f.getName(), f.getInternalPath(), f.getExternalPath()) : fileManager.loadFile(f.getName(), f.getInternalPath(), f.getExternalPath())
-                );
+                final String name = f.getName();
+                final String internalPath = f.getInternalPath();
+                final String externalPath = f.getExternalPath();
+                final Class<? extends Annotation> annotation = f.getAnnotation();
+
+                if (f.isConfig()) {
+                    addAnnotatedBinding(FileConfiguration.class, annotation, fileManager.loadConfig(name, internalPath, externalPath));
+                } else {
+                    addAnnotatedBinding(FileWrapper.class, annotation, fileManager.loadFile(name, internalPath, externalPath));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

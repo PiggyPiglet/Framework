@@ -33,8 +33,11 @@ import me.piggypiglet.framework.utils.annotations.id.Ids;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Parameter;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class GuildBindingRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;
@@ -42,11 +45,9 @@ public final class GuildBindingRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        final Set<IDInfo> info = scanner.getParametersInConstructorsAnnotatedWith(ID.class).stream()
-                .map(p -> new IDInfo(p.getType(), p.getAnnotation(ID.class)))
+        final Set<IDInfo> info = Stream.concat(scanner.getParametersInConstructorsAnnotatedWith(ID.class).stream(), scanner.getFieldsAnnotatedWith(ID.class).stream())
+                .map(p -> new IDInfo(p instanceof Parameter ? ((Parameter) p).getType() : ((Field) p).getType(), p.getAnnotation(ID.class)))
                 .collect(Collectors.toSet());
-
-        scanner.getFieldsAnnotatedWith(ID.class).forEach(f -> info.add(new IDInfo(f.getType(), f.getAnnotation(ID.class))));
 
         info.forEach(i -> {
             switch (i.getType().getSimpleName().toLowerCase()) {
