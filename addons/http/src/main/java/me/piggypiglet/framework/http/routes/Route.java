@@ -39,11 +39,11 @@ public abstract class Route {
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
      * @param route Route
-     * @param HEADERS Optional headers to append to the page
+     * @param headers Optional headers to append to the page
      */
-    protected Route(String route, Header... HEADERS) {
+    protected Route(String route, Header... headers) {
         this.route = route;
-        Route.HEADERS.addAll(Arrays.asList(HEADERS));
+        Route.HEADERS.addAll(Arrays.asList(headers));
     }
 
     /**

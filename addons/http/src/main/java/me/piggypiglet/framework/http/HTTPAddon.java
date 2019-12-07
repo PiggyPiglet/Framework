@@ -24,10 +24,12 @@
 
 package me.piggypiglet.framework.http;
 
+import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
 import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;
 import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
+import me.piggypiglet.framework.http.registerables.startup.PermissionRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.Config;
@@ -37,7 +39,11 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 @Addon(
         startup = {
                 @Startup(RoutesRegisterable.class),
-                @Startup(HTTPRegisterable.class)
+                @Startup(HTTPRegisterable.class),
+                @Startup(
+                        value = PermissionRegisterable.class,
+                        priority = BootPriority.BEFORE_ADDONS
+                )
         },
         files = {@File(
                 config = true,
@@ -54,7 +60,10 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         )},
         config = @Config(
                 name = "http",
-                keys = {"host", "port", "ssl.enabled", "ssl.path", "ssl.password", "basic-authentication.enabled", "basic-authentication.token"}
+                keys = {
+                        "host", "port", "ssl.enabled", "ssl.path", "ssl.password", "standard-authentication", "standard-authentication.enabled",
+                        "standard-authentication.tokens"
+                }
         ),
         shutdown = ShutdownHTTP.class
 )
