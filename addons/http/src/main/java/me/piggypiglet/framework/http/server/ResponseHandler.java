@@ -59,14 +59,20 @@ public final class ResponseHandler {
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
         for (Route route : routes) {
             if (session.getUri().toLowerCase().replace("/", "").startsWith(route.getRoute())) {
-                if (route.getClass().getAnnotation(Authenticated.class) != null) {
-                    Map<String, Object> config = configManager.getConfigs().get(HTTPAddon.class).getItems();
+                final Authenticated auth = route.getClass().getAnnotation(Authenticated.class);
 
-                    final Collection<String> perms = permStore.get(session.getHeaders().getOrDefault("auth", "test")).getPermissions();
+                if (auth != null) {
+                    final NanoHTTPD.Response noPermission = NanoHTTPD.newFixedLengthResponse("<p>No permission.</p>");
+                    final Map<String, Object> config = configManager.getConfigs().get(HTTPAddon.class).getItems();
+                    final String token = session.getHeaders().getOrDefault("auth", "null");
+
+                    if (!permStore.exists(token)) return noPermission;
+
+                    final Collection<String> perms = permStore.get(token).getPermissions();
 
                     if ((boolean) config.get("standard-authentication.enabled") &&
-                            (!perms.contains(route.getClass().getAnnotation(Authenticated.class).permission()) && !perms.contains("*"))) {
-                        return NanoHTTPD.newFixedLengthResponse("<p>No permission.</p>");
+                            (!auth.permission().isEmpty() && !perms.contains(auth.permission()) && !perms.contains("*"))) {
+                        return noPermission;
                     }
                 }
 

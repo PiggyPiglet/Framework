@@ -32,6 +32,7 @@ public final class PermissionRegisterable extends StartupRegisterable {
             addBinding(typeLiteral, (Manager<Permission>) manager.get());
         } else {
             addBinding(typeLiteral, defaultPermissionStore);
+            defaultPermissionStore.setup();
         }
     }
 }

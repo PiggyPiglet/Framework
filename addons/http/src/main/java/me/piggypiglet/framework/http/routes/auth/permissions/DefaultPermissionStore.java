@@ -18,8 +18,6 @@ import java.util.Map;
 public final class DefaultPermissionStore extends Manager<Permission> {
     @Inject private ConfigManager configManager;
 
-    public static final Permission DEFAULT = new Permission(null, null);
-
     private final Map<String, Permission> permissions = new HashMap<>();
 
     @SuppressWarnings("unchecked")
