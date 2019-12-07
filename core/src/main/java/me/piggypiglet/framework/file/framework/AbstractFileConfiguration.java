@@ -29,14 +29,17 @@ import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractFileConfiguration implements FileConfiguration {
     private final Predicate<String> match;
-    private final Flattener flattener;
+    private final Flattener[] flatteners;
 
     protected static final String NULL_STRING = "null";
     protected static final int NULL_NUM = 0;
@@ -52,9 +55,9 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
         this(match, Flattener.builder(null).build());
     }
 
-    protected AbstractFileConfiguration(Predicate<String> match, Flattener flattener) {
+    protected AbstractFileConfiguration(Predicate<String> match, Flattener... flatteners) {
         this.match = match;
-        this.flattener = flattener;
+        this.flatteners = flatteners;
     }
 
     /**
@@ -150,8 +153,10 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
     protected abstract Map<String, Object> retrieveAll();
 
     public Map<String, Object> getAll() {
-        return retrieveAll().entrySet().stream()
-                .flatMap(flattener::flatten)
+        final AtomicReference<Stream<Map.Entry<String, Object>>> stream = new AtomicReference<>(retrieveAll().entrySet().stream());
+        Arrays.stream(flatteners).forEach(f -> stream.set(stream.get().flatMap(f::flatten)));
+
+        return stream.get()
                 .distinct()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }

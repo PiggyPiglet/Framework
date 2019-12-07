@@ -29,6 +29,7 @@ import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.utils.FileUtils;
 
@@ -119,6 +120,14 @@ public final class FileManager {
         } else {
             FileWrapper file = (FileWrapper) item;
             file.setFileContent(FileUtils.readFileToString(file.getFile()));
+        }
+    }
+
+    public void save(String name) throws Exception {
+        Object item = get(name);
+
+        if (item instanceof MutableFileConfiguration) {
+            ((MutableFileConfiguration) item).save();
         }
     }
 

@@ -42,4 +42,9 @@ public final class MapFileConfigurationSection extends MapFileConfiguration {
     protected Map<String, Object> provide(File file, String fileContent) {
         return items;
     }
+
+    @Override
+    protected String convert(Map<String, Object> items) {
+        throw new UnsupportedOperationException("Map sections shouldn't be converted via this API.");
+    }
 }

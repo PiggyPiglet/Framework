@@ -26,16 +26,22 @@ package me.piggypiglet.framework.file.framework.implementations.map;
 
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
 import me.piggypiglet.framework.file.framework.objects.Flattener;
 import me.piggypiglet.framework.utils.map.Maps;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class MapFileConfiguration extends AbstractFileConfiguration {
+public abstract class MapFileConfiguration extends AbstractFileConfiguration implements MutableFileConfiguration {
     private Map<String, Object> items;
     private Map<String, Object> flat;
 
@@ -53,6 +59,8 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration {
     }
 
     protected abstract Map<String, Object> provide(File file, String fileContent);
+
+    protected abstract String convert(Map<String, Object> items);
 
     @Override
     protected void internalLoad(File file, String fileContent) {
@@ -124,6 +132,36 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration {
     @Override
     protected Map<String, Object> retrieveAll() {
         return items;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void set(String path, Object value) {
+        final String[] split = path.split("\\.");
+
+        if (split.length == 0) {
+            items = new HashMap<>();
+            flat = new HashMap<>();
+            return;
+        }
+
+        final String key = split[split.length - 1];
+        final Map<String, Object> parent = split.length == 1 ? items : (Map<String, Object>) get(String.join(".", Arrays.copyOf(split, split.length - 1)));
+
+        if (value == null) {
+            parent.remove(key);
+            flat.keySet().stream().filter(o -> o.startsWith(path)).forEach(flat::remove);
+        } else {
+            parent.put(key, value);
+            flat.put(path, value);
+        }
+    }
+
+    @Override
+    public void save() throws Exception {
+        final String content = convert(items);
+
+        Files.write(Paths.get(getFile().toURI()), Arrays.asList(content.split("\n")), StandardCharsets.UTF_8);
     }
 
     private FileConfiguration configSection(Map<String, Object> items) {

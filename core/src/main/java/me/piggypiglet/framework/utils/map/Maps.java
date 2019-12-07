@@ -25,12 +25,10 @@
 package me.piggypiglet.framework.utils.map;
 
 import javax.annotation.Nonnull;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Maps {
@@ -106,6 +104,21 @@ public class Maps {
                     .flatMap(e -> flatten(e, clazz, flatten));
         }
 
+        if (entry.getValue() instanceof Collection<?> && ((Collection<?>) entry.getValue()).stream().anyMatch(clazz::isInstance)) {
+            return Stream.of(new AbstractMap.SimpleEntry<>(entry.getKey(), ((Collection<?>) entry.getValue()).stream()
+                    .map(o -> {
+                        if (clazz.isInstance(o)) {
+                            return flatten.apply((T) o).entrySet().stream()
+                                    .flatMap(e -> flatten(new AbstractMap.SimpleEntry<>(entry.getKey() + "." + e.getKey(), e.getValue()), clazz, flatten))
+                                    .distinct()
+                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                        }
+
+                        return entry;
+                    })
+                    .collect(Collectors.toList())));
+        }
+
         return Stream.of(entry);
     }
 
@@ -129,17 +142,17 @@ public class Maps {
         int i = 1;
         Map<String, T> endObject = (Map<String, T>) map.get(keys[0]);
 
-        while (instanceOfMap(map, endObject.get(keys[i]))) {
+        while (instanceOfStringKeyMap(endObject.get(keys[i]))) {
             endObject = (Map<String, T>) endObject.get(keys[i++]);
         }
 
         return endObject.get(keys[i]);
     }
 
-    private static <T> boolean instanceOfMap(Map<String, T> map, Object obj) {
+    private static boolean instanceOfStringKeyMap(Object obj) {
         if (obj instanceof Map) {
             final Set<?> keys = ((Map<?, ?>) obj).keySet();
-            return keys.size() >= 1 && keys.toArray()[0] instanceof String;
+            return keys.size() >= 1 && keys.stream().allMatch(s -> s instanceof String);
         }
 
         return false;

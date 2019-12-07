@@ -29,11 +29,28 @@ import me.piggypiglet.framework.file.framework.objects.Flattener;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.YamlConstructor;
+import org.bukkit.configuration.file.YamlRepresenter;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.File;
 import java.util.Map;
 
 public final class SpigotFileConfiguration extends MapFileConfiguration {
+    private static final String BLANK_CONFIG = "{}\n";
+    private static final DumperOptions OPTIONS = new DumperOptions();
+    private static final Representer REPRESENTER = new YamlRepresenter();
+
+    private final ThreadLocal<Yaml> yaml = ThreadLocal.withInitial(() -> new Yaml(new YamlConstructor(), REPRESENTER, OPTIONS));
+
+    static {
+        OPTIONS.setIndent(4);
+        OPTIONS.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        REPRESENTER.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+    }
+
     public SpigotFileConfiguration() {
         super(s -> s.endsWith(".yml"), Flattener.builder(MemorySection.class).flattener(m -> m.getValues(true)).build());
     }
@@ -49,5 +66,16 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
         }
 
         return config.getValues(true);
+    }
+
+    @Override
+    protected String convert(Map<String, Object> items) {
+        String dump = yaml.get().dump(items);
+
+        if (dump.equals(BLANK_CONFIG)) {
+            dump = "";
+        }
+
+        return dump;
     }
 }

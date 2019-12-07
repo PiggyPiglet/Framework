@@ -25,102 +25,68 @@
 package me.piggypiglet.framework.nukkit.file;
 
 import cn.nukkit.utils.Config;
-import cn.nukkit.utils.ConfigSection;
 import com.google.common.io.Files;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
+import com.google.gson.GsonBuilder;
+import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
 import me.piggypiglet.framework.utils.StringUtils;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
-public final class NukkitFileConfiguration extends AbstractFileConfiguration {
-    private Config config;
-
+public final class NukkitFileConfiguration extends MapFileConfiguration {
     public NukkitFileConfiguration() {
         super(s -> StringUtils.anyEndWith(s, ".properties", ".con", ".conf", ".config", ".yml", ".yaml", ".txt", ".list", ".enum"));
     }
 
+    @Override
+    protected Map<String, Object> provide(File file, String fileContent) {
+        return new Config(file).getAll();
+    }
+
     @SuppressWarnings("UnstableApiUsage")
-    private NukkitFileConfiguration(Map<String, Object> map) {
-        this();
-
-        config = new Config(
-                getFile(),
-                Config.format.get(Files.getFileExtension(getFile().getName())),
-                new ConfigSection((LinkedHashMap<String, Object>) map)
-        );
-    }
-
     @Override
-    protected void internalLoad(File file, String fileContent) {
-        config = new Config(file);
-    }
+    protected String convert(Map<String, Object> items) {
+        StringBuilder content = new StringBuilder();
 
-    @Override
-    protected Map<String, Object> retrieveAll() {
-        return config.getAll();
-    }
+        // https://github.com/NukkitX/Nukkit/blob/master/src/main/java/cn/nukkit/utils/Config.java#L216-L254
+        switch (Config.format.get(Files.getFileExtension(getFile().getName()))) {
+            case Config.PROPERTIES:
+                content = new StringBuilder("#Properties Config file\r\n#" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + "\r\n");
 
-    @Override
-    public Object get(String path) {
-        return config.get(path);
-    }
+                for (Object o : items.entrySet()) {
+                    Map.Entry entry = (Map.Entry) o;
+                    Object v = entry.getValue();
+                    Object k = entry.getKey();
+                    if (v instanceof Boolean) {
+                        v = (Boolean) v ? "on" : "off";
+                    }
+                    content.append(k).append("=").append(v).append("\r\n");
+                }
+                break;
 
-    @Override
-    public FileConfiguration getConfigSection(String path) {
-        ConfigSection section = config.getSection(path);
+            case Config.JSON:
+                content = new StringBuilder(new GsonBuilder().setPrettyPrinting().create().toJson(items));
+                break;
 
-        if (section != null) {
-            return sectionToFileConfiguration(section);
+            case Config.YAML:
+                DumperOptions dumperOptions = new DumperOptions();
+                dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+                Yaml yaml = new Yaml(dumperOptions);
+                content = new StringBuilder(yaml.dump(items));
+                break;
+
+            case Config.ENUM:
+                for (Object o : items.entrySet()) {
+                    Map.Entry entry = (Map.Entry) o;
+                    content.append(entry.getKey()).append("\r\n");
+                }
+                break;
         }
 
-        return null;
-    }
-
-    @Override
-    public String getString(String path) {
-        return config.getString(path);
-    }
-
-    @Override
-    public Integer getInt(String path) {
-        return config.getInt(path);
-    }
-
-    @Override
-    public Long getLong(String path) {
-        return config.getLong(path);
-    }
-
-    @Override
-    public Double getDouble(String path) {
-        return config.getDouble(path);
-    }
-
-    @Override
-    public Boolean getBoolean(String path) {
-        return config.getBoolean(path);
-    }
-
-    @Override
-    public List<String> getStringList(String path) {
-        return config.getStringList(path);
-    }
-
-    @Override
-    public List<FileConfiguration> getConfigList(String path) {
-        return null;
-    }
-
-    @Override
-    public List<?> getList(String path) {
-        return config.getList(path);
-    }
-
-    private FileConfiguration sectionToFileConfiguration(ConfigSection section) {
-        return new NukkitFileConfiguration(section.getAllMap());
+        return content.toString();
     }
 }

@@ -85,7 +85,7 @@ public final class FileUtils {
      * @throws Exception when read process errors
      */
     @SuppressWarnings("UnstableApiUsage")
-    public static String readEmbedToString(String path, Class clazz) throws Exception {
+    public static String readEmbedToString(String path, Class<?> clazz) throws Exception {
         return Resources.toString(clazz.getResource(path), StandardCharsets.UTF_8);
     }
 
