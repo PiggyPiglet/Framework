@@ -12,7 +12,7 @@
     "enabled": false,
     "tokens": [
       {
-        "token": "",
+        "pub": "",
         "permissions": [
           "*"
         ]

@@ -58,7 +58,14 @@ public final class ResponseHandler {
      */
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
         for (Route route : routes) {
-            if (session.getUri().toLowerCase().replace("/", "").startsWith(route.getRoute())) {
+            final String routeStr = route.getRoute();
+            final String uri = session.getUri().toLowerCase().replace("/", "");
+
+            if (uri.startsWith(routeStr)) {
+                final String sanitizedUri = uri.replace(routeStr, "");
+
+                if (!sanitizedUri.isEmpty() && !sanitizedUri.startsWith("?")) continue;
+
                 final Authenticated auth = route.getClass().getAnnotation(Authenticated.class);
 
                 if (auth != null) {

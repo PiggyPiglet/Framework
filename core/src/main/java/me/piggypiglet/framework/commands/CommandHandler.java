@@ -57,7 +57,7 @@ public class CommandHandler {
     private Command helpCommand;
 
     public void handle(User user, String message, String handler) {
-        if (message.startsWith(framework.getCommandPrefix())) {
+        if (message.toLowerCase().startsWith(framework.getCommandPrefix().toLowerCase())) {
             message = message.replaceFirst(framework.getCommandPrefix(), "").trim();
 
             if (message.isEmpty()) {
@@ -146,9 +146,9 @@ public class CommandHandler {
     }
 
     private boolean startsWith(String msg, String q) {
-        msg = msg.toLowerCase();
-        q = q.toLowerCase();
+        String msg_ = msg.toLowerCase();
+        String q_ = q.toLowerCase();
 
-        return msg.endsWith(q) || msg.startsWith(q + " ");
+        return msg_.endsWith(q_) || msg_.startsWith(q_ + " ");
     }
 }
