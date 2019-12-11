@@ -26,19 +26,17 @@ package me.piggypiglet.framework.scanning.implementations;
 
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.utils.StringUtils;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -89,11 +87,7 @@ public final class Reflections extends Scanner {
                 .useParallelExecutor()
                 .setUrls(ClasspathHelper.forPackage(pckg))
                 .setScanners(scanners)
-                .filterInputsBy(Arrays.stream(exclusions).collect(Collector.of(
-                        FilterBuilder::new,
-                        FilterBuilder::excludePackage,
-                        (b, e) -> b
-                )))
+                .filterInputsBy(s -> !StringUtils.anyStartWith(s, exclusions))
         );
     }
 }
