@@ -42,5 +42,4 @@ import me.piggypiglet.framework.utils.annotations.registerable.Startup;
         ),
         @Startup(EventFinderRegisterable.class)
 })
-public final class BukkitAddon {
-}
+public final class BukkitAddon {}

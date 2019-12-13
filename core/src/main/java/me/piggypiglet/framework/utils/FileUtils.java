@@ -95,8 +95,7 @@ public final class FileUtils {
      * @return checksum
      */
     public static String md5Checksum(File file) {
-        try {
-            InputStream fis = new FileInputStream(file);
+        try (InputStream fis = new FileInputStream(file)) {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] buffer = new byte[1024];
             int read;
@@ -108,8 +107,6 @@ public final class FileUtils {
                     digest.update(buffer, 0, read);
                 }
             } while (read != -1);
-
-            fis.close();
 
             byte[] checksumBytes = digest.digest();
             StringBuilder checksum = new StringBuilder();

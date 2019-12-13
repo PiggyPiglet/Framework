@@ -17,18 +17,10 @@ public final class MathKeyUtils {
     }
 
     public static BigInteger f2mMultiply(BigInteger a, BigInteger b) {
-        BigInteger result = BigInteger.ZERO, sparse, full;
+        BigInteger result = BigInteger.ZERO;
 
-        if (a.bitCount() > b.bitCount()) {
-            sparse = b;
-            full = a;
-        } else {
-            sparse = b;
-            full = a;
-        }
-
-        for (int i = sparse.bitLength(); i >= 0; i--) {
-            if (sparse.testBit(i)) result = result.xor(full.shiftLeft(i));
+        for (int i = b.bitLength(); i >= 0; i--) {
+            if (b.testBit(i)) result = result.xor(a.shiftLeft(i));
         }
 
         return result;
