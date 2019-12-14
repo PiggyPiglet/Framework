@@ -30,6 +30,7 @@ import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 public final class BungeeUser extends MinecraftUser {
     private static final Class<? extends CommandSender> CONSOLE_COMMAND_SENDER;
@@ -57,6 +58,11 @@ public final class BungeeUser extends MinecraftUser {
     @Override
     protected void sendMessage(String message) {
         sender.sendMessage(TextComponent.fromLegacyText(message));
+    }
+
+    @Override
+    protected void sendJsonMessage(String json) {
+        sender.sendMessage(ComponentSerializer.parse(json));
     }
 
     @Override

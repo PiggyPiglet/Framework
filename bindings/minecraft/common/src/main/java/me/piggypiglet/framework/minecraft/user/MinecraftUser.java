@@ -24,10 +24,14 @@
 
 package me.piggypiglet.framework.minecraft.user;
 
+import com.google.gson.Gson;
 import me.piggypiglet.framework.minecraft.player.Player;
+import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.user.User;
 
 public abstract class MinecraftUser extends User {
+    private static final Gson GSON = new Gson();
+
     /**
      * Provide basic info to the superclass
      *
@@ -36,6 +40,16 @@ public abstract class MinecraftUser extends User {
      */
     protected MinecraftUser(String name, String id) {
         super(name, id);
+    }
+
+    protected abstract void sendJsonMessage(String json);
+
+    public void sendRawMessage(String message) {
+        if (isPlayer()) {
+            sendJsonMessage(GSON.toJson(Text.of(message)));
+        } else {
+            sendMessage(message);
+        }
     }
 
     public abstract boolean isPlayer();

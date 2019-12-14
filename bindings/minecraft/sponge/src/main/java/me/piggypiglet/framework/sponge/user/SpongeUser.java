@@ -54,6 +54,11 @@ public final class SpongeUser extends MinecraftUser {
     }
 
     @Override
+    protected void sendJsonMessage(String json) {
+        src.sendMessage(TextSerializers.JSON.deserialize(json));
+    }
+
+    @Override
     public boolean isPlayer() {
         return src instanceof org.spongepowered.api.entity.living.player.Player;
     }

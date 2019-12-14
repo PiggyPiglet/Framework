@@ -28,6 +28,7 @@ package me.piggypiglet.framework.nukkit.user;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
+import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.nukkit.binding.player.NukkitPlayer;
 
@@ -52,6 +53,14 @@ public final class NukkitUser extends MinecraftUser {
     @Override
     public boolean hasPermission(String permission) {
         return sender.hasPermission(permission);
+    }
+
+    @Override
+    protected void sendJsonMessage(String json) {}
+
+    @Override
+    public void sendRawMessage(String message) {
+        sendMessage(Text.redactJavaTriggers(message));
     }
 
     public boolean isPlayer() {

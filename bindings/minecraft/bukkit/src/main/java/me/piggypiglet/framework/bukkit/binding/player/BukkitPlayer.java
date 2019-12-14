@@ -28,6 +28,7 @@ import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
 import me.piggypiglet.framework.minecraft.world.World;
 import me.piggypiglet.framework.minecraft.world.location.Location;
+import me.piggypiglet.framework.utils.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -35,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -48,13 +50,30 @@ import static me.piggypiglet.framework.bukkit.binding.player.BukkitPlayerUtils.p
 public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     private static Method handleMethod;
     private static Field pingField;
+    private static Field connection;
+    private static Method sendPacket;
+    private static Constructor<?> packetPlayOutChat;
+    private static Method fromJson;
 
     static {
         try {
             final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            final String cb = "org.bukkit.craftbukkit." + version + ".";
+            final String nms = "net.minecraft.server." + version + ".";
 
-            handleMethod = Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftPlayer").getDeclaredMethod("getHandle");
-            pingField = Class.forName("net.minecraft.server." + version + ".EntityPlayer").getDeclaredField("ping");
+            handleMethod = Class.forName(cb + "entity.CraftPlayer").getDeclaredMethod("getHandle");
+
+            final Class<?> entityPlayer = handleMethod.getReturnType();
+
+            pingField = ReflectionUtils.getAccessible(entityPlayer.getDeclaredField("ping"));
+            connection = ReflectionUtils.getAccessible(entityPlayer.getDeclaredField("playerConnection"));
+            sendPacket = ReflectionUtils.getAccessible(connection.getType().getDeclaredMethod("sendPacket", Class.forName(nms + "Packet")));
+
+            final Class<?> packet = Class.forName(nms + "PacketPlayOutChat");
+            final Class<?> component = Class.forName(nms + "IChatBaseComponent");
+
+            packetPlayOutChat = packet.getConstructor(component);
+            fromJson = ReflectionUtils.getAccessible(component.getDeclaredClasses()[0].getDeclaredMethod("a", String.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -297,5 +316,16 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     @Override
     public String getName() {
         return player.getName();
+    }
+
+    public void sendRawMessage(String json) {
+        try {
+            sendPacket.invoke(
+                    connection.get(handleMethod.invoke(getHandle())),
+                    packetPlayOutChat.newInstance(fromJson.invoke(null, json))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -25,7 +25,10 @@
 package me.piggypiglet.framework.utils.map;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,10 +41,6 @@ public class Maps {
 
     public static <K, V, R> Builder<K, V, R> builder(Map<K, V> implementation, @Nonnull R returnInstance, @Nonnull Consumer<Map<K, V>> build) {
         return new Builder<>(implementation, returnInstance, build);
-    }
-
-    public static <K, V> Builder<K, V, Map<K, V>> of() {
-        return of(new HashMap<>());
     }
 
     public static <K, V> Builder<K, V, Map<K, V>> of(Map<K, V> implementation) {

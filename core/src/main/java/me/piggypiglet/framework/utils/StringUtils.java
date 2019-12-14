@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public final class StringUtils {
     }
 
     public static boolean anyStartWith(String str, List<String> elements) {
-        return lowercaseStream(elements).anyMatch(str::startsWith);
+        return anyWith(str, elements, String::startsWith);
     }
 
     public static boolean anyEndWith(String str, String... elements) {
@@ -54,11 +55,32 @@ public final class StringUtils {
     }
 
     public static boolean anyEndWith(String str, List<String> elements) {
-        return lowercaseStream(elements).anyMatch(str::endsWith);
+        return anyWith(str, elements, String::endsWith);
     }
 
-    private static Stream<String> lowercaseStream(List<String> elements) {
-        return elements.stream().map(String::toLowerCase);
+    public static boolean anyContains(String str, String... elements) {
+        return anyContains(str, Arrays.asList(elements));
+    }
+
+    public static boolean anyContains(String str, List<String> elements) {
+        return anyWith(str, elements, String::contains);
+    }
+
+    public static boolean anyMatches(String str, Pattern... patterns) {
+        return anyMatches(str, Arrays.asList(patterns));
+    }
+
+    public static boolean anyMatches(String str, List<Pattern> elements) {
+        return anyWith(str, elements, (p, s) -> p.matcher(s).matches());
+    }
+
+    public static <T> boolean anyWith(String trigger, List<T> elements, BiFunction<T, String, Boolean> test) {
+        return lowercaseStream(elements).anyMatch(s -> test.apply(s, trigger));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Stream<T> lowercaseStream(List<T> elements) {
+        return elements.stream().map(o -> o instanceof String ? (T) ((String) o).toLowerCase() : o);
     }
 
     public static String addonName(Class<?> addon) {

@@ -32,6 +32,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public final class BukkitUser extends MinecraftUser {
+
     private final CommandSender sender;
 
     public BukkitUser(CommandSender sender) {
@@ -41,6 +42,13 @@ public final class BukkitUser extends MinecraftUser {
         );
 
         this.sender = sender;
+    }
+
+    @Override
+    protected void sendJsonMessage(String json) {
+        System.out.println(json);
+
+        ((BukkitPlayer) getAsPlayer()).sendRawMessage(json);
     }
 
     @Override

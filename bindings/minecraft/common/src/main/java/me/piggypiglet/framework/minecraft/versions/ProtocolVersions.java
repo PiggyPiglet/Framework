@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum ProtocolVersions {
+    V1_15(565, 574),
     V1_14(472, 498),
     V1_13(383, 404),
     V1_12(328, 340),

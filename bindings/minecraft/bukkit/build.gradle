@@ -12,5 +12,5 @@ dependencies {
     compile project(":bindings:minecraft:common")
 
     compileOnly 'com.google.guava:guava:28.0-jre'
-    compileOnly 'org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT'
+    compileOnly 'org.bukkit:bukkit:1.15-R0.1-SNAPSHOT'
 }

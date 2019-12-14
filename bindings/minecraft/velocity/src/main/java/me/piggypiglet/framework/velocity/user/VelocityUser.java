@@ -28,6 +28,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import net.kyori.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
 public final class VelocityUser extends MinecraftUser {
@@ -50,6 +51,11 @@ public final class VelocityUser extends MinecraftUser {
     @Override
     public boolean hasPermission(String permission) {
         return source.hasPermission(permission);
+    }
+
+    @Override
+    protected void sendJsonMessage(String json) {
+        source.sendMessage(GsonComponentSerializer.INSTANCE.deserialize(json));
     }
 
     @Override
