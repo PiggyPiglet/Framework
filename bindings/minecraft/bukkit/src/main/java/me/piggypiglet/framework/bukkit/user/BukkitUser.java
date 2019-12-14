@@ -46,8 +46,6 @@ public final class BukkitUser extends MinecraftUser {
 
     @Override
     protected void sendJsonMessage(String json) {
-        System.out.println(json);
-
         ((BukkitPlayer) getAsPlayer()).sendRawMessage(json);
     }
 
