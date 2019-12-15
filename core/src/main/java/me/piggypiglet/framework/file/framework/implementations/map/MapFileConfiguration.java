@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 public abstract class MapFileConfiguration extends AbstractFileConfiguration implements MutableFileConfiguration {
     private Map<String, Object> items;
     private Map<String, Object> flat;
+    private Flattener flattener = null;
 
     /**
      * Provision a predicate to see whether a file extension will match this configuration
@@ -54,6 +55,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     protected MapFileConfiguration(Predicate<String> match, Flattener flattener) {
         super(match, flattener);
+        this.flattener = flattener;
     }
 
     protected abstract Map<String, Object> provide(File file, String fileContent);
@@ -68,7 +70,13 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     @Override
     public Object get(String path) {
-        return Maps.recursiveGet(items, path);
+        final Object obj = Maps.recursiveGet(items, path);
+
+        if (flattener != null && flattener.getClazz().isInstance(obj)) {
+            return flattener.getFunction().apply(obj);
+        }
+
+        return obj;
     }
 
     @SuppressWarnings("unchecked")

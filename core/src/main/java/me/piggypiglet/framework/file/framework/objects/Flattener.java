@@ -69,4 +69,14 @@ public final class Flattener {
 
         return Maps.flatten(entry, (Class<T>) clazz, (Function<T, Map<String, Object>>) function);
     }
+
+    @SuppressWarnings("unchecked")
+    public <T> Class<T> getClazz() {
+        return (Class<T>) clazz;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Function<T, Map<String, Object>> getFunction() {
+        return (Function<T, Map<String, Object>>) function;
+    }
 }
