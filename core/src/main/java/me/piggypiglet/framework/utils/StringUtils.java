@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -78,8 +78,8 @@ public final class StringUtils {
         return anyWith(str, elements, (p, s) -> p.matcher(s).matches());
     }
 
-    public static <T> boolean anyWith(String trigger, List<T> elements, BiFunction<T, String, Boolean> test) {
-        return lowercaseStream(elements).anyMatch(s -> test.apply(s, trigger));
+    public static <T> boolean anyWith(String trigger, List<T> elements, BiPredicate<T, String> test) {
+        return lowercaseStream(elements).anyMatch(s -> test.test(s, trigger));
     }
 
     @SuppressWarnings("unchecked")

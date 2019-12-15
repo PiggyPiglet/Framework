@@ -27,6 +27,7 @@ package me.piggypiglet.framework.file.objects;
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public final class FileData implements Comparable<FileData> {
     private final boolean config;
@@ -91,13 +92,13 @@ public final class FileData implements Comparable<FileData> {
         private final String config;
         private final String path;
         private final String def;
-        private final Function<String, String> mapper;
+        private final UnaryOperator<String> mapper;
 
         public ConfigPathReference(String config, String path, String def) {
             this(config, path, def, null);
         }
 
-        public ConfigPathReference(String config, String path, String def, Function<String, String> mapper) {
+        public ConfigPathReference(String config, String path, String def, UnaryOperator<String> mapper) {
             this.config = config;
             this.path = path;
             this.def = def;

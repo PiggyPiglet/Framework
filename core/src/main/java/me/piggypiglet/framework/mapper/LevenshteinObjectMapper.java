@@ -164,12 +164,18 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
                         switch (typeValues.get(i).getSimpleName().toLowerCase()) {
                             case "integer":
                                 values.add(d.intValue());
-                                continue;
+                                break;
 
                             case "long":
                                 values.add(d.longValue());
-                                continue;
+                                break;
+
+                            default:
+                                values.add(d);
+                                break;
                         }
+
+                        continue;
                     }
 
                     values.add(value);

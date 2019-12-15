@@ -44,7 +44,7 @@ public abstract class Manager<S> {
     /**
      * Handle initial population here
      */
-    protected void populate() {};
+    protected void populate() {}
 
     /**
      * Populate the manager.
@@ -125,7 +125,7 @@ public abstract class Manager<S> {
         KeyFunction<T, U> function = findFunc(key);
 
         if (function != null) {
-            return function.getExists().apply(map(function, key));
+            return function.getExists().test(map(function, key));
         }
 
         return false;

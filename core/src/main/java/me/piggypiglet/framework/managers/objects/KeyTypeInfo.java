@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public final class KeyTypeInfo {
     private final List<KeyFunction<?, ?>> keys;
@@ -81,7 +82,7 @@ public final class KeyTypeInfo {
             private final Class<T> key;
             private final Function<T, U> mapper;
             private Function<U, Object> getter;
-            private Function<U, Boolean> exists;
+            private Predicate<U> exists;
 
             private KeyFunctionBuilder(Class<T> key, Function<T, U> mapper) {
                 this.key = key;
@@ -103,7 +104,7 @@ public final class KeyTypeInfo {
              * @param exists Function to check if &lt;U&gt; exists (or what it represents) in a data structure
              * @return Current instance of KeyFunctionBuilder
              */
-            public final KeyFunctionBuilder<T, U> exists(Function<U, Boolean> exists) {
+            public final KeyFunctionBuilder<T, U> exists(Predicate<U> exists) {
                 this.exists = exists;
                 return this;
             }

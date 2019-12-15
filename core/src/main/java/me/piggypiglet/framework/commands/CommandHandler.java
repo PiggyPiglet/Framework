@@ -36,7 +36,7 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -46,9 +46,9 @@ import static me.piggypiglet.framework.lang.Lang.Values.*;
 public class CommandHandler {
     public static final Pattern ARGUMENT_PATTERN = Pattern.compile("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-    private static final BiFunction<Command, Class<? extends Annotation>, Boolean> HAS_ANNOTATION = (c, a) -> c.getClass().isAnnotationPresent(a);
-    private static final Predicate<Command> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.apply(c, UltraDefault.class);
-    private static final Predicate<Command> IS_DEFAULT = c -> HAS_ANNOTATION.apply(c, Default.class);
+    private static final BiPredicate<Command, Class<? extends Annotation>> HAS_ANNOTATION = (c, a) -> c.getClass().isAnnotationPresent(a);
+    private static final Predicate<Command> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.test(c, UltraDefault.class);
+    private static final Predicate<Command> IS_DEFAULT = c -> HAS_ANNOTATION.test(c, Default.class);
 
     @Inject private Framework framework;
     @Inject private HelpCommand defHelpCommand;
@@ -71,7 +71,7 @@ public class CommandHandler {
                 if (startsWith(message, cmd)) {
                     List<String> permissions = c.getPermissions();
 
-                    if (permissions.size() == 0 || permissions.stream().anyMatch(user::hasPermission)) {
+                    if (permissions.isEmpty() || permissions.stream().anyMatch(user::hasPermission)) {
                         String[] args = args(message.replaceFirst(cmd, "").trim());
 
                         if (!run(user, c)) return;
@@ -146,9 +146,9 @@ public class CommandHandler {
     }
 
     private boolean startsWith(String msg, String q) {
-        String msg_ = msg.toLowerCase();
-        String q_ = q.toLowerCase();
+        String lowerMsg = msg.toLowerCase();
+        String lowerQ = q.toLowerCase();
 
-        return msg_.endsWith(q_) || msg_.startsWith(q_ + " ");
+        return lowerMsg.endsWith(lowerQ) || lowerMsg.startsWith(lowerQ + " ");
     }
 }

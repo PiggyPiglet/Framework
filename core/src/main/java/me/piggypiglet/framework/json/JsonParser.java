@@ -179,7 +179,7 @@ public final class JsonParser {
                 }
             }
 
-            if (jsons.size() >= 1) {
+            if (!jsons.isEmpty()) {
                 return jsons;
             }
         }

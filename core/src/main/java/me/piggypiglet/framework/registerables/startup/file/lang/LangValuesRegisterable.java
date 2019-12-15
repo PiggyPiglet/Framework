@@ -58,7 +58,7 @@ public final class LangValuesRegisterable extends StartupRegisterable {
             if (lang.clazz() != Lang.Values.class) {
                 final Set<LangEnum> tempValues = new HashSet<>();
 
-                for (Enum val : lang.clazz().getEnumConstants()) {
+                for (Enum<? extends LangEnum> val : lang.clazz().getEnumConstants()) {
                     tempValues.add((LangEnum) val);
                 }
 

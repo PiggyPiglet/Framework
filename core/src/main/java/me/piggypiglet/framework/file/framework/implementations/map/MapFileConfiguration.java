@@ -111,7 +111,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
     public List<FileConfiguration> getConfigList(String path) {
         final List<Map<String, Object>> list = getList(path);
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             return list.stream()
                     .map(this::configSection)
                     .collect(Collectors.toList());

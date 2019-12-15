@@ -25,14 +25,15 @@
 package me.piggypiglet.framework.managers.objects;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public final class KeyFunction<T, U> {
     private final Class<T> type;
     private final Function<T, U> mapper;
     private final Function<U, Object> getter;
-    private final Function<U, Boolean> exists;
+    private final Predicate<U> exists;
 
-    public KeyFunction(Class<T> type, Function<T, U> mapper, Function<U, Object> getter, Function<U, Boolean> exists) {
+    public KeyFunction(Class<T> type, Function<T, U> mapper, Function<U, Object> getter, Predicate<U> exists) {
         this.type = type;
         this.mapper = mapper;
         this.getter = getter;
@@ -51,7 +52,7 @@ public final class KeyFunction<T, U> {
         return getter;
     }
 
-    public Function<U, Boolean> getExists() {
+    public Predicate<U> getExists() {
         return exists;
     }
 }

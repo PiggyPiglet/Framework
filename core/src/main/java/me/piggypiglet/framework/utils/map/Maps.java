@@ -162,7 +162,7 @@ public class Maps {
     private static boolean instanceOfStringKeyMap(Object obj) {
         if (obj instanceof Map) {
             final Set<?> keys = ((Map<?, ?>) obj).keySet();
-            return keys.size() >= 1 && keys.stream().allMatch(s -> s instanceof String);
+            return !keys.isEmpty() && keys.stream().allMatch(s -> s instanceof String);
         }
 
         return false;

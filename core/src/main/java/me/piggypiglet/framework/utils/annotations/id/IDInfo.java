@@ -49,9 +49,9 @@ public final class IDInfo {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IDInfo) {
-            IDInfo id = (IDInfo) obj;
+            IDInfo info = (IDInfo) obj;
 
-            return id.type.equals(type) && id.id.value().equals(this.id.value());
+            return info.type.equals(type) && info.id.value().equals(this.id.value());
         }
 
         return false;
