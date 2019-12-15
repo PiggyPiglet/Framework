@@ -168,7 +168,7 @@ public interface FileConfiguration {
      * @param path Path of the List
      * @return List
      */
-    List<?> getList(String path);
+    <T> List<T> getList(String path);
 
     /**
      * Get a List at a specific path, and if it's null, use a default value
@@ -176,5 +176,5 @@ public interface FileConfiguration {
      * @param def Default value
      * @return List
      */
-    List<?> getList(String path, List<?> def);
+    <T> List<T> getList(String path, List<T> def);
 }

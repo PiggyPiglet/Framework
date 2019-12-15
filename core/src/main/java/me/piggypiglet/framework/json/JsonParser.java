@@ -157,19 +157,8 @@ public final class JsonParser {
      * @param path Path of the list
      * @return List of Strings
      */
-    @SuppressWarnings("unchecked")
-    public final List<String> getStringList(String path) {
-        Object object = get(path);
-
-        if (object instanceof List<?>) {
-            for (Object obj : (List<?>) object) {
-                if (obj instanceof String) {
-                    return (List<String>) object;
-                }
-            }
-        }
-
-        return null;
+    public List<String> getStringList(String path) {
+        return getList(path);
     }
 
     /**
@@ -178,7 +167,7 @@ public final class JsonParser {
      * @return List of JsonParsers
      */
     @SuppressWarnings("unchecked")
-    public final List<JsonParser> getJsonList(String path) {
+    public List<JsonParser> getJsonList(String path) {
         Object object = get(path);
 
         if (object instanceof List<?>) {
@@ -195,7 +184,7 @@ public final class JsonParser {
             }
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     /**
@@ -203,14 +192,15 @@ public final class JsonParser {
      * @param path Path of the list
      * @return List
      */
-    public final List<?> getList(String path) {
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getList(String path) {
         Object object = get(path);
 
-        if (object instanceof List<?>) {
-            return (List<?>) object;
+        if (object instanceof List) {
+            return (List<T>) object;
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     public Map<String, Object> getAll() {

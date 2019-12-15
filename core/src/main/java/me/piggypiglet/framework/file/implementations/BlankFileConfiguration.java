@@ -83,7 +83,7 @@ public final class BlankFileConfiguration extends AbstractFileConfiguration {
     }
 
     @Override
-    public List<?> getList(String path) {
+    public <T> List<T> getList(String path) {
         return new ArrayList<>();
     }
 

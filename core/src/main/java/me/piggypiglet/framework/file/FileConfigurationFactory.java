@@ -25,13 +25,15 @@
 package me.piggypiglet.framework.file;
 
 import com.google.inject.Singleton;
-import me.piggypiglet.framework.file.exceptions.BadConfigTypeException;
-import me.piggypiglet.framework.file.exceptions.UnknownConfigTypeException;
+import me.piggypiglet.framework.file.exceptions.RPFFileException;
+import me.piggypiglet.framework.file.exceptions.config.BadConfigTypeException;
+import me.piggypiglet.framework.file.exceptions.config.UnknownConfigTypeException;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.utils.FileUtils;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,21 +59,25 @@ public final class FileConfigurationFactory {
      * @param path Path of the file
      * @param fileContent plain text file content
      * @return FileConfiguration instance
-     * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
+     * @throws RPFFileException Will throw if bad config type, unknown config type, or reflection issue.
      */
-    public FileConfiguration get(String path, String fileContent) throws Exception {
+    public FileConfiguration get(String path, String fileContent) throws RPFFileException {
         return getAFC(path).load(null, fileContent);
     }
 
-    private AbstractFileConfiguration getAFC(String path) throws Exception {
-        return (AbstractFileConfiguration) Arrays.stream(configTypes.get(configTypes.keySet().stream()
-                .filter(p -> p.test(path))
-                .findAny()
-                .orElseThrow(() -> new UnknownConfigTypeException("Unknown config type: " + path))).getConstructors())
-                .filter(c -> c.getParameterCount() == 0)
-                .findAny()
-                .orElseThrow(() -> new BadConfigTypeException("Bad config type encountered."))
-                .newInstance();
+    private AbstractFileConfiguration getAFC(String path) throws RPFFileException {
+        try {
+            return (AbstractFileConfiguration) Arrays.stream(configTypes.get(configTypes.keySet().stream()
+                    .filter(p -> p.test(path))
+                    .findAny()
+                    .orElseThrow(() -> new UnknownConfigTypeException("Unknown config type: " + path))).getConstructors())
+                    .filter(c -> c.getParameterCount() == 0)
+                    .findAny()
+                    .orElseThrow(() -> new BadConfigTypeException("Bad config type encountered."))
+                    .newInstance();
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            throw new BadConfigTypeException(e.getMessage());
+        }
     }
 
     /**

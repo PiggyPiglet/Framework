@@ -21,7 +21,7 @@ subprojects {
     apply plugin: 'org.sonarqube'
 
     group 'me.piggypiglet'
-    version '1.7.19'
+    version '1.7.20'
     sourceCompatibility = 1.8
 
     repositories {
@@ -36,7 +36,6 @@ subprojects {
     }
 
     dependencies {
-
         testCompile 'junit:junit:4.12'
     }
 

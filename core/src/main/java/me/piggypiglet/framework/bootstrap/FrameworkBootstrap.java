@@ -79,9 +79,9 @@ public final class FrameworkBootstrap {
         injector.get().getInstance(Scanner.class).getTypesAnnotatedWith(Addon.class)
                 .forEach(c -> addons.put(c, c.getAnnotation(Addon.class)));
 
-        final Multimap<BootPriority, Class<? extends StartupRegisterable>> registerables = ArrayListMultimap.create();
+        final Multimap<BootPriority, Class<? extends StartupRegisterable>> boot = ArrayListMultimap.create();
 
-        registerables.putAll(BootPriority.IMPL, linkedHashSet(
+        boot.putAll(BootPriority.IMPL, linkedHashSet(
                 ImplementationFinderRegisterable.class, FileTypesRegisterable.class,
                 DefaultConfigsRegisterable.class, FilesRegisterable.class,
                 FileMappingRegisterable.class, UserConfigsRegisterable.class,
@@ -89,12 +89,12 @@ public final class FrameworkBootstrap {
         ));
 
         if (config.getCommandPrefix() != null) {
-            registerables.putAll(BootPriority.COMMANDS, linkedHashSet(
+            boot.putAll(BootPriority.COMMANDS, linkedHashSet(
                     CommandsRegisterable.class, CommandHandlerRegisterable.class
             ));
         }
 
-        registerables.putAll(BootPriority.SHUTDOWN, linkedHashSet(
+        boot.putAll(BootPriority.SHUTDOWN, linkedHashSet(
                 ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class
         ));
 
@@ -103,12 +103,12 @@ public final class FrameworkBootstrap {
                 .map(Addon::startup)
                 .map(Arrays::stream)
                 .map(s -> s.map(RegisterableData::new))
-                .forEach(s -> processRegisterableData(s, registerables));
+                .forEach(s -> processRegisterableData(s, boot));
 
-        processRegisterableData(config.getStartupRegisterables().stream(), registerables);
+        processRegisterableData(config.getStartupRegisterables().stream(), boot);
 
         for (BootPriority priority : BootPriority.values()) {
-            final Collection<Class<? extends StartupRegisterable>> section = registerables.get(priority);
+            final Collection<Class<? extends StartupRegisterable>> section = boot.get(priority);
 
             section.forEach(r -> {
                 StartupRegisterable registerable = injector.get().getInstance(r);

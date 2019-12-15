@@ -36,7 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class YamlConfiguration {
-    private static final Yaml YAML;
+    public static final Yaml YAML;
 
     static {
         Representer representer = new ConfigurationRepresenter();

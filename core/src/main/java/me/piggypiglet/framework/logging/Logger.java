@@ -35,7 +35,7 @@ import java.io.PrintStream;
 public abstract class Logger<T> {
     private boolean debug;
 
-    protected T logger;
+    protected T underlyingLogger;
 
     /**
      * Create an instance of a third-party logger with a name.
@@ -74,7 +74,7 @@ public abstract class Logger<T> {
      * @return Logger instance
      */
     public Logger create(String name, boolean debug) {
-        logger = init(name);
+        underlyingLogger = init(name);
         this.debug = debug;
         return this;
     }

@@ -37,6 +37,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static me.piggypiglet.framework.utils.TypeUtils.valueNullDef;
+
 public abstract class AbstractFileConfiguration implements FileConfiguration {
     private final Predicate<String> match;
     private final Flattener[] flatteners;
@@ -95,59 +97,54 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
         return match;
     }
 
-    @SafeVarargs
-    private final <T> T value(T value, T nullValue, T... def) {
-        return value == null ? def.length >= 1 ? def[0] : nullValue : value;
-    }
-
     @Override
     public Object get(String path, Object def) {
-        return value(get(path), null, def);
+        return valueNullDef(get(path), null, def);
     }
 
     @Override
     public FileConfiguration getConfigSection(String path, FileConfiguration def) {
-        return value(getConfigSection(path), new BlankFileConfiguration(), def);
+        return valueNullDef(getConfigSection(path), new BlankFileConfiguration(), def);
     }
 
     @Override
     public String getString(String path, String def) {
-        return value(getString(path), NULL_STRING, def);
+        return valueNullDef(getString(path), NULL_STRING, def);
     }
 
     @Override
     public int getInt(String path, int def) {
-        return value(getInt(path), NULL_NUM, def);
+        return valueNullDef(getInt(path), NULL_NUM, def);
     }
 
     @Override
     public long getLong(String path, long def) {
-        return value(getLong(path), (long) NULL_NUM, def);
+        return valueNullDef(getLong(path), (long) NULL_NUM, def);
     }
 
     @Override
     public double getDouble(String path, double def) {
-        return value(getDouble(path), (double) NULL_NUM, def);
+        return valueNullDef(getDouble(path), (double) NULL_NUM, def);
     }
 
     @Override
     public boolean getBoolean(String path, boolean def) {
-        return value(getBoolean(path), NULL_BOOL, def);
+        return valueNullDef(getBoolean(path), NULL_BOOL, def);
     }
 
     @Override
     public List<String> getStringList(String path, List<String> def) {
-        return value(getStringList(path), new ArrayList<>(), def);
+        return valueNullDef(getStringList(path), new ArrayList<>(), def);
     }
 
     @Override
     public List<FileConfiguration> getConfigList(String path, List<FileConfiguration> def) {
-        return value(getConfigList(path), new ArrayList<>(), def);
+        return valueNullDef(getConfigList(path), new ArrayList<>(), def);
     }
 
     @Override
-    public List<?> getList(String path, List<?> def) {
-        return value(getList(path), new ArrayList<>(), def);
+    public <T> List<T> getList(String path, List<T> def) {
+        return valueNullDef(getList(path), new ArrayList<>(), def);
     }
 
     protected abstract Map<String, Object> retrieveAll();

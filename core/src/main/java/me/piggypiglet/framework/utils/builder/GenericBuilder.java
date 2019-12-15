@@ -7,7 +7,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class GenericBuilder {
-    private GenericBuilder() {}
+    private GenericBuilder() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
 
     public static <T> Builder<T> of(Supplier<T> initialiser) {
         return new Builder<>(initialiser);

@@ -22,13 +22,15 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.file.exceptions;
+package me.piggypiglet.framework.file.exceptions.config;
+
+import me.piggypiglet.framework.file.exceptions.RPFFileException;
 
 /**
- * Thrown if no config could be found for the path/file provided
+ * Thrown if the implementation of AbstractFileConfiguration is incorrectly made
  */
-public final class UnknownConfigTypeException extends Exception {
-    public UnknownConfigTypeException(String message) {
+public final class BadConfigTypeException extends RPFFileException {
+    public BadConfigTypeException(String message) {
         super(message);
     }
 }

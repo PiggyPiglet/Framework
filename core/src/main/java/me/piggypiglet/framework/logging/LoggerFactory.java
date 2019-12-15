@@ -35,6 +35,8 @@ public final class LoggerFactory {
     @Inject private static Framework framework;
     @Inject @Named("logger") private static Class logger;
 
+    private LoggerFactory() {}
+
     /**
      * Get an instance using the set logger implementation. Will return DefaultLogger (implementation of Java Logger) if no custom loggers have been made.
      * @param name Name of the logger

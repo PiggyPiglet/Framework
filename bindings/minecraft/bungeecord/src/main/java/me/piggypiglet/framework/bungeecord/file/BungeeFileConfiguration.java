@@ -26,101 +26,40 @@ package me.piggypiglet.framework.bungeecord.file;
 
 import me.piggypiglet.framework.bungeecord.file.api.Configuration;
 import me.piggypiglet.framework.bungeecord.file.api.YamlConfiguration;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 
 import java.io.File;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-public final class BungeeFileConfiguration extends AbstractFileConfiguration {
+public final class BungeeFileConfiguration extends MapFileConfiguration {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("BungeeConfig");
-
-    private Configuration config;
+    private static final String BLANK_CONFIG = "{}\n";
 
     public BungeeFileConfiguration() {
         super(s -> s.endsWith(".yml"));
     }
 
-    private BungeeFileConfiguration(Configuration config, File file) {
-        this();
-        load(file, "");
-        this.config = config;
-    }
 
     @Override
-    protected void internalLoad(File file, String fileContent) {
+    protected Map<String, Object> provide(File file, String fileContent) {
+        final Configuration config;
+
         try {
             config = YamlConfiguration.load(file);
         } catch (Exception e) {
             LOGGER.error(e);
-        }
-    }
-
-    @Override
-    public Object get(String path) {
-        return config.get(path);
-    }
-
-    @Override
-    public FileConfiguration getConfigSection(String path) {
-        Configuration section = config.getSection(path);
-
-        if (section != null) {
-            return configSectionToFileConfiguration(section);
+            return new HashMap<>();
         }
 
-        return null;
-    }
-
-    @Override
-    public String getString(String path) {
-        return config.getString(path);
-    }
-
-    @Override
-    public Integer getInt(String path) {
-        return config.getInt(path);
-    }
-
-    @Override
-    public Long getLong(String path) {
-        return config.getLong(path);
-    }
-
-    @Override
-    public Double getDouble(String path) {
-        return config.getDouble(path);
-    }
-
-    @Override
-    public Boolean getBoolean(String path) {
-        return config.getBoolean(path);
-    }
-
-    @Override
-    public List<String> getStringList(String path) {
-        return config.getStringList(path);
-    }
-
-    @Override
-    public List<FileConfiguration> getConfigList(String path) {
-        return null;
-    }
-
-    @Override
-    public List<?> getList(String path) {
-        return config.getList(path);
-    }
-
-    @Override
-    protected Map<String, Object> retrieveAll() {
         return config.getAll();
     }
 
-    private FileConfiguration configSectionToFileConfiguration(Configuration section) {
-        return new BungeeFileConfiguration(section, getFile());
+    @Override
+    protected String convert(Map<String, Object> items) {
+        final String dump = YamlConfiguration.YAML.dump(items);
+        return dump.equals(BLANK_CONFIG) ? "" : dump;
     }
 }

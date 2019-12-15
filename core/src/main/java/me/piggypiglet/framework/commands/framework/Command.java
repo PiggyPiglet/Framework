@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Command<T extends User> {
-    private final String command;
+    private final String prefix;
 
     private List<String> handlers = new ArrayList<>();
     private String description = "null";
@@ -46,8 +46,8 @@ public abstract class Command<T extends User> {
      */
     protected Options options = new Options();
 
-    protected Command(String command) {
-        this.command = command;
+    protected Command(String prefix) {
+        this.prefix = prefix;
     }
 
     /**
@@ -64,7 +64,7 @@ public abstract class Command<T extends User> {
     }
 
     public String getCommand() {
-        return command;
+        return prefix;
     }
 
     public List<String> getHandlers() {

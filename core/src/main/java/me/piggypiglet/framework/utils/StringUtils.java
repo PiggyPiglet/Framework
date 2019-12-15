@@ -42,6 +42,10 @@ public final class StringUtils {
     private static final Pattern SPECIFIC_FORMAT_REGEX = Pattern.compile("/%\\d\\$s/g");
     private static final Pattern INDEX_FORMAT_REGEX = Pattern.compile("/%s/g");
 
+    private StringUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     public static boolean anyStartWith(String str, String... elements) {
         return anyStartWith(str, Arrays.asList(elements));
     }

@@ -35,21 +35,21 @@ public final class LogbackLogger extends Logger<org.slf4j.Logger> {
 
     @Override
     protected void info(String message) {
-        logger.info(message);
+        underlyingLogger.info(message);
     }
 
     @Override
     protected void warning(String message) {
-        logger.warn(message);
+        underlyingLogger.warn(message);
     }
 
     @Override
     protected void error(String message) {
-        logger.error(message);
+        underlyingLogger.error(message);
     }
 
     @Override
     protected void debug(String message) {
-        logger.debug(message);
+        underlyingLogger.debug(message);
     }
 }

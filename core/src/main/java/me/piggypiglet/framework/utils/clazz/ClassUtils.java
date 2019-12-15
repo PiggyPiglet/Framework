@@ -25,6 +25,10 @@
 package me.piggypiglet.framework.utils.clazz;
 
 public final class ClassUtils {
+    private ClassUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     /**
      * Get a generic on an interface a class is imlementing generic, a bit iffy, might not work in all scenarios
      * @param clazz Class to get the generic from

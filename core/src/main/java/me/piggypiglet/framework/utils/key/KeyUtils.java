@@ -9,6 +9,10 @@ import static me.piggypiglet.framework.utils.key.MathKeyUtils.*;
 
 // https://stackoverflow.com/a/31858690
 public final class KeyUtils {
+    private KeyUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     public static boolean match(ECPublicKey pub, ECPrivateKey priv) {
         ECParameterSpec pubSpec = pub.getParams(), privSpec = priv.getParams();
         EllipticCurve pubCurve = pubSpec.getCurve(), privCurve = privSpec.getCurve();

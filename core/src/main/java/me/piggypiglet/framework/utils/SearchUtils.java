@@ -34,6 +34,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class SearchUtils {
+    private SearchUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     /**
      * Use the levenshtein algorithm, via a java fuzzy wuzzy port (python library), to order a list of items based on string similarity.
      * Will leverage multithreading if items size exceeds 5000.

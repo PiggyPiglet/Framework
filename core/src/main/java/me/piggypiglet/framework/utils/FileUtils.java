@@ -37,6 +37,10 @@ import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 
 public final class FileUtils {
+    private FileUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     /**
      * Export an inputstream into an external file
      * @param in InputStream

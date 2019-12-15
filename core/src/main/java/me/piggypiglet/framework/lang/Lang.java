@@ -64,6 +64,8 @@ public final class Lang {
     public static class LanguageGetter {
         @Inject private static LangConfig config;
 
+        private LanguageGetter() {}
+
         public static String get(String path) {
             return config.get(path);
         }

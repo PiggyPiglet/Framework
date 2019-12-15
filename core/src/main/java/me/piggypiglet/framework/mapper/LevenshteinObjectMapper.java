@@ -156,7 +156,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
                 for (int i = 0; i < resultValues.size(); i++) {
                     final Object value = resultValues.get(i);
-                    final Class clazz = value.getClass();
+                    final Class<?> clazz = value.getClass();
 
                     if (clazz == Double.class) {
                         final Double d = (Double) value;

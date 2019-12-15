@@ -43,7 +43,7 @@ public final class CommandHandlers {
     @Inject private Task task;
 
     private final Set<Command> commands = new HashSet<>();
-    private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
+    private final Map<String, CommandHandler> handlers = new HashMap<>();
 
     /**
      * Find and run a command in a specific handler.
@@ -52,7 +52,7 @@ public final class CommandHandlers {
      * @param message Message, including command prefix, command, and arguments.
      */
     public void process(String commandHandler, User user, String message) {
-        task.async(r -> commandHandlers.get(commandHandler).handle(user, message, commandHandler));
+        task.async(r -> handlers.get(commandHandler).handle(user, message, commandHandler));
     }
 
     /**
@@ -73,16 +73,16 @@ public final class CommandHandlers {
     public void newHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
         final CommandHandler commandHandler = injector.getInstance(handler);
 
-        commandHandlers.put(name, commandHandler);
+        handlers.put(name, commandHandler);
         commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toSet()));
     }
 
     public void overrideHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
-        if (commandHandlers.containsKey(name)) {
+        if (handlers.containsKey(name)) {
             CommandHandler commandHandler = injector.getInstance(handler);
 
-            commandHandler.setCommands(commandHandlers.get(name).getCommands());
-            commandHandlers.put(name, commandHandler);
+            commandHandler.setCommands(handlers.get(name).getCommands());
+            handlers.put(name, commandHandler);
         }
     }
 
@@ -92,7 +92,7 @@ public final class CommandHandlers {
      * @return Set of commands that handler can process
      */
     public Set<Command> getCommands(String handler) {
-        return commandHandlers.get(handler).getCommands();
+        return handlers.get(handler).getCommands();
     }
 
     /**
@@ -108,6 +108,6 @@ public final class CommandHandlers {
      */
     public void clearCommands() {
         commands.clear();
-        commandHandlers.values().stream().map(CommandHandler::getCommands).forEach(Set::clear);
+        handlers.values().stream().map(CommandHandler::getCommands).forEach(Set::clear);
     }
 }

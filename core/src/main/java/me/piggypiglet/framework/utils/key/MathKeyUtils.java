@@ -4,6 +4,10 @@ import java.math.BigInteger;
 
 // https://stackoverflow.com/a/31858690
 public final class MathKeyUtils {
+    private MathKeyUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     public static BigInteger f2mSum(BigInteger... values) {
         if (values.length == 0) return BigInteger.ZERO;
 

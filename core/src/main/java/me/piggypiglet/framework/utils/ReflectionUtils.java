@@ -27,7 +27,11 @@ package me.piggypiglet.framework.utils;
 import java.lang.reflect.AccessibleObject;
 
 public final class ReflectionUtils {
-    public static <T extends AccessibleObject> T getAccessible(T type) throws Exception {
+    private ReflectionUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
+    public static <T extends AccessibleObject> T getAccessible(T type) {
         type.setAccessible(true);
         return type;
     }

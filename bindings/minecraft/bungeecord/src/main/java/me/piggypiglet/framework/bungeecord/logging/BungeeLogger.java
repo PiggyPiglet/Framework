@@ -39,17 +39,17 @@ public final class BungeeLogger extends Logger<java.util.logging.Logger> {
 
     @Override
     protected void info(String message) {
-        logger.info(message);
+        underlyingLogger.info(message);
     }
 
     @Override
     protected void warning(String message) {
-        logger.warning(message);
+        underlyingLogger.warning(message);
     }
 
     @Override
     protected void error(String message) {
-        logger.severe(message);
+        underlyingLogger.severe(message);
     }
 
     @Override

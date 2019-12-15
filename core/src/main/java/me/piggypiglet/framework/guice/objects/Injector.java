@@ -24,22 +24,24 @@
 
 package me.piggypiglet.framework.guice.objects;
 
+import me.piggypiglet.framework.guice.exceptions.InjectionException;
+
 public final class Injector {
-    private final com.google.inject.Injector injector;
+    private final com.google.inject.Injector real;
 
     public Injector(com.google.inject.Injector injector) {
-        this.injector = injector;
+        real = injector;
     }
 
     public <T> T getInstance(Class<T> clazz) {
         try {
-            return injector.getInstance(clazz);
+            return real.getInstance(clazz);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InjectionException(e.getMessage());
         }
     }
 
     public com.google.inject.Injector getReal() {
-        return injector;
+        return real;
     }
 }

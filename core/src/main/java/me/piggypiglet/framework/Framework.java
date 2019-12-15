@@ -36,11 +36,10 @@ import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.utils.annotations.Main;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
+import me.piggypiglet.framework.utils.builder.BuilderUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class Framework {
     private final MainBinding main;
@@ -395,15 +394,7 @@ public final class Framework {
          * @return Framework instance
          */
         public final Framework build() {
-            String unsetVars = Stream.of(main, pckg).filter(o -> {
-                try {
-                    return ((String) o).startsWith("d-");
-                } catch (Exception e) {
-                    return false;
-                }
-            }).map(String::valueOf).map(s -> s.replaceFirst("d-", "")).collect(Collectors.joining(", "));
-
-            if (!unsetVars.isEmpty()) throw new RuntimeException("These required vars weren't set in your FrameworkBuilder: " + unsetVars);
+            BuilderUtils.checkVars("FrameworkBuilder", main, pckg);
 
             return new Framework((MainBinding) main, pckg, pckgExclusions, injector, startupRegisterables, shutdownRegisterables,
                     commandPrefix, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);

@@ -25,6 +25,10 @@
 package me.piggypiglet.framework.utils;
 
 public final class TypeUtils {
+    private TypeUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     /**
      * Check if a value is null, if it is, return an optional def, if def isn't provided, return a configurable null value
      * @param value     Value
@@ -35,6 +39,10 @@ public final class TypeUtils {
      */
     @SafeVarargs
     public static <T> T valueNullDef(T value, T nullValue, T... def) {
-        return value == null ? def.length >= 1 ? def[0] : nullValue : value;
+        if (value != null) {
+            return value;
+        }
+
+        return def.length >= 1 ? def[0] : nullValue;
     }
 }

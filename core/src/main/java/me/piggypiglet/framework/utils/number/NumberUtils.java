@@ -41,6 +41,10 @@ public final class NumberUtils {
         PRIMITIVE_WRAPPER_MAP.put(Float.TYPE, Float.class);
     }
 
+    private NumberUtils() {
+        throw new RuntimeException("This class cannot be instantiated.");
+    }
+
     /**
      * Convert a primitive to it's wrapper, with a default value.<br>
      * Kudos to devs behind apache commons lang, they're the original author of this method.<br>

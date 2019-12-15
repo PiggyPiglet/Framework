@@ -32,11 +32,11 @@ import java.util.stream.Stream;
 
 public final class Flattener {
     private final Class<?> clazz;
-    private final Function<?, Map<String, Object>> flattener;
+    private final Function<?, Map<String, Object>> function;
 
-    private Flattener(Class<?> clazz, Function<?, Map<String, Object>> flattener) {
+    private Flattener(Class<?> clazz, Function<?, Map<String, Object>> function) {
         this.clazz = clazz;
-        this.flattener = flattener;
+        this.function = function;
     }
 
     public static <T> Builder<T> builder(Class<T> clazz) {
@@ -45,28 +45,28 @@ public final class Flattener {
 
     public static class Builder<T> {
         private final Class<T> clazz;
-        private Function<T, Map<String, Object>> flattener = null;
+        private Function<T, Map<String, Object>> function = null;
 
         private Builder(Class<T> clazz) {
             this.clazz = clazz;
         }
 
-        public Builder<T> flattener(Function<T, Map<String, Object>> flattener) {
-            this.flattener = flattener;
+        public Builder<T> flattener(Function<T, Map<String, Object>> function) {
+            this.function = function;
             return this;
         }
 
         public Flattener build() {
-            return new Flattener(clazz, flattener);
+            return new Flattener(clazz, function);
         }
     }
 
     @SuppressWarnings("unchecked")
     public <T> Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry) {
-        if (clazz == null || flattener == null) {
+        if (clazz == null || function == null) {
             return Maps.flatten(entry);
         }
 
-        return Maps.flatten(entry, (Class<T>) clazz, (Function<T, Map<String, Object>>) flattener);
+        return Maps.flatten(entry, (Class<T>) clazz, (Function<T, Map<String, Object>>) function);
     }
 }

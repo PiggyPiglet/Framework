@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.file.framework.implementations.map;
 
+import me.piggypiglet.framework.file.exceptions.config.ConfigSaveException;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
@@ -34,10 +35,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -104,16 +102,14 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
         return (Boolean) flat.get(path);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> getStringList(String path) {
-        return (List<String>) getList(path);
+        return getList(path);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<FileConfiguration> getConfigList(String path) {
-        final List<Map<String, Object>> list = (List<Map<String, Object>>) getList(path);
+        final List<Map<String, Object>> list = getList(path);
 
         if (list.size() > 0) {
             return list.stream()
@@ -121,12 +117,13 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
                     .collect(Collectors.toList());
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<?> getList(String path) {
-        return (List<?>) flat.get(path);
+    public <T> List<T> getList(String path) {
+        return (List<T>) flat.get(path);
     }
 
     @Override
@@ -158,10 +155,14 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
     }
 
     @Override
-    public void save() throws Exception {
+    public void save() throws ConfigSaveException {
         final String content = convert(items);
 
-        Files.write(Paths.get(getFile().toURI()), Arrays.asList(content.split("\n")), StandardCharsets.UTF_8);
+        try {
+            Files.write(Paths.get(getFile().toURI()), Arrays.asList(content.split("\n")), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new ConfigSaveException(e.getMessage());
+        }
     }
 
     private FileConfiguration configSection(Map<String, Object> items) {

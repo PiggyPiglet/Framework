@@ -33,11 +33,11 @@ import me.piggypiglet.framework.scanning.implementations.Reflections;
 import org.reflections.scanners.*;
 
 public final class InitialModule extends AbstractModule {
-    private final FrameworkBootstrap main;
+    private final FrameworkBootstrap boot;
     private final Framework config;
 
-    public InitialModule(FrameworkBootstrap main, Framework config) {
-        this.main = main;
+    public InitialModule(FrameworkBootstrap boot, Framework config) {
+        this.boot = boot;
         this.config = config;
     }
 
@@ -66,7 +66,7 @@ public final class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public FrameworkBootstrap providesFrameworkBootstrap() {
-        return main;
+        return boot;
     }
 
     @Provides
