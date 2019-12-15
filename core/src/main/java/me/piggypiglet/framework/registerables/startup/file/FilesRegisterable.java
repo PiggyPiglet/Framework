@@ -32,6 +32,8 @@ import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.file.objects.FileWrapper;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.File;
@@ -43,6 +45,8 @@ import java.util.Collections;
 import java.util.List;
 
 public final class FilesRegisterable extends StartupRegisterable {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("FilesRegisterable");
+
     @Inject private Framework framework;
     @Inject private FileManager fileManager;
     @Inject private FrameworkBootstrap frameworkBootstrap;
@@ -92,7 +96,7 @@ public final class FilesRegisterable extends StartupRegisterable {
                     addAnnotatedBinding(FileWrapper.class, annotation, fileManager.loadFile(name, internalPath, externalPath));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         });
     }

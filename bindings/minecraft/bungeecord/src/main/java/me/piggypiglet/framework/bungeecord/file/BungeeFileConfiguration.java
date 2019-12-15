@@ -28,12 +28,16 @@ import me.piggypiglet.framework.bungeecord.file.api.Configuration;
 import me.piggypiglet.framework.bungeecord.file.api.YamlConfiguration;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 public final class BungeeFileConfiguration extends AbstractFileConfiguration {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("BungeeConfig");
+
     private Configuration config;
 
     public BungeeFileConfiguration() {
@@ -51,7 +55,7 @@ public final class BungeeFileConfiguration extends AbstractFileConfiguration {
         try {
             config = YamlConfiguration.load(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 

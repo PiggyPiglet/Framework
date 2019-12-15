@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class NumberUtils {
-    public static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new HashMap<>();
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new HashMap<>();
 
     static {
         PRIMITIVE_WRAPPER_MAP.put(Boolean.TYPE, Boolean.class);

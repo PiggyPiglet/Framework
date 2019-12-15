@@ -28,6 +28,9 @@ import com.google.inject.ImplementedBy;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 import me.piggypiglet.framework.utils.StringUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 @ImplementedBy(DefaultLogger.class)
 public abstract class Logger<T> {
     private boolean debug;
@@ -100,7 +103,15 @@ public abstract class Logger<T> {
      * @param vars Any variables to be replaced in the message (uses String#format)
      */
     public void error(Object message, Object... vars) {
-        error(format(message, vars));
+        if (message instanceof Exception) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(out);
+            ((Exception) message).printStackTrace(ps);
+            ps.close();
+            error(out.toString());
+        } else {
+            error(format(message, vars));
+        }
     }
 
     /**

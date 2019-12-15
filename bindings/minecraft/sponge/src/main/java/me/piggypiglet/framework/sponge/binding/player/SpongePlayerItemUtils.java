@@ -26,6 +26,7 @@ package me.piggypiglet.framework.sponge.binding.player;
 
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -41,11 +42,13 @@ import java.util.stream.Stream;
 import static org.spongepowered.api.data.key.Keys.*;
 
 final class SpongePlayerItemUtils {
-    static void putFromInventory(Inventory inventory, Map<Integer, Item> map, int initial, int end) {
-        int i = initial;
+    static Map<Integer, Item> fromInventory(Inventory inventory, int end) {
+        final Map<Integer, Item> map = new HashMap<>();
+
+        int i = 0;
         for (Inventory item : inventory) {
             if (i == end) {
-                return;
+                return map;
             }
 
             final Optional<ItemStack> stack = item.peek();
@@ -56,6 +59,12 @@ final class SpongePlayerItemUtils {
 
             ++i;
         }
+
+        return map;
+    }
+
+    static Item hand(org.spongepowered.api.entity.living.player.Player handle, HandType type) {
+        return handle.getItemInHand(type).map(SpongePlayerItemUtils::fromItemStack).orElse(null);
     }
 
     static Item fromItemStack(ItemStack itemStack) {

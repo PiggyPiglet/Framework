@@ -27,6 +27,8 @@ package me.piggypiglet.framework.bungeecord.binding.player.inventory.packets.uti
 import com.google.common.base.Preconditions;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.TObjectIntMap;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.minecraft.versions.ProtocolVersions;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
@@ -41,6 +43,7 @@ import static me.piggypiglet.framework.utils.ReflectionUtils.getAccessible;
 
 @SuppressWarnings("unchecked")
 public final class PacketUtils {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("PacketUtils");
     private static final Class PROTOCOL = net.md_5.bungee.protocol.Protocol.class;
     private static final Object GAME = net.md_5.bungee.protocol.Protocol.GAME;
     private static final Field PROTOCOLS;
@@ -135,7 +138,7 @@ public final class PacketUtils {
 
             success = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
             success = false;
         }
 

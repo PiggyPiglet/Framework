@@ -28,18 +28,15 @@ import com.google.inject.Singleton;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
-import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public final class PlayerInventoryManager extends Manager<Inventory> {
-    private static final Inventory DEF = new Inventory(UUID.nameUUIDFromBytes("null".getBytes())) {{
-        setOffHand(new Item("null", -1, (short) -1, -1,
-                new ArrayList<>(), "null", new HashMap<>(), false,
-                new HashSet<>()));
-    }};
+    private static final Inventory DEF = new Inventory(UUID.nameUUIDFromBytes("null".getBytes()));
 
     private final Map<UUID, Inventory> inventories = new ConcurrentHashMap<>();
 

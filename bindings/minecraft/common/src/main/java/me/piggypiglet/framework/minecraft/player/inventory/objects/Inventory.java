@@ -77,6 +77,29 @@ public class Inventory {
         this.offHand = offHand;
     }
 
+    public void setCrafting(Map<Integer, Item> map) {
+        setMap(map, crafting, 5);
+    }
+
+    public void setArmor(Map<Integer, Item> map) {
+        setMap(map, armor, 4);
+    }
+
+    public void setItems(Map<Integer, Item> map) {
+        setMap(map, items, 27);
+    }
+
+    public void setHotbar(Map<Integer, Item> map) {
+        setMap(map, hotbar, 9);
+    }
+
+    private void setMap(Map<Integer, Item> provided, Map<Integer, Item> map, int max) {
+        if (provided.size() <= max) {
+            map.clear();
+            map.putAll(provided);
+        }
+    }
+
     @Override
     public String toString() {
         return String.format(

@@ -54,7 +54,7 @@ public class NukkitCommandRegistrar {
                 final Field f = ReflectionUtils.getAccessible(PluginManager.class.getDeclaredField("commandMap"));
                 commandMap = (CommandMap) f.get(server.getPluginManager());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         } else {
             logger.debug("PluginManager is null.");
@@ -70,6 +70,8 @@ public class NukkitCommandRegistrar {
     private void registerCommand(String... aliases) {
         PluginCommand command = getCommand(aliases[0]);
 
+        if (command == null) return;
+
         command.setAliases(aliases);
         commandMap.register(((PluginBase) main.getInstance()).getDescription().getName(), command);
     }
@@ -79,9 +81,9 @@ public class NukkitCommandRegistrar {
 
         try {
             final Constructor<PluginCommand> c = ReflectionUtils.getAccessible(PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class));
-            command = c.newInstance(name, (PluginBase) main.getInstance());
+            command = c.newInstance(name, main.getInstance());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return command;

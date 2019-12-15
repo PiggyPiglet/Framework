@@ -24,7 +24,6 @@
 
 package me.piggypiglet.framework.utils.map;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
@@ -39,27 +38,33 @@ public class Maps {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
-    public static <K, V, R> Builder<K, V, R> builder(Map<K, V> implementation, @Nonnull R returnInstance, @Nonnull Consumer<Map<K, V>> build) {
-        return new Builder<>(implementation, returnInstance, build);
+    public static <K, V, R> Builder<K, V, R, V> builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build) {
+        return builder(implementation, returnInstance, build, null);
     }
 
-    public static <K, V> Builder<K, V, Map<K, V>> of(Map<K, V> implementation) {
-        return new Builder<>(implementation);
+    public static <K, V, R, T> Builder<K, V, R, T> builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build, Function<T, V> mapper) {
+        return new Builder<>(implementation, returnInstance, build, mapper);
     }
 
-    public static final class Builder<K, V, R> {
+    public static <K, V> Builder<K, V, Map<K, V>, V> of(Map<K, V> implementation) {
+        return builder(implementation, null, null, null);
+    }
+
+    public static <K, V, T> Builder<K, V, Map<K, V>, T> of(Map<K, V> implementation, Function<T, V> mapper) {
+        return builder(implementation, null, null, mapper);
+    }
+
+    public static final class Builder<K, V, R, T> {
         private final Map<K, V> map;
         private final R returnInstance;
         private final Consumer<Map<K, V>> build;
+        private final Function<T, V> mapper;
 
-        private Builder(Map<K, V> implementation) {
-            this(implementation, null, null);
-        }
-
-        private Builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build) {
+        private Builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build, Function<T, V> mapper) {
             map = implementation;
             this.returnInstance = returnInstance;
             this.build = build;
+            this.mapper = mapper;
         }
 
         public ValueBuilder key(K key) {
@@ -73,8 +78,14 @@ public class Maps {
                 this.key = key;
             }
 
-            public Builder<K, V, R> value(V value) {
-                map.put(key, value);
+            @SuppressWarnings("unchecked")
+            public Builder<K, V, R, T> value(T value) {
+                if (mapper != null) {
+                    map.put(key, mapper.apply(value));
+                } else {
+                    map.put(key, (V) value);
+                }
+
                 return Builder.this;
             }
         }

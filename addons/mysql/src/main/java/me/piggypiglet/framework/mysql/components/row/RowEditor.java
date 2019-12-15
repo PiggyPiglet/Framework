@@ -59,7 +59,7 @@ public final class RowEditor extends MySQLComponent {
          * Location of the row
          * @return Builder instance
          */
-        public Maps.Builder<String, Object, Builder> location() {
+        public Maps.Builder<String, Object, Builder, Object> location() {
             return Maps.builder(new LinkedHashMap<>(), this, m -> location = m);
         }
 
@@ -77,7 +77,7 @@ public final class RowEditor extends MySQLComponent {
          * Changes to make
          * @return Builder instance
          */
-        public Maps.Builder<String, Object, Builder> changes() {
+        public Maps.Builder<String, Object, Builder, Object> changes() {
             return Maps.builder(new LinkedHashMap<>(), this, m -> changes = m);
         }
 

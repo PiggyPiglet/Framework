@@ -53,15 +53,13 @@ public final class Text {
                 final Map<String, Object> map = new HashMap<>();
 
                 switch (type) {
-                    case "suggest_command":
-                    case "run_command":
-                    case "open_url":
-                        extra.put("clickEvent", map);
-                        break;
-
                     case "show_text":
                         value = Text.of((String) value);
                         extra.put("hoverEvent", map);
+                        break;
+
+                    default:
+                        extra.put("clickEvent", map);
                         break;
                 }
 
@@ -69,7 +67,7 @@ public final class Text {
                 map.put("value", value);
             }
 
-            final char[] codes = key.replaceAll("&", "").toCharArray();
+            final char[] codes = key.replace("&", "").toCharArray();
 
             Component color = null;
             Component style = null;
@@ -77,15 +75,13 @@ public final class Text {
             for (int i = codes.length - 1; i >= 0; --i) {
                 final Component component = Component.from(codes[i]);
 
-                if (component instanceof Color && color == null) {
+                if (component instanceof Color) {
                     color = component;
-
-                    if (style != null) break;
-                } else if (component instanceof Style && style == null) {
+                } else if (component instanceof Style) {
                     style = component;
-
-                    if (color != null) break;
                 }
+
+                if (style != null || color != null) break;
             }
 
             if (style == Style.RESET) {

@@ -26,6 +26,8 @@ package me.piggypiglet.framework.bukkit.file;
 
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
 import me.piggypiglet.framework.file.framework.objects.Flattener;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,11 +41,12 @@ import java.io.File;
 import java.util.Map;
 
 public final class SpigotFileConfiguration extends MapFileConfiguration {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("");
     private static final String BLANK_CONFIG = "{}\n";
     private static final DumperOptions OPTIONS = new DumperOptions();
     private static final Representer REPRESENTER = new YamlRepresenter();
 
-    private final ThreadLocal<Yaml> yaml = ThreadLocal.withInitial(() -> new Yaml(new YamlConstructor(), REPRESENTER, OPTIONS));
+    private final Yaml yaml = new Yaml(new YamlConstructor(), REPRESENTER, OPTIONS);
 
     static {
         OPTIONS.setIndent(4);
@@ -62,7 +65,7 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
         try {
             config.load(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
 
         return config.getValues(true);
@@ -70,7 +73,7 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
 
     @Override
     protected String convert(Map<String, Object> items) {
-        String dump = yaml.get().dump(items);
+        String dump = yaml.dump(items);
 
         if (dump.equals(BLANK_CONFIG)) {
             dump = "";

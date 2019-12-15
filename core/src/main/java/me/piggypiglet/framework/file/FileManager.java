@@ -141,8 +141,10 @@ public final class FileManager {
         File file = new File(externalPath);
 
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
+            boolean dirs = file.getParentFile().mkdirs();
+            if (!dirs) throw new RuntimeException("can't create parent dir for file.");
+            boolean fileSuc = file.createNewFile();
+            if (!fileSuc) throw new RuntimeException("can't create file");
             FileUtils.exportResource(Framework.class.getResourceAsStream(internalPath), externalPath);
         }
 

@@ -26,21 +26,20 @@ package me.piggypiglet.framework.sponge.binding.player;
 
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
-import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 import me.piggypiglet.framework.minecraft.world.World;
 import me.piggypiglet.framework.minecraft.world.location.Location;
+import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.service.whitelist.WhitelistService;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
-import static me.piggypiglet.framework.sponge.binding.player.SpongePlayerItemUtils.putFromInventory;
+import static me.piggypiglet.framework.sponge.binding.player.SpongePlayerItemUtils.fromInventory;
+import static me.piggypiglet.framework.sponge.binding.player.SpongePlayerItemUtils.hand;
 
 public final class SpongePlayer implements Player<org.spongepowered.api.entity.living.player.Player> {
     private final org.spongepowered.api.entity.living.player.Player handle;
@@ -188,7 +187,7 @@ public final class SpongePlayer implements Player<org.spongepowered.api.entity.l
 
     @Override
     public double getLastDamage() {
-        return handle.get(Keys.LAST_DAMAGE).map(o -> o.orElse(0D)).get();
+        return handle.get(Keys.LAST_DAMAGE).map(o -> o.orElse(0D)).orElse(0D);
     }
 
     @Override
@@ -215,20 +214,13 @@ public final class SpongePlayer implements Player<org.spongepowered.api.entity.l
     public Inventory getInventory() {
         final PlayerInventory inventory = (PlayerInventory) handle.getInventory();
 
-        return new Inventory(getUuid()) {
-            {
-                hand(HandTypes.MAIN_HAND, this::setHand);
-                hand(HandTypes.OFF_HAND, this::setOffHand);
-
-                putFromInventory(inventory.getEquipment(), getArmor(), 0, 4);
-                putFromInventory(inventory.getHotbar(), getHotbar(), 0, 9);
-                putFromInventory(inventory.getMain(), getItems(), 0, 27);
-            }
-
-            private void hand(HandType type, Consumer<Item> set) {
-                handle.getItemInHand(type).map(SpongePlayerItemUtils::fromItemStack).ifPresent(set);
-            }
-        };
+        return GenericBuilder.of(() -> new Inventory(getUuid()))
+                .with(Inventory::setHand, hand(handle, HandTypes.MAIN_HAND))
+                .with(Inventory::setOffHand, hand(handle, HandTypes.OFF_HAND))
+                .with(Inventory::setArmor, fromInventory(inventory.getEquipment(), 4))
+                .with(Inventory::setArmor, fromInventory(inventory.getHotbar(), 9))
+                .with(Inventory::setArmor, fromInventory(inventory.getMain(), 27))
+                .build();
     }
 
     @Override

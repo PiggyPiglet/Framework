@@ -41,19 +41,9 @@ public final class FileUtils {
      * Export an inputstream into an external file
      * @param in InputStream
      * @param destination Destination path
-     * @return Successful or not
      */
-    public static boolean exportResource(InputStream in, String destination) {
-        boolean success = true;
-
-        try {
-            Files.copy(in, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            success = false;
-            e.printStackTrace();
-        }
-
-        return success;
+    public static void exportResource(InputStream in, String destination) throws Exception {
+        Files.copy(in, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
@@ -89,12 +79,13 @@ public final class FileUtils {
         return Resources.toString(clazz.getResource(path), StandardCharsets.UTF_8);
     }
 
+    //todo: use guava Hashing
     /**
      * Get the md5 hash/checksum of a file
      * @param file File
      * @return checksum
      */
-    public static String md5Checksum(File file) {
+    public static String md5Checksum(File file) throws Exception {
         try (InputStream fis = new FileInputStream(file)) {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] buffer = new byte[1024];
@@ -103,7 +94,7 @@ public final class FileUtils {
             do {
                 read = fis.read(buffer);
 
-                if (read > 0 ) {
+                if (read > 0) {
                     digest.update(buffer, 0, read);
                 }
             } while (read != -1);
@@ -116,10 +107,6 @@ public final class FileUtils {
             }
 
             return checksum.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        return "";
     }
 }

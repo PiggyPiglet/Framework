@@ -24,15 +24,19 @@
 
 package me.piggypiglet.framework.bukkit.binding.player;
 
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
+import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 import me.piggypiglet.framework.minecraft.world.World;
 import me.piggypiglet.framework.minecraft.world.location.Location;
 import me.piggypiglet.framework.utils.ReflectionUtils;
+import me.piggypiglet.framework.utils.builder.GenericBuilder;
+import me.piggypiglet.framework.utils.map.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nonnull;
@@ -42,12 +46,13 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Supplier;
 
+import static me.piggypiglet.framework.bukkit.binding.player.BukkitPlayerUtils.fromInventory;
 import static me.piggypiglet.framework.bukkit.binding.player.BukkitPlayerUtils.fromItemStack;
-import static me.piggypiglet.framework.bukkit.binding.player.BukkitPlayerUtils.putFromInventory;
 
 public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("");
+
     private static Method handleMethod;
     private static Field pingField;
     private static Field connection;
@@ -75,7 +80,7 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
             packetPlayOutChat = packet.getConstructor(component);
             fromJson = ReflectionUtils.getAccessible(component.getDeclaredClasses()[0].getDeclaredMethod("a", String.class));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 
@@ -88,7 +93,7 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
         try {
             nmsPlayer = handleMethod.invoke(player);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 
@@ -262,28 +267,18 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     public Inventory getInventory() {
         final PlayerInventory inventory = player.getInventory();
 
-        return new Inventory(getUuid()) {
-            {
-                setHand(fromItemStack(inventory.getItemInMainHand()));
-                setOffHand(fromItemStack(inventory.getItemInOffHand()));
-
-                new HashMap<Integer, Supplier<ItemStack>>() {{
-                    put(0, inventory::getBoots);
-                    put(1, inventory::getLeggings);
-                    put(2, inventory::getChestplate);
-                    put(3, inventory::getHelmet);
-                }}.forEach((k, v) -> {
-                    final ItemStack stack = v.get();
-
-                    if (stack != null) {
-                        getArmor().put(k, fromItemStack(stack));
-                    }
-                });
-
-                putFromInventory(inventory, getHotbar(), 0, 9);
-                putFromInventory(inventory, getItems(), 9, 36);
-            }
-        };
+        return GenericBuilder.of(() -> new Inventory(getUuid()))
+                .with(Inventory::setHand, fromItemStack(inventory.getItemInMainHand()))
+                .with(Inventory::setOffHand, fromItemStack(inventory.getItemInOffHand()))
+                .with(Inventory::setArmor, Maps.of(new HashMap<Integer, Item>(), BukkitPlayerUtils::fromItemStack)
+                        .key(0).value(inventory.getBoots())
+                        .key(1).value(inventory.getLeggings())
+                        .key(2).value(inventory.getChestplate())
+                        .key(3).value(inventory.getHelmet())
+                        .build())
+                .with(Inventory::setHotbar, fromInventory(inventory, 0, 9))
+                .with(Inventory::setItems, fromInventory(inventory, 9, 36))
+                .build();
     }
 
     @Override
@@ -325,7 +320,7 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
                     packetPlayOutChat.newInstance(fromJson.invoke(null, json))
             );
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 }

@@ -30,6 +30,7 @@ import co.aikar.idb.PooledDatabaseOptions;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.file.objects.FileWrapper;
+import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.mysql.MySQLAddon;
 import me.piggypiglet.framework.mysql.annotations.SQL;
@@ -41,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class MySQLRegisterable extends StartupRegisterable {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("MySQLRegisterable");
+
     @Inject private Task task;
     @Inject private ConfigManager configManager;
     @Inject @SQL private FileWrapper sql;
@@ -72,7 +75,7 @@ public final class MySQLRegisterable extends StartupRegisterable {
                         DB.executeInsert(schemas[i]);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.error(e);
                 }
             }
 

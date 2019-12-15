@@ -36,26 +36,32 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class YamlConfiguration {
-    private static final ThreadLocal<Yaml> YAML = ThreadLocal.withInitial(() -> {
-        Representer representer = new Representer() {{
-            representers.put( Configuration.class, data -> represent( ( (Configuration) data ).self ));
-        }};
+    private static final Yaml YAML;
 
+    static {
+        Representer representer = new ConfigurationRepresenter();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle( DumperOptions.FlowStyle.BLOCK );
 
-        return new Yaml( new Constructor(), representer, options );
-    });
+        YAML = new Yaml( new Constructor(), representer, options );
+    }
 
+    @SuppressWarnings("unchecked")
     public static Configuration load(File file) throws IOException {
         try (FileInputStream is = new FileInputStream(file)) {
-            Map<String, Object> map = YAML.get().loadAs(is, LinkedHashMap.class);
+            Map<String, Object> map = YAML.loadAs(is, LinkedHashMap.class);
 
             if (map == null) {
                 map = new LinkedHashMap<>();
             }
 
             return new Configuration(map, null);
+        }
+    }
+
+    private static class ConfigurationRepresenter extends Representer {
+        private ConfigurationRepresenter() {
+            representers.put(Configuration.class, data -> represent(((Configuration) data).self));
         }
     }
 }

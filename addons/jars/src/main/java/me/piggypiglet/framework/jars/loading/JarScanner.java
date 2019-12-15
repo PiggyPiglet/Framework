@@ -43,7 +43,7 @@ public final class JarScanner {
         this.match = match;
     }
 
-    public CompletableFuture<Class<?>> scan(URI uri) {
+    public CompletableFuture<Class<?>> scan(URI uri) throws Exception {
         final Path path = Paths.get(uri);
         final List<String> classes = new ArrayList<>();
 
@@ -61,8 +61,6 @@ public final class JarScanner {
                     classes.add(name);
                 }
             } while ((entry = jar.getNextEntry()) != null);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         CompletableFuture<Class<?>> module = new CompletableFuture<>();

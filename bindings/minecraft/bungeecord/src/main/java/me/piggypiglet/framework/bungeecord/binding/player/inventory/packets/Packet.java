@@ -50,7 +50,7 @@ public abstract class Packet extends DefinedPacket {
 
     @Override
     public boolean equals(Object obj) {
-        return obj.equals(this);
+        return false;
     }
 
     @Override

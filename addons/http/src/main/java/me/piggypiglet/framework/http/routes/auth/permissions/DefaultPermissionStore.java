@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.http.HTTPAddon;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
@@ -19,6 +21,7 @@ import java.util.*;
 @Disabled
 @Singleton
 public final class DefaultPermissionStore extends Manager<Permission> {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("DefaultPermissionStore");
     private static final Base64.Decoder DECODER = Base64.getDecoder();
     private static final KeyFactory KEY_FACTORY;
 
@@ -44,7 +47,7 @@ public final class DefaultPermissionStore extends Manager<Permission> {
                         (List<String>) m.get("permissions")
                 ));
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         });
     }

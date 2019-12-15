@@ -56,7 +56,7 @@ public final class BukkitCommandRegistrar {
                 final Field f = ReflectionUtils.getAccessible(SimplePluginManager.class.getDeclaredField("commandMap"));
                 commandMap = (CommandMap) f.get(server.getPluginManager());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         } else {
             logger.debug("PluginManager is not an instance of SimplePluginManager.");
@@ -72,6 +72,8 @@ public final class BukkitCommandRegistrar {
     private void registerCommand(String... aliases) {
         PluginCommand command = getCommand(aliases[0]);
 
+        if (command == null) return;
+
         command.setAliases(Arrays.asList(aliases));
         commandMap.register(((JavaPlugin) main.getInstance()).getDescription().getName(), command);
     }
@@ -81,9 +83,9 @@ public final class BukkitCommandRegistrar {
 
         try {
             final Constructor<PluginCommand> c = ReflectionUtils.getAccessible(PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class));
-            command = c.newInstance(name, (JavaPlugin) main.getInstance());
+            command = c.newInstance(name, main.getInstance());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return command;

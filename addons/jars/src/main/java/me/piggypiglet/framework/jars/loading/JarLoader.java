@@ -43,7 +43,7 @@ public final class JarLoader {
         urlClassLoader = (URLClassLoader) loader;
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("JarLoader");
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("JarLoader");
     private static final Method ADD_URL_METHOD;
 
     static {
@@ -54,7 +54,7 @@ public final class JarLoader {
         }
     }
 
-    public void load(Jar jar) {
+    public void load(Jar jar) throws Exception {
         String name = jar.getName();
         File file = new File(jar.getPath());
 
@@ -65,12 +65,7 @@ public final class JarLoader {
             return;
         }
 
-        try {
-            ADD_URL_METHOD.invoke(urlClassLoader, file.toURI().toURL());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        ADD_URL_METHOD.invoke(urlClassLoader, file.toURI().toURL());
         LOGGER.debug("Successfully loaded jar %s", name);
     }
 }

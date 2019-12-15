@@ -27,6 +27,8 @@ package me.piggypiglet.framework.mysql.utils;
 
 import co.aikar.idb.DB;
 import co.aikar.idb.DbRow;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.task.GRunnable;
 
 import java.util.List;
@@ -38,6 +40,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public final class MySQLUtils {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("MySQL");
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(7);
     private static final CompletableFuture<Boolean> READY = new CompletableFuture<>();
     private static final Pattern STRING_REGEX = Pattern.compile("[^A-Za-z0-9\\[\\]\\-.()/!_%:,&'<>@\\s ]");
@@ -67,7 +70,7 @@ public final class MySQLUtils {
                 success.complete(true);
             } catch (Exception e) {
                 success.complete(false);
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         });
 
@@ -97,7 +100,7 @@ public final class MySQLUtils {
                         success.complete(true);
                     } catch (Exception e) {
                         success.complete(false);
-                        e.printStackTrace();
+                        LOGGER.error(e);
                     }
                 }
             });
@@ -145,7 +148,7 @@ public final class MySQLUtils {
                     success.complete(true);
                 } catch (Exception e) {
                     success.complete(false);
-                    e.printStackTrace();
+                    LOGGER.error(e);
                 }
             }
         });
@@ -173,7 +176,7 @@ public final class MySQLUtils {
                     exists.complete(true);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         });
 

@@ -24,16 +24,22 @@
 
 package me.piggypiglet.framework.task;
 
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
+
 public abstract class GRunnable implements Runnable {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("GRunnable");
+
     /**
      * Util method to put thread to sleep without having to manually catch an exception; code shortener
+     *
      * @param ms Milliseconds to sleep for
      */
     protected void sleep(long ms) {
         try {
             Thread.sleep(ms);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 }

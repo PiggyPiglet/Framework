@@ -25,6 +25,8 @@
 package me.piggypiglet.framework.sponge.file;
 
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -34,10 +36,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class SpongeYamlFileConfiguration extends MapFileConfiguration {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("SpongeConfig");
     private static final String BLANK_CONFIG = "{}\n";
     private static final DumperOptions OPTIONS = new DumperOptions();
 
-    private final ThreadLocal<Yaml> yaml = ThreadLocal.withInitial(() -> new Yaml(OPTIONS));
+    private final Yaml yaml = new Yaml(OPTIONS);
 
     static {
         OPTIONS.setIndent(4);
@@ -57,7 +60,7 @@ public final class SpongeYamlFileConfiguration extends MapFileConfiguration {
                      .setFlowStyle(DumperOptions.FlowStyle.BLOCK)
                      .build().load().getValue();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
 
         return new HashMap<>();
@@ -65,7 +68,7 @@ public final class SpongeYamlFileConfiguration extends MapFileConfiguration {
 
     @Override
     protected String convert(Map<String, Object> items) {
-        String dump = yaml.get().dump(items);
+        String dump = yaml.dump(items);
 
         if (dump.equals(BLANK_CONFIG)) {
             dump = "";

@@ -77,7 +77,7 @@ public final class HTTPServer {
             nanoHTTPD.start();
             LOGGER.debug("HTTP Server started at %s:%s", ip, port);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 

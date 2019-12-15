@@ -42,7 +42,7 @@ public final class JarManager {
 
     private final Map<Loader, Jar[]> loaders = new HashMap<>();
 
-    public JarManager load() {
+    public JarManager load() throws Exception {
         for (Loader l : loaders.keySet()) {
             final File dir = new File(l.getDir());
             dir.getParentFile().mkdirs();
@@ -62,7 +62,7 @@ public final class JarManager {
         return this;
     }
 
-    public void scan(Injector injector) {
+    public void scan(Injector injector) throws Exception {
         for (Map.Entry<Loader, Jar[]> entry : loaders.entrySet()) {
             if (entry.getKey() instanceof ScannableLoader) {
                 ScannableLoader<?> loader = (ScannableLoader<?>) entry.getKey();

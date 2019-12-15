@@ -29,16 +29,21 @@ import cn.nukkit.nbt.tag.Tag;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class NukkitInventoryUtils {
-    static void transferMap(Map<Integer, Item> og, Map<Integer, Item> inven, int initial, int end) {
+    static Map<Integer, Item> subMap(Map<Integer, Item> map, int initial, int end) {
+        final Map<Integer, Item> sub = new HashMap<>();
+
         int i = -1;
         for (int j = initial; j <= end; ++j) {
-            inven.put(++i, og.get(j));
+            map.put(++i, map.get(j));
         }
+
+        return sub;
     }
 
     static Item fromItem(cn.nukkit.item.Item item) {

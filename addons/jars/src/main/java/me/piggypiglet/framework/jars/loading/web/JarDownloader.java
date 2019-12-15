@@ -40,7 +40,7 @@ import java.nio.file.StandardCopyOption;
 public final class JarDownloader {
     private static final Logger LOGGER = LoggerFactory.getLogger("JarDownloader");
 
-    public static void download(String dir, DownloadableJar... jars) {
+    public static void download(String dir, DownloadableJar... jars) throws Exception {
         OutdatedJarManager.deleteOutdated(dir, jars);
 
         for (DownloadableJar jar : jars) {
@@ -53,19 +53,14 @@ public final class JarDownloader {
             if (!file.exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 file.getParentFile().mkdirs();
+                LOGGER.info("Downloading jar %s from %s with hash %s.", name, url.toString(), hash);
 
-                try {
-                    LOGGER.info("Downloading jar %s from %s with hash %s.", name, url.toString(), hash);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
 
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-
-                    try (InputStream is = connection.getInputStream()) {
-                        Files.copy(is, Paths.get(file.toURI()), StandardCopyOption.REPLACE_EXISTING);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                try (InputStream is = connection.getInputStream()) {
+                    Files.copy(is, Paths.get(file.toURI()), StandardCopyOption.REPLACE_EXISTING);
                 }
             }
 

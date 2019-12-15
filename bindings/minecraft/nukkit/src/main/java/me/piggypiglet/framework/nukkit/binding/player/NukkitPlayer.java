@@ -32,13 +32,14 @@ import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;
 import me.piggypiglet.framework.minecraft.world.World;
 import me.piggypiglet.framework.minecraft.world.location.Location;
+import me.piggypiglet.framework.utils.builder.GenericBuilder;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static me.piggypiglet.framework.nukkit.binding.player.NukkitInventoryUtils.fromItem;
-import static me.piggypiglet.framework.nukkit.binding.player.NukkitInventoryUtils.transferMap;
+import static me.piggypiglet.framework.nukkit.binding.player.NukkitInventoryUtils.subMap;
 
 public final class NukkitPlayer implements Player<cn.nukkit.Player> {
     private final cn.nukkit.Player handle;
@@ -220,15 +221,12 @@ public final class NukkitPlayer implements Player<cn.nukkit.Player> {
         final PlayerInventory inventory = handle.getInventory();
         final Map<Integer, Item> slots = handle.getInventory().slots.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> fromItem(e.getValue())));
 
-        return new Inventory(getUuid()) {
-            {
-                setHand(fromItem(inventory.getItemInHand()));
-
-                transferMap(slots, getArmor(), 36, 39);
-                transferMap(slots, getHotbar(), 0, 8);
-                transferMap(slots, getItems(), 9, 35);
-            }
-        };
+        return GenericBuilder.of(() -> new Inventory(getUuid()))
+                .with(Inventory::setHand, fromItem(inventory.getItemInHand()))
+                .with(Inventory::setArmor, subMap(slots, 36, 39))
+                .with(Inventory::setHotbar, subMap(slots, 0, 8))
+                .with(Inventory::setItems, subMap(slots, 9, 35))
+                .build();
     }
 
     @Override

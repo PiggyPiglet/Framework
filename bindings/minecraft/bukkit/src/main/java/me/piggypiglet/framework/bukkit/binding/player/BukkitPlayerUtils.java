@@ -35,7 +35,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 final class BukkitPlayerUtils {
-    static void putFromInventory(Inventory inventory, Map<Integer, Item> map, int initial, int end) {
+    static Map<Integer, Item> fromInventory(Inventory inventory, int initial, int end) {
+        final Map<Integer, Item> map = new HashMap<>();
+
         for (int i = 0; i < end - initial; i++) {
             final ItemStack stack = inventory.getItem(i + initial);
 
@@ -43,6 +45,8 @@ final class BukkitPlayerUtils {
                 map.put(i, fromItemStack(stack));
             }
         }
+
+        return map;
     }
 
     static Item fromItemStack(ItemStack itemStack) {

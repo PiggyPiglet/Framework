@@ -25,28 +25,28 @@
 package me.piggypiglet.framework.jars.loading.web.update;
 
 import me.piggypiglet.framework.jars.loading.web.DownloadableJar;
+import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 
 import java.io.File;
 
 public final class OutdatedJarManager {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("OutdatedJarManager");
+
     /**
      * Delete any outdated jars
-     * @param dir Directory to look in
+     *
+     * @param dir   Directory to look in
      * @param files Current files
      */
-    public static void deleteOutdated(String dir, DownloadableJar... files) {
-        try {
-            OutdatedJarDeleter deleter = new OutdatedJarDeleter(
-                    new OutdatedJarScanner(new File(dir), files).scan().getNeedsUpdating()
-            );
+    public static void deleteOutdated(String dir, DownloadableJar... files) throws Exception {
+        OutdatedJarDeleter deleter = new OutdatedJarDeleter(
+                new OutdatedJarScanner(new File(dir), files).scan().getNeedsUpdating()
+        );
 
-            if (deleter.needsUpdating()) {
-                LoggerFactory.getLogger("OutdatedJarManager").debug("Deleting outdated/irrelevant jars in %s.", dir);
-                deleter.deleteAll();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (deleter.needsUpdating()) {
+            LOGGER.debug("Deleting outdated/irrelevant jars in %s.", dir);
+            deleter.deleteAll();
         }
     }
 }
