@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.file.exceptions.file.CreateFileException;
-import me.piggypiglet.framework.file.exceptions.file.ParentDirectoryException;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
@@ -143,8 +142,7 @@ public final class FileManager {
         File file = new File(externalPath);
 
         if (!file.exists()) {
-            boolean dirs = file.getParentFile().mkdirs();
-            if (!dirs) throw new ParentDirectoryException("can't create parent dir for file.");
+            file.getParentFile().mkdirs();
             boolean fileSuc = file.createNewFile();
             if (!fileSuc) throw new CreateFileException("can't create file");
             FileUtils.exportResource(Framework.class.getResourceAsStream(internalPath), externalPath);
