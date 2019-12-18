@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.file.framework;
 
-import me.piggypiglet.framework.file.framework.objects.Flattener;
+import me.piggypiglet.framework.file.framework.objects.Mapper;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 
 import java.io.File;
@@ -41,7 +41,7 @@ import static me.piggypiglet.framework.utils.TypeUtils.valueNullDef;
 
 public abstract class AbstractFileConfiguration implements FileConfiguration {
     private final Predicate<String> match;
-    private final Flattener[] flatteners;
+    protected final List<Mapper> mappers = new ArrayList<>();
 
     protected static final String NULL_STRING = "null";
     protected static final int NULL_NUM = 0;
@@ -54,12 +54,12 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
      * @param match Predicate
      */
     protected AbstractFileConfiguration(Predicate<String> match) {
-        this(match, Flattener.builder(null).build());
+        this(match, (Mapper[]) null);
     }
 
-    protected AbstractFileConfiguration(Predicate<String> match, Flattener... flatteners) {
+    protected AbstractFileConfiguration(Predicate<String> match, Mapper... mappers) {
         this.match = match;
-        this.flatteners = flatteners;
+        if (mappers != null) this.mappers.addAll(Arrays.asList(mappers));
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
      * Get this FileConfiguration's file instance
      * @return File
      */
-    public File getFile() {
+    public java.io.File getFile() {
         return file;
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
     }
 
     @Override
-    public FileConfiguration getConfigSection(String path, FileConfiguration def) {
+    public FileConfiguration getConfigSection(String path, me.piggypiglet.framework.file.framework.FileConfiguration def) {
         return valueNullDef(getConfigSection(path), new BlankFileConfiguration(), def);
     }
 
@@ -151,7 +151,9 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
 
     public Map<String, Object> getAll() {
         final AtomicReference<Stream<Map.Entry<String, Object>>> stream = new AtomicReference<>(retrieveAll().entrySet().stream());
-        Arrays.stream(flatteners).forEach(f -> stream.set(stream.get().flatMap(f::flatten)));
+        mappers.forEach(f -> {
+            if (f != null) stream.set(stream.get().flatMap(f::flatten));
+        });
 
         return stream.get()
                 .distinct()

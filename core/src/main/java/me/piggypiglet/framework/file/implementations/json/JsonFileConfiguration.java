@@ -28,7 +28,6 @@ import com.google.gson.GsonBuilder;
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
 import me.piggypiglet.framework.json.JsonParser;
 
-import java.io.File;
 import java.util.Map;
 
 public final class JsonFileConfiguration extends MapFileConfiguration {
@@ -37,7 +36,7 @@ public final class JsonFileConfiguration extends MapFileConfiguration {
     }
 
     @Override
-    protected Map<String, Object> provide(File file, String fileContent) {
+    protected java.util.Map<String, Object> provide(java.io.File file, String fileContent) {
         return new JsonParser(fileContent).getAll();
     }
 

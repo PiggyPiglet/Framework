@@ -24,15 +24,13 @@
 
 package me.piggypiglet.framework.utils.map;
 
-import java.util.AbstractMap;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unchecked")
 public class Maps {
     private Maps() {
         throw new RuntimeException("This class cannot be instantiated.");
@@ -78,7 +76,6 @@ public class Maps {
                 this.key = key;
             }
 
-            @SuppressWarnings("unchecked")
             public Builder<K, V, R, T> value(T value) {
                 if (mapper != null) {
                     map.put(key, mapper.apply(value));
@@ -90,7 +87,6 @@ public class Maps {
             }
         }
 
-        @SuppressWarnings("unchecked")
         public R build() {
             if (returnInstance != null && build != null) {
                 build.accept(map);
@@ -101,7 +97,7 @@ public class Maps {
         }
     }
 
-    @SuppressWarnings("unchecked")
+
     public static Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry) {
         return flatten(entry, Map.class, f -> f);
     }
@@ -132,6 +128,36 @@ public class Maps {
         return Stream.of(entry);
     }
 
+    public static <T> Map<String, Object> map(Map<String, Object> map, Class<T> clazz, Function<T, Map<String, Object>> mapper) {
+        final Map<String, Object> mapped = new HashMap<>();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            final Object obj = entry.getValue();
+
+            if (clazz.isInstance(obj)) {
+                mapped.put(entry.getKey(), Maps.map(mapper.apply((T) obj), clazz, mapper));
+                continue;
+            }
+
+            if (entry.getValue() instanceof Collection<?> && ((Collection<?>) entry.getValue()).stream().anyMatch(clazz::isInstance)) {
+                mapped.put(entry.getKey(), ((Collection<?>) entry.getValue()).stream()
+                        .map(o -> {
+                            if (clazz.isInstance(o)) {
+                                return Maps.map(mapper.apply((T) o), clazz, mapper);
+                            }
+
+                            return o;
+                        })
+                );
+                continue;
+            }
+
+            mapped.put(entry.getKey(), obj);
+        }
+
+        return mapped;
+    }
+
     public static <T> T recursiveGet(Map<String, T> map, String path) {
         T object = map.getOrDefault(path, null);
 
@@ -147,7 +173,6 @@ public class Maps {
         return object;
     }
 
-    @SuppressWarnings("unchecked")
     private static <T> T getBuriedObject(Map<String, T> map, String[] keys) {
         int i = 1;
         Map<String, T> endObject = (Map<String, T>) map.get(keys[0]);

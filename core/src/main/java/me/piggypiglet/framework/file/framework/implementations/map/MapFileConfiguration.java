@@ -28,10 +28,9 @@ import me.piggypiglet.framework.file.exceptions.config.ConfigSaveException;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
-import me.piggypiglet.framework.file.framework.objects.Flattener;
+import me.piggypiglet.framework.file.framework.objects.Mapper;
 import me.piggypiglet.framework.utils.map.Maps;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,41 +41,35 @@ import java.util.stream.Collectors;
 public abstract class MapFileConfiguration extends AbstractFileConfiguration implements MutableFileConfiguration {
     private Map<String, Object> items;
     private Map<String, Object> flat;
-    private Flattener flattener = null;
 
-    /**
-     * Provision a predicate to see whether a file extension will match this configuration
-     *
-     * @param match Predicate
-     */
     protected MapFileConfiguration(Predicate<String> match) {
         super(match);
     }
 
-    protected MapFileConfiguration(Predicate<String> match, Flattener flattener) {
-        super(match, flattener);
-        this.flattener = flattener;
+    protected MapFileConfiguration(Predicate<String> match, Mapper... mappers) {
+        super(match, mappers);
     }
 
-    protected abstract Map<String, Object> provide(File file, String fileContent);
+    MapFileConfiguration(Map<String, Object> items) {
+        super(null);
+        this.items = items;
+        flat = getAll();
+    }
+
+    protected abstract Map<String, Object> provide(java.io.File file, String fileContent);
 
     protected abstract String convert(Map<String, Object> items);
 
     @Override
-    protected void internalLoad(File file, String fileContent) {
+    protected void internalLoad(java.io.File file, String fileContent) {
         items = provide(file, fileContent);
+        mappers.forEach(f -> items = Maps.map(items, f.getClazz(), f.getFunction()));
         flat = getAll();
     }
 
     @Override
     public Object get(String path) {
-        final Object obj = Maps.recursiveGet(items, path);
-
-        if (flattener != null && flattener.getClazz().isInstance(obj)) {
-            return flattener.getFunction().apply(obj);
-        }
-
-        return obj;
+        return Maps.recursiveGet(items, path);
     }
 
     @SuppressWarnings("unchecked")

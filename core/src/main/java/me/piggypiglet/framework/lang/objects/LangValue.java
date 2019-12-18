@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.lang.objects;
 
-import me.piggypiglet.framework.lang.Lang;
+import me.piggypiglet.framework.lang.LanguageGetter;
 
 public final class LangValue {
     private final String path;
@@ -39,6 +39,6 @@ public final class LangValue {
 
     @Override
     public String toString() {
-        return Lang.LanguageGetter.get(path);
+        return LanguageGetter.get(path);
     }
 }

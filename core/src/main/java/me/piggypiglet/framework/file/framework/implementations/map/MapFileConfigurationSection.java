@@ -31,16 +31,13 @@ import java.util.Map;
 
 @Disabled
 public final class MapFileConfigurationSection extends MapFileConfiguration {
-    private final Map<String, Object> items;
-
     public MapFileConfigurationSection(Map<String, Object> items) {
-        super(null);
-        this.items = items;
+        super(items);
     }
 
     @Override
     protected Map<String, Object> provide(File file, String fileContent) {
-        return items;
+        return null;
     }
 
     @Override

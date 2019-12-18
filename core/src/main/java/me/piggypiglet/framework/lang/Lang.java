@@ -25,9 +25,7 @@
 package me.piggypiglet.framework.lang;
 
 import com.google.inject.Singleton;
-import me.piggypiglet.framework.lang.objects.LangConfig;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,16 +56,6 @@ public final class Lang {
         @Override
         public String toString() {
             return LanguageGetter.get(path);
-        }
-    }
-
-    public static class LanguageGetter {
-        @Inject private static LangConfig config;
-
-        private LanguageGetter() {}
-
-        public static String get(String path) {
-            return config.get(path);
         }
     }
 

@@ -42,7 +42,6 @@ public final class BungeeFileConfiguration extends MapFileConfiguration {
         super(s -> s.endsWith(".yml"));
     }
 
-
     @Override
     protected Map<String, Object> provide(File file, String fileContent) {
         final Configuration config;

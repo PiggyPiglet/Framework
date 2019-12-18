@@ -25,12 +25,10 @@
 package me.piggypiglet.framework.bukkit.file;
 
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
-import me.piggypiglet.framework.file.framework.objects.Flattener;
+import me.piggypiglet.framework.file.framework.objects.Mapper;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
 import org.yaml.snakeyaml.DumperOptions;
@@ -38,6 +36,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class SpigotFileConfiguration extends MapFileConfiguration {
@@ -45,8 +44,7 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
     private static final String BLANK_CONFIG = "{}\n";
     private static final DumperOptions OPTIONS = new DumperOptions();
     private static final Representer REPRESENTER = new YamlRepresenter();
-
-    private final Yaml yaml = new Yaml(new YamlConstructor(), REPRESENTER, OPTIONS);
+    private static final Yaml YAML = new Yaml(new YamlConstructor(), REPRESENTER, OPTIONS);
 
     static {
         OPTIONS.setIndent(4);
@@ -55,25 +53,24 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
     }
 
     public SpigotFileConfiguration() {
-        super(s -> s.endsWith(".yml"), Flattener.builder(MemorySection.class).flattener(m -> m.getValues(true)).build());
+        super(s -> s.endsWith(".yml"), Mapper.builder(MemorySection.class).flattener(m -> m.getValues(true)).build());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Map<String, Object> provide(File file, String fileContent) {
-        final FileConfiguration config = new YamlConfiguration();
-
         try {
-            config.load(file);
+            return (Map<String, Object>) YAML.load(fileContent);
         } catch (Exception e) {
-            LOGGER.error(e);
+            e.printStackTrace();
         }
 
-        return config.getValues(true);
+        return new LinkedHashMap<>();
     }
 
     @Override
     protected String convert(Map<String, Object> items) {
-        String dump = yaml.dump(items);
+        String dump = YAML.dump(items);
 
         if (dump.equals(BLANK_CONFIG)) {
             dump = "";

@@ -31,6 +31,7 @@ import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.lang.Lang;
 import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.LanguageGetter;
 import me.piggypiglet.framework.lang.objects.CustomLang;
 import me.piggypiglet.framework.lang.objects.LangConfig;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
@@ -80,7 +81,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
         }
 
         addBinding(new LangConfig(map));
-        requestStaticInjections(me.piggypiglet.framework.lang.Lang.LanguageGetter.class);
+        requestStaticInjections(LanguageGetter.class);
     }
 
     private Map<String, String> doConfig(Map<String, String> locations, FileConfiguration config) {
@@ -105,7 +106,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
                             fileManager.loadConfig(name, "/" + file, external ? "lang/" + file : null)
                     ));
                 } catch (Exception e) {
-                    throw new RuntimeException(exception + ":\n" + e);
+                    e.printStackTrace();
                 }
             }
         });

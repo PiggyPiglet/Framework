@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.utils;
 
-import me.piggypiglet.framework.lang.Lang;
 import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.LanguageGetter;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 
 import java.util.ArrayList;
@@ -140,6 +140,6 @@ public final class StringUtils {
     }
 
     public static String format(Object message) {
-        return message instanceof LangEnum ? Lang.LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
+        return message instanceof LangEnum ? LanguageGetter.get(((LangEnum) message).getPath()) : String.valueOf(message);
     }
 }

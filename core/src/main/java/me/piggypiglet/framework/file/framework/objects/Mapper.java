@@ -30,11 +30,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public final class Flattener {
+public final class Mapper {
     private final Class<?> clazz;
     private final Function<?, Map<String, Object>> function;
 
-    private Flattener(Class<?> clazz, Function<?, Map<String, Object>> function) {
+    private Mapper(Class<?> clazz, Function<?, Map<String, Object>> function) {
         this.clazz = clazz;
         this.function = function;
     }
@@ -56,8 +56,8 @@ public final class Flattener {
             return this;
         }
 
-        public Flattener build() {
-            return new Flattener(clazz, function);
+        public Mapper build() {
+            return new Mapper(clazz, function);
         }
     }
 
