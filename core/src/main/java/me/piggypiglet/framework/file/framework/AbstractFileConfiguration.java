@@ -26,6 +26,7 @@ package me.piggypiglet.framework.file.framework;
 
 import me.piggypiglet.framework.file.framework.objects.Mapper;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
+import me.piggypiglet.framework.utils.map.Maps;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -156,6 +157,7 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
         });
 
         return stream.get()
+                .flatMap(Maps::flatten)
                 .distinct()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
