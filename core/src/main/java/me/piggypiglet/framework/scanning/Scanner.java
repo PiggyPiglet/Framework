@@ -39,7 +39,7 @@ public abstract class Scanner {
 
     protected abstract Set<Method> provideMethodsAnnotatedWith(Class<? extends Annotation> annotation);
 
-    protected abstract Set<Constructor> provideConstructorsWithAnyParamAnnotated(Class<? extends Annotation> annotation);
+    protected abstract Set<Constructor<?>> provideConstructorsWithAnyParamAnnotated(Class<? extends Annotation> annotation);
 
     protected abstract Set<Field> provideFieldsAnnotatedWith(Class<? extends Annotation> annotation);
 

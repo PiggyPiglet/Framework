@@ -1,5 +1,5 @@
 # Reflection Based Project Framework
-RPF, as the name suggests, is a reflection based Java project framework. What is reflection though? In essence, reflection is basically a tool that allows you to view and extend a class's architecture, for example, allowing you to get all annotations in a class, or on a method. RPF takes this basic tool to the next level though, by integrating well-known reflection utilizing libraries such as Guice and org.reflections, resulting in a unique and efficient way of creating applications.
+RPF, as the name suggests, is a reflection based Java project framework. What is reflection though? In essence, reflection is basically a tool that allows you to view and extend a class's architecture, for example, allowing you to get all annotations in a class, or on a method. RPF takes this basic tool to the next level though, by integrating well-known reflection utilizing libraries such as Guice and Guava, resulting in a unique and efficient way of creating applications.
 ### Features:
 - Child injector based startup system
 - Platform independent command API
@@ -62,4 +62,4 @@ More info can be found on their respective pages.
 
 | Core  | Console | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity | Nukkit |
 |-------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|--------|
-| 1.7.25 | 1.7.25   | 1.7.25 | 1.7.25 | 1.7.25   | 1.7.25 | 1.7.25  | 1.7.25      | 1.7.25 | 1.7.25  | 1.7.25    | 1.7.25  |
+| 1.8.0 | 1.8.0   | 1.8.0 | 1.8.0 | 1.8.0   | 1.8.0 | 1.8.0  | 1.8.0      | 1.8.0 | 1.8.0  | 1.8.0    | 1.8.0  |

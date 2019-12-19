@@ -29,8 +29,7 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.scanning.Scanner;
-import me.piggypiglet.framework.scanning.implementations.Reflections;
-import org.reflections.scanners.*;
+import me.piggypiglet.framework.scanning.implementations.Guava;
 
 public final class InitialModule extends AbstractModule {
     private final FrameworkBootstrap boot;
@@ -78,11 +77,12 @@ public final class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public Scanner providesScanner() {
-        return new Reflections(config.getPckg(), config.getPckgExclusions(),
-                new MethodAnnotationsScanner(),
-                new MethodParameterScanner(),
-                new TypeAnnotationsScanner(),
-                new SubTypesScanner(),
-                new FieldAnnotationsScanner());
+//        return new Reflections(config.getPckg(), config.getPckgExclusions(),
+//                new MethodAnnotationsScanner(),
+//                new MethodParameterScanner(),
+//                new TypeAnnotationsScanner(),
+//                new SubTypesScanner(),
+//                new FieldAnnotationsScanner());
+        return new Guava(config.getPckg(), config.getPckgExclusions());
     }
 }

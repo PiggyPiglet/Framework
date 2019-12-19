@@ -46,45 +46,53 @@ public final class StringUtils {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
-    public static boolean anyStartWith(String str, String... elements) {
-        return anyStartWith(str, Arrays.asList(elements));
+    public static boolean anyStartWith(String str, String... triggers) {
+        return anyStartWith(str, Arrays.asList(triggers));
     }
 
-    public static boolean anyStartWith(String str, List<String> elements) {
-        return anyWith(str, elements, String::startsWith);
+    public static boolean anyStartWith(String str, List<String> triggers) {
+        return anyWith(str, triggers, String::startsWith);
     }
 
-    public static boolean anyEndWith(String str, String... elements) {
-        return anyEndWith(str, Arrays.asList(elements));
+    public static boolean startsWithAny(String trigger, String... strings) {
+        return startsWithAny(trigger, Arrays.asList(strings));
+    }
+    
+    public static boolean startsWithAny(String trigger, List<String> strings) {
+        return anyWith(trigger, strings, (t, s) -> s.startsWith(t));
     }
 
-    public static boolean anyEndWith(String str, List<String> elements) {
-        return anyWith(str, elements, String::endsWith);
+    public static boolean anyEndWith(String str, String... triggers) {
+        return anyEndWith(str, Arrays.asList(triggers));
     }
 
-    public static boolean anyContains(String str, String... elements) {
-        return anyContains(str, Arrays.asList(elements));
+    public static boolean anyEndWith(String str, List<String> triggers) {
+        return anyWith(str, triggers, String::endsWith);
     }
 
-    public static boolean anyContains(String str, List<String> elements) {
-        return anyWith(str, elements, String::contains);
+    public static boolean anyContains(String str, String... triggers) {
+        return anyContains(str, Arrays.asList(triggers));
+    }
+
+    public static boolean anyContains(String str, List<String> triggers) {
+        return anyWith(str, triggers, String::contains);
     }
 
     public static boolean anyMatches(String str, Pattern... patterns) {
         return anyMatches(str, Arrays.asList(patterns));
     }
 
-    public static boolean anyMatches(String str, List<Pattern> elements) {
-        return anyWith(str, elements, (p, s) -> p.matcher(s).matches());
+    public static boolean anyMatches(String str, List<Pattern> triggers) {
+        return anyWith(str, triggers, (p, s) -> p.matcher(s).matches());
     }
 
-    public static <T> boolean anyWith(String trigger, List<T> elements, BiPredicate<T, String> test) {
-        return lowercaseStream(elements).anyMatch(s -> test.test(s, trigger));
+    public static <T> boolean anyWith(String str, List<T> elements, BiPredicate<T, String> test) {
+        return lowercaseStream(elements).anyMatch(s -> test.test(s, str));
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Stream<T> lowercaseStream(List<T> elements) {
-        return elements.stream().map(o -> o instanceof String ? (T) ((String) o).toLowerCase() : o);
+    private static <T> Stream<T> lowercaseStream(List<T> triggers) {
+        return triggers.stream().map(o -> o instanceof String ? (T) ((String) o).toLowerCase() : o);
     }
 
     public static String addonName(Class<?> addon) {
