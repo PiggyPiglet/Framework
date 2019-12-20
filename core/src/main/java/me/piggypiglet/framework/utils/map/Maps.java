@@ -27,6 +27,7 @@ package me.piggypiglet.framework.utils.map;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,22 +67,36 @@ public class Maps {
         }
 
         public ValueBuilder key(K key) {
-            return new ValueBuilder(key);
+            return key(key, null);
+        }
+
+        public ValueBuilder key(K key, Predicate<V> requirement) {
+            return new ValueBuilder(key, requirement);
         }
 
         public final class ValueBuilder {
             private final K key;
+            private final Predicate<V> requirement;
 
-            private ValueBuilder(K key) {
+            private ValueBuilder(K key, Predicate<V> requirement) {
                 this.key = key;
+                this.requirement = requirement;
             }
 
             public Builder<K, V, R, T> value(T value) {
+                final V real;
+
                 if (mapper != null) {
-                    map.put(key, mapper.apply(value));
+                    real = mapper.apply(value);
                 } else {
-                    map.put(key, (V) value);
+                    real = (V) value;
                 }
+
+                if (requirement != null) {
+                    if (!requirement.test(real)) return Builder.this;
+                }
+
+                map.put(key, real);
 
                 return Builder.this;
             }
