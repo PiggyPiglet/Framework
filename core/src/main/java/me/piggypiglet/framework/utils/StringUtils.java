@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class StringUtils {
-    private static final Pattern SPECIFIC_FORMAT_REGEX = Pattern.compile("/%\\d\\$s/g");
-    private static final Pattern INDEX_FORMAT_REGEX = Pattern.compile("/%s/g");
+    private static final Pattern SPECIFIC_FORMAT_REGEX = Pattern.compile("%\\d\\$s");
+    private static final Pattern INDEX_FORMAT_REGEX = Pattern.compile("%s");
 
     private StringUtils() {
         throw new RuntimeException("This class cannot be instantiated.");
@@ -57,7 +57,7 @@ public final class StringUtils {
     public static boolean startsWithAny(String trigger, String... strings) {
         return startsWithAny(trigger, Arrays.asList(strings));
     }
-    
+
     public static boolean startsWithAny(String trigger, List<String> strings) {
         return anyWith(trigger, strings, (t, s) -> s.startsWith(t));
     }
@@ -114,12 +114,11 @@ public final class StringUtils {
                 .map(StringUtils::format)
                 .collect(Collectors.toList());
         final String joined = String.join("", messages);
-
         final Matcher specificMatcher = SPECIFIC_FORMAT_REGEX.matcher(joined);
 
-        int count = INDEX_FORMAT_REGEX.split(joined, -1).length;
+        int count = INDEX_FORMAT_REGEX.split(joined, -1).length - 1;
 
-        if (SPECIFIC_FORMAT_REGEX.matcher(joined).matches()) {
+        if (specificMatcher.matches()) {
             final List<Integer> nums = new ArrayList<>();
 
             while (specificMatcher.find()) {
@@ -138,9 +137,7 @@ public final class StringUtils {
             return String.format(messages.get(0), concatenations[0]);
         }
 
-        int midIndex = messages.size() - count;
-        midIndex = midIndex > 2 ? midIndex : midIndex - 1;
-
+        final int midIndex = messages.size() - count;
         final String msg = String.join("", messages.subList(0, midIndex));
         final Object[] vars = messages.subList(midIndex, messages.size()).toArray();
 
