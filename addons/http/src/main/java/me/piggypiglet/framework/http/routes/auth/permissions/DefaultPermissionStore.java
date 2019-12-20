@@ -63,7 +63,7 @@ public final class DefaultPermissionStore extends Manager<Permission> {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void populate() {
+    protected void postConfigure() {
         ((List<Map<String, Object>>) configManager.getConfigs().get(HTTPAddon.class).getItems().get("standard-authentication.tokens")).forEach(m -> {
             try {
                 add(new Permission(

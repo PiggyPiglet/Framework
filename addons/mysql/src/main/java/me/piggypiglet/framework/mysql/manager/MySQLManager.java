@@ -53,7 +53,7 @@ public abstract class MySQLManager<S extends SearchUtils.Searchable> extends Sea
             if (b) {
                 table.getAll().whenComplete((s, th) -> {
                     items.addAll(s);
-                    populate();
+                    postConfigure();
                 });
             }
         });

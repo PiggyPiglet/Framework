@@ -42,16 +42,22 @@ public abstract class Manager<S> {
     protected abstract KeyTypeInfo configure(KeyTypeInfo.Builder builder);
 
     /**
-     * Handle initial population here
+     * Ran before Manager#configure
      */
-    protected void populate() {}
+    protected void preConfigure() {}
+
+    /**
+     * Ran after Manager#configure
+     */
+    protected void postConfigure() {}
 
     /**
      * Populate the manager.
      */
     public void setup() {
+        preConfigure();
         keyTypes = configure(KeyTypeInfo.builder());
-        populate();
+        postConfigure();
     }
 
     /**
