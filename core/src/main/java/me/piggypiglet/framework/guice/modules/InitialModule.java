@@ -83,6 +83,6 @@ public final class InitialModule extends AbstractModule {
 //                new TypeAnnotationsScanner(),
 //                new SubTypesScanner(),
 //                new FieldAnnotationsScanner());
-        return new Guava(config.getPckg(), config.getPckgExclusions());
-    }
+        return new Guava(config.getMain().getInstance().getClass(), config.getPckg(), config.getPckgExclusions());
+}
 }

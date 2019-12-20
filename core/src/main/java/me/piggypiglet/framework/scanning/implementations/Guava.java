@@ -26,9 +26,9 @@ public final class Guava extends Scanner {
     private final Set<Field> fields;
 
     @SuppressWarnings("UnstableApiUsage")
-    public Guava(String pckg, String[] exclusions) {
+    public Guava(Class<?> main, String pckg, String[] exclusions) {
         try {
-            final ClassPath classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
+            final ClassPath classPath = ClassPath.from(main.getClassLoader());
             final Predicate<ClassPath.ClassInfo> allowThrough = c -> !StringUtils.startsWithAny(c.getPackageName(), exclusions);
             final String frameworkPackage = Framework.class.getPackage().getName();
             Stream<Class<?>> classStream = classPath.getTopLevelClassesRecursive(pckg).parallelStream()
