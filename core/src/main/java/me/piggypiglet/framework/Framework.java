@@ -305,7 +305,17 @@ public final class Framework {
             return this;
         }
 
+        public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Annotation annotation) {
+            files.add(new FileData(config, name, internalPath, externalPath, annotation));
+            return this;
+        }
+
         public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
+            files.add(new FileData(config, name, internalPath, externalPath, annotation));
+            return this;
+        }
+
+        public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Annotation annotation) {
             files.add(new FileData(config, name, internalPath, externalPath, annotation));
             return this;
         }

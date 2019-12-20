@@ -73,8 +73,8 @@ public final class FilesRegisterable extends StartupRegisterable {
                 final String name = f.getName();
                 final String internalPath;
 
-                if (f.getInternalConfigPathReference() != null) {
-                    final FileData.ConfigPathReference path = f.getInternalConfigPathReference();
+                if (f.getInternalPathReference() != null) {
+                    final FileData.ConfigPathReference path = f.getInternalPathReference();
 
                     String value = fileManager.getConfig(path.getConfig()).getString(path.getPath(), path.getDef());
 
@@ -84,20 +84,29 @@ public final class FilesRegisterable extends StartupRegisterable {
 
                     internalPath = "/" + value;
                 } else {
-                    internalPath = f.getInternalPath();
+                    internalPath = f.getHardInternalPath();
                 }
 
                 final String externalPath = f.getExternalPath();
-                final Class<? extends Annotation> annotation = f.getAnnotation();
+                final Class<? extends Annotation> annotationClass = f.getAnnotationClass();
+                final Annotation annotationInstance = f.getAnnotationInstance();
 
                 if (f.isConfig()) {
-                    addAnnotatedBinding(FileConfiguration.class, annotation, fileManager.loadConfig(name, internalPath, externalPath));
+                    bind(FileConfiguration.class, annotationClass, annotationInstance, fileManager.loadConfig(name, internalPath, externalPath));
                 } else {
-                    addAnnotatedBinding(FileWrapper.class, annotation, fileManager.loadFile(name, internalPath, externalPath));
+                    bind(FileWrapper.class, annotationClass, annotationInstance, fileManager.loadFile(name, internalPath, externalPath));
                 }
             } catch (Exception e) {
                 LOGGER.error(e);
             }
         });
+    }
+
+    private <T> void bind(Class<? super T> interfaze, Class<? extends Annotation> annotationClass, Annotation annotationInstance, T instance) {
+        if (annotationClass == null) {
+            addAnnotatedBinding(interfaze, annotationInstance, instance);
+        } else {
+            addAnnotatedBinding(interfaze, annotationClass, instance);
+        }
     }
 }

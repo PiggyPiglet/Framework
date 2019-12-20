@@ -32,56 +32,70 @@ import java.util.function.UnaryOperator;
 public final class FileData implements Comparable<FileData> {
     private final boolean config;
     private final String name;
-    private final String internalPath;
-    private final ConfigPathReference internalConfigPathReference;
+    private final String hardInternalPath;
+    private final ConfigPathReference internalPathReference;
     private final String externalPath;
-    private final Class<? extends Annotation> annotation;
+    private final Class<? extends Annotation> annotationClass;
+    private final Annotation annotationInstance;
 
-    public FileData(boolean config, String name, @Nonnull String internalPath, String externalPath, Class<? extends Annotation> annotation) {
-        this.config = config;
-        this.name = name;
-        this.internalPath = internalPath;
-        this.internalConfigPathReference = null;
-        this.externalPath = externalPath;
-        this.annotation = annotation;
+    public FileData(boolean config, String name, @Nonnull String internalPath, String externalPath, Class<? extends Annotation> annotationClass) {
+        this(config, name, internalPath, null, externalPath, annotationClass, null);
+    }
+
+    public FileData(boolean config, String name, @Nonnull String internalPath, String externalPath, Annotation annotation) {
+        this(config, name, internalPath, null, externalPath, null, annotation);
     }
 
     public FileData(boolean config, String name, @Nonnull ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
+        this(config, name, null, internalPath, externalPath, annotation, null);
+    }
+
+    public FileData(boolean config, String name, @Nonnull ConfigPathReference internalPath, String externalPath, Annotation annotation) {
+        this(config, name, null, internalPath, externalPath, null, annotation);
+    }
+
+    private FileData(boolean config, String name, String hardInternalPath, ConfigPathReference internalPathReference,
+                     String externalPath, Class<? extends Annotation> annotationClass, Annotation annotationInstance) {
         this.config = config;
         this.name = name;
-        this.internalPath = null;
-        this.internalConfigPathReference = internalPath;
+        this.hardInternalPath = hardInternalPath;
+        this.internalPathReference = internalPathReference;
         this.externalPath = externalPath;
-        this.annotation = annotation;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getInternalPath() {
-        return internalPath;
-    }
-
-    public ConfigPathReference getInternalConfigPathReference() {
-        return internalConfigPathReference;
-    }
-
-    public String getExternalPath() {
-        return externalPath;
-    }
-
-    public Class<? extends Annotation> getAnnotation() {
-        return annotation;
+        this.annotationClass = annotationClass;
+        this.annotationInstance = annotationInstance;
     }
 
     public boolean isConfig() {
         return config;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getHardInternalPath() {
+        return hardInternalPath;
+    }
+
+    public ConfigPathReference getInternalPathReference() {
+        return internalPathReference;
+    }
+
+    public String getExternalPath() {
+        return externalPath;
+    }
+
+    public Class<? extends Annotation> getAnnotationClass() {
+        return annotationClass;
+    }
+
+    public Annotation getAnnotationInstance() {
+        return annotationInstance;
+    }
+
     @Override
     public int compareTo(@Nonnull FileData fileData) {
-        if (fileData.internalPath == null) {
+        if (fileData.hardInternalPath == null) {
             return -1;
         }
 
