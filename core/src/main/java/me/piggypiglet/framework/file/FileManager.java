@@ -97,6 +97,10 @@ public final class FileManager {
         return null;
     }
 
+    public boolean exists(String name) {
+        return files.containsKey(name);
+    }
+
     /**
      * Get the raw type instance of a stored file/config (FileWrapper or FileConfiguration)
      * @param name Name of the file
