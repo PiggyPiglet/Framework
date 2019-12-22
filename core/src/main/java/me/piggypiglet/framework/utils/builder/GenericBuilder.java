@@ -30,11 +30,21 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Generic builder class that can be used on any object, that has setters.
+ */
 public final class GenericBuilder {
     private GenericBuilder() {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
+    /**
+     * Get a builder instance for an object.
+     *
+     * @param initialiser Object instantiator
+     * @param <T>         Type generic of object
+     * @return Generic Object Builder
+     */
     public static <T> Builder<T> of(Supplier<T> initialiser) {
         return new Builder<>(initialiser);
     }
@@ -47,11 +57,24 @@ public final class GenericBuilder {
             this.initialiser = initialiser;
         }
 
+        /**
+         * Method to supply a setter method with it's value.
+         *
+         * @param consumer Apply value to setter logic
+         * @param value    Value
+         * @param <U>      Value type
+         * @return Generic Object Builder
+         */
         public <U> Builder<T> with(BiConsumer<T, U> consumer, U value) {
             instanceModifiers.add(instance -> consumer.accept(instance, value));
             return this;
         }
 
+        /**
+         * Build the object, after initialising with the instantiator and applying setters.
+         *
+         * @return Object
+         */
         public T build() {
             T value = initialiser.get();
             instanceModifiers.forEach(modifier -> modifier.accept(value));

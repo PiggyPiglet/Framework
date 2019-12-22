@@ -31,8 +31,9 @@ public final class ClassUtils {
 
     /**
      * Get a generic on an interface a class is imlementing generic, a bit iffy, might not work in all scenarios
+     *
      * @param clazz Class to get the generic from
-     * @param <T> Type
+     * @param <T>   Type
      * @return Class of the generic type, with the type as the classes generic
      * @throws GenericException when it can't find the generic on the class
      */

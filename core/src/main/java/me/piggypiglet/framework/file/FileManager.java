@@ -48,7 +48,8 @@ public final class FileManager {
 
     /**
      * Load a file into the FileManager
-     * @param name Name the file will be referenced by
+     *
+     * @param name         Name the file will be referenced by
      * @param internalPath Internal path of the file to be exported
      * @param externalPath External path to save and load the file from
      * @return Returns a file wrapper containing the file object and it's plaintext content
@@ -66,7 +67,8 @@ public final class FileManager {
 
     /**
      * Load a config into the FileManager
-     * @param name Name the config will be referenced by
+     *
+     * @param name         Name the config will be referenced by
      * @param internalPath Internal path of the config to be exported
      * @param externalPath External path to save and load the config from
      * @return FileConfiguration object
@@ -84,6 +86,7 @@ public final class FileManager {
 
     /**
      * Get a FileConfiguration that's stored in the file manager.
+     *
      * @param name Name of the config
      * @return FileConfiguration instance, or null if the file couldn't be found, or isn't a config
      */
@@ -97,14 +100,21 @@ public final class FileManager {
         return null;
     }
 
+    /**
+     * Check if a file is stored under an identifier.
+     *
+     * @param name Name of the file
+     * @return boolean
+     */
     public boolean exists(String name) {
         return files.containsKey(name);
     }
 
     /**
      * Get the raw type instance of a stored file/config (FileWrapper or FileConfiguration)
+     *
      * @param name Name of the file
-     * @param <T> Type
+     * @param <T>  Type
      * @return Type
      */
     @SuppressWarnings("unchecked")
@@ -114,6 +124,7 @@ public final class FileManager {
 
     /**
      * Update instances of AbstractFileConfigurations or FileWrappers with physical changes to their respective files by the user.
+     *
      * @param name Reference to the stored object
      */
     public void update(String name) throws Exception {
@@ -128,6 +139,12 @@ public final class FileManager {
         }
     }
 
+    /**
+     * Save a MutableFileConfiguration to file.
+     *
+     * @param name Name of the fileconfiguration.
+     * @throws Exception May throw on IO error
+     */
     public void save(String name) throws Exception {
         Object item = get(name);
 

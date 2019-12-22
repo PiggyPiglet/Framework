@@ -37,18 +37,62 @@ public class Maps {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
+    /**
+     * Create an embeddable map builder instance. Embeddable meaning, the final build() method will
+     * return your defined instance, not a Map.
+     *
+     * @param implementation Map implementation.
+     * @param returnInstance Instance returned on build().
+     * @param build          Logic to perform on build, to store the Map instance somewhere.
+     * @param <K>            Key type
+     * @param <V>            Value type
+     * @param <R>            Return instance type
+     * @return Map Builder
+     */
     public static <K, V, R> Builder<K, V, R, V> builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build) {
         return builder(implementation, returnInstance, build, null);
     }
 
+    /**
+     * Create an embeddable map builder instance, with a value mapper. Embeddable meaning, the final
+     * build() method return your defined instance, not a Map.
+     *
+     * @param implementation Map implementation.
+     * @param returnInstance Instance returned on build().
+     * @param build          Logic to perform on build, to store the Map instance somewhere.
+     * @param mapper         Value mapper
+     * @param <K>            Key type
+     * @param <V>            Value type
+     * @param <R>            Return instance type
+     * @param <T>            Inputted value type
+     * @return Map Builder
+     */
     public static <K, V, R, T> Builder<K, V, R, T> builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build, Function<T, V> mapper) {
         return new Builder<>(implementation, returnInstance, build, mapper);
     }
 
+    /**
+     * Create a Map Builder.
+     *
+     * @param implementation Map implementation
+     * @param <K>            Key type
+     * @param <V>            Value type
+     * @return Map Builder
+     */
     public static <K, V> Builder<K, V, Map<K, V>, V> of(Map<K, V> implementation) {
         return builder(implementation, null, null, null);
     }
 
+    /**
+     * Create a Map Builder with a value mapper.
+     *
+     * @param implementation Map implementation
+     * @param mapper         Value mapper
+     * @param <K>            Key type
+     * @param <V>            Value type
+     * @param <T>            Inputted value type
+     * @return Map Builder
+     */
     public static <K, V, T> Builder<K, V, Map<K, V>, T> of(Map<K, V> implementation, Function<T, V> mapper) {
         return builder(implementation, null, null, mapper);
     }
@@ -66,10 +110,23 @@ public class Maps {
             this.mapper = mapper;
         }
 
+        /**
+         * Prepare a value builder.
+         *
+         * @param key Key
+         * @return Value Builder
+         */
         public ValueBuilder key(K key) {
             return key(key, null);
         }
 
+        /**
+         * Prepare a value builder with a requirement for addition.
+         *
+         * @param key         Key
+         * @param requirement Requirement for value to be added
+         * @return Value Builder
+         */
         public ValueBuilder key(K key, Predicate<V> requirement) {
             return new ValueBuilder(key, requirement);
         }
@@ -83,6 +140,13 @@ public class Maps {
                 this.requirement = requirement;
             }
 
+            /**
+             * Bind a value to the defined key. If a requirement is present, the value will be tested
+             * against it after mapping, before being added to the underlying map implementation.
+             *
+             * @param value Value
+             * @return Parent Map Builder
+             */
             public Builder<K, V, R, T> value(T value) {
                 final V real;
 
@@ -102,6 +166,11 @@ public class Maps {
             }
         }
 
+        /**
+         * Build the map.
+         *
+         * @return Map or configured return instance.
+         */
         public R build() {
             if (returnInstance != null && build != null) {
                 build.accept(map);
@@ -112,11 +181,27 @@ public class Maps {
         }
     }
 
-
+    /**
+     * Stream flatMap utility to flatten a map, with "." as the level separator.
+     *
+     * @param entry Entry to flatten
+     * @return Stream of flattened entr(y/ies)
+     */
     public static Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry) {
         return flatten(entry, Map.class, f -> f);
     }
 
+    /**
+     * Stream flatMap utility to flatten a map, with "." as the level separator,
+     * and a object mapper (triggered if a configured type is detected within a
+     * nested map).
+     *
+     * @param entry   Entry to flatten
+     * @param clazz   Class type of object to detect
+     * @param flatten Flatten logic for custom object type
+     * @param <T>     Type generic of object
+     * @return @return Stream of flattened entr(y/ies)
+     */
     @SuppressWarnings("unchecked")
     public static <T> Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry, Class<T> clazz, Function<T, Map<String, Object>> flatten) {
         if (clazz.isInstance(entry.getValue())) {
@@ -143,6 +228,16 @@ public class Maps {
         return Stream.of(entry);
     }
 
+    /**
+     * Utility method to sort through a map (including nested maps and collections), and replace
+     * a specific type, with a Map.
+     *
+     * @param map    Map to map
+     * @param clazz  Class type of object to detect
+     * @param mapper Logic to convert object to map
+     * @param <T>    Type generic of object
+     * @return Mapped map
+     */
     public static <T> Map<String, Object> map(Map<String, Object> map, Class<T> clazz, Function<T, Map<String, Object>> mapper) {
         final Map<String, Object> mapped = new HashMap<>();
 
@@ -173,6 +268,15 @@ public class Maps {
         return mapped;
     }
 
+    /**
+     * Utility method to recurse through levels of nested maps to retrieve a specific object,
+     * at a path (nested maps separated via "." in the path).
+     *
+     * @param map  Map to search through
+     * @param path Path of object
+     * @param <T>  Type generic of object
+     * @return Object located at path
+     */
     public static <T> T recursiveGet(Map<String, T> map, String path) {
         T object = map.getOrDefault(path, null);
 

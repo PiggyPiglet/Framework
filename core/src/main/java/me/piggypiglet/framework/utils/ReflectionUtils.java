@@ -31,6 +31,13 @@ public final class ReflectionUtils {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
+    /**
+     * Get an accessible version of a reflective object.
+     *
+     * @param type Type extending AccessibleObject
+     * @param <T>  extension of AccessibleObject
+     * @return Access enabled extension of AccessibleObject
+     */
     public static <T extends AccessibleObject> T getAccessible(T type) {
         type.setAccessible(true);
         return type;

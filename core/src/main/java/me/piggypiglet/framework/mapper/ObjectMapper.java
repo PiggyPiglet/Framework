@@ -30,6 +30,7 @@ package me.piggypiglet.framework.mapper;
 public interface ObjectMapper<D, T> {
     /**
      * Convert D to T
+     *
      * @param data Data to convert
      * @return End result
      */
@@ -37,6 +38,7 @@ public interface ObjectMapper<D, T> {
 
     /**
      * Convert T to D
+     *
      * @param type Type to convert
      * @return End result
      */

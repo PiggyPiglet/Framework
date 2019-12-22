@@ -32,6 +32,13 @@ public final class BuilderUtils {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
+    /**
+     * Utility method that will check if a builder has the required variables set,
+     * and if not, throw a RuntimeException.
+     *
+     * @param builderName Name of the builder, used in the exception method
+     * @param vars        Variables that need to be set
+     */
     public static void checkVars(String builderName, Object... vars) {
         final String unsetVars = Arrays.stream(vars).filter(o -> {
             try {
@@ -41,6 +48,7 @@ public final class BuilderUtils {
             }
         }).map(String::valueOf).map(s -> s.replaceFirst("d-", "")).collect(Collectors.joining(", "));
 
-        if (!unsetVars.isEmpty()) throw new UnsetVarsException("These required vars weren't set in your " + builderName + ": " + unsetVars);
+        if (!unsetVars.isEmpty())
+            throw new UnsetVarsException("These required vars weren't set in your " + builderName + ": " + unsetVars);
     }
 }

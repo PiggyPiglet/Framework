@@ -42,6 +42,7 @@ public final class ManagersManager {
 
     /**
      * Get all managers stored in this singleton
+     *
      * @return List of managers
      */
     public List<Manager> getManagers() {

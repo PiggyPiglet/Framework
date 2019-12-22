@@ -46,47 +46,209 @@ public final class StringUtils {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
-    public static boolean anyStartWith(String str, String... triggers) {
-        return anyStartWith(str, Arrays.asList(triggers));
+    /**
+     * Check if a string starts with any of the triggers supplied in the
+     * varargs.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean startsWithAny(String string, String... triggers) {
+        return startsWithAny(string, Arrays.asList(triggers));
     }
 
-    public static boolean anyStartWith(String str, List<String> triggers) {
-        return anyWith(str, triggers, String::startsWith);
+    /**
+     * Check if a string starts with any of the triggers supplied in the
+     * list.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean startsWithAny(String string, List<String> triggers) {
+        return anyWith(string, triggers, (t, s) -> s.startsWith(t));
     }
 
-    public static boolean startsWithAny(String trigger, String... strings) {
-        return startsWithAny(trigger, Arrays.asList(strings));
+    /**
+     * Check if any of the strings supplied in the varargs start with a
+     * specific trigger.
+     *
+     * @param trigger Trigger to check against
+     * @param strings Strings to check against
+     * @return boolean
+     */
+    public static boolean anyStartWith(String trigger, String... strings) {
+        return anyStartWith(trigger, Arrays.asList(strings));
     }
 
-    public static boolean startsWithAny(String trigger, List<String> strings) {
-        return anyWith(trigger, strings, (t, s) -> s.startsWith(t));
+    /**
+     * Check if any of the strings supplied in the varargs start with a
+     * specific trigger.
+     *
+     * @param trigger Trigger to check against
+     * @param strings Strings to check against
+     * @return boolean
+     */
+    public static boolean anyStartWith(String trigger, List<String> strings) {
+        return anyWith(trigger, strings, String::startsWith);
     }
 
-    public static boolean anyEndWith(String str, String... triggers) {
-        return anyEndWith(str, Arrays.asList(triggers));
+    /**
+     * Check if a string ends with any of the triggers supplied in the
+     * varargs.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean endWithAny(String string, String... triggers) {
+        return endsWithAny(string, Arrays.asList(triggers));
     }
 
-    public static boolean anyEndWith(String str, List<String> triggers) {
-        return anyWith(str, triggers, String::endsWith);
+    /**
+     * Check if a string ends with any of the triggers supplied in the
+     * list.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean endsWithAny(String string, List<String> triggers) {
+        return anyWith(string, triggers, (t, s) -> s.endsWith(t));
     }
 
-    public static boolean anyContains(String str, String... triggers) {
-        return anyContains(str, Arrays.asList(triggers));
+    /**
+     * Check if any of the strings supplied in the varargs end with a
+     * specific trigger.
+     *
+     * @param trigger Trigger to check against
+     * @param strings Strings to check against
+     * @return boolean
+     */
+    public static boolean anyEndWith(String trigger, String... strings) {
+        return anyEndWith(trigger, Arrays.asList(strings));
     }
 
-    public static boolean anyContains(String str, List<String> triggers) {
-        return anyWith(str, triggers, String::contains);
+    /**
+     * Check if any of the strings supplied in the list end with a
+     * specific trigger.
+     *
+     * @param trigger Trigger to check against
+     * @param strings Strings to check against
+     * @return boolean
+     */
+    public static boolean anyEndWith(String trigger, List<String> strings) {
+        return anyWith(trigger, strings, String::endsWith);
     }
 
-    public static boolean anyMatches(String str, Pattern... patterns) {
-        return anyMatches(str, Arrays.asList(patterns));
+    /**
+     * Check if a string contains any of the triggers supplied in the
+     * varargs.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean containsAny(String string, String... triggers) {
+        return containsAny(string, Arrays.asList(triggers));
     }
 
-    public static boolean anyMatches(String str, List<Pattern> triggers) {
-        return anyWith(str, triggers, (p, s) -> p.matcher(s).matches());
+    /**
+     * Check if a string contains any of the triggers supplied in the
+     * list.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean containsAny(String string, List<String> triggers) {
+        return anyWith(string, triggers, (t, s) -> s.contains(t));
     }
 
-    public static <T> boolean anyWith(String str, List<T> elements, BiPredicate<T, String> test) {
+    /**
+     * Check if any of the strings supplied in the varargs contain a
+     * specific trigger.
+     *
+     * @param trigger Trigger to check against
+     * @param strings Strings to check against
+     * @return boolean
+     */
+    public static boolean anyContains(String trigger, String... strings) {
+        return anyContains(trigger, Arrays.asList(strings));
+    }
+
+    /**
+     * Check if any of the strings supplied in the list contain a
+     * specific trigger.
+     *
+     * @param trigger Trigger to check against
+     * @param strings Strings to check against
+     * @return boolean
+     */
+    public static boolean anyContains(String trigger, List<String> strings) {
+        return anyWith(trigger, strings, String::contains);
+    }
+
+    /**
+     * Check if a pattern matches any of the triggers supplied in the
+     * varargs.
+     *
+     * @param pattern  Pattern to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean matchesAny(Pattern pattern, String... triggers) {
+        return matchesAny(pattern, Arrays.asList(triggers));
+    }
+
+    /**
+     * Check if a pattern matches any of the triggers supplied in the
+     * list.
+     *
+     * @param pattern  Pattern to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean matchesAny(Pattern pattern, List<String> triggers) {
+        return anyWith(pattern, triggers, (s, p) -> p.matcher(s).matches());
+    }
+
+    /**
+     * Check if any of the patterns supplied in the varargs match a
+     * specific trigger.
+     *
+     * @param trigger  Trigger to check against
+     * @param patterns Patterns to check against
+     * @return boolean
+     */
+    public static boolean anyMatches(String trigger, Pattern... patterns) {
+        return anyMatches(trigger, Arrays.asList(patterns));
+    }
+
+    /**
+     * Check if any of the patterns supplied in the list match a
+     * specific trigger.
+     *
+     * @param trigger  Trigger to check against
+     * @param patterns Patterns to check against
+     * @return boolean
+     */
+    public static boolean anyMatches(String trigger, List<Pattern> patterns) {
+        return anyWith(trigger, patterns, (p, s) -> p.matcher(s).matches());
+    }
+
+    /**
+     * Check if a list of elements matches a predefined test against a specific element.
+     *
+     * @param str      Specific element
+     * @param elements List of elements
+     * @param test     Match test
+     * @param <T>      Trigger type
+     * @param <U>      Element type
+     * @return boolean
+     */
+    public static <T, U> boolean anyWith(T str, List<U> elements, BiPredicate<U, T> test) {
         return lowercaseStream(elements).anyMatch(s -> test.test(s, str));
     }
 
@@ -95,12 +257,37 @@ public final class StringUtils {
         return triggers.stream().map(o -> o instanceof String ? (T) ((String) o).toLowerCase() : o);
     }
 
+    /**
+     * Format an addon class into an addon name
+     *
+     * @param addon Addon class
+     * @return String
+     */
     public static String addonName(Class<?> addon) {
-        if (!addon.isAnnotationPresent(Addon.class)) throw new UnsupportedOperationException("Class provided is not an addon class.");
+        if (!addon.isAnnotationPresent(Addon.class))
+            throw new UnsupportedOperationException("Class provided is not an addon class.");
 
         return "addon_" + addon.getSimpleName().toLowerCase().replace("addon", "");
     }
 
+    /**
+     * Extended implementation of String.format, with support for the Lang system, and type independent
+     * concatenations. Currently supports iterative variables, and index variables (%s and %num$s).
+     * <p>
+     * Examples:
+     * <i>Lang.TEST = "Hello %s."</i>
+     * <strong>format(Lang.TEST, "World")</strong> = <i>Hello World.</i>
+     * <i>Lang.TEST = "Hello %s." | Lang.TEST2 = World</i>
+     * <strong>format(Lang.TEST, Lang.TEST2)</strong> = <i>Hello World.</i>
+     * <strong>format("Hello %s.", "World")</strong> = <i>Hello World.</i>
+     * <p>
+     * Keep in mind, when concatenating different types, or declaring variable values, you must separate via
+     * a <strong>,</strong>, not the conventional <strong>+</strong>.
+     *
+     * @param message        Main message
+     * @param concatenations Extra concatenations and/or variables.
+     * @return Formatted string.
+     */
     public static String format(Object message, Object... concatenations) {
         if (concatenations.length == 0) {
             return format(message);

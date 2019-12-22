@@ -41,16 +41,17 @@ public final class SearchUtils {
     /**
      * Use the levenshtein algorithm, via a java fuzzy wuzzy port (python library), to order a list of items based on string similarity.
      * Will leverage multithreading if items size exceeds 5000.
+     *
      * @param items Items to re order
      * @param query Search query
-     * @param <T> Searchable types
+     * @param <T>   Searchable types
      * @return ImmutableList of re-ordered searchables
      */
     @SuppressWarnings("unchecked")
     public static <T extends Searchable> ImmutableList<T> search(List<Searchable> items, String query) {
         List<SearchPair> pairs = items.stream().map(i -> new SearchPair(i, query)).sorted().collect(Collectors.toList());
         Collections.reverse(pairs);
-        
+
         Stream<SearchPair> stream = pairs.stream();
 
         if (pairs.size() > 5000) {
@@ -93,6 +94,7 @@ public final class SearchUtils {
     public interface Searchable {
         /**
          * The string used when a searchable is compared to other searchables in terms of string similarity
+         *
          * @return String
          */
         String getName();

@@ -46,8 +46,9 @@ public abstract class StartupRegisterable {
 
     /**
      * Add a binding to guice with a specific class and instance.
+     *
      * @param interfaze Class the object will be referenced by
-     * @param instance Object that will be binded to the class
+     * @param instance  Object that will be binded to the class
      */
     protected <T> void addBinding(Class<? super T> interfaze, T instance) {
         bindings.put(interfaze, instance);
@@ -55,21 +56,30 @@ public abstract class StartupRegisterable {
 
     /**
      * Add a binding to guice, reference class is deduced from the instance itself.
+     *
      * @param instance Object of the instance to be binded
      */
     protected void addBinding(Object instance) {
         bindings.put(instance.getClass(), instance);
     }
 
+    /**
+     * Add a binding to guice with a specific class & generic, and instance.
+     *
+     * @param interfaze Class the object will be referenced by
+     * @param instance  Object that will be binded
+     * @param <T>       Type parameter belonging to interfaze
+     */
     protected <T> void addBinding(TypeLiteral<? super T> interfaze, T instance) {
         genericBindings.put(interfaze, instance);
     }
 
     /**
      * Add a binding to guice that's only injectable when a specific annotation is provided.
-     * @param interfaze Reference class to be binded to
+     *
+     * @param interfaze  Reference class to be binded to
      * @param annotation Class extending annotation
-     * @param instance Instance of the object to be binded.
+     * @param instance   Instance of the object to be binded.
      */
     protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Class<? extends Annotation> annotation, T instance) {
         annotatedBindings.add(
@@ -79,9 +89,10 @@ public abstract class StartupRegisterable {
 
     /**
      * Add a binding to guice that's only injectable when a specific annotation is provided.
-     * @param interfaze Reference class to be binded to
+     *
+     * @param interfaze  Reference class to be binded to
      * @param annotation Annotation instance
-     * @param instance Instance of the object to be binded
+     * @param instance   Instance of the object to be binded
      */
     protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Annotation annotation, T instance) {
         annotatedBindings.add(
@@ -91,6 +102,7 @@ public abstract class StartupRegisterable {
 
     /**
      * Request classes to have their static injection honoured
+     *
      * @param classes Varargs of classes
      */
     protected void requestStaticInjections(Class<?>... classes) {
@@ -99,6 +111,7 @@ public abstract class StartupRegisterable {
 
     /**
      * Run the registerable
+     *
      * @param injector Injector instance that will be provided to the registerable
      */
     public void run(Injector injector) {
@@ -108,6 +121,7 @@ public abstract class StartupRegisterable {
 
     /**
      * Get a map of bindings to be made
+     *
      * @return Map with Class as key, Object as value
      */
     public Map<Class<?>, Object> getBindings() {
@@ -120,6 +134,7 @@ public abstract class StartupRegisterable {
 
     /**
      * Get a list of annotated binding objects set by the registerable
+     *
      * @return List of annotatedbinding data objects
      */
     public List<AnnotatedBinding<?>> getAnnotatedBindings() {
@@ -128,6 +143,7 @@ public abstract class StartupRegisterable {
 
     /**
      * Get any static injections requested by the registerable
+     *
      * @return List of classes
      */
     public List<Class<?>> getStaticInjections() {

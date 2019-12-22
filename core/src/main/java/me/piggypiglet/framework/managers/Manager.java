@@ -36,6 +36,7 @@ public abstract class Manager<S> {
 
     /**
      * Configure acceptable key types
+     *
      * @param builder Instance of KeyTypeInfo builder
      * @return Built KeyTypeInfo
      */
@@ -44,12 +45,14 @@ public abstract class Manager<S> {
     /**
      * Ran before Manager#configure
      */
-    protected void preConfigure() {}
+    protected void preConfigure() {
+    }
 
     /**
      * Ran after Manager#configure
      */
-    protected void postConfigure() {}
+    protected void postConfigure() {
+    }
 
     /**
      * Populate the manager.
@@ -62,24 +65,28 @@ public abstract class Manager<S> {
 
     /**
      * Handle inserting an item into underlying data structures
+     *
      * @param item Item to insert
      */
     protected abstract void insert(S item);
 
     /**
      * Handle deleting an item from underlying data structures
+     *
      * @param item Item to delete
      */
     protected abstract void delete(S item);
 
     /**
      * Retrieve values from any data structures in this manager
+     *
      * @return Collection of values
      */
     protected abstract Collection<S> retrieveAll();
 
     /**
      * Store an item to this manager
+     *
      * @param item Item
      */
     public void add(S item) {
@@ -88,6 +95,7 @@ public abstract class Manager<S> {
 
     /**
      * Remove an item from this manager
+     *
      * @param item Item
      */
     public void remove(S item) {
@@ -96,6 +104,7 @@ public abstract class Manager<S> {
 
     /**
      * Get everything stored in this manager.
+     *
      * @return Collection of values
      */
     public Collection<S> getAll() {
@@ -104,6 +113,7 @@ public abstract class Manager<S> {
 
     /**
      * Get a value based on configured key types
+     *
      * @param key Key value
      * @param <T> Key type
      * @param <U> Raw type before mapping
@@ -122,6 +132,7 @@ public abstract class Manager<S> {
 
     /**
      * Check if a key is set based on configured key types.
+     *
      * @param key Key value
      * @param <T> Key type
      * @param <U> Raw type before mapping

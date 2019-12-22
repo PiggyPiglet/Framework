@@ -24,6 +24,9 @@
 
 package me.piggypiglet.framework.utils.lambda;
 
+/**
+ * Supplier that can throw an exception catchable outside of the lambda
+ */
 @FunctionalInterface
 public interface CheckedSupplier<T> {
     T get() throws Exception;

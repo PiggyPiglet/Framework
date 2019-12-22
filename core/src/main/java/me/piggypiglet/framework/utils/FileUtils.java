@@ -43,7 +43,8 @@ public final class FileUtils {
 
     /**
      * Export an inputstream into an external file
-     * @param in InputStream
+     *
+     * @param in          InputStream
      * @param destination Destination path
      */
     public static void exportResource(InputStream in, String destination) throws Exception {
@@ -52,6 +53,7 @@ public final class FileUtils {
 
     /**
      * Gets the raw plaintext content of a file
+     *
      * @param file File to read
      * @return String
      * @throws Exception when read process errors
@@ -63,6 +65,7 @@ public final class FileUtils {
 
     /**
      * Gets the raw plaintext content of an embedded file.
+     *
      * @param path Path of the file
      * @return String
      * @throws Exception when read process errors
@@ -73,7 +76,8 @@ public final class FileUtils {
 
     /**
      * Gets the raw plaintext content of an embedded file.
-     * @param path Path of the file
+     *
+     * @param path  Path of the file
      * @param clazz Class to get the resource from.
      * @return String
      * @throws Exception when read process errors
@@ -84,8 +88,10 @@ public final class FileUtils {
     }
 
     //todo: use guava Hashing
+
     /**
      * Get the md5 hash/checksum of a file
+     *
      * @param file File
      * @return checksum
      */
