@@ -64,9 +64,7 @@ public final class BukkitCommandRegistrar {
     }
 
     public void registerCommands() {
-        final String command = framework.getCommandPrefix();
-
-        registerCommand(command);
+        registerCommand(framework.getCommandPrefixes());
     }
 
     private void registerCommand(String... aliases) {

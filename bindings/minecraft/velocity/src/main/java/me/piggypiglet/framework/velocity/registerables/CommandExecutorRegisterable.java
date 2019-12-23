@@ -40,6 +40,6 @@ public final class CommandExecutorRegisterable extends StartupRegisterable {
     @Override
     protected void execute() {
         commandHandlers.newHandler("velocity", injector);
-        commandManager.register(velocityCommandExecutor, framework.getCommandPrefix());
+        commandManager.register(velocityCommandExecutor, framework.getCommandPrefixes());
     }
 }

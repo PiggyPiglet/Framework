@@ -48,6 +48,7 @@ public final class HelpCommand extends MinecraftCommand {
     @Override
     protected boolean execute(MinecraftUser user, String[] args) {
         final Set<Command> commands = commandHandlers.getCommands();
+        final String prefix = framework.getCommandPrefixes()[0];
 
         if (args.length > 0) {
             final Optional<Command> command = commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(args[0])).findAny();
@@ -55,7 +56,7 @@ public final class HelpCommand extends MinecraftCommand {
             if (command.isPresent()) {
                 final Command cmd = command.get();
                 user.sendMessage("&c/%s %s%s &8- &7%s\n",
-                        framework.getCommandPrefix(),
+                        prefix,
                         cmd.getCommand(),
                         cmd.getUsage().isEmpty() ? "" : " " + cmd.getUsage(),
                         cmd.getDescription());
@@ -69,7 +70,7 @@ public final class HelpCommand extends MinecraftCommand {
         final StringBuilder builder = new StringBuilder("&7Help menu\n");
 
         commands.forEach(c -> {
-            builder.append("&c/").append(framework.getCommandPrefix()).append(" ").append(c.getCommand());
+            builder.append("&c/").append(prefix).append(" ").append(c.getCommand());
 
             if (!c.getUsage().isEmpty()) {
                 builder.append(" ").append(c.getUsage());

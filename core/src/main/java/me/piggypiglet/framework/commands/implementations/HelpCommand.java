@@ -27,12 +27,12 @@ package me.piggypiglet.framework.commands.implementations;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.CommandHandlers;
-import me.piggypiglet.framework.commands.framework.Command;
+import me.piggypiglet.framework.commands.framework.BaseCommand;
 import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.reflection.def.UltraDefault;
 
 @UltraDefault
-public final class HelpCommand extends Command {
+public final class HelpCommand extends BaseCommand {
     @Inject private CommandHandlers commandHandlers;
     @Inject private Framework framework;
 
@@ -46,7 +46,7 @@ public final class HelpCommand extends Command {
         StringBuilder message = new StringBuilder("\n");
 
         commandHandlers.getCommands().forEach(c -> {
-                    message.append(framework.getCommandPrefix()).append(c.getCommand());
+                    message.append(framework.getCommandPrefixes()[0]).append(c.getCommand());
 
                     if (!c.getUsage().isEmpty()) {
                         message.append(" ").append(c.getUsage());

@@ -48,7 +48,7 @@ public final class Framework {
     private final Injector injector;
     private final List<RegisterableData> startupRegisterables;
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
-    private final String commandPrefix;
+    private final String[] commandPrefixes;
     private final List<FileData> files;
     private final int threads;
     private final Map<Class<?>, ConfigInfo> configs;
@@ -59,7 +59,7 @@ public final class Framework {
     private final boolean debug;
 
     private Framework(MainBinding main, String pckg, String[] pckgExclusions, Injector injector, List<RegisterableData> startupRegisterables,
-                      List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String commandPrefix, List<FileData> files,
+                      List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String[] commandPrefixes, List<FileData> files,
                       int threads, Map<Class<?>, ConfigInfo> configs, String configDir, boolean overrideLangFile, ConfigInfo langConfig,
                       CustomLang customLang, boolean debug) {
         this.main = main;
@@ -68,7 +68,7 @@ public final class Framework {
         this.injector = injector;
         this.startupRegisterables = startupRegisterables;
         this.shutdownRegisterables = shutdownRegisterables;
-        this.commandPrefix = commandPrefix;
+        this.commandPrefixes = commandPrefixes;
         this.files = files;
         this.threads = threads;
         this.configs = configs;
@@ -152,12 +152,12 @@ public final class Framework {
     }
 
     /**
-     * Get the application's main command prefix.
+     * Get the application's command prefixes.
      *
      * @return String
      */
-    public String getCommandPrefix() {
-        return commandPrefix;
+    public String[] getCommandPrefixes() {
+        return commandPrefixes;
     }
 
     /**
@@ -239,7 +239,7 @@ public final class Framework {
         private Injector injector = null;
         private List<RegisterableData> startupRegisterables = new ArrayList<>();
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
-        private String commandPrefix = null;
+        private String[] commandPrefixes = null;
         private final List<FileData> files = new ArrayList<>();
         private int threads = 15;
         private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
@@ -325,13 +325,13 @@ public final class Framework {
         }
 
         /**
-         * The application's command prefix, to be used in command handlers.
+         * The application's command prefixes, to be used in command handlers.
          *
-         * @param commandPrefix String
+         * @param commandPrefixes Strings
          * @return FrameworkBuilder
          */
-        public final FrameworkBuilder commandPrefix(String commandPrefix) {
-            this.commandPrefix = commandPrefix;
+        public final FrameworkBuilder commandPrefixes(String... commandPrefixes) {
+            this.commandPrefixes = commandPrefixes;
             return this;
         }
 
@@ -495,7 +495,7 @@ public final class Framework {
             BuilderUtils.checkVars("FrameworkBuilder", main, pckg);
 
             return new Framework((MainBinding) main, pckg, pckgExclusions, injector, startupRegisterables, shutdownRegisterables,
-                    commandPrefix, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
+                    commandPrefixes, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
         }
     }
 }

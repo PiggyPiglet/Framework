@@ -5,7 +5,7 @@ if [ $# -ne 2 ]; then
 fi
 
 gradle clean
-gradle jar
+gradle build
 
 cd /e/Documents/Github/Framework/
 rm -r maven/tmp/
@@ -36,7 +36,7 @@ deploy() {
   mkdir -p $pomDir
   cp maven/${name}/pom.xml $pom
   sed -i "s/@VERSION@/$2/g" $pom
-  mvn deploy:deploy-file -DgroupId=me.piggypiglet -DartifactId=framework-$name -Dversion=$2 -Dpackaging=jar -Dfile=$i/build/libs/${cutName[-1]}-$2.jar -DpomFile=${pom} -DrepositoryId=piggypiglet -Durl=https://repo.piggypiglet.me/repository/maven-releases
+  mvn deploy:deploy-file -DgroupId=me.piggypiglet -DartifactId=framework-$name -Dversion=$2 -Dpackaging=jar -Dfile=$i/build/libs/${cutName[-1]}-$2.jar -Dsources=$i/build/libs/${cutName[-1]}-$2-sources.jar -Djavadoc=$i/build/libs/${cutName[-1]}-$2-javadoc.jar -DpomFile=${pom} -DrepositoryId=piggypiglet -Durl=https://repo.piggypiglet.me/repository/maven-releases
   rm $pom
 }
 

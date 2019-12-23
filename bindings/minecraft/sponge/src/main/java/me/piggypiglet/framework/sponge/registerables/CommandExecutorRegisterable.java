@@ -42,6 +42,6 @@ public final class CommandExecutorRegisterable extends StartupRegisterable {
     protected void execute() {
         commandHandlers.newHandler("sponge", injector);
 
-        Sponge.getCommandManager().register(main.getInstance(), spongeCommandExecutor, framework.getCommandPrefix());
+        Sponge.getCommandManager().register(main.getInstance(), spongeCommandExecutor, framework.getCommandPrefixes());
     }
 }

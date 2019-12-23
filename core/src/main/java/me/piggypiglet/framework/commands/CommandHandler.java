@@ -29,13 +29,16 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.commands.implementations.HelpCommand;
 import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
 import me.piggypiglet.framework.utils.annotations.reflection.def.UltraDefault;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -56,9 +59,12 @@ public class CommandHandler {
     private Set<Command> commands;
     private Command helpCommand;
 
+    @SuppressWarnings("unchecked")
     public void handle(User user, String message, String handler) {
-        if (message.toLowerCase().startsWith(framework.getCommandPrefix().toLowerCase())) {
-            message = message.replaceFirst(framework.getCommandPrefix(), "").trim();
+        if (StringUtils.startsWithAny(message, framework.getCommandPrefixes())) {
+            final AtomicReference<String> messageRef = new AtomicReference<>(message);
+            Arrays.stream(framework.getCommandPrefixes()).forEach(c -> messageRef.set(messageRef.get().replaceFirst(c, "")));
+            message = messageRef.get().trim();
 
             if (message.isEmpty()) {
                 helpCommand.run(user, new String[]{}, handler);

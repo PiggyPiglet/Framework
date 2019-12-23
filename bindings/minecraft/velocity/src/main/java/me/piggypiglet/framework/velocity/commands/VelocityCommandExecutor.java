@@ -37,6 +37,6 @@ public final class VelocityCommandExecutor implements Command {
 
     @Override
     public void execute(CommandSource source, String[] args) {
-        commandHandlers.process("minecraft", new VelocityUser(source), framework.getCommandPrefix() + " " + String.join(" ", args));
+        commandHandlers.process("minecraft", new VelocityUser(source), framework.getCommandPrefixes()[0] + " " + String.join(" ", args));
     }
 }

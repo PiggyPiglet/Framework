@@ -43,6 +43,6 @@ public final class CommandExecutorRegisterable extends StartupRegisterable {
     @Override
     protected void execute() {
         nukkitCommandRegistrar.registerCommands();
-        ((PluginCommand) ((PluginBase) main.getInstance()).getCommand(framework.getCommandPrefix())).setExecutor(commandExecutor);
+        ((PluginCommand) ((PluginBase) main.getInstance()).getCommand(framework.getCommandPrefixes()[0])).setExecutor(commandExecutor);
     }
 }

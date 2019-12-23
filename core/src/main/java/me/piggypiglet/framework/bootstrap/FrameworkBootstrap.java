@@ -88,7 +88,7 @@ public final class FrameworkBootstrap {
                 LangValuesRegisterable.class, LangFileRegisterable.class
         ));
 
-        if (config.getCommandPrefix() != null) {
+        if (config.getCommandPrefixes() != null) {
             boot.putAll(BootPriority.COMMANDS, linkedHashSet(
                     CommandsRegisterable.class, CommandHandlerRegisterable.class
             ));

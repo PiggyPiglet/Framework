@@ -31,6 +31,8 @@ import me.piggypiglet.framework.commands.CommandHandlers;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.util.Arrays;
+
 public final class BungeeCommandExecutor {
     @Inject private CommandHandlers commandHandlers;
     @Inject private Framework framework;
@@ -41,12 +43,12 @@ public final class BungeeCommandExecutor {
 
     public final class Executor extends Command {
         private Executor() {
-            super(framework.getCommandPrefix());
+            super(framework.getCommandPrefixes()[0], "", Arrays.stream(framework.getCommandPrefixes()).skip(1).toArray(String[]::new));
         }
 
         @Override
         public void execute(CommandSender sender, String[] args) {
-            commandHandlers.process("minecraft", new BungeeUser(sender), framework.getCommandPrefix() + " " + String.join(" ", args));
+            commandHandlers.process("minecraft", new BungeeUser(sender), framework.getCommandPrefixes()[0] + " " + String.join(" ", args));
         }
     }
 }

@@ -44,6 +44,6 @@ public final class CommandExecutorRegisterable extends StartupRegisterable {
     protected void execute() {
         bukkitCommandRegistrar.registerCommands();
         //todo: do a proper null check, throw custom exception if null
-        Objects.requireNonNull(((JavaPlugin) main.getInstance()).getCommand(framework.getCommandPrefix())).setExecutor(commandHandler);
+        Objects.requireNonNull(((JavaPlugin) main.getInstance()).getCommand(framework.getCommandPrefixes()[0])).setExecutor(commandHandler);
     }
 }
