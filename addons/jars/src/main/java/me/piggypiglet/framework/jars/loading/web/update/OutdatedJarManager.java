@@ -38,6 +38,7 @@ public final class OutdatedJarManager {
      *
      * @param dir   Directory to look in
      * @param files Current files
+     * @throws Exception IO error when deleting
      */
     public static void deleteOutdated(String dir, DownloadableJar... files) throws Exception {
         OutdatedJarDeleter deleter = new OutdatedJarDeleter(

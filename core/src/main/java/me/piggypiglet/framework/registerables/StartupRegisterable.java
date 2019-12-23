@@ -49,6 +49,7 @@ public abstract class StartupRegisterable {
      *
      * @param interfaze Class the object will be referenced by
      * @param instance  Object that will be binded to the class
+     * @param <T>       Object type
      */
     protected <T> void addBinding(Class<? super T> interfaze, T instance) {
         bindings.put(interfaze, instance);
@@ -64,7 +65,7 @@ public abstract class StartupRegisterable {
     }
 
     /**
-     * Add a binding to guice with a specific class & generic, and instance.
+     * Add a binding to guice with a specific class &amp; generic, and instance.
      *
      * @param interfaze Class the object will be referenced by
      * @param instance  Object that will be binded
@@ -80,6 +81,7 @@ public abstract class StartupRegisterable {
      * @param interfaze  Reference class to be binded to
      * @param annotation Class extending annotation
      * @param instance   Instance of the object to be binded.
+     * @param <T>        Object type
      */
     protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Class<? extends Annotation> annotation, T instance) {
         annotatedBindings.add(
@@ -93,6 +95,7 @@ public abstract class StartupRegisterable {
      * @param interfaze  Reference class to be binded to
      * @param annotation Annotation instance
      * @param instance   Instance of the object to be binded
+     * @param <T>        Object type
      */
     protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Annotation annotation, T instance) {
         annotatedBindings.add(

@@ -35,9 +35,9 @@ import java.util.Map;
 /**
  * JsonParser class, used for parsing json, as the name suggests. Use . as a path separator when receiving nested objects, for example
  * {
- *     "test": {
- *         "key": "value"
- *     }
+ * "test": {
+ * "key": "value"
+ * }
  * }
  * In this json, key could be received as JsonParser#getString("test.key");
  */
@@ -47,6 +47,7 @@ public final class JsonParser {
 
     /**
      * Create a JsonParser instance from raw json data as a string
+     *
      * @param json JSON String
      */
     @SuppressWarnings("unchecked")
@@ -56,6 +57,7 @@ public final class JsonParser {
 
     /**
      * Load JsonParser with already-decoded json data.
+     *
      * @param items Map of json data
      */
     public JsonParser(Map<String, Object> items) {
@@ -64,6 +66,7 @@ public final class JsonParser {
 
     /**
      * Get an object at a specific path
+     *
      * @param path Path to find the object at
      * @return Object
      */
@@ -73,6 +76,7 @@ public final class JsonParser {
 
     /**
      * Get a section and turn it into a JsonParser instance.
+     *
      * @param path Path the json section can be found at
      * @return JsonParser
      */
@@ -89,6 +93,7 @@ public final class JsonParser {
 
     /**
      * Get a string at a specific path
+     *
      * @param path Path of the string
      * @return String
      */
@@ -104,6 +109,7 @@ public final class JsonParser {
 
     /**
      * Get an Integer at a specific path
+     *
      * @param path Path of the integer
      * @return Integer
      */
@@ -114,6 +120,7 @@ public final class JsonParser {
 
     /**
      * Get a long at a specific path
+     *
      * @param path Path of the Long
      * @return Long
      */
@@ -124,6 +131,7 @@ public final class JsonParser {
 
     /**
      * Get a Double at a specific path
+     *
      * @param path Path of the Double
      * @return Double
      */
@@ -139,6 +147,7 @@ public final class JsonParser {
 
     /**
      * Get a boolean at a specific path
+     *
      * @param path Path of the boolean
      * @return Boolean
      */
@@ -154,6 +163,7 @@ public final class JsonParser {
 
     /**
      * Get a list of strings at a specific path
+     *
      * @param path Path of the list
      * @return List of Strings
      */
@@ -163,6 +173,7 @@ public final class JsonParser {
 
     /**
      * Get a list of sections, parsed as JsonParsers.
+     *
      * @param path Path of the list
      * @return List of JsonParsers
      */
@@ -189,7 +200,9 @@ public final class JsonParser {
 
     /**
      * Get a list without knowing the type of the content
+     *
      * @param path Path of the list
+     * @param <T>  Object type
      * @return List
      */
     @SuppressWarnings("unchecked")

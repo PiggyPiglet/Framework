@@ -41,8 +41,10 @@ import java.util.Map;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Singleton
 public final class FileManager {
-    @Inject private FileConfigurationFactory fileConfigurationFactory;
-    @Inject private Framework framework;
+    @Inject
+    private FileConfigurationFactory fileConfigurationFactory;
+    @Inject
+    private Framework framework;
 
     private final Map<String, Object> files = new HashMap<>();
 
@@ -126,6 +128,7 @@ public final class FileManager {
      * Update instances of AbstractFileConfigurations or FileWrappers with physical changes to their respective files by the user.
      *
      * @param name Reference to the stored object
+     * @throws Exception IO error
      */
     public void update(String name) throws Exception {
         Object item = get(name);

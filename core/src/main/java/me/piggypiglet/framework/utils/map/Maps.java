@@ -200,7 +200,7 @@ public class Maps {
      * @param clazz   Class type of object to detect
      * @param flatten Flatten logic for custom object type
      * @param <T>     Type generic of object
-     * @return @return Stream of flattened entr(y/ies)
+     * @return Stream of flattened entr(y/ies)
      */
     @SuppressWarnings("unchecked")
     public static <T> Stream<Map.Entry<String, Object>> flatten(Map.Entry<String, Object> entry, Class<T> clazz, Function<T, Map<String, Object>> flatten) {

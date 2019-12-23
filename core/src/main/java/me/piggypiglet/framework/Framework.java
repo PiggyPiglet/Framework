@@ -256,7 +256,6 @@ public final class Framework {
          * Set the application's main instance
          *
          * @param instance Main instance
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder main(Object instance) {
@@ -270,7 +269,6 @@ public final class Framework {
          * @param clazz    Class to bind the instance under, for example, in bukkit,
          *                 you'd enter JavaPlugin.class
          * @param instance Main instance
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder main(Class<?> clazz, Object instance) {
@@ -279,10 +277,11 @@ public final class Framework {
         }
 
         /**
-         * Set the application's package.
+         * Set the application's package which will be scanned,
+         * and optionally any sub packages to exclude.
          *
-         * @param pckg Application's package
-         *
+         * @param pckg       Application's package
+         * @param exclusions Packages to be excluded
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder pckg(String pckg, String... exclusions) {
@@ -295,7 +294,6 @@ public final class Framework {
          * Set the application's initial injector, if one is already made.
          *
          * @param injector Application's injector
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder injector(Injector injector) {
@@ -307,7 +305,6 @@ public final class Framework {
          * Add startup registerables to be ran in the bootstrap, in order.
          *
          * @param registerables Varargs classes extending StartupRegisterable
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder startup(RegisterableData... registerables) {
@@ -319,7 +316,6 @@ public final class Framework {
          * Add shutdown registerables to be ran in the shutdown hook, in order.
          *
          * @param registerables Varargs classes extending ShutdownRegisterable
-         *
          * @return FrameworkBuilder
          */
         @SafeVarargs
@@ -332,7 +328,6 @@ public final class Framework {
          * The application's command prefix, to be used in command handlers.
          *
          * @param commandPrefix String
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder commandPrefix(String commandPrefix) {
@@ -349,7 +344,6 @@ public final class Framework {
          * @param externalPath The external path of the file, set to null if file shouldn't be copied
          *                     outside the jar.
          * @param annotation   Annotation class to bind the instance to.
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Class<? extends Annotation> annotation) {
@@ -366,7 +360,6 @@ public final class Framework {
          * @param externalPath The external path of the file, set to null if file shouldn't be copied
          *                     outside the jar.
          * @param annotation   Annotation instance to bind the instance to.
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Annotation annotation) {
@@ -383,7 +376,6 @@ public final class Framework {
          * @param externalPath The external path of the file, set to null if file shouldn't be copied
          *                     outside the jar.
          * @param annotation   Annotation class to bind the instance to.
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
@@ -400,7 +392,6 @@ public final class Framework {
          * @param externalPath The external path of the file, set to null if file shouldn't be copied
          *                     outside the jar.
          * @param annotation   Annotation instance to bind the instance to.
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Annotation annotation) {
@@ -412,7 +403,6 @@ public final class Framework {
          * Set the amount of threads that will be available via the default task manager's thread pol
          *
          * @param threads Amount of threads
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder threads(int threads) {
@@ -427,7 +417,6 @@ public final class Framework {
          * @param addon     Addon to configure
          * @param config    String reference to config in FileManager
          * @param locations Locations of the values the addon needs
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder config(Class<?> addon, String config, Map<String, String> locations) {
@@ -441,7 +430,6 @@ public final class Framework {
          * Set the parent directory configs will be put in. Don't include a file separator (/ or \) at the end.
          *
          * @param dir Path of the directory
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder fileDir(String dir) {
@@ -453,7 +441,6 @@ public final class Framework {
          * Declare whether a lang file will be used over hardcoded values.
          *
          * @param value True or false
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder overrideLangFile(boolean value) {
@@ -466,7 +453,6 @@ public final class Framework {
          *
          * @param config    Config name
          * @param locations Mapping
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder langConfig(String config, Map<String, String> locations) {
@@ -479,7 +465,6 @@ public final class Framework {
          *
          * @param config Config identifier
          * @param values Values of the enum
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder customLang(String config, LangEnum[] values) {
@@ -491,7 +476,6 @@ public final class Framework {
          * Should debug messages be logged?
          *
          * @param debug True/false
-         *
          * @return FrameworkBuilder
          */
         public final FrameworkBuilder debug(boolean debug) {

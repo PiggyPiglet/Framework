@@ -39,6 +39,7 @@ public abstract class Logger<T> {
 
     /**
      * Create an instance of a third-party logger with a name.
+     *
      * @param name Name the logger will use
      * @return Instance of third-party logger
      */
@@ -46,34 +47,40 @@ public abstract class Logger<T> {
 
     /**
      * Implementation of sending an info message through a third-party logger.
+     *
      * @param message Message to be logged.
      */
     protected abstract void info(String message);
 
     /**
      * Implementation of sending a warning message through a third-party logger.
+     *
      * @param message Message to be logged.
      */
     protected abstract void warning(String message);
 
     /**
      * Implementation of sending an error message through a third-party logger.
+     *
      * @param message Message to be logged.
      */
     protected abstract void error(String message);
 
     /**
      * Implementation of sending a debug message through a third-party logger.
+     *
      * @param message Message to be logged.
      */
     protected abstract void debug(String message);
 
     /**
      * Create a logger instance with a name
-     * @param name Name that will appear when logging.
+     *
+     * @param name  Name that will appear when logging.
+     * @param debug Whether debugging is enabled
      * @return Logger instance
      */
-    public Logger create(String name, boolean debug) {
+    public Logger<T> create(String name, boolean debug) {
         underlyingLogger = init(name);
         this.debug = debug;
         return this;
@@ -81,8 +88,9 @@ public abstract class Logger<T> {
 
     /**
      * Log an info message.
+     *
      * @param message Message to be logged
-     * @param vars Any variables to be replaced in the message (uses String#format)
+     * @param vars    Any variables to be replaced in the message (uses String#format)
      */
     public void info(Object message, Object... vars) {
         info(format(message, vars));
@@ -90,8 +98,9 @@ public abstract class Logger<T> {
 
     /**
      * Log a warning message.
+     *
      * @param message Message to be logged
-     * @param vars Any variables to be replaced in the message (uses String#format)
+     * @param vars    Any variables to be replaced in the message (uses String#format)
      */
     public void warning(Object message, Object... vars) {
         warning(format(message, vars));
@@ -99,8 +108,9 @@ public abstract class Logger<T> {
 
     /**
      * Log an error message.
+     *
      * @param message Message to be logged
-     * @param vars Any variables to be replaced in the message (uses String#format)
+     * @param vars    Any variables to be replaced in the message (uses String#format)
      */
     public void error(Object message, Object... vars) {
         if (message instanceof Exception) {
@@ -116,8 +126,9 @@ public abstract class Logger<T> {
 
     /**
      * Log a debug message.
+     *
      * @param message Message to be logged.
-     * @param vars Any variables to be replaced in the message (uses String#format)
+     * @param vars    Any variables to be replaced in the message (uses String#format)
      */
     public void debug(Object message, Object... vars) {
         if (debug) {

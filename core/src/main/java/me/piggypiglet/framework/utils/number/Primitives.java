@@ -55,7 +55,7 @@ public enum Primitives {
      *  <li>Character: 0
      * </ul>
      * @return Wrapper instance with populated value field
-     * @throws Exception
+     * @throws Exception Reflection exception
      */
     public Object getDefaultInstance() throws Exception {
         return defaultInstance.apply(clazz.getConstructors()[0]);

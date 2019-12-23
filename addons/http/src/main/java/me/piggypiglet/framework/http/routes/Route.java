@@ -38,7 +38,8 @@ public abstract class Route {
 
     /**
      * Provide the path of this route, do not include a forward slash at the beginning.
-     * @param route Route
+     *
+     * @param route   Route
      * @param headers Optional headers to append to the page
      */
     protected Route(String route, Header... headers) {
@@ -48,18 +49,23 @@ public abstract class Route {
 
     /**
      * Process user-inputted params and return a string response
-     * @param params Query parameters on the URL
+     *
+     * @param params  Query parameters on the URL
      * @param headers Any headers that were supplied in the request
+     * @param ip      Client ip
      * @return Object, will be converted to string
      */
     protected abstract Object provide(Map<String, List<String>> params, List<Header> headers, String ip);
 
     /**
      * Process parameters and return a string based on them &amp; the route
-     * @param params Map of params and their value(s). Identical to a multimap, example format would be:
-     *               url/route?test=oof&amp;test=oof2&amp;oof=test
-     *               which would result in:
-     *               {test:["oof", "oof2"],oof:["test"]}
+     *
+     * @param params  Map of params and their value(s). Identical to a multimap, example format would be:
+     *                url/route?test=oof&amp;test=oof2&amp;oof=test
+     *                which would result in:
+     *                {test:["oof", "oof2"],oof:["test"]}
+     * @param headers List of headers
+     * @param ip      Client ip
      * @return Object, will be converted to string
      */
     public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
@@ -68,6 +74,7 @@ public abstract class Route {
 
     /**
      * Get the value of the route defined in this route
+     *
      * @return String
      */
     public String getRoute() {
@@ -76,6 +83,7 @@ public abstract class Route {
 
     /**
      * Get headers that this route should declare
+     *
      * @return List of headers
      */
     public List<Header> getHeaders() {

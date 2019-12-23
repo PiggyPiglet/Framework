@@ -46,6 +46,7 @@ public final class FileUtils {
      *
      * @param in          InputStream
      * @param destination Destination path
+     * @throws Exception IO error
      */
     public static void exportResource(InputStream in, String destination) throws Exception {
         Files.copy(in, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
@@ -94,6 +95,7 @@ public final class FileUtils {
      *
      * @param file File
      * @return checksum
+     * @throws Exception IO exception
      */
     public static String md5Checksum(File file) throws Exception {
         try (InputStream fis = new FileInputStream(file)) {

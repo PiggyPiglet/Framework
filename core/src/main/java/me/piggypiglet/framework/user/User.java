@@ -72,7 +72,7 @@ public abstract class User {
     /**
      * Send the user a message
      * @param message Message to send
-     * @param concatenations Concatenations to main message & variables
+     * @param concatenations Concatenations to main message &amp; variables
      */
     public void sendMessage(Object message, Object... concatenations) {
         sendMessage(StringUtils.format(message, concatenations));
