@@ -239,6 +239,30 @@ public final class StringUtils {
     }
 
     /**
+     * Check if a string equals any of the triggers supplied in the
+     * varargs.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean equalsAny(String string, String... triggers) {
+        return equalsAny(string, Arrays.asList(triggers));
+    }
+
+    /**
+     * Check if a string equals any of the triggers supplied in the
+     * list.
+     *
+     * @param string   String to check against
+     * @param triggers Triggers to check against
+     * @return boolean
+     */
+    public static boolean equalsAny(String string, List<String> triggers) {
+        return anyWith(string, triggers, String::equals);
+    }
+
+    /**
      * Check if a list of elements matches a predefined test against a specific element.
      *
      * @param str      Specific element
