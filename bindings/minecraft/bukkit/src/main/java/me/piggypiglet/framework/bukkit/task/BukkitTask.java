@@ -58,4 +58,9 @@ public final class BukkitTask extends Task {
             SCHEDULER.runTaskLaterAsynchronously(main, task, ticks);
         }
     }
+
+    @Override
+    protected void sync(GRunnable task) {
+        SCHEDULER.runTask(main, task);
+    }
 }

@@ -36,20 +36,21 @@ import java.util.concurrent.TimeUnit;
 
 public final class BungeeTask extends Task {
     private final Plugin plugin;
+    private final TaskScheduler scheduler;
 
     @Inject
     public BungeeTask(MainBinding binding) {
         this.plugin = (Plugin) binding.getInstance();
+        this.scheduler = plugin.getProxy().getScheduler();
     }
 
     @Override
     protected void async(GRunnable task) {
-        plugin.getProxy().getScheduler().runAsync(plugin, task);
+        scheduler.runAsync(plugin, task);
     }
 
     @Override
     protected void scheduleAsync(GRunnable task, TimeAPI time, boolean repeat) {
-        final TaskScheduler scheduler = plugin.getProxy().getScheduler();
         final long millis = time.getMilliseconds();
 
         if (repeat) {
@@ -58,5 +59,10 @@ public final class BungeeTask extends Task {
         }
 
         scheduler.schedule(plugin, task, millis, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    protected void sync(GRunnable task) {
+        async(task);
     }
 }

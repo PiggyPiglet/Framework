@@ -60,6 +60,11 @@ public final class NukkitTask extends Task {
         }
     }
 
+    @Override
+    protected void sync(GRunnable task) {
+        SCHEDULER.scheduleTask(main, task(task));
+    }
+
     private AsyncTask task(GRunnable runnable) {
         return new AsyncTask() {
             @Override

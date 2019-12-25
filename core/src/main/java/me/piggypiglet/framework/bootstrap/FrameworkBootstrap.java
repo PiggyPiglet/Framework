@@ -31,12 +31,8 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.guice.objects.Injector;
-import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.registerables.startup.ImplementationFinderRegisterable;
-import me.piggypiglet.framework.registerables.startup.ManagersRegisterable;
-import me.piggypiglet.framework.registerables.startup.ShutdownHookRegisterable;
-import me.piggypiglet.framework.registerables.startup.ShutdownRegisterablesRegisterable;
+import me.piggypiglet.framework.registerables.startup.*;
 import me.piggypiglet.framework.registerables.startup.addon.DefaultConfigsRegisterable;
 import me.piggypiglet.framework.registerables.startup.addon.UserConfigsRegisterable;
 import me.piggypiglet.framework.registerables.startup.commands.CommandHandlerRegisterable;
@@ -98,6 +94,7 @@ public final class FrameworkBootstrap {
                 ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class
         ));
 
+        boot.put(BootPriority.AFTER_SHUTDOWN, SyncRegisterable.class);
 
         addons.values().stream()
                 .map(Addon::startup)
@@ -127,8 +124,6 @@ public final class FrameworkBootstrap {
                 this.registerables.add(registerable);
             });
         }
-
-        LoggerFactory.getLogger("RPF").debug("Bootstrap process completed.");
     }
 
     @SafeVarargs

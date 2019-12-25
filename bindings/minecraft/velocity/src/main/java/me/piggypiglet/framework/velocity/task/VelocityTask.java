@@ -35,22 +35,33 @@ import sh.okx.timeapi.TimeAPI;
 import java.util.concurrent.TimeUnit;
 
 public final class VelocityTask extends Task {
-    @Inject private ProxyServer proxyServer;
-    @Inject private MainBinding main;
+    private final Object main;
+    private final Scheduler scheduler;
+
+    @Inject
+    public VelocityTask(MainBinding binding, ProxyServer proxyServer) {
+        this.main = binding.getInstance();
+        this.scheduler = proxyServer.getScheduler();
+    }
 
     @Override
     protected void async(GRunnable task) {
-        proxyServer.getScheduler().buildTask(main.getInstance(), task).schedule();
+        scheduler.buildTask(main, task).schedule();
     }
 
     @Override
     protected void scheduleAsync(GRunnable task, TimeAPI time, boolean repeat) {
-        Scheduler.TaskBuilder builder = proxyServer.getScheduler().buildTask(main.getInstance(), task).delay(time.getMilliseconds(), TimeUnit.MILLISECONDS);
+        Scheduler.TaskBuilder builder = scheduler.buildTask(main, task).delay(time.getMilliseconds(), TimeUnit.MILLISECONDS);
 
         if (repeat) {
             builder.repeat(time.getMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
         builder.schedule();
+    }
+
+    @Override
+    protected void sync(GRunnable task) {
+        async(task);
     }
 }

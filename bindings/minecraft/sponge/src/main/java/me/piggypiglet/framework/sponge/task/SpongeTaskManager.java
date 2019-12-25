@@ -43,10 +43,15 @@ public final class SpongeTaskManager extends Task {
         org.spongepowered.api.scheduler.Task.Builder builder = builder().async().delayTicks(time.getTicks()).execute(task);
 
         if (repeat) {
-            builder.intervalTicks(time.getTicks());
+            builder = builder.intervalTicks(time.getTicks());
         }
 
         builder.submit(main.getInstance());
+    }
+
+    @Override
+    protected void sync(GRunnable task) {
+        builder().execute(task).submit(main.getInstance());
     }
 
     private static org.spongepowered.api.scheduler.Task.Builder builder() {
