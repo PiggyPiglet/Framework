@@ -31,12 +31,12 @@ import me.piggypiglet.framework.minecraft.lang.Lang;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.user.User;
 
-public final class MinecraftCommandHandler extends CommandHandler {
+public class MinecraftCommandHandler extends CommandHandler {
     @Override
     protected boolean run(User user, Command command) {
         if (user instanceof MinecraftUser && command instanceof GenericMinecraftCommand) {
             final MinecraftUser mcUser = (MinecraftUser) user;
-            final GenericMinecraftCommand mcCommand = (GenericMinecraftCommand) command;
+            final GenericMinecraftCommand<?> mcCommand = (GenericMinecraftCommand<?>) command;
 
             if (mcCommand.isPlayerOnly() && !mcUser.isPlayer()) {
                 user.sendMessage(Lang.PLAYER_ONLY);

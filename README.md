@@ -62,7 +62,7 @@ More info can be found on their respective pages.
 
 | Core  | Console | HTTP  | Jars  | Logback | MySQL | Bukkit | BungeeCord | JDA   | Sponge | Velocity | Nukkit |
 |-------|---------|-------|-------|---------|-------|--------|------------|-------|--------|----------|--------|
-| 1.8.11 | 1.8.11   | 1.8.11 | 1.8.11 | 1.8.11   | 1.8.11 | 1.8.11  | 1.8.11      | 1.8.11 | 1.8.11  | 1.8.11    | 1.8.11  |
+| 1.8.12 | 1.8.12   | 1.8.12 | 1.8.12 | 1.8.12   | 1.8.12 | 1.8.12  | 1.8.12      | 1.8.12 | 1.8.12  | 1.8.12    | 1.8.12  |
 
 ### Endorsements
 ![YourKit](https://www.yourkit.com/images/yklogo.png)

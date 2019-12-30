@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.file;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
@@ -41,10 +42,8 @@ import java.util.Map;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Singleton
 public final class FileManager {
-    @Inject
-    private FileConfigurationFactory fileConfigurationFactory;
-    @Inject
-    private Framework framework;
+    @Inject private FileConfigurationFactory fileConfigurationFactory;
+    @Inject private Framework framework;
 
     private final Map<String, Object> files = new HashMap<>();
 
@@ -154,6 +153,18 @@ public final class FileManager {
         if (item instanceof MutableFileConfiguration) {
             ((MutableFileConfiguration) item).save();
         }
+    }
+
+    /**
+     * Get an immutable map of all files currently stored in the filemanager.
+     * The first type parameter, the string, corresponds to the file identifier.
+     * The object will either be a FileWrapper, or a FileConfiguration, depending
+     * on the type of file the identifier was configured with.
+     *
+     * @return ImmutableMap of String and object
+     */
+    public ImmutableMap<String, Object> getAll() {
+        return ImmutableMap.copyOf(files);
     }
 
     private <T> T putAndGet(String name, T file) {
