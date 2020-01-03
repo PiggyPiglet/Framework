@@ -66,10 +66,14 @@ public final class DefaultPermissionStore extends Manager<Permission> {
     protected void postConfigure() {
         ((List<Map<String, Object>>) configManager.getConfigs().get(HTTPAddon.class).getItems().get("standard-authentication.tokens")).forEach(m -> {
             try {
-                add(new Permission(
-                        KEY_FACTORY.generatePublic(new X509EncodedKeySpec(DECODER.decode((String) m.get("pub")))),
-                        (List<String>) m.get("permissions")
-                ));
+                final String pub = (String) m.get("pub");
+
+                if (!pub.isEmpty()) {
+                    add(new Permission(
+                            KEY_FACTORY.generatePublic(new X509EncodedKeySpec(DECODER.decode((String) m.get("pub")))),
+                            (List<String>) m.get("permissions")
+                    ));
+                }
             } catch (Exception e) {
                 LOGGER.error(e);
             }
