@@ -25,9 +25,7 @@
 package me.piggypiglet.framework.scanning.implementations;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.ClassPath;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;

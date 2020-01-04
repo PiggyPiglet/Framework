@@ -4,8 +4,7 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-gradle clean
-gradle build
+gradle clean updateLicenses build
 
 cd /e/Documents/Github/Framework/
 rm -r maven/tmp/
