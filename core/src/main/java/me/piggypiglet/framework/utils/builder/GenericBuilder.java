@@ -58,6 +58,17 @@ public final class GenericBuilder {
         }
 
         /**
+         * Method to execute a void method
+         *
+         * @param consumer Void method
+         * @return Generic Object Builder
+         */
+        public Builder<T> with(Consumer<T> consumer) {
+            instanceModifiers.add(consumer);
+            return this;
+        }
+
+        /**
          * Method to supply a setter method with it's value.
          *
          * @param consumer Apply value to setter logic

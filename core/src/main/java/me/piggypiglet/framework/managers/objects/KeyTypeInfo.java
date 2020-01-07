@@ -41,6 +41,7 @@ public final class KeyTypeInfo {
 
     /**
      * Get an instance of KeyTypeInfo.Builder
+     *
      * @return Builder instance
      */
     public static Builder builder() {
@@ -54,10 +55,12 @@ public final class KeyTypeInfo {
     public static class Builder {
         private final List<KeyFunction<?, ?>> keys = new ArrayList<>();
 
-        private Builder() {}
+        private Builder() {
+        }
 
         /**
          * Begin the process of creating a keyfunction with a class/interface as the key
+         *
          * @param key Key class
          * @param <T> Type generic of key class
          * @return KeyFunctionBuilder
@@ -68,10 +71,11 @@ public final class KeyTypeInfo {
 
         /**
          * Begin the process of creating a keyfunction with a class/interface as the key, and a mapper to convert the key to something else
-         * @param key Key class
+         *
+         * @param key    Key class
          * @param mapper Optional mapping of key
-         * @param <T> Type generic of key class
-         * @param <U> Type generic of the mapped key
+         * @param <T>    Type generic of key class
+         * @param <U>    Type generic of the mapped key
          * @return KeyFunctionBuilder
          */
         public final <T, U> KeyFunctionBuilder<T, U> key(Class<T> key, Function<T, U> mapper) {
@@ -91,6 +95,7 @@ public final class KeyTypeInfo {
 
             /**
              * Set the function to get from a data structure via the mapped key
+             *
              * @param getter Function to get from data structure
              * @return Current instance of KeyFunctionBuilder
              */
@@ -101,6 +106,7 @@ public final class KeyTypeInfo {
 
             /**
              * Set the function to check if something exists in a data structure via the mapped key
+             *
              * @param exists Function to check if &lt;U&gt; exists (or what it represents) in a data structure
              * @return Current instance of KeyFunctionBuilder
              */
@@ -110,10 +116,25 @@ public final class KeyTypeInfo {
             }
 
             /**
-             * Util to build a KeyFunction based on the map data structure
+             * Util to build a KeyFunction based on a map data structure
+             *
+             * @param map Map instance
+             * @param <O> Value type of map
+             * @return Parent KeyTypeInfo.Builder instance
+             */
+            public <O> Builder map(Map<U, O> map) {
+                return getter(map::get)
+                        .exists(map::containsKey)
+                        .bundle();
+            }
+
+            /**
+             * Util to build a KeyFunction based on a map data structure,
+             * with a default value if the key doesn't exist.
+             *
              * @param map Map instance
              * @param def Default value
-             * @param <O> Unknown value type of map
+             * @param <O> Value type of map
              * @return Parent KeyTypeInfo.Builder instance
              */
             public final <O> Builder map(Map<U, O> map, O def) {
@@ -124,10 +145,11 @@ public final class KeyTypeInfo {
 
             /**
              * Util to build a KeyFunction based on the list data structure
-             * @param list List instance
+             *
+             * @param list   List instance
              * @param filter Filter to find the relevant value based on U
-             * @param def Default value
-             * @param <O> Unknown value type of list
+             * @param def    Default value
+             * @param <O>    Unknown value type of list
              * @return Parent KeyTypeInfo.Builder instance
              */
             public final <O> Builder list(List<O> list, BiPredicate<U, O> filter, O def) {
@@ -139,6 +161,7 @@ public final class KeyTypeInfo {
 
             /**
              * Bundle the getter &amp; exists functions into a KeyFunction
+             *
              * @return Parent KeyTypeInfo.Builder instance
              */
             public final Builder bundle() {
@@ -149,6 +172,7 @@ public final class KeyTypeInfo {
 
         /**
          * Build the KeyTypeInfo instance from the data submitted into the builder.
+         *
          * @return KeyTypeInfo instance
          */
         public KeyTypeInfo build() {

@@ -124,7 +124,11 @@ public abstract class Manager<S> {
         KeyFunction<T, U> function = findFunc(key);
 
         if (function != null) {
-            return (S) function.getGetter().apply(map(function, key));
+            final U val = map(function, key);
+
+            if (function.getExists().test(val)) {
+                return (S) function.getGetter().apply(val);
+            }
         }
 
         return null;
@@ -162,7 +166,8 @@ public abstract class Manager<S> {
     @SuppressWarnings("unchecked")
     private <T, U> KeyFunction<T, U> findFunc(T key) {
         for (KeyFunction<?, ?> f : keyTypes.getKeys()) {
-            if (f.getType() == key.getClass() || Arrays.asList(key.getClass().getInterfaces()).contains(f.getType())) {
+            // todo: second part of this statement might be redundant, do thorough testing
+            if (f.getType().isInstance(key) || Arrays.asList(key.getClass().getInterfaces()).contains(f.getType())) {
                 return (KeyFunction<T, U>) f;
             }
         }

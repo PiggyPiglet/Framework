@@ -31,7 +31,7 @@ import java.util.List;
 
 @Singleton
 public final class ManagersManager {
-    private final List<Manager> managers = new ArrayList<>();
+    private final List<Manager<?>> managers = new ArrayList<>();
 
     /**
      * Run the setup method on every manager stored by this class
@@ -45,7 +45,7 @@ public final class ManagersManager {
      *
      * @return List of managers
      */
-    public List<Manager> getManagers() {
+    public List<Manager<?>> getManagers() {
         return managers;
     }
 }

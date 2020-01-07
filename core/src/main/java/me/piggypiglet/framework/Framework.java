@@ -37,6 +37,7 @@ import me.piggypiglet.framework.utils.annotations.Main;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
+import me.piggypiglet.framework.utils.builder.GenericBuilder;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -94,7 +95,9 @@ public final class Framework {
      * @return FrameworkBootstrap instance
      */
     public FrameworkBootstrap init() {
-        return new FrameworkBootstrap(this);
+        return GenericBuilder.of(() -> new FrameworkBootstrap(this))
+                .with(FrameworkBootstrap::start)
+                .build();
     }
 
     /**

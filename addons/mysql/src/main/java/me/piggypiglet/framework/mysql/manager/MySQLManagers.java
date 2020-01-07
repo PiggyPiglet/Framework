@@ -33,18 +33,15 @@ import java.util.stream.Collectors;
 public final class MySQLManagers {
     @Inject private ManagersManager managersManager;
 
-    @SuppressWarnings("unchecked")
     public void saveAll() {
-        List<MySQLManager> managers = managersManager.getManagers()
+        managersManager.getManagers()
                 .stream()
-                .filter(m -> m instanceof MySQLManager).map(m -> (MySQLManager) m)
-                .collect(Collectors.toList());
-
-        managers.forEach(m -> {
-            m.getAll().forEach(m.getTable()::save);
-            m.getNeedsDeleting().forEach(m.getTable()::delete);
-        });
-
-        managers.forEach(m -> m.getNeedsDeleting().clear());
+                .filter(m -> m instanceof MySQLManager<?>)
+                .map(m -> (MySQLManager<?>) m)
+                .forEach(m -> {
+                    m.getAll().forEach(m.getTable()::save);
+                    m.getNeedsDeleting().forEach(m.getTable()::delete);
+                    m.getNeedsDeleting().clear();
+                });
     }
 }

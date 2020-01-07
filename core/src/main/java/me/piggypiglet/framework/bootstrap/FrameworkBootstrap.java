@@ -26,6 +26,7 @@ package me.piggypiglet.framework.bootstrap;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
@@ -42,6 +43,7 @@ import me.piggypiglet.framework.registerables.startup.file.FileTypesRegisterable
 import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.lang.LangFileRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.lang.LangValuesRegisterable;
+import me.piggypiglet.framework.registerables.startup.file.migration.MigrationRegisterable;
 import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
@@ -57,22 +59,25 @@ public final class FrameworkBootstrap {
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
     private final Map<Class<?>, Addon> addons = new HashMap<>();
 
+    @Inject private Scanner scanner;
+
     private final Framework config;
 
     public FrameworkBootstrap(Framework config) {
         this.config = config;
+    }
 
+    public void start() {
         if (config.getInjector() == null) {
             injector.set(new Injector(new InitialModule(this, config).createInjector()));
         } else {
             injector.set(new Injector(config.getInjector().createChildInjector(new InitialModule(this, config))));
         }
 
-        start();
-    }
+        injector.get().getReal().injectMembers(this);
 
-    private void start() {
-        injector.get().getInstance(Scanner.class).getTypesAnnotatedWith(Addon.class)
+        scanner
+                .getTypesAnnotatedWith(Addon.class)
                 .forEach(c -> addons.put(c, c.getAnnotation(Addon.class)));
 
         final Multimap<BootPriority, Class<? extends StartupRegisterable>> boot = ArrayListMultimap.create();
@@ -80,8 +85,9 @@ public final class FrameworkBootstrap {
         boot.putAll(BootPriority.IMPL, linkedHashSet(
                 ImplementationFinderRegisterable.class, FileTypesRegisterable.class,
                 DefaultConfigsRegisterable.class, FilesRegisterable.class,
-                FileMappingRegisterable.class, UserConfigsRegisterable.class,
-                LangValuesRegisterable.class, LangFileRegisterable.class
+                MigrationRegisterable.class, FileMappingRegisterable.class,
+                UserConfigsRegisterable.class, LangValuesRegisterable.class,
+                LangFileRegisterable.class
         ));
 
         if (config.getCommandPrefixes() != null) {

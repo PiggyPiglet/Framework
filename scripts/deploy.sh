@@ -4,11 +4,11 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-gradle clean updateLicenses build
-
 cd /e/Documents/Github/Framework/
 rm -r maven/tmp/
 mkdir maven/tmp/
+
+gradle clean updateLicenses build
 
 names=$1
 

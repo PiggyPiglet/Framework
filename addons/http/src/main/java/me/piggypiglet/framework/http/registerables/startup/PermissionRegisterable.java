@@ -40,6 +40,7 @@ public final class PermissionRegisterable extends StartupRegisterable {
     @Inject private DefaultPermissionStore defaultPermissionStore;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void execute() {
         final Optional<? extends Manager> manager = scanner.getSubTypesOf(Manager.class).stream().filter(m -> {
             try {
