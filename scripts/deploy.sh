@@ -8,7 +8,16 @@ cd /e/Documents/Github/Framework/
 rm -r maven/tmp/
 mkdir maven/tmp/
 
-gradle clean updateLicenses build
+tasks="clean updateLicenses build"
+
+case "$(uname -s)" in
+  *NT*)
+    ./gradlew.bat $tasks
+    ;;
+  *)
+    ./gradlew $tasks
+    ;;
+esac
 
 names=$1
 
