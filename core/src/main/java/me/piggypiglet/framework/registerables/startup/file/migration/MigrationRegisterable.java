@@ -24,22 +24,53 @@
 
 package me.piggypiglet.framework.registerables.startup.file.migration;
 
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
+import me.piggypiglet.framework.file.FileManager;
+import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
 import me.piggypiglet.framework.file.migration.Migrator;
-import me.piggypiglet.framework.file.migration.MigratorManager;
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.Scanner;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2020
 // https://www.piggypiglet.me
 // ------------------------------
 public final class MigrationRegisterable extends StartupRegisterable {
+    private static final Logger LOGGER = LoggerFactory.getLogger("Config Migration");
+
     @Inject private Scanner scanner;
-    @Inject private MigratorManager migratorManager;
+    @Inject private FileManager fileManager;
 
     @Override
     protected void execute() {
-        scanner.getSubTypesOf(Migrator.class).stream().map(injector::getInstance).sorted().forEach(migratorManager::add);
+        final Set<MutableFileConfiguration> needsSaving = new HashSet<>();
+
+        Multimaps.index(
+                scanner.getSubTypesOf(Migrator.class).stream()
+                        .map(injector::getInstance)
+                        .sorted()
+                        .collect(Collectors.toList()),
+                m -> (MutableFileConfiguration) fileManager.get(m.getConfig())
+        ).asMap().forEach((c, ms) -> ms.forEach(m -> {
+            if (m.canMigrate(c)) {
+                m.run(c);
+                needsSaving.add(c);
+            }
+        }));
+
+        needsSaving.forEach(c -> {
+            try {
+                c.save();
+            } catch (Exception e) {
+                LOGGER.error(e);
+            }
+        });
     }
 }

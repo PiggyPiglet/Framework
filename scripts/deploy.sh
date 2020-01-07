@@ -4,7 +4,7 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-cd /e/Documents/Github/Framework/
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/.."
 rm -r maven/tmp/
 mkdir maven/tmp/
 
