@@ -58,22 +58,21 @@ public final class ResponseHandler {
      */
     public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
         for (Route route : routes) {
-            final String routeStr = route.getRoute();
-            final String uri = session.getUri().toLowerCase().replace("/", "");
+            final String uri = session.getUri().toLowerCase().substring(1);
 
-            if (uri.startsWith(routeStr)) {
-                final String sanitizedUri = uri.replace(routeStr, "");
+            if (route.getRoute().test(uri)) {
+                final String sanitisedUri = route.getSanitiser().apply(uri);
 
-                if (!sanitizedUri.isEmpty() && !sanitizedUri.startsWith("?")) continue;
+                if (!sanitisedUri.isEmpty() && !sanitisedUri.equals("/") && !sanitisedUri.startsWith("?")) continue;
 
                 final Authenticated auth = route.getClass().getAnnotation(Authenticated.class);
 
                 if (auth != null) {
                     final NanoHTTPD.Response noPermission = NanoHTTPD.newFixedLengthResponse("<p>No permission.</p>");
                     final Map<String, Object> config = configManager.getConfigs().get(HTTPAddon.class).getItems();
-                    final String token = session.getHeaders().getOrDefault("auth", "null");
+                    final String token = session.getHeaders().getOrDefault("auth", null);
 
-                    if (!permStore.exists(token)) return noPermission;
+                    if (token == null || !permStore.exists(token)) return noPermission;
 
                     final Collection<String> perms = permStore.get(token).getPermissions();
 
@@ -84,6 +83,7 @@ public final class ResponseHandler {
                 }
 
                 NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(route.run(
+                        uri,
                         session.getParameters(),
                         session.getHeaders().entrySet().stream().map(e -> new Header(e.getKey(), e.getValue())).collect(Collectors.toList()),
                         session.getRemoteIpAddress()

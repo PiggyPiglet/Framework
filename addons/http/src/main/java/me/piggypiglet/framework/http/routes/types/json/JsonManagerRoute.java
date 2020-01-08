@@ -32,6 +32,8 @@ import me.piggypiglet.framework.utils.SearchUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends JsonRoute {
@@ -46,13 +48,23 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
         this.manager = manager;
     }
 
+    protected JsonManagerRoute(Predicate<String> route, UnaryOperator<String> sanitiser, SearchableManager<T> manager, Header... headers) {
+        super(route, sanitiser, headers);
+        this.manager = manager;
+    }
+
     protected JsonManagerRoute(String route, SearchableManager<T> manager, Gson gson, Header... headers) {
         super(route, gson, headers);
         this.manager = manager;
     }
 
+    protected JsonManagerRoute(Predicate<String> route, UnaryOperator<String> sanitiser, SearchableManager<T> manager, Gson gson, Header... headers) {
+        super(route, sanitiser, gson, headers);
+        this.manager = manager;
+    }
+
     @Override
-    public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
+    public Object run(String uri, Map<String, List<String>> params, List<Header> headers, String ip) {
         if (params.size() > 0) {
             final Map.Entry<String, List<String>> entry = params.entrySet().iterator().next();
             final String key = entry.getKey();
@@ -97,7 +109,7 @@ public abstract class JsonManagerRoute<T extends SearchUtils.Searchable> extends
 
         }
 
-        return provide(params, headers, ip);
+        return super.run(uri, params, headers, ip);
     }
 
     protected class Options {

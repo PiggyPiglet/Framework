@@ -31,12 +31,14 @@ import me.piggypiglet.framework.http.routes.objects.Header;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 public abstract class JsonRoute extends Route {
     protected final Gson gson;
 
-    static {
-        HEADERS.add(new Header("Content-Type", "application/json"));
+    {
+        headers.add(new Header("Content-Type", "application/json"));
     }
 
     /**
@@ -48,13 +50,22 @@ public abstract class JsonRoute extends Route {
         this(route, new GsonBuilder().setPrettyPrinting().create(), headers);
     }
 
+    protected JsonRoute(Predicate<String> route, UnaryOperator<String> sanitiser, Header... headers) {
+        this(route, sanitiser, new GsonBuilder().setPrettyPrinting().create(), headers);
+    }
+
     protected JsonRoute(String route, Gson gson, Header... headers) {
         super(route, headers);
         this.gson = gson;
     }
 
+    protected JsonRoute(Predicate<String> route, UnaryOperator<String> sanitiser, Gson gson, Header... headers) {
+        super(route, sanitiser, headers);
+        this.gson = gson;
+    }
+
     @Override
-    public Object run(Map<String, List<String>> params, List<Header> headers, String ip) {
-        return gson.toJson(super.run(params, headers, ip));
+    public Object run(String uri, Map<String, List<String>> params, List<Header> headers, String ip) {
+        return gson.toJson(super.run(uri, params, headers, ip));
     }
 }

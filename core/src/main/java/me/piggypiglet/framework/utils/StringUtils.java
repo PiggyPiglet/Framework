@@ -265,20 +265,25 @@ public final class StringUtils {
     /**
      * Check if a list of elements matches a predefined test against a specific element.
      *
-     * @param str      Specific element
+     * @param element  Specific element
      * @param elements List of elements
      * @param test     Match test
      * @param <T>      Trigger type
      * @param <U>      Element type
      * @return boolean
      */
-    public static <T, U> boolean anyWith(T str, List<U> elements, BiPredicate<U, T> test) {
-        return lowercaseStream(elements).anyMatch(s -> test.test(s, str));
+    public static <T, U> boolean anyWith(T element, List<U> elements, BiPredicate<U, T> test) {
+        final T clone = toLowerCase(element);
+        return lowercaseStream(elements).anyMatch(s -> test.test(s, clone));
+    }
+
+    private static <T> Stream<T> lowercaseStream(List<T> elements) {
+        return elements.stream().map(StringUtils::toLowerCase);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Stream<T> lowercaseStream(List<T> triggers) {
-        return triggers.stream().map(o -> o instanceof String ? (T) ((String) o).toLowerCase() : o);
+    private static <T> T toLowerCase(T element) {
+        return element instanceof String ? (T) ((String) element).toLowerCase() : element;
     }
 
     /**

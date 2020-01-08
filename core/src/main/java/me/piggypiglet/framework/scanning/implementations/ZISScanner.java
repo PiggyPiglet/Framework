@@ -49,7 +49,7 @@ public final class ZISScanner extends Scanner {
     private final Set<Field> fields;
 
     public ZISScanner(Class<?> main, String pckg, String[] exclusions) {
-        final String framework = Framework.class.getPackage().getName();
+        final String framework = Framework.class.getPackage().getName().replace('.', '/');
         pckg = pckg.replace('.', '/');
         exclusions = Arrays.stream(exclusions).map(s -> s.replace('.', '/')).toArray(String[]::new);
 
