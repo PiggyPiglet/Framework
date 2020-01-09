@@ -64,7 +64,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     @Override
     protected void internalLoad(java.io.File file, String fileContent) {
-        items = provide(file, fileContent);
+        items = new ConcurrentHashMap<>(provide(file, fileContent));
         mappers.forEach(f -> items = Maps.map(items, f.getClazz(), f.getFunction()));
         flat = getAll();
     }
