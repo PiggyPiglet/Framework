@@ -35,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     MapFileConfiguration(Map<String, Object> items) {
         super(null);
-        this.items = items;
+        this.items = new ConcurrentHashMap<>(items);
         flat = getAll();
     }
 
