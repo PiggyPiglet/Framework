@@ -35,7 +35,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -54,7 +53,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     MapFileConfiguration(Map<String, Object> items) {
         super(null);
-        this.items = new ConcurrentHashMap<>(items);
+        this.items = items;
         flat = getAll();
     }
 
@@ -64,7 +63,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     @Override
     protected void internalLoad(java.io.File file, String fileContent) {
-        items = new ConcurrentHashMap<>(provide(file, fileContent));
+        items = provide(file, fileContent);
         mappers.forEach(f -> items = Maps.map(items, f.getClazz(), f.getFunction()));
         flat = getAll();
     }
@@ -151,11 +150,17 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
         }
 
         final String key = split[split.length - 1];
-        final Map<String, Object> parent = split.length == 1 ? items : (Map<String, Object>) get(String.join(".", Arrays.copyOf(split, split.length - 1)));
+        final String parentPath = String.join(".", Arrays.copyOf(split, split.length - 1));
+        Map<String, Object> parent = split.length == 1 ? items : (Map<String, Object>) get(parentPath);
+
+        if (parent == null) {
+            set(parentPath, new HashMap<>());
+            parent = (Map<String, Object>) get(parentPath);
+        }
 
         if (value == null) {
             parent.remove(key);
-            flat.keySet().stream().filter(o -> o.startsWith(path)).forEach(flat::remove);
+            new HashSet<>(flat.keySet()).stream().filter(o -> o.startsWith(path)).forEach(flat::remove);
         } else {
             parent.put(key, value);
             flat.put(path, value);
@@ -174,6 +179,6 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
     }
 
     private FileConfiguration configSection(Map<String, Object> items) {
-        return new MapFileConfigurationSection(items);
+        return items == null ? null : new MapFileConfigurationSection(items);
     }
 }
