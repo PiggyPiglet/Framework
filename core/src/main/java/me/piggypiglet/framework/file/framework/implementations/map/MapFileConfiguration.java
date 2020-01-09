@@ -35,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -85,17 +86,22 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
 
     @Override
     public Integer getInt(String path) {
-        return ((Number) flat.get(path)).intValue();
+        return number(path, Number::intValue);
     }
 
     @Override
     public Long getLong(String path) {
-        return ((Number) flat.get(path)).longValue();
+        return number(path, Number::longValue);
     }
 
     @Override
     public Double getDouble(String path) {
-        return ((Number) flat.get(path)).doubleValue();
+        return number(path, Number::doubleValue);
+    }
+
+    private <T> T number(String path, Function<Number, T> value) {
+        final Object obj = flat.get(path);
+        return obj == null ? null : value.apply(((Number) obj));
     }
 
     @Override
@@ -112,7 +118,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
     public List<FileConfiguration> getConfigList(String path) {
         final List<Map<String, Object>> list = getList(path);
 
-        if (!list.isEmpty()) {
+        if (list != null && !list.isEmpty()) {
             return list.stream()
                     .map(this::configSection)
                     .collect(Collectors.toList());
