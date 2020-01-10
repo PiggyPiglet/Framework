@@ -65,7 +65,7 @@ public final class MySQLRegisterable extends StartupRegisterable {
                     (String) items.get("password"),
                     (String) items.get("db"),
                     (String) items.get("host")
-            ).build();
+            ).dataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource").build();
 
             DB.setGlobalDatabase(PooledDatabaseOptions.builder().options(options).createHikariDatabase());
 

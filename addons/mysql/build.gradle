@@ -6,7 +6,7 @@ repositories {
 
 dependencies {
     compileOnly project(":core")
-    compile 'mysql:mysql-connector-java:5.1.33'
+    compile 'mysql:mysql-connector-java:8.0.18'
     compile 'co.aikar:idb-core:1.0.0-SNAPSHOT'
     compile 'com.zaxxer:HikariCP:2.4.1'
 }
