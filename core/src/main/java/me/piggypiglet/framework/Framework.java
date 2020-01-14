@@ -29,6 +29,7 @@ import com.google.inject.Injector;
 import me.piggypiglet.framework.addon.objects.ConfigInfo;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.file.objects.FileData;
+import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.lang.objects.CustomLang;
@@ -41,11 +42,13 @@ import me.piggypiglet.framework.utils.builder.GenericBuilder;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public final class Framework {
     private final MainBinding main;
     private final String pckg;
     private final String[] pckgExclusions;
+    private final BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule;
     private final Injector injector;
     private final List<RegisterableData> startupRegisterables;
     private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
@@ -59,13 +62,14 @@ public final class Framework {
     private final CustomLang customLang;
     private final boolean debug;
 
-    private Framework(MainBinding main, String pckg, String[] pckgExclusions, Injector injector, List<RegisterableData> startupRegisterables,
-                      List<Class<? extends ShutdownRegisterable>> shutdownRegisterables, String[] commandPrefixes, List<FileData> files,
-                      int threads, Map<Class<?>, ConfigInfo> configs, String configDir, boolean overrideLangFile, ConfigInfo langConfig,
-                      CustomLang customLang, boolean debug) {
+    private Framework(MainBinding main, String pckg, String[] pckgExclusions, BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule,
+                      Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables,
+                      String[] commandPrefixes, List<FileData> files, int threads, Map<Class<?>, ConfigInfo> configs, String configDir,
+                      boolean overrideLangFile, ConfigInfo langConfig, CustomLang customLang, boolean debug) {
         this.main = main;
         this.pckg = pckg;
         this.pckgExclusions = pckgExclusions;
+        this.initialModule = initialModule;
         this.injector = injector;
         this.startupRegisterables = startupRegisterables;
         this.shutdownRegisterables = shutdownRegisterables;
@@ -125,6 +129,10 @@ public final class Framework {
      */
     public String[] getPckgExclusions() {
         return pckgExclusions;
+    }
+
+    public BiFunction<FrameworkBootstrap, Framework, InitialModule> getInitialModule() {
+        return initialModule;
     }
 
     /**
@@ -239,6 +247,7 @@ public final class Framework {
         private Object main = "d-main";
         private String pckg = "d-pckg";
         private String[] pckgExclusions = new String[]{};
+        private BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule = InitialModule::new;
         private Injector injector = null;
         private List<RegisterableData> startupRegisterables = new ArrayList<>();
         private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
@@ -290,6 +299,11 @@ public final class Framework {
         public final FrameworkBuilder pckg(String pckg, String... exclusions) {
             this.pckg = pckg;
             this.pckgExclusions = exclusions;
+            return this;
+        }
+
+        public final FrameworkBuilder initialModule(BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule) {
+            this.initialModule = initialModule;
             return this;
         }
 
@@ -497,8 +511,8 @@ public final class Framework {
         public final Framework build() {
             BuilderUtils.checkVars("FrameworkBuilder", main, pckg);
 
-            return new Framework((MainBinding) main, pckg, pckgExclusions, injector, startupRegisterables, shutdownRegisterables,
-                    commandPrefixes, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
+            return new Framework((MainBinding) main, pckg, pckgExclusions, initialModule, injector, startupRegisterables,
+                    shutdownRegisterables, commandPrefixes, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
         }
     }
 }

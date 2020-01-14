@@ -68,10 +68,12 @@ public final class FrameworkBootstrap {
     }
 
     public void start() {
+        final InitialModule initialModule = config.getInitialModule().apply(this, config);
+
         if (config.getInjector() == null) {
-            injector.set(new Injector(new InitialModule(this, config).createInjector()));
+            injector.set(new Injector(initialModule.createInjector()));
         } else {
-            injector.set(new Injector(config.getInjector().createChildInjector(new InitialModule(this, config))));
+            injector.set(new Injector(config.getInjector().createChildInjector(initialModule)));
         }
 
         injector.get().getReal().injectMembers(this);

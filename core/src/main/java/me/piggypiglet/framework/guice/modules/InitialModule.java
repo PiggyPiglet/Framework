@@ -31,22 +31,22 @@ import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.scanning.implementations.ZISScanner;
 
-public final class InitialModule extends AbstractModule {
-    private final FrameworkBootstrap boot;
-    private final Framework config;
+public class InitialModule extends AbstractModule {
+    protected final FrameworkBootstrap boot;
+    protected final Framework config;
 
     public InitialModule(FrameworkBootstrap boot, Framework config) {
         this.boot = boot;
         this.config = config;
     }
 
-    public Injector createInjector() {
+    public final Injector createInjector() {
         return Guice.createInjector(this);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void configure() {
+    public final void configure() {
         final MainBinding main = config.getMain();
 
         if (main.getAnnotation() != null) {
@@ -54,23 +54,27 @@ public final class InitialModule extends AbstractModule {
         } else {
             bind(main.getClazz()).toInstance(main.getInstance());
         }
+
+        customConfigure();
     }
+
+    protected void customConfigure() {}
 
     @Provides
     @Singleton
-    public MainBinding providesMainBinding() {
+    public final MainBinding providesMainBinding() {
         return config.getMain();
     }
 
     @Provides
     @Singleton
-    public FrameworkBootstrap providesFrameworkBootstrap() {
+    public final FrameworkBootstrap providesFrameworkBootstrap() {
         return boot;
     }
 
     @Provides
     @Singleton
-    public Framework providesConfig() {
+    public final Framework providesConfig() {
         return config;
     }
 
@@ -78,5 +82,5 @@ public final class InitialModule extends AbstractModule {
     @Singleton
     public Scanner providesScanner() {
         return new ZISScanner(config.getMain().getInstance().getClass(), config.getPckg(), config.getPckgExclusions());
-}
+    }
 }
