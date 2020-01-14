@@ -26,10 +26,10 @@ package me.piggypiglet.framework.managers;
 
 import me.piggypiglet.framework.managers.objects.KeyFunction;
 import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
+import me.piggypiglet.framework.utils.lambda.NullableFunction;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.Function;
 
 public abstract class Manager<S> {
     protected KeyTypeInfo keyTypes;
@@ -121,14 +121,10 @@ public abstract class Manager<S> {
      */
     @SuppressWarnings("unchecked")
     public <T, U> S get(T key) {
-        KeyFunction<T, U> function = findFunc(key);
+        final KeyFunction<T, U> function = findFunc(key);
 
         if (function != null) {
-            final U val = map(function, key);
-
-            if (function.getExists().test(val)) {
-                return (S) function.getGetter().apply(val);
-            }
+            return (S) function.getGetter().apply(map(function, key));
         }
 
         return null;
@@ -154,7 +150,7 @@ public abstract class Manager<S> {
 
     @SuppressWarnings("unchecked")
     private <T, U> U map(KeyFunction<T, U> function, T key) {
-        Function<T, U> mapper = function.getMapper();
+        NullableFunction<T, U> mapper = function.getMapper();
 
         if (mapper != null) {
             return mapper.apply(key);

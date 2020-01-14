@@ -27,9 +27,6 @@ package me.piggypiglet.framework.mysql.manager;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.managers.ManagersManager;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public final class MySQLManagers {
     @Inject private ManagersManager managersManager;
 

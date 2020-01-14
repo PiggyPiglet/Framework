@@ -24,16 +24,17 @@
 
 package me.piggypiglet.framework.managers.objects;
 
-import java.util.function.Function;
+import me.piggypiglet.framework.utils.lambda.NullableFunction;
+
 import java.util.function.Predicate;
 
 public final class KeyFunction<T, U> {
     private final Class<T> type;
-    private final Function<T, U> mapper;
-    private final Function<U, Object> getter;
+    private final NullableFunction<T, U> mapper;
+    private final NullableFunction<U, Object> getter;
     private final Predicate<U> exists;
 
-    public KeyFunction(Class<T> type, Function<T, U> mapper, Function<U, Object> getter, Predicate<U> exists) {
+    public KeyFunction(Class<T> type, NullableFunction<T, U> mapper, NullableFunction<U, Object> getter, Predicate<U> exists) {
         this.type = type;
         this.mapper = mapper;
         this.getter = getter;
@@ -44,11 +45,11 @@ public final class KeyFunction<T, U> {
         return type;
     }
 
-    public Function<T, U> getMapper() {
+    public NullableFunction<T, U> getMapper() {
         return mapper;
     }
 
-    public Function<U, Object> getGetter() {
+    public NullableFunction<U, Object> getGetter() {
         return getter;
     }
 

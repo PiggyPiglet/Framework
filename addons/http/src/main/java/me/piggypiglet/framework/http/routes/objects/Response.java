@@ -60,4 +60,14 @@ public final class Response {
     public String getIp() {
         return ip;
     }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "uri='" + uri + '\'' +
+                ", params=" + params +
+                ", headers=" + headers +
+                ", ip='" + ip + '\'' +
+                '}';
+    }
 }

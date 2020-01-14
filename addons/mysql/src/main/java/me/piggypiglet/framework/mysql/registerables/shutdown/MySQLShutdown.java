@@ -24,12 +24,17 @@
 
 package me.piggypiglet.framework.mysql.registerables.shutdown;
 
-import co.aikar.idb.DB;
+import me.piggypiglet.framework.mysql.utils.MySQLUtils;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
+
+import java.util.concurrent.CompletableFuture;
 
 public final class MySQLShutdown extends ShutdownRegisterable {
     @Override
     protected void execute() {
-        DB.close();
+        final CompletableFuture<Void> future = MySQLUtils.shutdown();
+
+        //noinspection StatementWithEmptyBody
+        while (!future.isDone()) {}
     }
 }

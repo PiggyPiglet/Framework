@@ -24,12 +24,13 @@
 
 package me.piggypiglet.framework.managers.objects;
 
+import me.piggypiglet.framework.utils.lambda.NullableFunction;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class KeyTypeInfo {
@@ -78,17 +79,17 @@ public final class KeyTypeInfo {
          * @param <U>    Type generic of the mapped key
          * @return KeyFunctionBuilder
          */
-        public final <T, U> KeyFunctionBuilder<T, U> key(Class<T> key, Function<T, U> mapper) {
+        public final <T, U> KeyFunctionBuilder<T, U> key(Class<T> key, NullableFunction<T, U> mapper) {
             return new KeyFunctionBuilder<>(key, mapper);
         }
 
         public class KeyFunctionBuilder<T, U> {
             private final Class<T> key;
-            private final Function<T, U> mapper;
-            private Function<U, Object> getter;
+            private final NullableFunction<T, U> mapper;
+            private NullableFunction<U, Object> getter;
             private Predicate<U> exists;
 
-            private KeyFunctionBuilder(Class<T> key, Function<T, U> mapper) {
+            private KeyFunctionBuilder(Class<T> key, NullableFunction<T, U> mapper) {
                 this.key = key;
                 this.mapper = mapper;
             }
@@ -99,7 +100,7 @@ public final class KeyTypeInfo {
              * @param getter Function to get from data structure
              * @return Current instance of KeyFunctionBuilder
              */
-            public final KeyFunctionBuilder<T, U> getter(Function<U, Object> getter) {
+            public final KeyFunctionBuilder<T, U> getter(NullableFunction<U, Object> getter) {
                 this.getter = getter;
                 return this;
             }

@@ -42,7 +42,7 @@ public final class MySQLUtils {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("MySQL");
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(7);
     private static final CompletableFuture<Boolean> READY = new CompletableFuture<>();
-    private static final Pattern STRING_REGEX = Pattern.compile("[^A-Za-z0-9\\[\\]\\-.()/!_%:,&'<>@\\s ]");
+    private static final Pattern STRING_REGEX = Pattern.compile("[^A-Za-z0-9\\[\\]\\-.(){}/!_%:,&'<>@\\s ]");
 
     /**
      * See whether MySQL is ready for operation
@@ -137,7 +137,6 @@ public final class MySQLUtils {
      * @return CompletableFuture of whether the operation was successful
      */
     public static CompletableFuture<Boolean> remove(String table, Map<String, Object> location) {
-
         final CompletableFuture<Boolean> success = new CompletableFuture<>();
 
         exists(table, location).whenComplete((r, t) -> {
@@ -180,6 +179,17 @@ public final class MySQLUtils {
         });
 
         return exists;
+    }
+
+    public static CompletableFuture<Void> shutdown() {
+        EXECUTOR.shutdown();
+
+        return CompletableFuture.runAsync(() -> {
+            //noinspection StatementWithEmptyBody
+            while (!EXECUTOR.isTerminated()) {}
+
+            DB.close();
+        });
     }
 
     private static String createFormat(Map<String, Object> map) {
