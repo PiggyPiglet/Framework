@@ -26,7 +26,6 @@ package me.piggypiglet.framework.mapper;
 
 import me.piggypiglet.framework.utils.ReflectionUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
-import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.number.NumberUtils;
 import sun.misc.Unsafe;
 
@@ -89,15 +88,15 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
         types = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toMap(Field::getName, f -> {
             final Class<?> type = f.getType().isPrimitive() ? NumberUtils.primitiveToWrapper(f.getType()) : f.getType();
-            final LevenshteinObjectMapper<?> mapper;
+            final LevenshteinObjectMapper<?> mapper = null;
 
-            if (!StringUtils.anyWith(type,
-                    Arrays.asList(Map.class, Iterable.class, String.class, Number.class, Boolean.class, Byte.class, Character.class),
-                    Class::isAssignableFrom)) {
-                mapper = new LevenshteinObjectMapper<Object>((Class<Object>) type){};
-            } else {
-                mapper = null;
-            }
+//            if (!StringUtils.anyWith(type,
+//                    Arrays.asList(Map.class, Iterable.class, String.class, Number.class, Boolean.class, Byte.class, Character.class),
+//                    Class::isAssignableFrom)) {
+//                mapper = new LevenshteinObjectMapper<Object>((Class<Object>) type){};
+//            } else {
+//                mapper = null;
+//            }
 
             return new Type(type, mapper);
         }));
