@@ -52,7 +52,8 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
      */
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper() {
-        final LevenshteinObjectMapper<T> mapper = new LevenshteinObjectMapper<T>((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]){};
+        final LevenshteinObjectMapper<T> mapper = new LevenshteinObjectMapper<T>((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]) {
+        };
         constructor = mapper.constructor;
         params = mapper.params;
         types.putAll(mapper.types);
@@ -62,7 +63,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
     /**
      * Create an instance of LevenshteinObjectMapper and cache important data. Provide the class reference to save time on initialisation.
-     * 
+     *
      * @param clazz Class data will be mapped to and from
      */
     @SuppressWarnings("unchecked")
@@ -121,17 +122,41 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
                 key = SearchUtils.search(searchables, s).get(0).getName();
             }
 
-            final Object o = data.get(key);
+            Object o = data.get(key);
 
             if (Map.class.isAssignableFrom(c) && !(o instanceof Map)) {
-                result.put(s, data.entrySet().stream()
+                o = data.entrySet().stream()
                         .filter(e -> e.getKey().startsWith(key))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-            } else {
-                result.put(s, o);
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            } else if (Number.class.isAssignableFrom(c) && !c.isInstance(o)) {
+                final Number num = (Number) o;
+
+                switch (c.getSimpleName().toLowerCase()) {
+                    case "short":
+                        o = num.shortValue();
+                        break;
+
+                    case "integer":
+                        o = num.intValue();
+                        break;
+
+                    case "long":
+                        o = num.longValue();
+                        break;
+
+                    case "float":
+                        o = num.floatValue();
+                        break;
+
+                    case "double":
+                        o = num.doubleValue();
+                        break;
+                }
             }
+
+            result.put(s, o);
         });
-        
+
         final List<Class<?>> inputted = result.values().stream().map(Object::getClass).collect(Collectors.toList());
 
         boolean canUseConstructor = false;
@@ -150,38 +175,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
 
         if (canUseConstructor) {
             try {
-                List<Class<?>> typeValues = new ArrayList<>(types.values());
-                List<Object> resultValues = new ArrayList<>(result.values());
-                List<Object> values = new ArrayList<>();
-
-                for (int i = 0; i < resultValues.size(); i++) {
-                    final Object value = resultValues.get(i);
-                    final Class<?> clazz = value.getClass();
-
-                    if (clazz == Double.class) {
-                        final Double d = (Double) value;
-
-                        switch (typeValues.get(i).getSimpleName().toLowerCase()) {
-                            case "integer":
-                                values.add(d.intValue());
-                                break;
-
-                            case "long":
-                                values.add(d.longValue());
-                                break;
-
-                            default:
-                                values.add(d);
-                                break;
-                        }
-
-                        continue;
-                    }
-
-                    values.add(value);
-                }
-
-                instance = constructor.newInstance(values.toArray());
+                instance = constructor.newInstance(result.values().toArray());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

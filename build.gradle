@@ -21,7 +21,7 @@ subprojects {
     apply plugin: 'org.sonarqube'
 
     group 'me.piggypiglet'
-    version '1.8.24'
+    version '1.8.25'
     sourceCompatibility = 1.8
 
     repositories {
