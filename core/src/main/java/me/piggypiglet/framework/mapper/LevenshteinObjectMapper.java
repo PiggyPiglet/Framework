@@ -26,12 +26,17 @@ package me.piggypiglet.framework.mapper;
 
 import me.piggypiglet.framework.utils.ReflectionUtils;
 import me.piggypiglet.framework.utils.SearchUtils;
+import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.number.NumberUtils;
+import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -41,24 +46,31 @@ import java.util.stream.Collectors;
  * closest match.
  */
 public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<String, Object>, T> {
+    private static final Unsafe UNSAFE;
+
+    static {
+        try {
+            UNSAFE = (Unsafe) ReflectionUtils.getAccessible(Unsafe.class.getDeclaredField("theUnsafe")).get(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private final Class<T> clazz;
     private final Constructor<T> constructor;
-    private final Object[] params;
-    private final Map<String, Class<?>> types = new LinkedHashMap<>();
-    private final Map<String, Field> fields = new HashMap<>();
-    private final List<Class<?>> required;
+    private final Map<String, Type> types;
+    private final Map<String, Field> fields;
 
     /**
      * Same as LevenshteinObjectMapper(Class&lt;T&gt;) but uses reflection to fetch the class from the generic.
      */
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper() {
-        final LevenshteinObjectMapper<T> mapper = new LevenshteinObjectMapper<T>((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]) {
-        };
+        final LevenshteinObjectMapper<T> mapper = new LevenshteinObjectMapper<T>((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]) {};
+        clazz = mapper.clazz;
         constructor = mapper.constructor;
-        params = mapper.params;
-        types.putAll(mapper.types);
-        fields.putAll(mapper.fields);
-        required = mapper.required;
+        types = mapper.types;
+        fields = mapper.fields;
     }
 
     /**
@@ -68,36 +80,35 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
      */
     @SuppressWarnings("unchecked")
     protected LevenshteinObjectMapper(Class<T> clazz) {
+        this.clazz = clazz;
+
         constructor = (Constructor<T>) Arrays.stream(clazz.getConstructors())
-                .max(Comparator.comparing(Constructor::getParameterCount))
-                .orElseThrow(RuntimeException::new);
-        params = Arrays.stream(constructor.getParameterTypes()).map(p -> {
+                .filter(c -> c.getParameterCount() == 0)
+                .findAny()
+                .orElse(null);
+
+        types = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toMap(Field::getName, f -> {
+            final Class<?> type = f.getType().isPrimitive() ? NumberUtils.primitiveToWrapper(f.getType()) : f.getType();
+            final LevenshteinObjectMapper<?> mapper;
+
+            if (!StringUtils.anyWith(type,
+                    Arrays.asList(Map.class, Iterable.class, String.class, Number.class, Boolean.class, Byte.class, Character.class),
+                    Class::isAssignableFrom)) {
+                mapper = new LevenshteinObjectMapper<Object>((Class<Object>) type){};
+            } else {
+                mapper = null;
+            }
+
+            return new Type(type, mapper);
+        }));
+
+        fields = types.keySet().stream().collect(Collectors.toMap(s -> s, s -> {
             try {
-                return p.isPrimitive() ? NumberUtils.wrapperToPrimitive(p) : null;
+                return ReflectionUtils.getAccessible(clazz.getDeclaredField(s));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }).toArray();
-
-        Arrays.stream(clazz.getDeclaredFields()).forEach(
-                f -> types.put(f.getName(), f.getType().isPrimitive() ? NumberUtils.primitiveToWrapper(f.getType()) : f.getType())
-        );
-
-        types.keySet().forEach(s -> {
-            try {
-                fields.put(s, ReflectionUtils.getAccessible(clazz.getDeclaredField(s)));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        required = types.values().stream().map(t -> {
-            if (t == Integer.class || t == Long.class) {
-                return Double.class;
-            }
-
-            return t;
-        }).collect(Collectors.toList());
+        }));
     }
 
     /**
@@ -109,11 +120,9 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
     @Override
     public final T dataToType(Map<String, Object> data) {
         final Map<String, Object> result = new LinkedHashMap<>();
-        T instance;
-
         final List<SearchUtils.Searchable> searchables = data.keySet().stream().map(SearchUtils::stringSearchable).collect(Collectors.toList());
 
-        types.forEach((s, c) -> {
+        types.forEach((s, t) -> {
             String key;
 
             if (data.containsKey(s)) {
@@ -123,6 +132,7 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             }
 
             Object o = data.get(key);
+            final Class<?> c = t.clazz;
 
             if (Map.class.isAssignableFrom(c) && !(o instanceof Map)) {
                 o = data.entrySet().stream()
@@ -157,39 +167,15 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
             result.put(s, o);
         });
 
-        final List<Class<?>> inputted = result.values().stream().map(Object::getClass).collect(Collectors.toList());
+        final T instance = createInstance();
 
-        boolean canUseConstructor = false;
-
-        if (constructor.getParameterCount() == inputted.size()) {
-            for (int i = 0; i < inputted.size(); i++) {
-                Class<?> require = required.get(i);
-                Class<?> input = inputted.get(i);
-
-                if (input.equals(require) || require.isAssignableFrom(input)) {
-                    canUseConstructor = true;
-                    break;
-                }
-            }
-        }
-
-        if (canUseConstructor) {
+        result.forEach((s, o) -> {
             try {
-                instance = constructor.newInstance(result.values().toArray());
+                fields.get(s).set(instance, o);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        } else {
-            instance = createInstance();
-
-            result.forEach((s, o) -> {
-                try {
-                    fields.get(s).set(instance, o);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
+        });
 
         return instance;
     }
@@ -211,11 +197,22 @@ public abstract class LevenshteinObjectMapper<T> implements ObjectMapper<Map<Str
         }));
     }
 
+    @SuppressWarnings("unchecked")
     private T createInstance() {
         try {
-            return constructor.newInstance(params);
+            return constructor == null ? (T) UNSAFE.allocateInstance(clazz) : constructor.newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static class Type {
+        private final Class<?> clazz;
+        private final LevenshteinObjectMapper<?> mapper;
+
+        public Type(Class<?> clazz, LevenshteinObjectMapper<?> mapper) {
+            this.clazz = clazz;
+            this.mapper = mapper;
         }
     }
 }
