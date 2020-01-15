@@ -39,7 +39,7 @@ import java.util.Map;
 
 public final class NukkitFileConfiguration extends MapFileConfiguration {
     public NukkitFileConfiguration() {
-        super(s -> StringUtils.anyEndWith(s, ".properties", ".con", ".conf", ".config", ".yml", ".yaml", ".txt", ".list", ".enum"));
+        super(s -> StringUtils.endsWithAny(s, ".properties", ".con", ".conf", ".config", ".yml", ".yaml", ".txt", ".list", ".enum"));
     }
 
     @Override

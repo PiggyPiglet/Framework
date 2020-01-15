@@ -102,7 +102,7 @@ public final class StringUtils {
      * @param triggers Triggers to check against
      * @return boolean
      */
-    public static boolean endWithAny(String string, String... triggers) {
+    public static boolean endsWithAny(String string, String... triggers) {
         return endsWithAny(string, Arrays.asList(triggers));
     }
 
