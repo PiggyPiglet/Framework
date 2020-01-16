@@ -31,6 +31,7 @@ import cn.nukkit.command.ConsoleCommandSender;
 import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.nukkit.binding.player.NukkitPlayer;
+import me.piggypiglet.framework.utils.StringUtils;
 
 public final class NukkitUser extends MinecraftUser {
     private final CommandSender sender;
@@ -59,8 +60,8 @@ public final class NukkitUser extends MinecraftUser {
     protected void sendJsonMessage(String json) {}
 
     @Override
-    public void sendRawMessage(String message) {
-        sendMessage(Text.redactJavaTriggers(message));
+    public void sendRawMessage(Object message, Object... concatenations) {
+        sendMessage(Text.redactJavaTriggers(StringUtils.format(message, concatenations)));
     }
 
     public boolean isPlayer() {
