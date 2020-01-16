@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.utils.StringUtils;
 
 public abstract class MinecraftUser extends User {
     private static final Gson GSON = new Gson();
@@ -44,11 +45,11 @@ public abstract class MinecraftUser extends User {
 
     protected abstract void sendJsonMessage(String json);
 
-    public void sendRawMessage(String message) {
+    public void sendRawMessage(Object message, Object... concatenations) {
         if (isPlayer()) {
-            sendJsonMessage(GSON.toJson(Text.of(message)));
+            sendJsonMessage(GSON.toJson(Text.of(StringUtils.format(message, concatenations))));
         } else {
-            sendMessage(message);
+            sendMessage(message, concatenations);
         }
     }
 
