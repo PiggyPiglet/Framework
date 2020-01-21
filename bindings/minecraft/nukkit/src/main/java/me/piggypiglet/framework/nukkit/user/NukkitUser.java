@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 PiggyPiglet
+ * Copyright (c) 2019-2020 PiggyPiglet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ package me.piggypiglet.framework.nukkit.user;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
+import cn.nukkit.utils.TextFormat;
 import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.nukkit.binding.player.NukkitPlayer;
@@ -48,7 +49,7 @@ public final class NukkitUser extends MinecraftUser {
     //todo Handle color formatting
     @Override
     protected void sendMessage(String message) {
-        sender.sendMessage(message);
+        sender.sendMessage(TextFormat.colorize(message));
     }
 
     @Override

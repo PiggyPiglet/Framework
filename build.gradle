@@ -21,7 +21,7 @@ subprojects {
     apply plugin: 'org.sonarqube'
 
     group 'me.piggypiglet'
-    version '1.8.30'
+    version '1.8.31'
     sourceCompatibility = 1.8
 
     repositories {
@@ -48,7 +48,7 @@ subprojects {
     license {
         header = file("$rootDir/LICENSE.md")
         ext {
-            year = 2019
+            year = 2020
         }
         include '**/*.java'
     }

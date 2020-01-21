@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 PiggyPiglet
+ * Copyright (c) 2019-2020 PiggyPiglet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,8 @@ import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.mapping.Maps;
 import me.piggypiglet.framework.mapper.LevenshteinObjectMapper;
-import me.piggypiglet.framework.scanning.Scanner;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 
 public final class FileMappingRegisterable extends StartupRegisterable {
     @Inject private FileManager fileManager;

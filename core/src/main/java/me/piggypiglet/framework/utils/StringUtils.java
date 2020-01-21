@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 PiggyPiglet
+ * Copyright (c) 2019-2020 PiggyPiglet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -334,12 +334,11 @@ public final class StringUtils {
 
         int count = INDEX_FORMAT_REGEX.split(joined, -1).length - 1;
 
-        if (specificMatcher.matches()) {
+        if (specificMatcher.find()) {
             final List<Integer> nums = new ArrayList<>();
 
             while (specificMatcher.find()) {
-                nums.add(Integer.valueOf(specificMatcher.group(1).replace("%", "").replace("$s", "")));
-                specificMatcher.group(2);
+                nums.add(Integer.valueOf(specificMatcher.group(0).replace("%", "").replace("$s", "")));
             }
 
             final int highest = Collections.max(nums);
