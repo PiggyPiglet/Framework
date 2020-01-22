@@ -119,11 +119,10 @@ public final class FrameworkBootstrap {
                 StartupRegisterable registerable = injector.get().getInstance(r);
                 registerable.run(injector.get());
 
-                if (registerable.getBindings().size() > 0 || registerable.getGenericBindings().size() > 0 ||
-                        registerable.getAnnotatedBindings().size() > 0 || registerable.getStaticInjections().size() > 0) {
+                if (registerable.getBindings().size() > 0 || registerable.getAnnotatedBindings().size() > 0 ||
+                        registerable.getStaticInjections().size() > 0) {
                     injector.set(new Injector(injector.get().getReal().createChildInjector(new BindingSetterModule(
                             registerable.getBindings(),
-                            registerable.getGenericBindings(),
                             registerable.getAnnotatedBindings(),
                             registerable.getStaticInjections().toArray(new Class[]{})
                     ))));

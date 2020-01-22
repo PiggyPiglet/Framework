@@ -26,16 +26,18 @@ package me.piggypiglet.framework.registerables;
 
 import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
+import me.piggypiglet.framework.guice.objects.Binding;
 import me.piggypiglet.framework.guice.objects.Injector;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class StartupRegisterable {
     protected Injector injector;
 
-    private final Map<Class<?>, Object> bindings = new HashMap<>();
-    private final Map<TypeLiteral<?>, Object> genericBindings = new HashMap<>();
+    private final List<Binding<?>> bindings = new ArrayList<>();
     private final List<AnnotatedBinding<?>> annotatedBindings = new ArrayList<>();
     private final List<Class<?>> staticInjections = new ArrayList<>();
 
@@ -52,40 +54,41 @@ public abstract class StartupRegisterable {
      * @param <T>       Object type
      */
     protected <T> void addBinding(Class<? super T> interfaze, T instance) {
-        bindings.put(interfaze, instance);
+        bindings.add(new Binding<>(interfaze, instance));
+    }
+
+    /**
+     * Add a binding to guice with a specific class &amp; generic, and instance.
+     *
+     * @param type      Class the object will be referenced by
+     * @param instance  Object that will be binded
+     * @param <T>       Type parameter belonging to interfaze
+     */
+    protected <T> void addBinding(TypeLiteral<? super T> type, T instance) {
+        bindings.add(new Binding<>(type, instance));
     }
 
     /**
      * Add a binding to guice, reference class is deduced from the instance itself.
      *
      * @param instance Object of the instance to be binded
+     * @param <T>      Object type
      */
-    protected void addBinding(Object instance) {
-        bindings.put(instance.getClass(), instance);
-    }
-
-    /**
-     * Add a binding to guice with a specific class &amp; generic, and instance.
-     *
-     * @param interfaze Class the object will be referenced by
-     * @param instance  Object that will be binded
-     * @param <T>       Type parameter belonging to interfaze
-     */
-    protected <T> void addBinding(TypeLiteral<? super T> interfaze, T instance) {
-        genericBindings.put(interfaze, instance);
+    protected <T> void addBinding(T instance) {
+        addBinding(new TypeLiteral<T>(){}, instance);
     }
 
     /**
      * Add a binding to guice that's only injectable when a specific annotation is provided.
      *
-     * @param interfaze  Reference class to be binded to
-     * @param annotation Class extending annotation
-     * @param instance   Instance of the object to be binded.
+     * @param type       Reference type to be binded to
+     * @param annotation Annotation instance
+     * @param instance   Instance of the object to be binded
      * @param <T>        Object type
      */
-    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Class<? extends Annotation> annotation, T instance) {
+    protected <T> void addAnnotatedBinding(TypeLiteral<? super T> type, Annotation annotation, T instance) {
         annotatedBindings.add(
-                new AnnotatedBinding<>(interfaze, annotation, instance)
+                new AnnotatedBinding<>(type, annotation, instance)
         );
     }
 
@@ -98,6 +101,34 @@ public abstract class StartupRegisterable {
      * @param <T>        Object type
      */
     protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Annotation annotation, T instance) {
+        annotatedBindings.add(
+                new AnnotatedBinding<>(interfaze, annotation, instance)
+        );
+    }
+
+    /**
+     * Add a binding to guice that's only injectable when a specific annotation is provided.
+     *
+     * @param type       Reference type to be binded to
+     * @param annotation Class extending annotation
+     * @param instance   Instance of the object to be binded.
+     * @param <T>        Object type
+     */
+    protected <T> void addAnnotatedBinding(TypeLiteral<? super T> type, Class<? extends Annotation> annotation, T instance) {
+        annotatedBindings.add(
+                new AnnotatedBinding<>(type, annotation, instance)
+        );
+    }
+
+    /**
+     * Add a binding to guice that's only injectable when a specific annotation is provided.
+     *
+     * @param interfaze  Reference class to be binded to
+     * @param annotation Class extending annotation
+     * @param instance   Instance of the object to be binded.
+     * @param <T>        Object type
+     */
+    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Class<? extends Annotation> annotation, T instance) {
         annotatedBindings.add(
                 new AnnotatedBinding<>(interfaze, annotation, instance)
         );
@@ -123,16 +154,12 @@ public abstract class StartupRegisterable {
     }
 
     /**
-     * Get a map of bindings to be made
+     * Get a list of bindings set by the registerable
      *
-     * @return Map with Class as key, Object as value
+     * @return List of bindings
      */
-    public Map<Class<?>, Object> getBindings() {
+    public List<Binding<?>> getBindings() {
         return bindings;
-    }
-
-    public Map<TypeLiteral<?>, Object> getGenericBindings() {
-        return genericBindings;
     }
 
     /**

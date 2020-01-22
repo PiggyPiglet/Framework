@@ -25,53 +25,58 @@
 package me.piggypiglet.framework.guice.modules;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
+import me.piggypiglet.framework.guice.objects.Binding;
 
 import java.util.List;
-import java.util.Map;
 
 public final class BindingSetterModule extends AbstractModule {
-    private final Map<Class<?>, Object> providers;
-    private final Map<TypeLiteral<?>, Object> genericBindings;
+    private final List<Binding<?>> bindings;
     private final List<AnnotatedBinding<?>> annotatedBindings;
     private final Class<?>[] staticInjections;
 
-    public BindingSetterModule(Map<Class<?>, Object> providers, Map<TypeLiteral<?>, Object> genericBindings, List<AnnotatedBinding<?>> annotatedBindings, Class<?>... staticInjections) {
-        this.providers = providers;
-        this.genericBindings = genericBindings;
+    public BindingSetterModule(List<Binding<?>> bindings, List<AnnotatedBinding<?>> annotatedBindings, Class<?>... staticInjections) {
+        this.bindings = bindings;
         this.annotatedBindings = annotatedBindings;
         this.staticInjections = staticInjections;
     }
 
     @Override
     public void configure() {
-        providers.forEach(this::bind);
-        genericBindings.forEach(this::bindGeneric);
+        bindings.forEach(this::bind);
         annotatedBindings.forEach(this::bindAnnotation);
         requestStaticInjection(staticInjections);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> void bind(Class<?> clazz, T instance) {
-        bind((Class<? super T>) clazz).toInstance(instance);
-    }
+    private <T> void bind(Binding<T> binding) {
+        final LinkedBindingBuilder<? super T> bind;
 
-    @SuppressWarnings("unchecked")
-    private <T> void bindGeneric(TypeLiteral<?> interfaze, T instance) {
-        bind((TypeLiteral<? super T>) interfaze).toInstance(instance);
+        if (binding.isTypeLiteral()) {
+            bind = bind(binding.getTypeLiteral());
+        } else {
+            bind = bind(binding.getTypeClass());
+        }
+
+        bind.toInstance(binding.getInstance());
     }
 
     private <T> void bindAnnotation(AnnotatedBinding<T> binding) {
-        final AnnotatedBindingBuilder<? super T> bind = bind(binding.getClazz());
+        final AnnotatedBindingBuilder<? super T> bind;
+
+        if (binding.isTypeLiteral()) {
+            bind = bind(binding.getTypeLiteral());
+        } else {
+            bind = bind(binding.getTypeClazz());
+        }
+
         final LinkedBindingBuilder<? super T> link;
 
-        if (binding.isObject()) {
-            link = bind.annotatedWith(binding.getObjectAnnotation());
+        if (binding.isAnnotationInstance()) {
+            link = bind.annotatedWith(binding.getAnnotationInstance());
         } else {
-            link = bind.annotatedWith(binding.getClassAnnotation());
+            link = bind.annotatedWith(binding.getAnnotationClass());
         }
 
         link.toInstance(binding.getInstance());

@@ -26,37 +26,27 @@ package me.piggypiglet.framework.guice.objects;
 
 import com.google.inject.TypeLiteral;
 
-import java.lang.annotation.Annotation;
-
-public final class AnnotatedBinding<T> {
+// ------------------------------
+// Copyright (c) PiggyPiglet 2020
+// https://www.piggypiglet.me
+// ------------------------------
+public final class Binding<T> {
     private final Object type;
-    private final Object annotation;
     private final T instance;
     private final boolean typeLiteral;
-    private final boolean annotationInstance;
 
-    public AnnotatedBinding(TypeLiteral<? super T> literal, Annotation annotation, T instance) {
-        this((Object) literal, annotation, instance);
+    public Binding(TypeLiteral<? super T> type, T instance) {
+        this((Object) type, instance);
     }
 
-    public AnnotatedBinding(Class<? super T> clazz, Annotation annotation, T instance) {
-        this((Object) clazz, annotation, instance);
+    public Binding(Class<? super T> interfaze, T instance) {
+        this((Object) interfaze, instance);
     }
 
-    public AnnotatedBinding(TypeLiteral<? super T> literal, Class<? extends Annotation> annotation, T instance) {
-        this((Object) literal, annotation, instance);
-    }
-
-    public AnnotatedBinding(Class<? super T> clazz, Class<? extends Annotation> annotation, T instance) {
-        this((Object) clazz, annotation, instance);
-    }
-
-    private AnnotatedBinding(Object type, Object annotation, T instance) {
+    private Binding(Object type, T instance) {
         this.type = type;
-        this.annotation = annotation;
         this.instance = instance;
         typeLiteral = type instanceof TypeLiteral;
-        annotationInstance = annotation instanceof Annotation;
     }
 
     @SuppressWarnings("unchecked")
@@ -65,17 +55,8 @@ public final class AnnotatedBinding<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public Class<? super T> getTypeClazz() {
+    public Class<? super T> getTypeClass() {
         return (Class<? super T>) type;
-    }
-
-    public Annotation getAnnotationInstance() {
-        return (Annotation) annotation;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Class<? extends Annotation> getAnnotationClass() {
-        return (Class<? extends Annotation>) annotation;
     }
 
     public T getInstance() {
@@ -84,9 +65,5 @@ public final class AnnotatedBinding<T> {
 
     public boolean isTypeLiteral() {
         return typeLiteral;
-    }
-
-    public boolean isAnnotationInstance() {
-        return annotationInstance;
     }
 }

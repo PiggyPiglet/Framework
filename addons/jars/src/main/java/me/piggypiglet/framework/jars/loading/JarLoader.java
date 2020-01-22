@@ -36,11 +36,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public final class JarLoader {
-    private final URLClassLoader urlClassLoader;
+    private final URLClassLoader classLoader;
 
     @Inject
-    public JarLoader(ClassLoader loader) {
-        urlClassLoader = (URLClassLoader) loader;
+    public JarLoader(URLClassLoader loader) {
+        classLoader = loader;
     }
 
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("JarLoader");
@@ -65,7 +65,7 @@ public final class JarLoader {
             return;
         }
 
-        ADD_URL_METHOD.invoke(urlClassLoader, file.toURI().toURL());
+        ADD_URL_METHOD.invoke(classLoader, file.toURI().toURL());
         LOGGER.debug("Successfully loaded jar %s", name);
     }
 }
