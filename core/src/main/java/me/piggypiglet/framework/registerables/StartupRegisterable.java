@@ -72,10 +72,10 @@ public abstract class StartupRegisterable {
      * Add a binding to guice, reference class is deduced from the instance itself.
      *
      * @param instance Object of the instance to be binded
-     * @param <T>      Object type
      */
+    @SuppressWarnings("unchecked")
     protected <T> void addBinding(T instance) {
-        addBinding(new TypeLiteral<T>(){}, instance);
+        addBinding((Class<T>) instance.getClass(), instance);
     }
 
     /**
