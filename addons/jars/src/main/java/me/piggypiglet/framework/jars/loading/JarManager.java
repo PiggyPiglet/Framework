@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.jars.loading;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.guice.objects.Injector;
@@ -32,6 +33,8 @@ import me.piggypiglet.framework.jars.loading.framework.Loader;
 import me.piggypiglet.framework.jars.loading.framework.ScannableLoader;
 
 import java.io.File;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -41,6 +44,8 @@ public final class JarManager {
     @Inject private JarLoader jarLoader;
 
     private final Map<Loader, Jar[]> loaders = new HashMap<>();
+    private final Map<Jar, URLClassLoader> classLoaders = new HashMap<>();
+    private final Map<Jar, Object> mains = new HashMap<>();
 
     public JarManager load() throws Exception {
         for (Loader l : loaders.keySet()) {
@@ -55,7 +60,7 @@ public final class JarManager {
             loaders.put(l, jars);
 
             for (Jar jar : jars) {
-                jarLoader.load(jar);
+                classLoaders.put(jar, jarLoader.load(jar));
             }
         }
 
@@ -71,14 +76,35 @@ public final class JarManager {
                 if (entry.getValue() == null) continue;
 
                 for (Jar jar : entry.getValue()) {
-                    CompletableFuture<Class<?>> future = new JarScanner(loader.getMatch()).scan(new File(jar.getPath()).toURI());
+                    final CompletableFuture<Class<?>> future = new JarScanner(loader.getMatch(), classLoaders.get(jar)).scan(new File(jar.getPath()).toURI());
 
                     if (future != null) {
-                        future.whenComplete((c, t) -> loader.run(injector.getInstance(c)));
+                        final Injector newInjector = new Injector(injector.getReal().createChildInjector(new AbstractModule(){}));
+
+                        future.whenComplete((c, t) -> {
+                            final Object main = newInjector.getInstance(c);
+
+                            mains.put(jar, main);
+                            loader.enable(main, jar);
+                        });
                     }
                 }
             }
         }
+    }
+
+    public void unload(Jar jar) throws Exception {
+        loaders.entrySet().stream()
+                .filter(e -> Arrays.asList(e.getValue()).contains(jar))
+                .findAny().ifPresent(e -> {
+                    if (e.getKey() instanceof ScannableLoader<?>) {
+                        ((ScannableLoader<?>) e.getKey()).disable(mains.get(jar));
+                        mains.remove(jar);
+                    }
+        });
+
+        jarLoader.unload(jar, classLoaders.get(jar));
+        classLoaders.remove(jar);
     }
 
     public void add(Loader loader) {

@@ -28,10 +28,8 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.jars.loading.framework.Jar;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
-import me.piggypiglet.framework.utils.ReflectionUtils;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -44,28 +42,25 @@ public final class JarLoader {
     }
 
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("JarLoader");
-    private static final Method ADD_URL_METHOD;
 
-    static {
-        try {
-            ADD_URL_METHOD = ReflectionUtils.getAccessible(URLClassLoader.class.getDeclaredMethod("addURL", URL.class));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void load(Jar jar) throws Exception {
-        String name = jar.getName();
-        File file = new File(jar.getPath());
+    public URLClassLoader load(Jar jar) throws Exception {
+        final String name = jar.getName();
+        final File file = new File(jar.getPath());
 
         LOGGER.debug("Loading jar %s.", name);
 
         if (!file.exists()) {
             LOGGER.debug("Jar doesn't exist for %s.", name);
-            return;
+            return null;
         }
 
-        ADD_URL_METHOD.invoke(classLoader, file.toURI().toURL());
+        final URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()}, classLoader);
         LOGGER.debug("Successfully loaded jar %s", name);
+        return loader;
+    }
+
+    public void unload(Jar jar, URLClassLoader loader) throws Exception {
+        loader.close();
+        LOGGER.debug("Unloaded %s from the classpath.", jar.getName());
     }
 }

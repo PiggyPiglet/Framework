@@ -28,11 +28,13 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
+import java.net.URLClassLoader;
+
 public final class ClassLoaderRegisterable extends StartupRegisterable {
     @Inject private MainBinding main;
 
     @Override
     protected void execute() {
-        addBinding(ClassLoader.class, main.getInstance().getClass().getClassLoader());
+        addBinding(URLClassLoader.class, (URLClassLoader) main.getInstance().getClass().getClassLoader());
     }
 }

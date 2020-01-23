@@ -28,7 +28,7 @@ import me.piggypiglet.framework.jars.loading.framework.Jar;
 
 import java.net.URL;
 
-public final class DownloadableJar extends Jar {
+public class DownloadableJar implements Jar {
     private final String name;
     private final String path;
     private final String version;

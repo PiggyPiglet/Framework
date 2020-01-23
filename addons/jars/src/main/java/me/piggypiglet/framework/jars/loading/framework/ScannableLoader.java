@@ -26,6 +26,7 @@ package me.piggypiglet.framework.jars.loading.framework;
 
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,15 +45,22 @@ public abstract class ScannableLoader<T> extends Loader {
         this.match = match;
     }
 
-    protected abstract void init(T instance);
+    protected abstract void init(T instance, @Nullable Jar jar);
 
     @SuppressWarnings("unchecked")
-    public void run(Object instance) {
-        init((T) instance);
+    public void enable(Object instance, Jar jar) {
+        init((T) instance, jar);
+    }
+
+    protected abstract void term(T instance);
+
+    @SuppressWarnings("unchecked")
+    public void disable(Object instance) {
+        term((T) instance);
     }
 
     public void preRun() {
-        predefined.forEach(this::init);
+        predefined.forEach(t -> init(t, null));
     }
 
     public Predicate<Class<?>> getMatch() {

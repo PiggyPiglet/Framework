@@ -24,10 +24,10 @@
 
 package me.piggypiglet.framework.jars.loading.framework;
 
-public abstract class Jar {
-    public abstract String getName();
+import me.piggypiglet.framework.utils.SearchUtils;
 
-    public abstract String getPath();
+public interface Jar extends SearchUtils.Searchable {
+    String getPath();
 
-    public abstract String getVersion();
+    String getVersion();
 }

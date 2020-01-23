@@ -38,16 +38,18 @@ import java.util.zip.ZipEntry;
 
 public final class JarScanner {
     private final Predicate<Class<?>> match;
+    private final ClassLoader loader;
 
-    public JarScanner(final Predicate<Class<?>> match) {
+    public JarScanner(final Predicate<Class<?>> match, ClassLoader loader) {
         this.match = match;
+        this.loader = loader;
     }
 
     public CompletableFuture<Class<?>> scan(URI uri) throws Exception {
         final Path path = Paths.get(uri);
         final List<String> classes = new ArrayList<>();
 
-        try (JarInputStream jar = new JarInputStream(new BufferedInputStream(Files.newInputStream(path)))) {
+        try (final JarInputStream jar = new JarInputStream(new BufferedInputStream(Files.newInputStream(path)))) {
             ZipEntry entry = jar.getNextEntry();
 
             if (entry == null) {
@@ -70,10 +72,10 @@ public final class JarScanner {
                         .replace(".class", "")
                         .replace("/", "."))
                 .forEach(c -> {
-                    Class clazz = null;
+                    Class<?> clazz = null;
 
                     try {
-                        clazz = Class.forName(c);
+                        clazz = loader.loadClass(c);
                     } catch (Exception ignored) {}
 
                     if (clazz != null) {
