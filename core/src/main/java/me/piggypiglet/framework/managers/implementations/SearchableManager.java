@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class SearchableManager<S extends SearchUtils.Searchable> extends Manager<S> {
-    protected final List<S> items = new ArrayList<>();
+    protected final transient List<S> items = new ArrayList<>();
 
     @Override
     public void add(S item) {

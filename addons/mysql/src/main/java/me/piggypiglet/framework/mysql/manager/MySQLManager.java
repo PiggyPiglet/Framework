@@ -34,11 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MySQLManager<S extends SearchUtils.Searchable> extends SearchableManager<S> {
-    private final Table<S> table;
-    private final List<S> needsDeleting = new ArrayList<>();
-    private boolean autoPopulate = true;
+    private final transient Table<S> table;
+    private final transient List<S> needsDeleting = new ArrayList<>();
+    private transient boolean autoPopulate = true;
 
-    protected final Options options = new Options();
+    protected final transient Options options = new Options();
 
     protected MySQLManager(Table<S> table) {
         this.table = table;

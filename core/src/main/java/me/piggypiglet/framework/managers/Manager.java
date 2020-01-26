@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public abstract class Manager<S> {
-    protected KeyTypeInfo keyTypes;
+    protected transient KeyTypeInfo keyTypes;
 
     /**
      * Configure acceptable key types
