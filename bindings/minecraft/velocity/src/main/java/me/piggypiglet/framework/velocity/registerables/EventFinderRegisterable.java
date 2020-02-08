@@ -31,7 +31,7 @@ import com.velocitypowered.api.event.Subscribe;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;
 import me.piggypiglet.framework.utils.clazz.GenericException;
 

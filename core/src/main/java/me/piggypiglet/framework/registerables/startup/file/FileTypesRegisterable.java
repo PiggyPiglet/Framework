@@ -29,7 +29,7 @@ import me.piggypiglet.framework.file.FileConfigurationFactory;
 import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 
 public final class FileTypesRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;

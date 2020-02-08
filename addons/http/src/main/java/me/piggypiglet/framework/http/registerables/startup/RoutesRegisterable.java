@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.http.routes.Route;
 import me.piggypiglet.framework.http.server.ResponseHandler;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 
 public final class RoutesRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;

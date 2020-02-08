@@ -25,9 +25,9 @@
 package me.piggypiglet.framework.utils.lambda;
 
 /**
- * Function that can throw an exception catchable outside of the lambda
+ * Consumer that can throw an exception catchable outside of the lambda
  */
 @FunctionalInterface
-public interface CheckedFunction<T, R> {
-    R apply(T t) throws Exception;
+public interface ExceptionableConsumer<T> {
+    void accept(T t) throws Exception;
 }

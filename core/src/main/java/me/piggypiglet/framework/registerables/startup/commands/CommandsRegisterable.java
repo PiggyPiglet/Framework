@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 
 import java.util.stream.Collectors;
 

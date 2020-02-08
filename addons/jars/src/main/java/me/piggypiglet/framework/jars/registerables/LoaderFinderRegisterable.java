@@ -30,7 +30,7 @@ import me.piggypiglet.framework.jars.loading.framework.Loader;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 
 public final class LoaderFinderRegisterable extends StartupRegisterable {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("LoaderRegisterable");

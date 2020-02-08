@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.managers.ManagersManager;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.task.Task;
 
 public final class ManagersRegisterable extends StartupRegisterable {

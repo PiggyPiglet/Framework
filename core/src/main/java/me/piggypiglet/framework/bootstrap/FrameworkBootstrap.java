@@ -44,7 +44,7 @@ import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.lang.LangFileRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.lang.LangValuesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.migration.MigrationRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
@@ -79,7 +79,7 @@ public final class FrameworkBootstrap {
         injector.get().getReal().injectMembers(this);
 
         scanner
-                .getTypesAnnotatedWith(Addon.class)
+                .getClassesAnnotatedWith(Addon.class)
                 .forEach(c -> addons.put(c, c.getAnnotation(Addon.class)));
 
         final Multimap<BootPriority, Class<? extends StartupRegisterable>> boot = ArrayListMultimap.create();

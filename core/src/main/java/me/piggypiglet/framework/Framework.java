@@ -34,12 +34,16 @@ import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.lang.objects.CustomLang;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
+import me.piggypiglet.framework.scanning.Scanners;
+import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.annotations.Main;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -245,8 +249,7 @@ public final class Framework {
 
     public static final class FrameworkBuilder {
         private Object main = "d-main";
-        private String pckg = "d-pckg";
-        private String[] pckgExclusions = new String[]{};
+        private Scanner scanner = null;
         private BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule = InitialModule::new;
         private Injector injector = null;
         private List<RegisterableData> startupRegisterables = new ArrayList<>();
@@ -261,44 +264,33 @@ public final class Framework {
         private CustomLang customLang = null;
         private boolean debug = false;
 
-        private FrameworkBuilder() {
-        }
+        private FrameworkBuilder() {}
 
-        /**
-         * Set the application's main instance
-         *
-         * @param instance Main instance
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder main(Object instance) {
-            this.main = new MainBinding(Object.class, instance, Main.class);
+        public <T> FrameworkBuilder main(@Nonnull final T instance) {
+            main = new MainBinding(instance.getClass(), instance, Main.class);
             return this;
         }
 
-        /**
-         * Set the application's main instance
-         *
-         * @param clazz    Class to bind the instance under, for example, in bukkit,
-         *                 you'd enter JavaPlugin.class
-         * @param instance Main instance
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder main(Class<?> clazz, Object instance) {
-            this.main = new MainBinding(clazz, instance);
+        public <T> FrameworkBuilder main(@Nonnull final Class<? super T> clazz, @Nonnull final T instance) {
+            main = new MainBinding(clazz, instance);
             return this;
         }
 
-        /**
-         * Set the application's package which will be scanned,
-         * and optionally any sub packages to exclude.
-         *
-         * @param pckg       Application's package
-         * @param exclusions Packages to be excluded
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder pckg(String pckg, String... exclusions) {
-            this.pckg = pckg;
-            this.pckgExclusions = exclusions;
+        public ScannerBuilder<FrameworkBuilder> scanner() {
+            if (main.equals("d-main")) {
+                throw new UnsupportedOperationException("You cannot configure the scanner before the main class.");
+            }
+
+            final Class<?> main = ((MainBinding) this.main).getClazz();
+
+            return Scanners.of(main, scanner -> {
+                this.scanner = scanner;
+                return this;
+            });
+        }
+
+        public FrameworkBuilder scanner(@Nonnull final Scanner scanner) {
+            this.scanner = scanner;
             return this;
         }
 
@@ -509,9 +501,9 @@ public final class Framework {
          * @return Framework instance
          */
         public final Framework build() {
-            BuilderUtils.checkVars("FrameworkBuilder", main, pckg);
+            BuilderUtils.requiredVariables("FrameworkBuilder", main);
 
-            return new Framework((MainBinding) main, pckg, pckgExclusions, initialModule, injector, startupRegisterables,
+            return new Framework((MainBinding) main, scanner, initialModule, injector, startupRegisterables,
                     shutdownRegisterables, commandPrefixes, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
         }
     }

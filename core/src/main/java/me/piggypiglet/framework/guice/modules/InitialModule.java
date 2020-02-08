@@ -28,7 +28,7 @@ import com.google.inject.*;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.scanning.implementations.ZISScanner;
 
 public class InitialModule extends AbstractModule {

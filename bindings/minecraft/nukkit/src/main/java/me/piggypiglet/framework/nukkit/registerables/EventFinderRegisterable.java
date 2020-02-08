@@ -29,7 +29,7 @@ import cn.nukkit.plugin.PluginBase;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 
 public final class EventFinderRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;

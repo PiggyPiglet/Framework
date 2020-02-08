@@ -32,7 +32,7 @@ import me.piggypiglet.framework.file.migration.Migrator;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 
 import java.util.HashSet;
 import java.util.Set;

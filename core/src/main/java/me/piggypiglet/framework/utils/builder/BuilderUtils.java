@@ -24,23 +24,69 @@
 
 package me.piggypiglet.framework.utils.builder;
 
+import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.LoggerFactory;
+
+import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Small suite of utilities especially related to the preconditions of
+ * compiling a builder's components, and the embeddability of builders.
+ */
 public final class BuilderUtils {
+    private static final Logger<?> LOGGER = LoggerFactory.getLogger("BuilderUtils");
+
     private BuilderUtils() {
-        throw new RuntimeException("This class cannot be instantiated.");
+        throw new UnsupportedOperationException("This class cannot be initialized.");
     }
 
     /**
-     * Utility method that will check if a builder has the required variables set,
+     * Function that will check if a builder has the required variables set,
      * and if not, throw a RuntimeException.
      *
      * @param builderName Name of the builder, used in the exception method
-     * @param vars        Variables that need to be set
+     * @param variables   Variables that need to be set
      */
-    public static void checkVars(String builderName, Object... vars) {
-        final String unsetVars = Arrays.stream(vars).filter(o -> {
+    public static void requiredVariables(@Nonnull final String builderName, @Nonnull final Object... variables) {
+        handleVariables(unsetVariables -> {
+            throw new UnsetVarsException("These required variables weren't set in your " + builderName + ": " + unsetVariables);
+        }, variables);
+    }
+
+    /**
+     * Function that will check if suggested variables have been set, and
+     * if not, log a warning.
+     *
+     * @param builderName Name of the builder, used in the warning log
+     * @param variables   Suggested variables
+     */
+    public static void warningVariables(@Nonnull final String builderName, @Nonnull final Object... variables) {
+        handleVariables(unsetVariables -> LOGGER.warning("These suggested variables weren't set in your %s: %s", builderName, unsetVariables), variables);
+    }
+
+    /**
+     * Function for base functionality of requiredVariables and
+     * warningVariables. Streams through an array of objects and check's,
+     * assuming that they're an instance of String, starts with "d-". It then
+     * collect's the matches, remove's the "d-" prefix from each, and uses the
+     * remaining string as a variable name, joining the array with ", ". This joint
+     * array is then provided in the defaultLogic consumer, assuming the joint
+     * array isn't an empty string.
+     * <p>
+     * In a nutshell, in your builders, define you variables as Objects and give
+     * them a default value of "d-variable name", for example, if you require a class,
+     * Object clazz = "d-clazz";
+     * "clazz" being the friendly name that may be provided in the consumer.
+     *
+     * @param defaultLogic Logic to run if variables have their default value.
+     * @param variables    Array of variables to check
+     */
+    public static void handleVariables(@Nonnull final Consumer<String> defaultLogic, @Nonnull final Object... variables) {
+        final String unsetVariables = Arrays.stream(variables).filter(o -> {
             try {
                 return ((String) o).startsWith("d-");
             } catch (Exception e) {
@@ -48,7 +94,27 @@ public final class BuilderUtils {
             }
         }).map(String::valueOf).map(s -> s.replaceFirst("d-", "")).collect(Collectors.joining(", "));
 
-        if (!unsetVars.isEmpty())
-            throw new UnsetVarsException("These required vars weren't set in your " + builderName + ": " + unsetVars);
+        if (!unsetVariables.isEmpty())
+            defaultLogic.accept(unsetVariables);
+    }
+
+    /**
+     * Function that will effectively wrap around a builder to alter
+     * it's build return value/type. This is especially useful for
+     * embeddable builders. For example, a root builder with child
+     * builders, where the child builders' build methods return the
+     * master builder instance, but the child builders can still be
+     * used standalone.
+     *
+     * @param builder Builder instance
+     * @param build   Build method logic
+     * @param <B>     Builder type extending AbstractBuilder
+     * @param <D>     Type the builder returns by default
+     * @param <R>     New return type
+     * @return original builder
+     */
+    public static <B extends AbstractBuilder<D, R>, D, R> B customBuilder(@Nonnull final B builder, @Nonnull final Function<D, R> build) {
+        builder.setBuilder(build);
+        return builder;
     }
 }

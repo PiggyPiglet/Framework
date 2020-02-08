@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.utils.number;
 
-import me.piggypiglet.framework.utils.lambda.CheckedFunction;
+import me.piggypiglet.framework.utils.lambda.ExceptionableFunction;
 
 import java.lang.reflect.Constructor;
 
@@ -40,15 +40,15 @@ public enum Primitives {
     UNKNOWN(null, null);
 
     private final Class clazz;
-    private final CheckedFunction<Constructor, ?> defaultInstance;
+    private final ExceptionableFunction<Constructor, ?> defaultInstance;
 
-    Primitives(final Class clazz, CheckedFunction<Constructor, ?> defaultInstance) {
+    Primitives(final Class clazz, ExceptionableFunction<Constructor, ?> defaultInstance) {
         this.clazz = clazz;
         this.defaultInstance = defaultInstance;
     }
 
     /**
-     * Initialise a default instance of a primitive wrapper.
+     * initialize a default instance of a primitive wrapper.
      * <ul>
      *  <li>Boolean: false
      *  <li>Number: 0

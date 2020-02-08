@@ -26,7 +26,7 @@ package me.piggypiglet.framework.jda.startup;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.annotations.id.ID;
 import me.piggypiglet.framework.utils.annotations.id.IDInfo;
 import me.piggypiglet.framework.utils.annotations.id.Ids;

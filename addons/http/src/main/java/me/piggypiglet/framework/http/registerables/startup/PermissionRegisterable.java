@@ -30,7 +30,7 @@ import me.piggypiglet.framework.http.routes.auth.permissions.DefaultPermissionSt
 import me.piggypiglet.framework.http.routes.auth.permissions.Permission;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;
 
 import java.util.Optional;

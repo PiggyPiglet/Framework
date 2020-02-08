@@ -29,7 +29,7 @@ import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.jda.JDAAddon;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.task.Task;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;

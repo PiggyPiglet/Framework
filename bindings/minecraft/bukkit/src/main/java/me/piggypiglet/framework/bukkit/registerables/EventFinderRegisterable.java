@@ -27,7 +27,7 @@ package me.piggypiglet.framework.bukkit.registerables;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.framework.Scanner;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -24,113 +24,98 @@
 
 package me.piggypiglet.framework.scanning.implementations;
 
-import com.google.common.collect.ImmutableSet;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
+import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.utils.StringUtils;
-import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import javax.annotation.Nonnull;
 import java.security.CodeSource;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public final class ZISScanner extends Scanner {
-    private final Set<Class<?>> classes = new HashSet<>();
-    private final Set<Constructor<?>> constructors;
-    private final Set<Method> methods;
-    private final Set<Field> fields;
+/**
+ * The ZISScanner (ZipInputStream Scanner), as the name suggests, scans the
+ * literal jar file with a ZipInputStream; recursing through every file entry
+ * while checking the name to see if it's a class, and if the package
+ * isn't on the exclusion list. If all is well, load the class through the main
+ * classes classloader.
+ */
+public final class ZISScanner extends AbstractScanner {
+    public ZISScanner(@Nonnull final ScannerBuilder.ScannerData data) {
+        super(data);
+    }
 
-    public ZISScanner(Class<?> main, String pckg, String[] exclusions) {
-        final String framework = Framework.class.getPackage().getName().replace('.', '/');
-        pckg = pckg.replace('.', '/');
-        exclusions = Arrays.stream(exclusions).map(s -> s.replace('.', '/')).toArray(String[]::new);
+    /**
+     * Semantics:
+     * A class is not loaded if any of the following conditions are true:
+     * <i>Filename includes the file name, and it's relative path from the root of the jar</i>
+     * <ul>
+     *   <li>Filename doesn't end with .class</li>
+     *   <li>Filename doesn't start with the configured package, and doesn't
+     *   start with RPF's package.</li>
+     *   <li>Filename starts with any of the provided package exclusions</li>
+     * </ul>
+     * A file that follows the above criteria may not be loaded because:
+     * <ul>
+     *     <li>It's not a class (e.g. interfaces)</li>
+     * </ul>
+     * The class list may be empty because:
+     * <ul>
+     *     <li>The main class's code source is null</li>
+     * </ul>
+     * <p>
+     * If any of the logic before the recursing throws an exception,
+     * it'll be caught and wrapped into a RuntimeException, effectively
+     * terminating the program.
+     *
+     * @param main       Main class
+     * @param pckg       Package to scan
+     * @param exclusions Packages to exclude from scanning
+     * @return Set of loaded classes
+     */
+    @Override
+    protected Set<Class<?>> provideClasses(@Nonnull final Class<?> main, @Nonnull String pckg, @Nonnull String[] exclusions) {
+        final Set<Class<?>> classes = new HashSet<>();
+
+        final String framework = Framework.class.getPackage().getName()
+                .replace('.', '/');
+        pckg = pckg
+                .replace('.', '/');
+        exclusions = Arrays.stream(exclusions)
+                .map(s -> s.replace('.', '/'))
+                .toArray(String[]::new);
 
         try {
             final ClassLoader loader = main.getClassLoader();
             final CodeSource src = main.getProtectionDomain().getCodeSource();
 
-            if (src != null) {
-                final ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
-                ZipEntry entry;
-
-                while((entry = zip.getNextEntry()) != null) {
-                    final String name = entry.getName();
-
-                    if (name.endsWith(".class") && (name.startsWith(pckg) || name.startsWith(framework)) && !StringUtils.startsWithAny(name, exclusions)) {
-                        final Class<?> clazz;
-
-                        try {
-                            clazz = loader.loadClass(name.replace('/', '.').replace(".class", ""));
-                        } catch (Exception e) {
-                            continue;
-                        }
-
-                        if (!clazz.isAnnotationPresent(Disabled.class)) {
-                            classes.add(clazz);
-                        }
-                    }
-                }
+            if (src == null) {
+                return classes;
             }
 
-            constructors = get(Class::getDeclaredConstructors);
-            methods = get(Class::getDeclaredMethods);
-            fields = get(Class::getDeclaredFields);
+            final ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
+            ZipEntry entry;
+
+            while ((entry = zip.getNextEntry()) != null) {
+                final String name = entry.getName();
+
+                if (!name.endsWith(".class") || (!name.startsWith(pckg) && !name.startsWith(framework)) || StringUtils.startsWithAny(name, exclusions)) {
+                    continue;
+                }
+
+                try {
+                    classes.add(loader.loadClass(name.replace('/', '.').replace(".class", "")));
+                } catch (Exception ignored) {
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected <T> Set<Class<? extends T>> provideSubTypesOf(Class<T> type) {
-        return classes.parallelStream()
-                .filter(type::isAssignableFrom)
-                .map(c -> (Class<? extends T>) c)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    protected Set<Class<?>> provideTypesAnnotatedWith(Class<? extends Annotation> annotation) {
-        return classes.parallelStream()
-                .filter(c -> c.isAnnotationPresent(annotation))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    protected Set<Method> provideMethodsAnnotatedWith(Class<? extends Annotation> annotation) {
-        return methods.parallelStream()
-                .filter(m -> m.isAnnotationPresent(annotation))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    protected Set<Constructor<?>> provideConstructorsWithAnyParamAnnotated(Class<? extends Annotation> annotation) {
-        return constructors.parallelStream()
-                .filter(c -> Arrays.stream(c.getParameters()).anyMatch(p -> p.isAnnotationPresent(annotation)))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    protected Set<Field> provideFieldsAnnotatedWith(Class<? extends Annotation> annotation) {
-        return fields.parallelStream()
-                .filter(f -> f.isAnnotationPresent(annotation))
-                .collect(Collectors.toSet());
-    }
-
-    private <T extends AccessibleObject> Set<T> get(Function<Class<?>, T[]> map) {
-        return classes.parallelStream()
-                .map(map)
-                .flatMap(Arrays::stream)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableSet::copyOf));
+        return classes;
     }
 }

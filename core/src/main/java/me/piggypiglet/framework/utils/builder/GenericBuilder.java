@@ -41,20 +41,20 @@ public final class GenericBuilder {
     /**
      * Get a builder instance for an object.
      *
-     * @param initialiser Object instantiator
+     * @param initializer Object instantiator
      * @param <T>         Type generic of object
      * @return Generic Object Builder
      */
-    public static <T> Builder<T> of(Supplier<T> initialiser) {
-        return new Builder<>(initialiser);
+    public static <T> Builder<T> of(Supplier<T> initializer) {
+        return new Builder<>(initializer);
     }
 
     public static class Builder<T> {
-        private final Supplier<T> initialiser;
+        private final Supplier<T> initializer;
         private final List<Consumer<T>> instanceModifiers = new ArrayList<>();
 
-        private Builder(Supplier<T> initialiser) {
-            this.initialiser = initialiser;
+        private Builder(Supplier<T> initializer) {
+            this.initializer = initializer;
         }
 
         /**
@@ -87,7 +87,7 @@ public final class GenericBuilder {
          * @return Object
          */
         public T build() {
-            T value = initialiser.get();
+            T value = initializer.get();
             instanceModifiers.forEach(modifier -> modifier.accept(value));
             instanceModifiers.clear();
             return value;
