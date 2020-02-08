@@ -54,7 +54,7 @@ public final class SpongeUser extends MinecraftUser {
     }
 
     @Override
-    protected void sendJsonMessage(String json) {
+    public void sendRawMessage(String json) {
         src.sendMessage(TextSerializers.JSON.deserialize(json));
     }
 

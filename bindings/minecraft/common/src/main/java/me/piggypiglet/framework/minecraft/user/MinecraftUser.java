@@ -43,13 +43,16 @@ public abstract class MinecraftUser extends User {
         super(name, id);
     }
 
-    protected abstract void sendJsonMessage(String json);
+    public abstract void sendRawMessage(String json);
 
-    public void sendRawMessage(Object message, Object... concatenations) {
+    @Override
+    public void sendMessage(Object message, Object... concatenations) {
+        final String formatted = StringUtils.format(message, concatenations);
+
         if (isPlayer()) {
-            sendJsonMessage(GSON.toJson(Text.of(StringUtils.format(message, concatenations))));
+            sendRawMessage(GSON.toJson(Text.of(formatted)));
         } else {
-            sendMessage(message, concatenations);
+            sendMessage(formatted);
         }
     }
 

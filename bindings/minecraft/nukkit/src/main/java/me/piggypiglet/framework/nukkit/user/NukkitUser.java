@@ -58,10 +58,10 @@ public final class NukkitUser extends MinecraftUser {
     }
 
     @Override
-    protected void sendJsonMessage(String json) {}
+    public void sendRawMessage(String json) {}
 
     @Override
-    public void sendRawMessage(Object message, Object... concatenations) {
+    public void sendMessage(Object message, Object... concatenations) {
         sendMessage(Text.redactJavaTriggers(StringUtils.format(message, concatenations)));
     }
 

@@ -54,7 +54,7 @@ public final class VelocityUser extends MinecraftUser {
     }
 
     @Override
-    protected void sendJsonMessage(String json) {
+    public void sendRawMessage(String json) {
         source.sendMessage(GsonComponentSerializer.INSTANCE.deserialize(json));
     }
 
