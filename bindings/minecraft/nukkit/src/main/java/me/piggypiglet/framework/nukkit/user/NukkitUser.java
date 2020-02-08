@@ -46,7 +46,6 @@ public final class NukkitUser extends MinecraftUser {
         this.sender = sender;
     }
 
-    //todo Handle color formatting
     @Override
     protected void sendMessage(String message) {
         sender.sendMessage(TextFormat.colorize(message));
