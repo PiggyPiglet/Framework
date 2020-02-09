@@ -22,30 +22,35 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft;
+package me.piggypiglet.framework.sponge.binding.plugin;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
-import me.piggypiglet.framework.minecraft.lang.Lang;
-import me.piggypiglet.framework.minecraft.registerables.BindingImplementationLoaderRegisterable;
-import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.Langs;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
+import com.google.inject.Inject;
+import me.piggypiglet.framework.guice.objects.MainBinding;
+import me.piggypiglet.framework.minecraft.plugin.Plugin;
 
-@Addon(
-        startup = {
-                @Startup(
-                        value = BindingImplementationLoaderRegisterable.class,
-                        priority = BootPriority.IMPL
-                ),
-                @Startup(
-                        value = CommandHandlerRegisterable.class,
-                        priority = BootPriority.COMMANDS
-                )
-        },
-        lang = @Langs(
-                file = "minecraft_lang.json",
-                clazz = Lang.class
-        )
-)
-public final class MinecraftAddon {}
+import java.util.Arrays;
+import java.util.List;
+
+public final class SpongePlugin implements Plugin {
+    private final org.spongepowered.api.plugin.Plugin meta;
+
+    @Inject
+    public SpongePlugin(MainBinding main) {
+        meta = main.getInstance().getClass().getAnnotation(org.spongepowered.api.plugin.Plugin.class);
+    }
+
+    @Override
+    public String getName() {
+        return meta.name();
+    }
+
+    @Override
+    public String getVersion() {
+        return meta.version();
+    }
+
+    @Override
+    public List<String> getAuthors() {
+        return Arrays.asList(meta.authors());
+    }
+}

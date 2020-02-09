@@ -22,30 +22,31 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft;
+package me.piggypiglet.framework.minecraft.registerables;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
-import me.piggypiglet.framework.minecraft.lang.Lang;
-import me.piggypiglet.framework.minecraft.registerables.BindingImplementationLoaderRegisterable;
-import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.Langs;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
+import com.google.inject.Inject;
+import me.piggypiglet.framework.minecraft.plugin.DefaultPlugin;
+import me.piggypiglet.framework.minecraft.plugin.Plugin;
+import me.piggypiglet.framework.minecraft.server.DefaultServer;
+import me.piggypiglet.framework.minecraft.server.Server;
+import me.piggypiglet.framework.minecraft.text.Text;
+import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.scanning.Scanner;
 
-@Addon(
-        startup = {
-                @Startup(
-                        value = BindingImplementationLoaderRegisterable.class,
-                        priority = BootPriority.IMPL
-                ),
-                @Startup(
-                        value = CommandHandlerRegisterable.class,
-                        priority = BootPriority.COMMANDS
-                )
-        },
-        lang = @Langs(
-                file = "minecraft_lang.json",
-                clazz = Lang.class
-        )
-)
-public final class MinecraftAddon {}
+import java.util.Optional;
+
+public final class BindingImplementationLoaderRegisterable extends StartupRegisterable {
+    @Inject private Scanner scanner;
+
+    @Override
+    protected void execute() {
+       bind(Server.class, new DefaultServer());
+       bind(Plugin.class, new DefaultPlugin());
+       requestStaticInjections(Text.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void bind(Class<T> clazz, T def) {
+        addBinding(clazz, ((Optional<T>) scanner.getSubTypesOf(clazz).stream().map(injector::getInstance).findFirst()).orElse(def));
+    }
+}

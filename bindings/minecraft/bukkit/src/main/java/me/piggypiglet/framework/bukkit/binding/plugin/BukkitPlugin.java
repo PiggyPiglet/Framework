@@ -22,24 +22,36 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.registerables;
+package me.piggypiglet.framework.bukkit.binding.plugin;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.minecraft.server.DefaultServer;
-import me.piggypiglet.framework.minecraft.server.Server;
-import me.piggypiglet.framework.minecraft.text.Text;
-import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.Scanner;
+import me.piggypiglet.framework.guice.objects.MainBinding;
+import me.piggypiglet.framework.minecraft.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Optional;
+import java.util.List;
 
-public final class ServerRegisterable extends StartupRegisterable {
-    @Inject private Scanner scanner;
+public final class BukkitPlugin implements Plugin {
+    private final PluginDescriptionFile meta;
 
-    @SuppressWarnings("unchecked")
+    @Inject
+    public BukkitPlugin(MainBinding main) {
+        meta = ((JavaPlugin) main.getInstance()).getDescription();
+    }
+
     @Override
-    protected void execute() {
-       addBinding(Server.class, ((Optional<Server>) scanner.getSubTypesOf(Server.class).stream().map(injector::getInstance).findFirst()).orElse(new DefaultServer()));
-       requestStaticInjections(Text.class);
+    public String getName() {
+        return meta.getName();
+    }
+
+    @Override
+    public String getVersion() {
+        return meta.getVersion();
+    }
+
+    @Override
+    public List<String> getAuthors() {
+        return meta.getAuthors();
     }
 }

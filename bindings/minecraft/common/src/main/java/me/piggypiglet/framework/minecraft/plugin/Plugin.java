@@ -22,30 +22,14 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft;
+package me.piggypiglet.framework.minecraft.plugin;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
-import me.piggypiglet.framework.minecraft.lang.Lang;
-import me.piggypiglet.framework.minecraft.registerables.BindingImplementationLoaderRegisterable;
-import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.Langs;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
+import java.util.List;
 
-@Addon(
-        startup = {
-                @Startup(
-                        value = BindingImplementationLoaderRegisterable.class,
-                        priority = BootPriority.IMPL
-                ),
-                @Startup(
-                        value = CommandHandlerRegisterable.class,
-                        priority = BootPriority.COMMANDS
-                )
-        },
-        lang = @Langs(
-                file = "minecraft_lang.json",
-                clazz = Lang.class
-        )
-)
-public final class MinecraftAddon {}
+public interface Plugin {
+    String getName();
+
+    String getVersion();
+
+    List<String> getAuthors();
+}
