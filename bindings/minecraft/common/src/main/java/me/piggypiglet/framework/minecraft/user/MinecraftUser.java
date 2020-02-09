@@ -24,14 +24,14 @@
 
 package me.piggypiglet.framework.minecraft.user;
 
-import com.google.gson.Gson;
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.StringUtils;
+import net.kyori.text.serializer.gson.GsonComponentSerializer;
 
 public abstract class MinecraftUser extends User {
-    private static final Gson GSON = new Gson();
+    private static final GsonComponentSerializer SERIALIZER = GsonComponentSerializer.INSTANCE;
 
     /**
      * Provide basic info to the superclass
@@ -47,7 +47,7 @@ public abstract class MinecraftUser extends User {
 
     public void sendRawMessage(Object message, Object... concatenations) {
         if (isPlayer()) {
-            sendJsonMessage(GSON.toJson(Text.parseFormat(StringUtils.format(message, concatenations))));
+            sendJsonMessage(SERIALIZER.serialize(Text.parseFormat(StringUtils.format(message, concatenations))));
         } else {
             sendMessage(message, concatenations);
         }
