@@ -34,9 +34,7 @@ import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
 
 import javax.annotation.Nonnull;
-import java.util.EnumSet;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,7 +45,7 @@ public class Text {
     private static final String INNER = "inner";
     private static final String END = "end";
     // https://regex101.com/r/8VZ7uA/5
-    private static final Pattern PATTERN = Pattern.compile("((?<start><)(?<token>([^<>]+)|([^<>]+\"(?<inner>[^\"]+)\"))(?<end>>))+?");
+    private static final Pattern PATTERN = Pattern.compile("((?<start>(?<!\\\\)<)(?<token>([^<>]+)|([^<>]+\"(?<inner>[^\"]+)\"))(?<end>(?<!\\\\)>))+?");
     private static final Pattern JAVA_PATTERN = Pattern.compile("<(click|hover):.*\".*\">", Pattern.DOTALL);
     private static final Pattern END_PATTERN = Pattern.compile("</.*>");
     private static final Pattern START_PATTERN = Pattern.compile("<(.*)>");
@@ -58,8 +56,7 @@ public class Text {
     private static final String CLOSE_TAG = "/";
     private static final String SEPARATOR = ":";
 
-    @Nonnull
-    public static String escapeTokens(@Nonnull String richMessage) {
+    public static String escapeTokens(@Nonnull final String richMessage) {
         final StringBuilder sb = new StringBuilder();
         final Matcher matcher = PATTERN.matcher(richMessage);
         int lastEnd = 0;
@@ -94,8 +91,7 @@ public class Text {
         return sb.toString();
     }
 
-    @Nonnull
-    public static String stripTokens(@Nonnull String richMessage) {
+    public static String stripTokens(@Nonnull final String richMessage) {
         final StringBuilder sb = new StringBuilder();
         final Matcher matcher = PATTERN.matcher(richMessage);
         int lastEnd = 0;
@@ -118,12 +114,10 @@ public class Text {
         return sb.toString();
     }
 
-    @Nonnull
-    public static String stripJavaTokens(@Nonnull String richMessage) {
+    public static String stripJavaTokens(@Nonnull final String richMessage) {
         return JAVA_PATTERN.matcher(richMessage).replaceAll("");
     }
 
-    @Nonnull
     public static String legacy(@Nonnull String richMessage) {
         richMessage = stripJavaTokens(richMessage);
         richMessage = END_PATTERN.matcher(richMessage).replaceAll("");
@@ -141,8 +135,7 @@ public class Text {
         return richMessage;
     }
 
-    @Nonnull
-    public static Component parseFormat(@Nonnull String richMessage) {
+    public static Component parseFormat(@Nonnull final String richMessage) {
         TextComponent.Builder builder = null;
 
         final Stack<ClickEvent> clickEvents = new Stack<>();
@@ -160,7 +153,7 @@ public class Text {
             String msg = null;
 
             if (startIndex > lastEnd) {
-                msg = richMessage.substring(lastEnd, startIndex);
+                msg = richMessage.substring(lastEnd, startIndex).replace("\\<", "<").replace("\\>", ">");
             }
 
             lastEnd = endIndex;
@@ -210,7 +203,7 @@ public class Text {
 
         // handle last message part
         if (richMessage.length() > lastEnd) {
-            final String msg = richMessage.substring(lastEnd);
+            final String msg = richMessage.substring(lastEnd).replace("\\<", "<").replace("\\>", ">");
             // append message
             if (builder == null) {
                 builder = ComponentBuilders.text(msg);
@@ -228,10 +221,13 @@ public class Text {
         return builder.build();
     }
 
-    private static void style(Stack<ClickEvent> clickEvents, Stack<HoverEvent> hoverEvents, Stack<TextColor> colors, EnumSet<TextDecoration> decorations, TextComponent.Builder builder) {
+    private static void style(@Nonnull final Stack<ClickEvent> clickEvents, @Nonnull final Stack<HoverEvent> hoverEvents,
+                              @Nonnull final Stack<TextColor> colors, @Nonnull final EnumSet<TextDecoration> decorations,
+                              @Nonnull final TextComponent.Builder builder) {
         if (clickEvents.size() > 0) builder.clickEvent(clickEvents.peek());
         if (hoverEvents.size() > 0) builder.hoverEvent(hoverEvents.peek());
         if (colors.size() > 0) builder.color(colors.peek());
+        builder.decorations(new HashSet<>(Arrays.asList(TextDecoration.values())), false);
         if (decorations.size() > 0) {
             for (TextDecoration decor : decorations) {
                 builder.decoration(decor, true);
@@ -239,8 +235,7 @@ public class Text {
         }
     }
 
-    @Nonnull
-    private static ClickEvent handleClick(@Nonnull String token) {
+    private static ClickEvent handleClick(@Nonnull final String token) {
         final String[] args = token.split(SEPARATOR);
 
         if (args.length < 2) {
@@ -251,8 +246,7 @@ public class Text {
         return ClickEvent.of(action, token.replace(CLICK + SEPARATOR + args[1] + SEPARATOR, ""));
     }
 
-    @Nonnull
-    private static HoverEvent handleHover(@Nonnull String token, @Nonnull String inner) {
+    private static HoverEvent handleHover(@Nonnull final String token, @Nonnull final String inner) {
         final String[] args = token.split(SEPARATOR);
 
         if (args.length < 2) {
@@ -263,8 +257,7 @@ public class Text {
         return HoverEvent.of(action, parseFormat(inner));
     }
 
-    @Nonnull
-    private static Optional<TextColor> resolveColor(@Nonnull String token) {
+    private static Optional<TextColor> resolveColor(@Nonnull final String token) {
         try {
             return Optional.of(TextColor.valueOf(token.toUpperCase()));
         } catch (IllegalArgumentException ex) {
@@ -272,8 +265,7 @@ public class Text {
         }
     }
 
-    @Nonnull
-    private static Optional<TextDecoration> resolveDecoration(@Nonnull String token) {
+    private static Optional<TextDecoration> resolveDecoration(@Nonnull final String token) {
         try {
             return Optional.of(TextDecoration.valueOf(token.toUpperCase()));
         } catch (IllegalArgumentException ex) {
