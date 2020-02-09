@@ -30,18 +30,53 @@ public enum Scanners {
         this.initializer = initializer;
     }
 
+    /**
+     * Get a default ScannerBuilder instance, with Scanner as the
+     * return type.
+     *
+     * @param main Main class
+     * @return ScannerBuilder returning Scanner
+     */
     public static ScannerBuilder<Scanner> of(@Nonnull final Class<?> main) {
         return new ScannerBuilder<>(DEFAULT.initializer, main);
     }
 
+    /**
+     * Get a default ScannerBuilder instance, with a custom
+     * return type.
+     *
+     * @param main    Main class
+     * @param builder Builder return logic
+     * @param <T>     Return type
+     * @return ScannerBuilder returning T
+     */
     public static <T> ScannerBuilder<T> of(@Nonnull final Class<?> main, @Nonnull final Function<Scanner, T> builder) {
         return BuilderUtils.customBuilder(new ScannerBuilder<>(DEFAULT.initializer, main), builder);
     }
 
+    /**
+     * Get a ScannerBuilder instance that builds one of
+     * the implementations defined in this enum.
+     *
+     * @param type Scanner implementation
+     * @param main Main class
+     * @return ScannerBuilder returning Scanner
+     */
     public static ScannerBuilder<Scanner> of(@Nonnull final Scanners type, @Nonnull final Class<?> main) {
         return new ScannerBuilder<>(type.initializer, main);
     }
 
+    /**
+     * Get a ScannerBuilder instance that builds a custom
+     * scanner implementation, that isn't included in RPF.
+     * The initializer provides a ScannerData object which
+     * stores crucial metadata that has to be passed to the
+     * AbstractScanner super constructor.
+     *
+     * @param initializer Custom scanner initialization logic
+     * @param main        Main class
+     * @return ScannerBuilder returning Scanner
+     */
     public static ScannerBuilder<Scanner> of(@Nonnull final Function<ScannerBuilder.ScannerData, AbstractScanner> initializer, @Nonnull final Class<?> main) {
         return new ScannerBuilder<>(initializer, main);
     }
