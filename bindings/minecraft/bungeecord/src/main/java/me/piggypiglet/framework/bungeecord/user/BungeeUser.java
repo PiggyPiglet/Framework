@@ -61,7 +61,7 @@ public final class BungeeUser extends MinecraftUser {
     }
 
     @Override
-    public void sendRawMessage(String json) {
+    public void sendJsonMessage(String json) {
         sender.sendMessage(ComponentSerializer.parse(json));
     }
 

@@ -21,7 +21,7 @@ subprojects {
     apply plugin: 'org.sonarqube'
 
     group 'me.piggypiglet'
-    version '1.8.38'
+    version '1.8.39'
     sourceCompatibility = 1.8
 
     repositories {
@@ -51,6 +51,7 @@ subprojects {
             year = 2020
         }
         include '**/*.java'
+        exclude '**/minecraft/text/Text.java'
     }
 
     compileJava.options.encoding = 'UTF-8'

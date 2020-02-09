@@ -22,19 +22,40 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.text.components;
+package me.piggypiglet.framework.minecraft.text;
 
-public interface Component {
-    default String getName() {
-        return toString().toLowerCase();
+public enum LegacyCodes {
+    BLACK('0'),
+    DARK_BLUE('1'),
+    DARK_GREEN('2'),
+    DARK_AQUA('3'),
+    DARK_RED('4'),
+    DARK_PURPLE('5'),
+    GOLD('6'),
+    GRAY('7'),
+    DARK_GRAY('8'),
+    BLUE('9'),
+    GREEN('a'),
+    AQUA('b'),
+    RED('c'),
+    LIGHT_PURPLE('d'),
+    YELLOW('e'),
+    WHITE('f'),
+
+    OBFUSCATED('k'),
+    BOLD('l'),
+    STRIKETHROUGH('m'),
+    UNDERLINE('n'),
+    ITALIC('o'),
+    RESET('r');
+
+    private final char code;
+
+    LegacyCodes(char code) {
+        this.code = code;
     }
 
-    char getCode();
-
-    static Component from(char code) {
-        final Color color = Color.from(code);
-        final Style style = Style.from(code);
-
-        return color == null ? style : color;
+    public char getCode() {
+        return code;
     }
 }

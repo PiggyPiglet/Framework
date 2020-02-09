@@ -1,6 +1,7 @@
 /*
  * MIT License
  *
+ * Copyright (c) 2019-2020 MiniDigger
  * Copyright (c) 2019-2020 PiggyPiglet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,117 +25,259 @@
 
 package me.piggypiglet.framework.minecraft.text;
 
-import me.piggypiglet.framework.minecraft.text.components.Color;
-import me.piggypiglet.framework.minecraft.text.components.Component;
-import me.piggypiglet.framework.minecraft.text.components.Style;
-import me.piggypiglet.framework.utils.map.Maps;
+import net.kyori.text.Component;
+import net.kyori.text.ComponentBuilders;
+import net.kyori.text.TextComponent;
+import net.kyori.text.event.ClickEvent;
+import net.kyori.text.event.HoverEvent;
+import net.kyori.text.format.TextColor;
+import net.kyori.text.format.TextDecoration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import java.util.EnumSet;
+import java.util.Optional;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class Text {
-    private static final Pattern TRIGGERS;
-    private static final Pattern JAVA_TRIGGERS;
+public class Text {
+    // regex group names
+    private static final String START = "start";
+    private static final String TOKEN = "token";
+    private static final String INNER = "inner";
+    private static final String END = "end";
+    // https://regex101.com/r/8VZ7uA/5
+    private static final Pattern PATTERN = Pattern.compile("((?<start><)(?<token>([^<>]+)|([^<>]+\"(?<inner>[^\"]+)\"))(?<end>>))+?");
+    private static final Pattern JAVA_PATTERN = Pattern.compile("<(click|hover):.*\".*\">", Pattern.DOTALL);
+    private static final Pattern END_PATTERN = Pattern.compile("</.*>");
+    private static final Pattern START_PATTERN = Pattern.compile("<(.*)>");
 
-    static {
-        final String javaTriggers = "&(" + String.join("|", "open_url", "show_text", "suggest_command", "run_command") + ")=<.*?>";
+    private static final String CLICK = "click";
+    private static final String HOVER = "hover";
 
-        TRIGGERS = Pattern.compile(
-                "(" + javaTriggers +
-                        "|(&([a-f]|[k-o]|r|[0-9])))+"
-        );
+    private static final String CLOSE_TAG = "/";
+    private static final String SEPARATOR = ":";
 
-        JAVA_TRIGGERS = Pattern.compile(javaTriggers);
-    }
-
-    public static Map<String, Object> of(String input) {
-        final Matcher matcher = TRIGGERS.matcher(input);
-        final List<Map<String, Object>> extras = new ArrayList<>();
-
-        boolean start = false;
+    @Nonnull
+    public static String escapeTokens(@Nonnull String richMessage) {
+        final StringBuilder sb = new StringBuilder();
+        final Matcher matcher = PATTERN.matcher(richMessage);
+        int lastEnd = 0;
 
         while (matcher.find()) {
-            if (matcher.start() == 0) start = true;
+            final int startIndex = matcher.start();
+            final int endIndex = matcher.end();
 
-            String key = matcher.group(0);
-            final Map<String, Object> extra = Maps.of(new HashMap<String, Object>())
-                    .key("text").value(TRIGGERS.split(input.substring(matcher.end()))[0])
-                    .build();
-
-            final Matcher javaMatcher = JAVA_TRIGGERS.matcher(key);
-
-            while (javaMatcher.find()) {
-                final String[] parts = javaMatcher.group(0).replaceFirst("&", "").split("=");
-                final String type = parts[0];
-                Object value = parts[1].replace("<", "").replace(">", "");
-
-                key = key.replace("&" + type + "=" + parts[1], "");
-
-                final Map<String, Object> map = new HashMap<>();
-
-                switch (type) {
-                    case "show_text":
-                        value = Text.of((String) value);
-                        extra.put("hoverEvent", map);
-                        break;
-
-                    default:
-                        extra.put("clickEvent", map);
-                        break;
-                }
-
-                map.put("action", type);
-                map.put("value", value);
+            if (startIndex > lastEnd) {
+                sb.append(richMessage, lastEnd, startIndex);
             }
 
-            final char[] codes = key.replace("&", "").toCharArray();
+            lastEnd = endIndex;
 
-            Component color = null;
-            Component style = null;
+            final String start = matcher.group(START);
+            final String inner = matcher.group(INNER);
+            final String end = matcher.group(END);
+            String token = matcher.group(TOKEN);
 
-            for (int i = codes.length - 1; i >= 0; --i) {
-                final Component component = Component.from(codes[i]);
-
-                if (component instanceof Color) {
-                    color = component;
-                } else if (component instanceof Style) {
-                    style = component;
-                }
-
-                if (style != null || color != null) break;
+            // also escape inner
+            if (inner != null) {
+                token = token.replace(inner, escapeTokens(inner));
             }
 
-            if (style == Style.RESET) {
-                extras.add(extra);
-                continue;
-            }
-
-            if (color != null) extra.put("color", color.getName());
-            if (style != null) extra.put(style.getName(), "true");
-
-            extras.add(extra);
+            sb.append("\\").append(start).append(token).append("\\").append(end);
         }
 
-        final Map<String, Object> parent = new HashMap<>();
-
-        parent.put("text", "");
-
-        if (extras.isEmpty()) {
-            parent.put("text", input);
-        } else {
-            parent.put("extra", extras);
+        if (richMessage.length() > lastEnd) {
+            sb.append(richMessage.substring(lastEnd));
         }
 
-        if (!start) parent.put("text", TRIGGERS.split(input)[0]);
-
-        return parent;
+        return sb.toString();
     }
 
-    public static String redactJavaTriggers(String input) {
-        return JAVA_TRIGGERS.matcher(input).replaceAll("");
+    @Nonnull
+    public static String stripTokens(@Nonnull String richMessage) {
+        final StringBuilder sb = new StringBuilder();
+        final Matcher matcher = PATTERN.matcher(richMessage);
+        int lastEnd = 0;
+
+        while (matcher.find()) {
+            final int startIndex = matcher.start();
+            final int endIndex = matcher.end();
+
+            if (startIndex > lastEnd) {
+                sb.append(richMessage, lastEnd, startIndex);
+            }
+
+            lastEnd = endIndex;
+        }
+
+        if (richMessage.length() > lastEnd) {
+            sb.append(richMessage.substring(lastEnd));
+        }
+
+        return sb.toString();
+    }
+
+    @Nonnull
+    public static String stripJavaTokens(@Nonnull String richMessage) {
+        return JAVA_PATTERN.matcher(richMessage).replaceAll("");
+    }
+
+    @Nonnull
+    public static String legacy(@Nonnull String richMessage) {
+        richMessage = stripJavaTokens(richMessage);
+        richMessage = END_PATTERN.matcher(richMessage).replaceAll("");
+
+        final Matcher codes = START_PATTERN.matcher(richMessage);
+
+        while (codes.find()) {
+            final String name = codes.group(1);
+
+            try {
+                richMessage = richMessage.replace("<" + name + ">", "&" + LegacyCodes.valueOf(name.toUpperCase()).getCode());
+            } catch (Exception ignored) {}
+        }
+
+        return richMessage;
+    }
+
+    @Nonnull
+    public static Component parseFormat(@Nonnull String richMessage) {
+        TextComponent.Builder builder = null;
+
+        final Stack<ClickEvent> clickEvents = new Stack<>();
+        final Stack<HoverEvent> hoverEvents = new Stack<>();
+        final Stack<TextColor> colors = new Stack<>();
+        final EnumSet<TextDecoration> decorations = EnumSet.noneOf(TextDecoration.class);
+
+        final Matcher matcher = PATTERN.matcher(richMessage);
+        int lastEnd = 0;
+
+        while (matcher.find()) {
+            final int startIndex = matcher.start();
+            final int endIndex = matcher.end();
+
+            String msg = null;
+
+            if (startIndex > lastEnd) {
+                msg = richMessage.substring(lastEnd, startIndex);
+            }
+
+            lastEnd = endIndex;
+
+            // handle message
+            if (msg != null && msg.length() != 0) {
+                // append message
+                if (builder == null) {
+                    builder = ComponentBuilders.text(msg);
+                    style(clickEvents, hoverEvents, colors, decorations, builder);
+                } else {
+                    builder.append(msg, b -> style(clickEvents, hoverEvents, colors, decorations, b));
+                }
+            }
+
+            final String token = matcher.group(TOKEN);
+            final String inner = matcher.group(INNER);
+
+            Optional<TextDecoration> deco;
+            Optional<TextColor> color;
+
+            // click
+            if (token.startsWith(CLICK + SEPARATOR)) {
+                clickEvents.push(handleClick(token));
+            } else if (token.equals(CLOSE_TAG + CLICK)) {
+                clickEvents.pop();
+            }
+            // hover
+            else if (token.startsWith(HOVER + SEPARATOR)) {
+                hoverEvents.push(handleHover(token, inner));
+            } else if (token.equals(CLOSE_TAG + HOVER)) {
+                hoverEvents.pop();
+            }
+            // decoration
+            else if ((deco = resolveDecoration(token)).isPresent()) {
+                decorations.add(deco.get());
+            } else if (token.startsWith(CLOSE_TAG) && (deco = resolveDecoration(token.replace(CLOSE_TAG, ""))).isPresent()) {
+                decorations.remove(deco.get());
+            }
+            // color
+            else if ((color = resolveColor(token)).isPresent()) {
+                colors.push(color.get());
+            } else if (token.startsWith(CLOSE_TAG) && resolveColor(token.replace(CLOSE_TAG, "")).isPresent()) {
+                colors.pop();
+            }
+        }
+
+        // handle last message part
+        if (richMessage.length() > lastEnd) {
+            final String msg = richMessage.substring(lastEnd);
+            // append message
+            if (builder == null) {
+                builder = ComponentBuilders.text(msg);
+                style(clickEvents, hoverEvents, colors, decorations, builder);
+            } else {
+                builder.append(msg, b -> style(clickEvents, hoverEvents, colors, decorations, b));
+            }
+        }
+
+        if (builder == null) {
+            // lets just return an empty component
+            builder = ComponentBuilders.text("");
+        }
+
+        return builder.build();
+    }
+
+    private static void style(Stack<ClickEvent> clickEvents, Stack<HoverEvent> hoverEvents, Stack<TextColor> colors, EnumSet<TextDecoration> decorations, TextComponent.Builder builder) {
+        if (clickEvents.size() > 0) builder.clickEvent(clickEvents.peek());
+        if (hoverEvents.size() > 0) builder.hoverEvent(hoverEvents.peek());
+        if (colors.size() > 0) builder.color(colors.peek());
+        if (decorations.size() > 0) {
+            for (TextDecoration decor : decorations) {
+                builder.decoration(decor, true);
+            }
+        }
+    }
+
+    @Nonnull
+    private static ClickEvent handleClick(@Nonnull String token) {
+        final String[] args = token.split(SEPARATOR);
+
+        if (args.length < 2) {
+            throw new RuntimeException("Can't parse click action (too few args) " + token);
+        }
+
+        final ClickEvent.Action action = ClickEvent.Action.valueOf(args[1].toUpperCase());
+        return ClickEvent.of(action, token.replace(CLICK + SEPARATOR + args[1] + SEPARATOR, ""));
+    }
+
+    @Nonnull
+    private static HoverEvent handleHover(@Nonnull String token, @Nonnull String inner) {
+        final String[] args = token.split(SEPARATOR);
+
+        if (args.length < 2) {
+            throw new RuntimeException("Can't parse hover action (too few args) " + token);
+        }
+
+        final HoverEvent.Action action = HoverEvent.Action.valueOf(args[1].toUpperCase());
+        return HoverEvent.of(action, parseFormat(inner));
+    }
+
+    @Nonnull
+    private static Optional<TextColor> resolveColor(@Nonnull String token) {
+        try {
+            return Optional.of(TextColor.valueOf(token.toUpperCase()));
+        } catch (IllegalArgumentException ex) {
+            return Optional.empty();
+        }
+    }
+
+    @Nonnull
+    private static Optional<TextDecoration> resolveDecoration(@Nonnull String token) {
+        try {
+            return Optional.of(TextDecoration.valueOf(token.toUpperCase()));
+        } catch (IllegalArgumentException ex) {
+            return Optional.empty();
+        }
     }
 }

@@ -57,11 +57,13 @@ public final class NukkitUser extends MinecraftUser {
     }
 
     @Override
-    public void sendRawMessage(String json) {}
+    public void sendJsonMessage(String json) {
+        throw new UnsupportedOperationException("Nukkit doesn't have JSON chat.");
+    }
 
     @Override
-    public void sendMessage(Object message, Object... concatenations) {
-        sendMessage(Text.redactJavaTriggers(StringUtils.format(message, concatenations)));
+    public void sendRawMessage(Object message, Object... concatenations) {
+        sendMessage(Text.legacy(StringUtils.format(message, concatenations)));
     }
 
     public boolean isPlayer() {
