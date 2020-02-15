@@ -44,14 +44,16 @@ import static me.piggypiglet.framework.json.ParserConstants.*;
  * key-value system, with . as the nested element path separator.
  * Suppose the following JSON is supplied,
  * <p>
+ * <pre>
  * {
- * "meta": {
- * "name: "Piggy",
- * "age": "118"
- * },
- * <p>
- * "active": true
+ *   "meta": {
+ *     "name: "Piggy",
+ *     "age": "118"
+ *   },
+ *
+ *   "active": true
  * }
+ * </pre>
  * <p>
  * Retrieving the name value, would be as simple as invoking
  * JsonParser#getString("meta.name");
