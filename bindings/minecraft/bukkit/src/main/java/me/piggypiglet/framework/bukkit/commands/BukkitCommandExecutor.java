@@ -30,14 +30,13 @@ import me.piggypiglet.framework.commands.CommandHandlers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class BukkitCommandExecutor implements CommandExecutor {
     @Inject private CommandHandlers commandHandlers;
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         commandHandlers.process("minecraft", new BukkitUser(sender), label + " " + String.join(" ", args));
 
         return true;

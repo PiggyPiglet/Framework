@@ -24,6 +24,8 @@
 
 package me.piggypiglet.framework.utils.map;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -226,6 +228,17 @@ public class Maps {
         }
 
         return Stream.of(entry);
+    }
+
+    /**
+     * Wrapper around flatten stream util.
+     *
+     * @param map Map to flatten
+     * @return Flattened map
+     */
+    @NotNull
+    public static Map<String, Object> flatten(@NotNull final Map<String, Object> map) {
+        return map.entrySet().stream().flatMap(Maps::flatten).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**

@@ -24,10 +24,8 @@
 
 package me.piggypiglet.framework.utils.builder;
 
-import me.piggypiglet.framework.logging.Logger;
-import me.piggypiglet.framework.logging.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -38,8 +36,6 @@ import java.util.stream.Collectors;
  * compiling a builder's components, and the embeddability of builders.
  */
 public final class BuilderUtils {
-    private static final Logger<?> LOGGER = LoggerFactory.getLogger("BuilderUtils");
-
     private BuilderUtils() {
         throw new UnsupportedOperationException("This class cannot be initialized.");
     }
@@ -51,7 +47,7 @@ public final class BuilderUtils {
      * @param builderName Name of the builder, used in the exception method
      * @param variables   Variables that need to be set
      */
-    public static void requiredVariables(@Nonnull final String builderName, @Nonnull final Object... variables) {
+    public static void requiredVariables(@NotNull final String builderName, @NotNull final Object... variables) {
         handleVariables(unsetVariables -> {
             throw new UnsetVarsException("These required variables weren't set in your " + builderName + ": " + unsetVariables);
         }, variables);
@@ -64,8 +60,9 @@ public final class BuilderUtils {
      * @param builderName Name of the builder, used in the warning log
      * @param variables   Suggested variables
      */
-    public static void warningVariables(@Nonnull final String builderName, @Nonnull final Object... variables) {
-        handleVariables(unsetVariables -> LOGGER.warning("These suggested variables weren't set in your %s: %s", builderName, unsetVariables), variables);
+    public static void warningVariables(@NotNull final String builderName, @NotNull final Object... variables) {
+        handleVariables(unsetVariables -> System.out.println(String.format("These suggested variables weren't set in your %s: %s", builderName, unsetVariables)),
+                variables);
     }
 
     /**
@@ -85,7 +82,7 @@ public final class BuilderUtils {
      * @param defaultLogic Logic to run if variables have their default value.
      * @param variables    Array of variables to check
      */
-    public static void handleVariables(@Nonnull final Consumer<String> defaultLogic, @Nonnull final Object... variables) {
+    public static void handleVariables(@NotNull final Consumer<String> defaultLogic, @NotNull final Object... variables) {
         final String unsetVariables = Arrays.stream(variables).filter(o -> {
             try {
                 return ((String) o).startsWith("d-");
@@ -113,7 +110,7 @@ public final class BuilderUtils {
      * @param <R>     New return type
      * @return original builder
      */
-    public static <B extends AbstractBuilder<D, R>, D, R> B customBuilder(@Nonnull final B builder, @Nonnull final Function<D, R> build) {
+    public static <B extends AbstractBuilder<D, R>, D, R> B customBuilder(@NotNull final B builder, @NotNull final Function<D, R> build) {
         builder.setBuilder(build);
         return builder;
     }

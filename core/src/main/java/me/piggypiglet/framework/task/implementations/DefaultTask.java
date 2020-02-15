@@ -24,6 +24,8 @@
 
 package me.piggypiglet.framework.task.implementations;
 
+import com.google.inject.Inject;
+import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.task.GRunnable;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
@@ -40,7 +42,9 @@ public final class DefaultTask extends Task {
     private final ExecutorService executor;
     private final ScheduledExecutorService scheduler;
 
-    public DefaultTask(int threads) {
+    @Inject
+    public DefaultTask(Framework config) {
+        final int threads = config.getThreads();
         this.executor = Executors.newFixedThreadPool(threads);
         this.scheduler = Executors.newScheduledThreadPool(threads);
     }

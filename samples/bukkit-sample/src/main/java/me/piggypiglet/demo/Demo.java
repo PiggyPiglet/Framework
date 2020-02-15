@@ -35,7 +35,9 @@ public final class Demo extends JavaPlugin {
     public void onEnable() {
         Framework.builder()
                 .main(JavaPlugin.class, this)
-                .pckg("me.piggypiglet.demo")
+                .scanner()
+                        .pckg("me.piggypiglet.demo")
+                        .build()
                 .commandPrefixes("demo")
                 .startup(new RegisterableData(BroadcasterRegisterable.class))
                 .file(true, "config", "/config.yml", getDataFolder() + "/config.yml", Config.class)

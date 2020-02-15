@@ -25,6 +25,7 @@
 package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
+import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
@@ -32,6 +33,7 @@ import me.piggypiglet.framework.task.implementations.DefaultTask;
 
 public final class SyncRegisterable extends StartupRegisterable {
     @Inject private Task task;
+    @Inject private FrameworkBootstrap boot;
 
     @Override
     protected void execute() {

@@ -24,7 +24,8 @@
 
 package me.piggypiglet.framework.file.objects;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.Annotation;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -38,19 +39,19 @@ public final class FileData implements Comparable<FileData> {
     private final Class<? extends Annotation> annotationClass;
     private final Annotation annotationInstance;
 
-    public FileData(boolean config, String name, @Nonnull String internalPath, String externalPath, Class<? extends Annotation> annotationClass) {
+    public FileData(boolean config, String name, @NotNull String internalPath, String externalPath, Class<? extends Annotation> annotationClass) {
         this(config, name, internalPath, null, externalPath, annotationClass, null);
     }
 
-    public FileData(boolean config, String name, @Nonnull String internalPath, String externalPath, Annotation annotation) {
+    public FileData(boolean config, String name, @NotNull String internalPath, String externalPath, Annotation annotation) {
         this(config, name, internalPath, null, externalPath, null, annotation);
     }
 
-    public FileData(boolean config, String name, @Nonnull ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
+    public FileData(boolean config, String name, @NotNull ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
         this(config, name, null, internalPath, externalPath, annotation, null);
     }
 
-    public FileData(boolean config, String name, @Nonnull ConfigPathReference internalPath, String externalPath, Annotation annotation) {
+    public FileData(boolean config, String name, @NotNull ConfigPathReference internalPath, String externalPath, Annotation annotation) {
         this(config, name, null, internalPath, externalPath, null, annotation);
     }
 
@@ -94,7 +95,7 @@ public final class FileData implements Comparable<FileData> {
     }
 
     @Override
-    public int compareTo(@Nonnull FileData fileData) {
+    public int compareTo(@NotNull FileData fileData) {
         if (fileData.hardInternalPath == null) {
             return -1;
         }

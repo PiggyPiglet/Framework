@@ -3,8 +3,8 @@ package me.piggypiglet.framework.scanning.framework;
 import com.google.common.collect.ImmutableSet;
 import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Arrays;
@@ -34,9 +34,9 @@ public abstract class AbstractScanner implements Scanner {
      *
      * @param classes Set of loaded classes
      */
-    protected AbstractScanner(@Nonnull final ScannerBuilder.ScannerData data, @Nonnull final Set<Class<?>> classes,
-                              @Nonnull final Set<Constructor<?>> constructors, @Nonnull final Set<Method> methods,
-                              @Nonnull final Set<Field> fields) {
+    protected AbstractScanner(@NotNull final ScannerBuilder.ScannerData data, @NotNull final Set<Class<?>> classes,
+                              @NotNull final Set<Constructor<?>> constructors, @NotNull final Set<Method> methods,
+                              @NotNull final Set<Field> fields) {
         this.data = data;
         this.classes = classes;
         this.constructors = constructors;
@@ -48,7 +48,7 @@ public abstract class AbstractScanner implements Scanner {
      * One arg (ScannerData) constructor that will assign #classes, #constructors,
      * #methods, and #fields to a new HashSet.
      */
-    protected AbstractScanner(@Nonnull final ScannerBuilder.ScannerData data) {
+    protected AbstractScanner(@NotNull final ScannerBuilder.ScannerData data) {
         this.data = data;
         classes = new HashSet<>();
         constructors = new HashSet<>();
@@ -61,7 +61,7 @@ public abstract class AbstractScanner implements Scanner {
      *
      * @return Set of loaded classes
      */
-    protected abstract Set<Class<?>> provideClasses(@Nonnull Class<?> main, @Nonnull String pckg, @Nonnull String[] exclusions) ;
+    protected abstract Set<Class<?>> provideClasses(@NotNull Class<?> main, @NotNull String pckg, @NotNull String[] exclusions) ;
 
     /**
      * Store the values from the class loading method provided by the implementation,
@@ -98,8 +98,9 @@ public abstract class AbstractScanner implements Scanner {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Set<Class<? extends T>> getSubTypesOf(@Nonnull final Class<T> type) {
+    public <T> Set<Class<? extends T>> getSubTypesOf(@NotNull final Class<T> type) {
         return stream(classes)
+                .filter(c -> !Modifier.isAbstract(c.getModifiers()) && !c.isInterface())
                 .filter(type::isAssignableFrom)
                 .map(c -> (Class<? extends T>) c)
                 .collect(Collectors.toSet());
@@ -113,7 +114,7 @@ public abstract class AbstractScanner implements Scanner {
      * @return Set of classes
      */
     @Override
-    public Set<Class<?>> getClassesAnnotatedWith(@Nonnull final Class<? extends Annotation> annotation) {
+    public Set<Class<?>> getClassesAnnotatedWith(@NotNull final Class<? extends Annotation> annotation) {
         return stream(classes)
                 .filter(c -> c.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());
@@ -127,7 +128,7 @@ public abstract class AbstractScanner implements Scanner {
      * @return Set of classes
      */
     @Override
-    public Set<Class<?>> getClassesWithAnnotatedMethods(@Nonnull final Class<? extends Annotation> annotation) {
+    public Set<Class<?>> getClassesWithAnnotatedMethods(@NotNull final Class<? extends Annotation> annotation) {
         return stream(methods)
                 .filter(m -> m.isAnnotationPresent(annotation))
                 .map(Method::getDeclaringClass)
@@ -144,7 +145,7 @@ public abstract class AbstractScanner implements Scanner {
      * @return Set of parameters
      */
     @Override
-    public Set<Parameter> getParametersInConstructorsAnnotatedWith(@Nonnull final Class<? extends Annotation> annotation) {
+    public Set<Parameter> getParametersInConstructorsAnnotatedWith(@NotNull final Class<? extends Annotation> annotation) {
         return stream(constructors)
                 .flatMap(c -> Arrays.stream(c.getParameters())
                         .filter(p -> Arrays.stream(p.getAnnotations())
@@ -161,7 +162,7 @@ public abstract class AbstractScanner implements Scanner {
      * @return Set of fields
      */
     @Override
-    public Set<Field> getFieldsAnnotatedWith(@Nonnull final Class<? extends Annotation> annotation) {
+    public Set<Field> getFieldsAnnotatedWith(@NotNull final Class<? extends Annotation> annotation) {
         return stream(fields)
                 .filter(f -> f.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());
@@ -175,7 +176,7 @@ public abstract class AbstractScanner implements Scanner {
      * @param <T>    Wildcard type parameter extending AccessibleObject
      * @return Set of T
      */
-    private <T extends AccessibleObject> Set<T> get(@Nonnull final Function<Class<?>, T[]> getter) {
+    private <T extends AccessibleObject> Set<T> get(@NotNull final Function<Class<?>, T[]> getter) {
         return classes.parallelStream()
                 .map(getter)
                 .flatMap(Arrays::stream)
@@ -188,7 +189,7 @@ public abstract class AbstractScanner implements Scanner {
      * @param clazz Class to check
      * @return boolean value of result
      */
-    private boolean notDisabled(@Nonnull final Class<?> clazz) {
+    private boolean notDisabled(@NotNull final Class<?> clazz) {
         return !clazz.isAnnotationPresent(Disabled.class);
     }
 
@@ -200,7 +201,7 @@ public abstract class AbstractScanner implements Scanner {
      * @param <R>        Collection element type
      * @return Stream of R
      */
-    private <R> Stream<R> stream(@Nonnull final Collection<R> collection) {
+    private <R> Stream<R> stream(@NotNull final Collection<R> collection) {
         return data.isParallelFiltering() ? collection.parallelStream() : collection.stream();
     }
 }

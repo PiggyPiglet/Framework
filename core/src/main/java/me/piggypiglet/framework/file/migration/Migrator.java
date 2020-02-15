@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.file.migration;
 
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 // ------------------------------
@@ -59,7 +59,7 @@ public abstract class Migrator implements Comparable<Migrator> {
     }
 
     @Override
-    public int compareTo(@Nonnull Migrator target) {
+    public int compareTo(@NotNull Migrator target) {
         return priority - target.priority;
     }
 

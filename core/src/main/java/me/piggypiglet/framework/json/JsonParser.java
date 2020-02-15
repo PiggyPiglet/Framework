@@ -24,211 +24,246 @@
 
 package me.piggypiglet.framework.json;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.JsonElement;
+import me.piggypiglet.framework.utils.builder.AbstractBuilder;
 import me.piggypiglet.framework.utils.map.Maps;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-/**
- * JsonParser class, used for parsing json, as the name suggests. Use . as a path separator when receiving nested objects, for example
- * {
- * "test": {
- * "key": "value"
- * }
- * }
- * In this json, key could be received as JsonParser#getString("test.key");
- */
+import static me.piggypiglet.framework.json.ParserConstants.*;
+
 @SuppressWarnings("unused")
 public final class JsonParser {
-    private Map<String, Object> items;
+    private final boolean nullableValues;
+    private final Gson gson;
+    private final JsonElement data;
+    private final Map<String, Object> map;
+    private final Map<String, Object> flattenedMap;
 
-    /**
-     * Create a JsonParser instance from raw json data as a string
-     *
-     * @param json JSON String
-     */
-    @SuppressWarnings("unchecked")
-    public JsonParser(String json) {
-        items = new Gson().fromJson(json, LinkedTreeMap.class);
+    private final Function<JsonElement, List<JsonElement>> listGetter;
+    private final Function<JsonElement, Map<?, ?>> mapGetter;
+    private final Function<JsonElement, List<JsonParser>> jsonListGetter;
+
+    JsonParser(final boolean nullableValues, final Gson gson,
+                       final JsonElement data, final Map<String, Object> map,
+                       final Map<String, Object> flattenedMap) {
+        this.nullableValues = nullableValues;
+        this.gson = gson;
+        this.data = data;
+        this.map = map;
+        this.flattenedMap = flattenedMap;
+
+        listGetter = element -> LIST_GETTER.apply(gson, element);
+        mapGetter = element -> MAP_GETTER.apply(gson, element);
+        jsonListGetter = element -> JSON_LIST_GETTER.apply(this, element);
     }
 
-    /**
-     * Load JsonParser with already-decoded json data.
-     *
-     * @param items Map of json data
-     */
-    public JsonParser(Map<String, Object> items) {
-        this.items = items;
+    @NotNull
+    public static JsonParser of(@NotNull final String json) {
+        return builder(json).build();
     }
 
-    /**
-     * Get an object at a specific path
-     *
-     * @param path Path to find the object at
-     * @return Object
-     */
-    public Object get(String path) {
-        return Maps.recursiveGet(items, path);
+    @NotNull
+    public static Builder<JsonParser> builder(@NotNull final String json) {
+        return new Builder<>(json);
     }
 
-    /**
-     * Get a section and turn it into a JsonParser instance.
-     *
-     * @param path Path the json section can be found at
-     * @return JsonParser
-     */
-    @SuppressWarnings("unchecked")
-    public JsonParser getJsonSection(String path) {
-        Object object = get(path);
+    public static class Builder<T> extends AbstractBuilder<JsonParser, T> {
+        private final String json;
 
-        if (isConfigSection(object)) {
-            return new JsonParser((Map<String, Object>) object);
+        private boolean nullableValues = true;
+        private Gson gson = new Gson();
+
+        private Builder(final String json) {
+            this.json = json;
         }
 
-        return null;
-    }
-
-    /**
-     * Get a string at a specific path
-     *
-     * @param path Path of the string
-     * @return String
-     */
-    public String getString(String path) {
-        Object object = get(path);
-
-        if (object instanceof String) {
-            return (String) object;
+        @NotNull
+        public Builder<T> nullableValues(final boolean value) {
+            nullableValues = value;
+            return this;
         }
 
-        return null;
-    }
-
-    /**
-     * Get an Integer at a specific path
-     *
-     * @param path Path of the integer
-     * @return Integer
-     */
-    public Integer getInt(String path) {
-        Double d = getDouble(path);
-        return d == null ? null : d.intValue();
-    }
-
-    /**
-     * Get a long at a specific path
-     *
-     * @param path Path of the Long
-     * @return Long
-     */
-    public Long getLong(String path) {
-        Double d = getDouble(path);
-        return d == null ? null : d.longValue();
-    }
-
-    /**
-     * Get a Double at a specific path
-     *
-     * @param path Path of the Double
-     * @return Double
-     */
-    public Double getDouble(String path) {
-        Object object = get(path);
-
-        if (object instanceof Double) {
-            return (double) object;
+        @NotNull
+        public Builder<T> gson(@NotNull final Gson value) {
+            gson = value;
+            return this;
         }
 
-        return null;
+        @SuppressWarnings("unchecked")
+        @Override
+        protected JsonParser provideBuild() {
+            final JsonElement data = PARSER.parse(json);
+            final Map<String, Object> map = ImmutableMap.copyOf((Map<String, Object>) MAP_GETTER.apply(gson, data));
+            final Map<String, Object> flattenedMap = ImmutableMap.copyOf(Maps.flatten(map));
+
+            return new JsonParser(nullableValues, gson, data, map, flattenedMap);
+        }
     }
 
-    /**
-     * Get a boolean at a specific path
-     *
-     * @param path Path of the boolean
-     * @return Boolean
-     */
-    public Boolean getBoolean(String path) {
-        Object object = get(path);
+    public boolean isNullableValues() {
+        return nullableValues;
+    }
 
-        if (object instanceof Boolean) {
-            return (boolean) object;
+    @NotNull
+    public Gson getGson() {
+        return gson;
+    }
+
+    @NotNull
+    public JsonElement getData() {
+        return data;
+    }
+
+    @NotNull
+    public Map<String, Object> getMap() {
+        return map;
+    }
+
+    @NotNull
+    public Map<String, Object> getFlattenedMap() {
+        return flattenedMap;
+    }
+
+    @Nullable
+    public String getString(@NotNull final String path) {
+        return findFromPath(path, STRING_GETTER, provideDef(STRING_DEFAULT));
+    }
+
+    @NotNull
+    public String getString(@NotNull final String path, @NotNull final String def) {
+        return findFromPath(path, STRING_GETTER, def);
+    }
+
+    @Nullable
+    public Character getCharacter(@NotNull final String path) {
+        return findFromPath(path, CHARACTER_GETTER, provideDef(CHARACTER_DEFAULT));
+    }
+
+    public char getCharacter(@NotNull final String path, final char def) {
+        return findFromPath(path, CHARACTER_GETTER, def);
+    }
+
+    @Nullable
+    public Byte getByte(@NotNull final String path) {
+        return findFromPath(path, BYTE_GETTER, provideDef(BYTE_DEFAULT));
+    }
+
+    public byte getByte(@NotNull final String path, final byte def) {
+        return findFromPath(path, BYTE_GETTER, def);
+    }
+
+    @Nullable
+    public Boolean getBoolean(@NotNull final String path) {
+        return findFromPath(path, BOOLEAN_GETTER, provideDef(BOOLEAN_DEFAULT));
+    }
+
+    public boolean getBoolean(@NotNull final String path, final boolean def) {
+        return findFromPath(path, BOOLEAN_GETTER, def);
+    }
+
+    @Nullable
+    public Short getShort(@NotNull final String path) {
+        return findFromPath(path, SHORT_GETTER, provideDef(NUMBER_DEFAULT.shortValue()));
+    }
+
+    public short getShort(@NotNull final String path, final short def) {
+        return findFromPath(path, SHORT_GETTER, def);
+    }
+
+    @Nullable
+    public Integer getInteger(@NotNull final String path) {
+        return findFromPath(path, INTEGER_GETTER, provideDef(NUMBER_DEFAULT.intValue()));
+    }
+
+    public int getInteger(@NotNull final String path, final int def) {
+        return findFromPath(path, INTEGER_GETTER, def);
+    }
+
+    @Nullable
+    public Float getFloat(@NotNull final String path) {
+        return findFromPath(path, FLOAT_GETTER, provideDef(NUMBER_DEFAULT.floatValue()));
+    }
+
+    public float getFloat(@NotNull final String path, final float def) {
+        return findFromPath(path, FLOAT_GETTER, def);
+    }
+
+    @Nullable
+    public Double getDouble(@NotNull final String path) {
+        return findFromPath(path, DOUBLE_GETTER, provideDef(NUMBER_DEFAULT.doubleValue()));
+    }
+
+    public double getDouble(@NotNull final String path, final double def) {
+        return findFromPath(path, DOUBLE_GETTER, def);
+    }
+
+    @Nullable
+    public Long getLong(@NotNull final String path) {
+        return findFromPath(path, LONG_GETTER, provideDef(NUMBER_DEFAULT.longValue()));
+    }
+
+    public long getLong(@NotNull final String path, final long def) {
+        return findFromPath(path, LONG_GETTER, def);
+    }
+
+    @Nullable
+    public List<JsonElement> getList(@NotNull final String path) {
+        return findFromPath(path, listGetter, provideDef(LIST_DEFAULT));
+    }
+
+    @NotNull
+    public List<JsonElement> getList(@NotNull final String path, @NotNull final List<JsonElement> def) {
+        return findFromPath(path, listGetter, def);
+    }
+
+    @Nullable
+    public List<JsonParser> getJsonList(@NotNull final String path) {
+        return findFromPath(path, jsonListGetter, provideDef(JSON_LIST_DEFAULT));
+    }
+
+    @NotNull
+    public List<JsonParser> getJsonList(@NotNull final String path, @NotNull final List<JsonParser> def) {
+        return findFromPath(path, jsonListGetter, def);
+    }
+
+    @Nullable
+    public Map<?, ?> getMap(@NotNull final String path) {
+        return findFromPath(path, mapGetter, provideDef(MAP_DEFAULT));
+    }
+
+    @NotNull
+    public Map<?, ?> getMap(@NotNull final String path, @NotNull final Map<?, ?> def) {
+        return findFromPath(path, mapGetter, def);
+    }
+
+    @Nullable
+    private <T> T provideDef(@NotNull final T def) {
+        return nullableValues ? null : def;
+    }
+
+    private <T> T findFromPath(@NotNull final String path, @NotNull final Function<JsonElement, T> getter,
+                               @Nullable final T def) {
+        JsonElement data = this.data;
+
+        if (data == null || data.isJsonNull()) {
+            return def;
         }
 
-        return null;
-    }
-
-    /**
-     * Get a list of strings at a specific path
-     *
-     * @param path Path of the list
-     * @return List of Strings
-     */
-    public List<String> getStringList(String path) {
-        return getList(path);
-    }
-
-    /**
-     * Get a list of sections, parsed as JsonParsers.
-     *
-     * @param path Path of the list
-     * @return List of JsonParsers
-     */
-    @SuppressWarnings("unchecked")
-    public List<JsonParser> getJsonList(String path) {
-        Object object = get(path);
-
-        if (object instanceof List<?>) {
-            List<JsonParser> jsons = new ArrayList<>();
-
-            for (Object obj : (List<?>) object) {
-                if (isConfigSection(obj)) {
-                    jsons.add(new JsonParser((Map<String, Object>) obj));
-                }
+        for (final String key : PATH.split(path)) {
+            if (!data.isJsonObject()) {
+                return def;
             }
 
-            if (!jsons.isEmpty()) {
-                return jsons;
-            }
+            data = data.getAsJsonObject().get(key);
         }
 
-        return new ArrayList<>();
-    }
-
-    /**
-     * Get a list without knowing the type of the content
-     *
-     * @param path Path of the list
-     * @param <T>  Object type
-     * @return List
-     */
-    @SuppressWarnings("unchecked")
-    public <T> List<T> getList(String path) {
-        Object object = get(path);
-
-        if (object instanceof List) {
-            return (List<T>) object;
-        }
-
-        return new ArrayList<>();
-    }
-
-    public Map<String, Object> getAll() {
-        return items;
-    }
-
-    private boolean isConfigSection(Object object) {
-        if (object instanceof Map<?, ?>) {
-            Map<?, ?> map = (Map<?, ?>) object;
-
-            if (map.size() >= 1) {
-                return map.keySet().toArray()[0] instanceof String && map.values().toArray()[0] != null;
-            }
-        }
-
-        return false;
+        return data == null ? def : getter.apply(data);
     }
 }

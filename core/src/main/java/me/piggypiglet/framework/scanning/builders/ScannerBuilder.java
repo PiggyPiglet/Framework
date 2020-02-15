@@ -3,8 +3,8 @@ package me.piggypiglet.framework.scanning.builders;
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.builder.AbstractBuilder;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -28,7 +28,7 @@ public final class ScannerBuilder<T> extends AbstractBuilder<Scanner, T> {
      * @param initializer Scanner implementation initialization logic
      * @param main        Main class of the application
      */
-    public ScannerBuilder(@Nonnull final Function<ScannerData, AbstractScanner> initializer, @Nonnull final Class<?> main) {
+    public ScannerBuilder(@NotNull final Function<ScannerData, AbstractScanner> initializer, @NotNull final Class<?> main) {
         this.initializer = initializer;
         this.main = main;
     }
@@ -42,7 +42,7 @@ public final class ScannerBuilder<T> extends AbstractBuilder<Scanner, T> {
      * @param pckg Package that you wish to scan (recursive).
      * @return ScannerBuilder instance
      */
-    public ScannerBuilder<T> pckg(@Nonnull final String pckg) {
+    public ScannerBuilder<T> pckg(@NotNull final String pckg) {
         this.pckg = pckg;
         return this;
     }
@@ -55,7 +55,7 @@ public final class ScannerBuilder<T> extends AbstractBuilder<Scanner, T> {
      * @param exclusions Array of packages
      * @return ScannerBuilder instance
      */
-    public ScannerBuilder<T> exclusions(@Nonnull final String... exclusions) {
+    public ScannerBuilder<T> exclusions(@NotNull final String... exclusions) {
         this.exclusions = exclusions;
         return this;
     }
@@ -92,8 +92,8 @@ public final class ScannerBuilder<T> extends AbstractBuilder<Scanner, T> {
         private final String[] exclusions;
         private final boolean parallelFiltering;
 
-        private ScannerData(@Nonnull final Class<?> main, @Nonnull final String pckg,
-                           @Nonnull final String[] exclusions, final boolean parallelFiltering) {
+        private ScannerData(@NotNull final Class<?> main, @NotNull final String pckg,
+                           @NotNull final String[] exclusions, final boolean parallelFiltering) {
             this.main = main;
             this.pckg = pckg;
             this.exclusions = exclusions;

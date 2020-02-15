@@ -38,8 +38,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -87,7 +87,7 @@ public final class BukkitPlayer implements Player<org.bukkit.entity.Player> {
     private final org.bukkit.entity.Player player;
     private Object nmsPlayer;
 
-    public BukkitPlayer(@Nonnull org.bukkit.entity.Player player) {
+    public BukkitPlayer(@NotNull org.bukkit.entity.Player player) {
         this.player = player;
 
         try {

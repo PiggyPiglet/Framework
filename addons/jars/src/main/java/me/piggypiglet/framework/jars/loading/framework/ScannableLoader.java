@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.jars.loading.framework;
 
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -1,12 +1,12 @@
 package me.piggypiglet.framework.scanning.exceptions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Thrown if a fatal exception occurs in a scanner implementation.
  */
 public final class ScannerException extends RuntimeException {
-    public ScannerException(@Nonnull final String message) {
+    public ScannerException(@NotNull final String message) {
         super(message);
     }
 }

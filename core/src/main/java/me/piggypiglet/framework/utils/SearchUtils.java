@@ -26,8 +26,8 @@ package me.piggypiglet.framework.utils;
 
 import com.google.common.collect.ImmutableList;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,7 +79,7 @@ public final class SearchUtils {
         }
 
         @Override
-        public int compareTo(@Nonnull Object o) {
+        public int compareTo(@NotNull Object o) {
             if (!(o instanceof SearchPair)) return 0;
 
             return similarity - ((SearchPair) o).similarity;

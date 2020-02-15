@@ -44,6 +44,7 @@ import me.piggypiglet.framework.registerables.startup.file.FilesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.lang.LangFileRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.lang.LangValuesRegisterable;
 import me.piggypiglet.framework.registerables.startup.file.migration.MigrationRegisterable;
+import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
@@ -77,6 +78,10 @@ public final class FrameworkBootstrap {
         }
 
         injector.get().getReal().injectMembers(this);
+
+        if (scanner instanceof AbstractScanner) {
+            ((AbstractScanner) scanner).populate();
+        }
 
         scanner
                 .getClassesAnnotatedWith(Addon.class)

@@ -46,7 +46,7 @@ public final class SpongeServer implements Server {
         String version;
 
         try {
-            version = new JsonParser(
+            version = JsonParser.of(
                     "{\"data\":" + FileUtils.readEmbedToString("/mcmod.info", Sponge.class) + "}"
             ).getJsonList("data").get(0).getString("version");
         } catch (Exception e) {

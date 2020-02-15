@@ -42,16 +42,15 @@ import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.BiFunction;
 
 public final class Framework {
     private final MainBinding main;
-    private final String pckg;
-    private final String[] pckgExclusions;
+    private final Scanner scanner;
     private final BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule;
     private final Injector injector;
     private final List<RegisterableData> startupRegisterables;
@@ -66,13 +65,12 @@ public final class Framework {
     private final CustomLang customLang;
     private final boolean debug;
 
-    private Framework(MainBinding main, String pckg, String[] pckgExclusions, BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule,
+    private Framework(MainBinding main, Scanner scanner, BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule,
                       Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables,
                       String[] commandPrefixes, List<FileData> files, int threads, Map<Class<?>, ConfigInfo> configs, String configDir,
                       boolean overrideLangFile, ConfigInfo langConfig, CustomLang customLang, boolean debug) {
         this.main = main;
-        this.pckg = pckg;
-        this.pckgExclusions = pckgExclusions;
+        this.scanner = scanner;
         this.initialModule = initialModule;
         this.injector = injector;
         this.startupRegisterables = startupRegisterables;
@@ -117,22 +115,8 @@ public final class Framework {
         return main;
     }
 
-    /**
-     * Get the projects package
-     *
-     * @return String
-     */
-    public String getPckg() {
-        return pckg;
-    }
-
-    /**
-     * Get any packages that should be excluded when scanning
-     *
-     * @return String array
-     */
-    public String[] getPckgExclusions() {
-        return pckgExclusions;
+    public Scanner getScanner() {
+        return scanner;
     }
 
     public BiFunction<FrameworkBootstrap, Framework, InitialModule> getInitialModule() {
@@ -266,12 +250,12 @@ public final class Framework {
 
         private FrameworkBuilder() {}
 
-        public <T> FrameworkBuilder main(@Nonnull final T instance) {
+        public <T> FrameworkBuilder main(@NotNull final T instance) {
             main = new MainBinding(instance.getClass(), instance, Main.class);
             return this;
         }
 
-        public <T> FrameworkBuilder main(@Nonnull final Class<? super T> clazz, @Nonnull final T instance) {
+        public <T> FrameworkBuilder main(@NotNull final Class<? super T> clazz, @NotNull final T instance) {
             main = new MainBinding(clazz, instance);
             return this;
         }
@@ -289,7 +273,7 @@ public final class Framework {
             });
         }
 
-        public FrameworkBuilder scanner(@Nonnull final Scanner scanner) {
+        public FrameworkBuilder scanner(@NotNull final Scanner scanner) {
             this.scanner = scanner;
             return this;
         }

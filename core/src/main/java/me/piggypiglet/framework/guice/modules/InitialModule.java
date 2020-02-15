@@ -29,7 +29,6 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.scanning.framework.Scanner;
-import me.piggypiglet.framework.scanning.implementations.ZISScanner;
 
 public class InitialModule extends AbstractModule {
     protected final FrameworkBootstrap boot;
@@ -81,6 +80,6 @@ public class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public Scanner providesScanner() {
-        return new ZISScanner(config.getMain().getInstance().getClass(), config.getPckg(), config.getPckgExclusions());
+        return config.getScanner();
     }
 }

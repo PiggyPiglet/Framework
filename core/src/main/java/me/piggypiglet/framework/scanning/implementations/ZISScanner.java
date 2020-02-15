@@ -28,8 +28,8 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.security.CodeSource;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,7 +45,7 @@ import java.util.zip.ZipInputStream;
  * classes classloader.
  */
 public final class ZISScanner extends AbstractScanner {
-    public ZISScanner(@Nonnull final ScannerBuilder.ScannerData data) {
+    public ZISScanner(@NotNull final ScannerBuilder.ScannerData data) {
         super(data);
     }
 
@@ -78,7 +78,7 @@ public final class ZISScanner extends AbstractScanner {
      * @return Set of loaded classes
      */
     @Override
-    protected Set<Class<?>> provideClasses(@Nonnull final Class<?> main, @Nonnull String pckg, @Nonnull String[] exclusions) {
+    protected Set<Class<?>> provideClasses(@NotNull final Class<?> main, @NotNull String pckg, @NotNull String[] exclusions) {
         final Set<Class<?>> classes = new HashSet<>();
 
         final String framework = Framework.class.getPackage().getName()
@@ -109,8 +109,7 @@ public final class ZISScanner extends AbstractScanner {
 
                 try {
                     classes.add(loader.loadClass(name.replace('/', '.').replace(".class", "")));
-                } catch (Exception ignored) {
-                }
+                } catch (Exception ignored) {}
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

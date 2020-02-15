@@ -24,7 +24,8 @@
 
 package me.piggypiglet.framework.scanning.framework;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -43,7 +44,7 @@ public interface Scanner {
      * @param <T>  Type generic
      * @return Set of classes
      */
-    <T> Set<Class<? extends T>> getSubTypesOf(@Nonnull Class<T> type);
+    <T> Set<Class<? extends T>> getSubTypesOf(@NotNull Class<T> type);
 
     /**
      * Get all known classes that are annotated with a specific annotation type.
@@ -51,7 +52,7 @@ public interface Scanner {
      * @param annotation Annotation class
      * @return Set of classes
      */
-    Set<Class<?>> getClassesAnnotatedWith(@Nonnull Class<? extends Annotation> annotation);
+    Set<Class<?>> getClassesAnnotatedWith(@NotNull Class<? extends Annotation> annotation);
 
     /**
      * Get all known classes that have methods annotated with a specific annotation
@@ -60,7 +61,7 @@ public interface Scanner {
      * @param annotation Annotation class
      * @return Set of classes
      */
-    Set<Class<?>> getClassesWithAnnotatedMethods(@Nonnull Class<? extends Annotation> annotation);
+    Set<Class<?>> getClassesWithAnnotatedMethods(@NotNull Class<? extends Annotation> annotation);
 
     /**
      * Get all known constructor parameters that are annotated with a specific
@@ -69,7 +70,7 @@ public interface Scanner {
      * @param annotation Annotation class
      * @return Set of parameters
      */
-    Set<Parameter> getParametersInConstructorsAnnotatedWith(@Nonnull Class<? extends Annotation> annotation);
+    Set<Parameter> getParametersInConstructorsAnnotatedWith(@NotNull Class<? extends Annotation> annotation);
 
     /**
      * Get all known fields that are annotated with a specific annotation type.
@@ -77,5 +78,5 @@ public interface Scanner {
      * @param annotation Annotation class
      * @return Set of fields
      */
-    Set<Field> getFieldsAnnotatedWith(@Nonnull Class<? extends Annotation> annotation);
+    Set<Field> getFieldsAnnotatedWith(@NotNull Class<? extends Annotation> annotation);
 }

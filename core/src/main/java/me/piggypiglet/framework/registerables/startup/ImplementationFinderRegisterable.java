@@ -26,7 +26,6 @@ package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Names;
-import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
@@ -39,12 +38,10 @@ import java.util.Optional;
 
 public final class ImplementationFinderRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;
-    @Inject private Framework framework;
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void execute() {
-        addBinding(Task.class, ((Optional<Task>) find(Task.class).map(injector::getInstance)).orElse(new DefaultTask(framework.getThreads())));
+        addBinding(Task.class, injector.getInstance(find(Task.class).orElse(DefaultTask.class)));
         addAnnotatedBinding(Class.class, Names.named("logger"), find(Logger.class).orElse(DefaultLogger.class));
         requestStaticInjections(LoggerFactory.class);
     }

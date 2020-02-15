@@ -36,6 +36,8 @@ subprojects {
     }
 
     dependencies {
+        compileOnly 'org.jetbrains:annotations:+'
+        testCompileOnly 'org.jetbrains:annotations:+'
         testCompile 'junit:junit:4.12'
     }
 
