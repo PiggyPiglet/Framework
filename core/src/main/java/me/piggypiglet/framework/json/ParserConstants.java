@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class ParserConstants {
+    static final Gson GSON_DEFAULT = new Gson();
     static final Pattern PATH = Pattern.compile("\\.");
     static final com.google.gson.JsonParser PARSER = new com.google.gson.JsonParser();
 

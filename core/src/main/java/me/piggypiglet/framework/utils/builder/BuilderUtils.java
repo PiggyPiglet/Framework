@@ -110,6 +110,7 @@ public final class BuilderUtils {
      * @param <R>     New return type
      * @return original builder
      */
+    @NotNull
     public static <B extends AbstractBuilder<D, R>, D, R> B customBuilder(@NotNull final B builder, @NotNull final Function<D, R> build) {
         builder.setBuilder(build);
         return builder;
