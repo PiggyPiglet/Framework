@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.utils.number;
+package me.piggypiglet.framework.utils.primitive;
 
 import me.piggypiglet.framework.utils.lambda.ExceptionableFunction;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 
@@ -39,10 +40,10 @@ public enum Primitives {
     FLOAT(Float.class, c -> c.newInstance(0.0f)),
     UNKNOWN(null, null);
 
-    private final Class clazz;
-    private final ExceptionableFunction<Constructor, ?> defaultInstance;
+    private final Class<?> clazz;
+    private final ExceptionableFunction<Constructor<?>, ?> defaultInstance;
 
-    Primitives(final Class clazz, ExceptionableFunction<Constructor, ?> defaultInstance) {
+    Primitives(final Class<?> clazz, ExceptionableFunction<Constructor<?>, ?> defaultInstance) {
         this.clazz = clazz;
         this.defaultInstance = defaultInstance;
     }
@@ -54,6 +55,7 @@ public enum Primitives {
      *  <li>Number: 0
      *  <li>Character: 0
      * </ul>
+     *
      * @return Wrapper instance with populated value field
      * @throws Exception Reflection exception
      */
@@ -61,14 +63,25 @@ public enum Primitives {
         return defaultInstance.apply(clazz.getConstructors()[0]);
     }
 
+    public static Primitives fromClass(@NotNull final Class<?> clazz) {
+        for (Primitives primitive : values()) {
+            if (primitive.clazz == clazz) {
+                return primitive;
+            }
+        }
+
+        return UNKNOWN;
+    }
+
     /**
      * Find a wrapper from a primitive class
+     *
      * @param clazz primitive class
      * @return Wrapper Primitives enum
      */
-    public static Primitives fromClass(Class clazz) {
+    public static Primitives fromPrimitiveClass(Class<?> clazz) {
         for (Primitives primitive : values()) {
-            if (primitive.clazz == NumberUtils.primitiveToWrapper(clazz)) {
+            if (primitive.clazz == PrimitiveUtils.primitiveToWrapper(clazz)) {
                 return primitive;
             }
         }

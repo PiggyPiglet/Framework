@@ -1,7 +1,7 @@
 package me.piggypiglet.framework.scanning.framework;
 
 import com.google.common.collect.ImmutableSet;
-import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
+import me.piggypiglet.framework.scanning.objects.ScannerData;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * Utility abstraction around Scanner interface to handle class list population
  */
 public abstract class AbstractScanner implements Scanner {
-    protected final ScannerBuilder.ScannerData data;
+    protected final ScannerData data;
 
     private final Set<Class<?>> classes;
     private final Set<Constructor<?>> constructors;
@@ -34,7 +34,7 @@ public abstract class AbstractScanner implements Scanner {
      *
      * @param classes Set of loaded classes
      */
-    protected AbstractScanner(@NotNull final ScannerBuilder.ScannerData data, @NotNull final Set<Class<?>> classes,
+    protected AbstractScanner(@NotNull final ScannerData data, @NotNull final Set<Class<?>> classes,
                               @NotNull final Set<Constructor<?>> constructors, @NotNull final Set<Method> methods,
                               @NotNull final Set<Field> fields) {
         this.data = data;
@@ -48,7 +48,7 @@ public abstract class AbstractScanner implements Scanner {
      * One arg (ScannerData) constructor that will assign #classes, #constructors,
      * #methods, and #fields to a new HashSet.
      */
-    protected AbstractScanner(@NotNull final ScannerBuilder.ScannerData data) {
+    protected AbstractScanner(@NotNull final ScannerData data) {
         this.data = data;
         classes = new HashSet<>();
         constructors = new HashSet<>();

@@ -56,8 +56,7 @@ public abstract class SearchableManager<S extends SearchUtils.Searchable> extend
      * @param query Query string
      * @return List of searchables, in order of most similar to least.
      */
-    @SuppressWarnings("unchecked")
     public List<S> search(String query) {
-        return SearchUtils.search((List<SearchUtils.Searchable>) items, query);
+        return SearchUtils.search(items, query);
     }
 }

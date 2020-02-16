@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.mysql.table;
 
-import me.piggypiglet.framework.mapper.ObjectMapper;
+import me.piggypiglet.framework.mapping.ObjectMapper;
 import me.piggypiglet.framework.mysql.components.row.RowCreator;
 import me.piggypiglet.framework.mysql.components.row.RowDeleter;
 import me.piggypiglet.framework.mysql.components.row.RowEditor;

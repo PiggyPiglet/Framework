@@ -22,25 +22,10 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.mapper;
+package me.piggypiglet.framework.mapping;
 
-/**
- * Interface to abstract the process of mapping objects to data, and vise versa.
- */
 public interface ObjectMapper<D, T> {
-    /**
-     * Convert D to T
-     *
-     * @param data Data to convert
-     * @return End result
-     */
-    T dataToType(D data);
+    T dataToType(final D data);
 
-    /**
-     * Convert T to D
-     *
-     * @param type Type to convert
-     * @return End result
-     */
-    D typeToData(T type);
+    D typeToData(final T type);
 }

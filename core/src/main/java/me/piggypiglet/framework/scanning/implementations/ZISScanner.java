@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.scanning.implementations;
 
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
+import me.piggypiglet.framework.scanning.objects.ScannerData;
 import me.piggypiglet.framework.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ import java.util.zip.ZipInputStream;
  * classes classloader.
  */
 public final class ZISScanner extends AbstractScanner {
-    public ZISScanner(@NotNull final ScannerBuilder.ScannerData data) {
+    public ZISScanner(@NotNull final ScannerData data) {
         super(data);
     }
 

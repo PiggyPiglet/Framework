@@ -24,10 +24,10 @@
 
 package me.piggypiglet.framework.utils;
 
-import com.google.common.collect.ImmutableList;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,44 +45,42 @@ public final class SearchUtils {
      * @param items Items to re order
      * @param query Search query
      * @param <T>   Searchable types
-     * @return ImmutableList of re-ordered searchables
+     * @return List of re-ordered searchables
      */
-    @SuppressWarnings("unchecked")
-    public static <T extends Searchable> ImmutableList<T> search(List<Searchable> items, String query) {
-        List<SearchPair> pairs = items.stream().map(i -> new SearchPair(i, query)).sorted().collect(Collectors.toList());
+    @NotNull
+    public static <T extends Searchable> List<T> search(@NotNull final Collection<T> items, @NotNull final String query) {
+        List<SearchPair<T>> pairs = items.stream().map(i -> new SearchPair<>(i, query)).sorted().collect(Collectors.toList());
         Collections.reverse(pairs);
 
-        Stream<SearchPair> stream = pairs.stream();
+        Stream<SearchPair<T>> stream = pairs.stream();
 
         if (pairs.size() > 5000) {
             stream = stream.parallel();
         }
 
         return stream
-                .map(i -> (T) i.item)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
+                .map(i -> i.item)
+                .collect(Collectors.toList());
     }
 
     public static Searchable stringSearchable(String str) {
         return () -> str;
     }
 
-    private static final class SearchPair implements Comparable {
-        private final Searchable item;
+    private static final class SearchPair<T extends Searchable> implements Comparable<SearchPair<T>> {
+        private final T item;
         private final String query;
         private int similarity;
 
-        private SearchPair(Searchable item, String query) {
+        private SearchPair(T item, String query) {
             this.item = item;
             this.query = query;
             this.similarity = FuzzySearch.weightedRatio(item.getName(), query);
         }
 
         @Override
-        public int compareTo(@NotNull Object o) {
-            if (!(o instanceof SearchPair)) return 0;
-
-            return similarity - ((SearchPair) o).similarity;
+        public int compareTo(@NotNull final SearchPair request) {
+            return similarity - request.similarity;
         }
 
         @Override

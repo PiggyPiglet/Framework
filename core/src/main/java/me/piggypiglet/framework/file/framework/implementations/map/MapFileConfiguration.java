@@ -54,7 +54,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
     MapFileConfiguration(Map<String, Object> items) {
         super(null);
         this.items = items;
-        flat = getAll();
+        flat = getAllFlattened();
     }
 
     protected abstract Map<String, Object> provide(java.io.File file, String fileContent);
@@ -65,7 +65,7 @@ public abstract class MapFileConfiguration extends AbstractFileConfiguration imp
     protected void internalLoad(java.io.File file, String fileContent) {
         items = provide(file, fileContent);
         mappers.forEach(f -> items = Maps.map(items, f.getClazz(), f.getFunction()));
-        flat = getAll();
+        flat = getAllFlattened();
     }
 
     @Override

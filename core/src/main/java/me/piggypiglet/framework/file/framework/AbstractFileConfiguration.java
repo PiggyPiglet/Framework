@@ -152,11 +152,16 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
 
     public Map<String, Object> getAll() {
         final AtomicReference<Stream<Map.Entry<String, Object>>> stream = new AtomicReference<>(retrieveAll().entrySet().stream());
+
         mappers.forEach(f -> {
             if (f != null) stream.set(stream.get().flatMap(f::flatten));
         });
 
-        return stream.get()
+        return stream.get().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public Map<String, Object> getAllFlattened() {
+        return getAll().entrySet().stream()
                 .flatMap(Maps::flatten)
                 .distinct()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.utils.number;
+package me.piggypiglet.framework.utils.primitive;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class NumberUtils {
+public final class PrimitiveUtils {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new HashMap<>();
 
     static {
@@ -41,7 +41,7 @@ public final class NumberUtils {
         PRIMITIVE_WRAPPER_MAP.put(Float.TYPE, Float.class);
     }
 
-    private NumberUtils() {
+    private PrimitiveUtils() {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
@@ -67,9 +67,7 @@ public final class NumberUtils {
      * Convert a wrapper into a primitive with a default value, likely either 0, false, or 'a'.
      *
      * @param clazz Wrapper class
-     *
      * @return Primitive object
-     *
      * @throws Exception Unlikely, but possible
      */
     public static Object wrapperToPrimitive(final Class<?> clazz) throws Exception {

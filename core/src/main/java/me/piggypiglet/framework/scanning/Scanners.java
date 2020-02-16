@@ -4,6 +4,7 @@ import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.scanning.implementations.ZISScanner;
+import me.piggypiglet.framework.scanning.objects.ScannerData;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,10 +25,30 @@ public enum Scanners {
      */
     DEFAULT(ZIS.initializer);
 
-    private final Function<ScannerBuilder.ScannerData, AbstractScanner> initializer;
+    private final Function<ScannerData, AbstractScanner> initializer;
 
-    Scanners(@NotNull final Function<ScannerBuilder.ScannerData, AbstractScanner> initializer) {
+    Scanners(@NotNull final Function<ScannerData, AbstractScanner> initializer) {
         this.initializer = initializer;
+    }
+
+    public Scanner create(@NotNull final Class<?> main) {
+        return of(initializer, main);
+    }
+
+    public ScannerBuilder<Scanner> createBuilder(@NotNull final Class<?> main) {
+        return builder(initializer, main);
+    }
+
+    public <T> ScannerBuilder<T> createBuilder(@NotNull final Class<?> main, @NotNull final Function<Scanner, T> builder) {
+        return builder(initializer, main, builder);
+    }
+
+    public static Scanner of(@NotNull final Class<?> main) {
+        return builder(main).build();
+    }
+
+    public static Scanner of(@NotNull final Function<ScannerData, AbstractScanner> initializer, @NotNull final Class<?> main) {
+        return builder(initializer, main).build();
     }
 
     /**
@@ -37,8 +58,8 @@ public enum Scanners {
      * @param main Main class
      * @return ScannerBuilder returning Scanner
      */
-    public static ScannerBuilder<Scanner> of(@NotNull final Class<?> main) {
-        return new ScannerBuilder<>(DEFAULT.initializer, main);
+    public static ScannerBuilder<Scanner> builder(@NotNull final Class<?> main) {
+        return builder(DEFAULT.initializer, main);
     }
 
     /**
@@ -50,20 +71,8 @@ public enum Scanners {
      * @param <T>     Return type
      * @return ScannerBuilder returning T
      */
-    public static <T> ScannerBuilder<T> of(@NotNull final Class<?> main, @NotNull final Function<Scanner, T> builder) {
-        return BuilderUtils.customBuilder(new ScannerBuilder<>(DEFAULT.initializer, main), builder);
-    }
-
-    /**
-     * Get a ScannerBuilder instance that builds one of
-     * the implementations defined in this enum.
-     *
-     * @param type Scanner implementation
-     * @param main Main class
-     * @return ScannerBuilder returning Scanner
-     */
-    public static ScannerBuilder<Scanner> of(@NotNull final Scanners type, @NotNull final Class<?> main) {
-        return new ScannerBuilder<>(type.initializer, main);
+    public static <T> ScannerBuilder<T> builder(@NotNull final Class<?> main, @NotNull final Function<Scanner, T> builder) {
+        return builder(DEFAULT.initializer, main, builder);
     }
 
     /**
@@ -77,7 +86,12 @@ public enum Scanners {
      * @param main        Main class
      * @return ScannerBuilder returning Scanner
      */
-    public static ScannerBuilder<Scanner> of(@NotNull final Function<ScannerBuilder.ScannerData, AbstractScanner> initializer, @NotNull final Class<?> main) {
+    public static ScannerBuilder<Scanner> builder(@NotNull final Function<ScannerData, AbstractScanner> initializer, @NotNull final Class<?> main) {
         return new ScannerBuilder<>(initializer, main);
+    }
+
+    public static <T> ScannerBuilder<T> builder(@NotNull final Function<ScannerData, AbstractScanner> initializer, @NotNull final Class<?> main,
+                                                @NotNull final Function<Scanner, T> builder) {
+        return BuilderUtils.customBuilder(new ScannerBuilder<>(initializer, main), builder);
     }
 }
