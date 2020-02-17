@@ -10,6 +10,8 @@ import java.util.function.Function;
 
 /**
  * Util builder class for any type of scanner.
+ *
+ * @param <T> Return type (returned on #build)
  */
 public final class ScannerBuilder<T> extends AbstractBuilder<Scanner, T> {
     /**
