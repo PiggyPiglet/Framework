@@ -16,7 +16,7 @@ import java.util.function.Function;
  * @param <R> Return type (returned on #build)
  */
 public final class GsonObjectMapperBuilder<T, R> extends AbstractBuilder<GsonObjectMapper<T>, R> {
-    private final Function<GsonObjectMapperData, ? extends GsonObjectMapper<T>> initializer;
+    private final Function<GsonObjectMapperData, GsonObjectMapper<T>> initializer;
     private final Class<T> type;
 
     private Gson gson = GsonObjectMappers.GSON;
@@ -31,7 +31,7 @@ public final class GsonObjectMapperBuilder<T, R> extends AbstractBuilder<GsonObj
      * @param type Type the mapper will be responsible for serializing,
      *             and deserializing.
      */
-    public GsonObjectMapperBuilder(@NotNull final Function<GsonObjectMapperData, ? extends GsonObjectMapper<T>> initializer, @NotNull final Class<T> type) {
+    public GsonObjectMapperBuilder(@NotNull final Function<GsonObjectMapperData, GsonObjectMapper<T>> initializer, @NotNull final Class<T> type) {
         this.initializer = initializer;
         this.type = type;
     }

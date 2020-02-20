@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.mapping.gson.framework;
 
+import com.google.common.annotations.Beta;
 import com.google.common.util.concurrent.AtomicDoubleArray;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -30,12 +31,16 @@ import java.util.stream.Collectors;
  * for field mapping, using an underlying gson instance for object
  * serialization. Data type is Map&lt;String, Object&gt;.
  *
+ * <strong>This API was specifically designed for the Levenshtein implementation,
+ * it's destined to change when more uses are thought of, and implemented.</strong>
+ *
  * @param <T> Type to map to and from
  */
+@Beta
 public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Object>, T> {
     private final Class<T> type;
     private final AtomicReference<Gson> gson = new AtomicReference<>();
-    private final Function<GsonObjectMapperData, ? extends GsonObjectMapper<?>> initializer;
+    private final Function<GsonObjectMapperData, GsonObjectMapper<?>> initializer;
 
     private FieldBinder binder = null;
 
@@ -49,7 +54,7 @@ public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Ob
      * @param data        Data from the builder.
      */
     @SuppressWarnings("unchecked")
-    protected GsonObjectMapper(@NotNull final Function<GsonObjectMapperData, ? extends GsonObjectMapper<?>> initializer, @NotNull final GsonObjectMapperData data) {
+    protected GsonObjectMapper(@NotNull final Function<GsonObjectMapperData, GsonObjectMapper<?>> initializer, @NotNull final GsonObjectMapperData data) {
         this(initializer, (Class<T>) data.getType(), data.getGson());
     }
 
@@ -63,7 +68,7 @@ public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Ob
      * @param type        Type to map to and from
      * @param gson        Gson instance
      */
-    protected GsonObjectMapper(@NotNull final Function<GsonObjectMapperData, ? extends GsonObjectMapper<?>> initializer, @NotNull final Class<T> type,
+    protected GsonObjectMapper(@NotNull final Function<GsonObjectMapperData, GsonObjectMapper<?>> initializer, @NotNull final Class<T> type,
                                @NotNull final Gson gson) {
         this.type = type;
         this.gson.set(gson);
@@ -136,12 +141,6 @@ public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Ob
         }.getType());
     }
 
-    /**
-     *
-     *
-     * @param entry
-     * @return
-     */
     @NotNull
     @SuppressWarnings("unchecked")
     private Map.Entry<String, Object> processDataEntry(@NotNull final Map.Entry<String, Object> entry) {
@@ -155,7 +154,6 @@ public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Ob
 
         if (value instanceof Map<?, ?> && !Map.class.isAssignableFrom(bindType)) {
             final FieldBinder binder = provideBinder(gson, TypeToken.get(bindType));
-
             final Map<String, Object> map = ((Map<String, Object>) value).entrySet().stream()
                     .map(e -> new AbstractMap.SimpleEntry<>(binder.get(e.getKey()).getName(), e.getValue()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -164,8 +162,8 @@ public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Ob
         } else if (isConstructable(clazz)) {
             final GsonObjectMapper<?> mapper = initializer.apply(new GsonObjectMapperData(clazz, gson));
             mapper.init();
-            final Object data = mapper.typeToData(gson.fromJson(gson.toJsonTree(value), new TypeToken<Map<String, Object>>() {
-            }.getType()));
+
+            final Object data = mapper.typeToData(gson.fromJson(gson.toJsonTree(value), new TypeToken<Map<String, Object>>(){}.getType()));
 
             return new AbstractMap.SimpleEntry<>(key, data);
         }
