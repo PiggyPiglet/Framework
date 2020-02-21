@@ -24,28 +24,22 @@
 
 package me.piggypiglet.framework;
 
-import com.google.common.base.Preconditions;
 import com.google.inject.Injector;
 import me.piggypiglet.framework.addon.objects.ConfigInfo;
-import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
-import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
+import me.piggypiglet.framework.init.builder.FrameworkBuilder;
+import me.piggypiglet.framework.init.builder.stages.file.FileData;
 import me.piggypiglet.framework.lang.objects.CustomLang;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
-import me.piggypiglet.framework.scanning.Scanners;
-import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.scanning.framework.Scanner;
-import me.piggypiglet.framework.utils.annotations.Main;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
-import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 public final class Framework {
@@ -65,7 +59,7 @@ public final class Framework {
     private final CustomLang customLang;
     private final boolean debug;
 
-    private Framework(MainBinding main, Scanner scanner, BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule,
+    public Framework(MainBinding main, Scanner scanner, BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule,
                       Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables,
                       String[] commandPrefixes, List<FileData> files, int threads, Map<Class<?>, ConfigInfo> configs, String configDir,
                       boolean overrideLangFile, ConfigInfo langConfig, CustomLang customLang, boolean debug) {
@@ -86,13 +80,8 @@ public final class Framework {
         this.debug = debug;
     }
 
-    /**
-     * Initialize a new instance of FrameworkBuilder
-     *
-     * @return FrameworkBuilder
-     */
-    public static FrameworkBuilder builder() {
-        return new FrameworkBuilder();
+    public static <T> FrameworkBuilder<T> builder(@NotNull final Class<T> main) {
+        return new FrameworkBuilder<>(main);
     }
 
     /**
@@ -229,266 +218,5 @@ public final class Framework {
      */
     public boolean isDebug() {
         return debug;
-    }
-
-    public static final class FrameworkBuilder {
-        private Object main = "d-main";
-        private Scanner scanner = null;
-        private BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule = InitialModule::new;
-        private Injector injector = null;
-        private List<RegisterableData> startupRegisterables = new ArrayList<>();
-        private List<Class<? extends ShutdownRegisterable>> shutdownRegisterables = new ArrayList<>();
-        private String[] commandPrefixes = null;
-        private final List<FileData> files = new ArrayList<>();
-        private int threads = 15;
-        private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
-        private String fileDir = ".";
-        private boolean overrideLangFile = false;
-        private ConfigInfo langConfig = null;
-        private CustomLang customLang = null;
-        private boolean debug = false;
-
-        private FrameworkBuilder() {}
-
-        public <T> FrameworkBuilder main(@NotNull final T instance) {
-            main = new MainBinding(instance.getClass(), instance, Main.class);
-            return this;
-        }
-
-        public <T> FrameworkBuilder main(@NotNull final Class<? super T> clazz, @NotNull final T instance) {
-            main = new MainBinding(clazz, instance);
-            return this;
-        }
-
-        public ScannerBuilder<FrameworkBuilder> scanner() {
-            if (main.equals("d-main")) {
-                throw new UnsupportedOperationException("You cannot configure the scanner before the main class.");
-            }
-
-            final Class<?> main = ((MainBinding) this.main).getClazz();
-
-            return Scanners.of(main, scanner -> {
-                this.scanner = scanner;
-                return this;
-            });
-        }
-
-        public FrameworkBuilder scanner(@NotNull final Scanner scanner) {
-            this.scanner = scanner;
-            return this;
-        }
-
-        public final FrameworkBuilder initialModule(BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule) {
-            this.initialModule = initialModule;
-            return this;
-        }
-
-        /**
-         * Set the application's initial injector, if one is already made.
-         *
-         * @param injector Application's injector
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder injector(Injector injector) {
-            this.injector = injector;
-            return this;
-        }
-
-        /**
-         * Add startup registerables to be ran in the bootstrap, in order.
-         *
-         * @param registerables Varargs classes extending StartupRegisterable
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder startup(RegisterableData... registerables) {
-            startupRegisterables = Arrays.asList(registerables);
-            return this;
-        }
-
-        /**
-         * Add shutdown registerables to be ran in the shutdown hook, in order.
-         *
-         * @param registerables Varargs classes extending ShutdownRegisterable
-         * @return FrameworkBuilder
-         */
-        @SafeVarargs
-        public final FrameworkBuilder shutdown(Class<? extends ShutdownRegisterable>... registerables) {
-            shutdownRegisterables = Arrays.asList(registerables);
-            return this;
-        }
-
-        /**
-         * The application's command prefixes, to be used in command handlers.
-         *
-         * @param commandPrefixes Strings
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder commandPrefixes(String... commandPrefixes) {
-            this.commandPrefixes = commandPrefixes;
-            return this;
-        }
-
-        /**
-         * Add a file to be copied from an embed and loaded into memory.
-         *
-         * @param config       Should this file be stored as a FileConfiguration
-         * @param name         Name of the file to be referenced in FileManager
-         * @param internalPath The hard internal path of the file.
-         * @param externalPath The external path of the file, set to null if file shouldn't be copied
-         *                     outside the jar.
-         * @param annotation   Annotation class to bind the instance to.
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Class<? extends Annotation> annotation) {
-            files.add(new FileData(config, name, internalPath, externalPath, annotation));
-            return this;
-        }
-
-        /**
-         * Add a file to be copied from an embed and loaded into memory.
-         *
-         * @param config       Should this file be stored as a FileConfiguration
-         * @param name         Name of the file to be referenced in FileManager
-         * @param internalPath The hard internal path of the file.
-         * @param externalPath The external path of the file, set to null if file shouldn't be copied
-         *                     outside the jar.
-         * @param annotation   Annotation instance to bind the instance to.
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder file(boolean config, String name, String internalPath, String externalPath, Annotation annotation) {
-            files.add(new FileData(config, name, internalPath, externalPath, annotation));
-            return this;
-        }
-
-        /**
-         * Add a file to be copied from an embed and loaded into memory.
-         *
-         * @param config       Should this file be stored as a FileConfiguration
-         * @param name         Name of the file to be referenced in FileManager
-         * @param internalPath The dynamic internal path of the file.
-         * @param externalPath The external path of the file, set to null if file shouldn't be copied
-         *                     outside the jar.
-         * @param annotation   Annotation class to bind the instance to.
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
-            files.add(new FileData(config, name, internalPath, externalPath, annotation));
-            return this;
-        }
-
-        /**
-         * Add a file to be copied from an embed and loaded into memory.
-         *
-         * @param config       Should this file be stored as a FileConfiguration
-         * @param name         Name of the file to be referenced in FileManager
-         * @param internalPath The dynamic internal path of the file.
-         * @param externalPath The external path of the file, set to null if file shouldn't be copied
-         *                     outside the jar.
-         * @param annotation   Annotation instance to bind the instance to.
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder file(boolean config, String name, FileData.ConfigPathReference internalPath, String externalPath, Annotation annotation) {
-            files.add(new FileData(config, name, internalPath, externalPath, annotation));
-            return this;
-        }
-
-        /**
-         * Set the amount of threads that will be available via the default task manager's thread pol
-         *
-         * @param threads Amount of threads
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder threads(int threads) {
-            this.threads = threads;
-            return this;
-        }
-
-        /**
-         * Configure a config for an addon that requires configuration. If not done manually,
-         * the addon will usually create it's own configuration file.
-         *
-         * @param addon     Addon to configure
-         * @param config    String reference to config in FileManager
-         * @param locations Locations of the values the addon needs
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder config(Class<?> addon, String config, Map<String, String> locations) {
-            Preconditions.checkArgument(addon.getAnnotation(Addon.class) != null, "%s is not a valid addon.", addon.getSimpleName());
-
-            configs.put(addon, new ConfigInfo(config, locations, false));
-            return this;
-        }
-
-        /**
-         * Set the parent directory configs will be put in. Don't include a file separator (/ or \) at the end.
-         *
-         * @param dir Path of the directory
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder fileDir(String dir) {
-            fileDir = dir;
-            return this;
-        }
-
-        /**
-         * Declare whether a lang file will be used over hardcoded values.
-         *
-         * @param value True or false
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder overrideLangFile(boolean value) {
-            this.overrideLangFile = value;
-            return this;
-        }
-
-        /**
-         * If useLangFile is set to true, optionally use your own config with mappings.
-         *
-         * @param config    Config name
-         * @param locations Mapping
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder langConfig(String config, Map<String, String> locations) {
-            this.langConfig = new ConfigInfo(config, locations, false);
-            return this;
-        }
-
-        /**
-         * Specify a custom language enum
-         *
-         * @param config Config identifier
-         * @param values Values of the enum
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder customLang(String config, LangEnum[] values) {
-            customLang = new CustomLang(config, values);
-            return this;
-        }
-
-        /**
-         * Should debug messages be logged?
-         *
-         * @param debug True/false
-         * @return FrameworkBuilder
-         */
-        public final FrameworkBuilder debug(boolean debug) {
-            this.debug = debug;
-            return this;
-        }
-
-        /**
-         * Compile all the user-set options into an instance of Framework
-         * NOTE: Will crash if any of the following aren't set:
-         * - main
-         * - pckg
-         *
-         * @return Framework instance
-         */
-        public final Framework build() {
-            BuilderUtils.requiredVariables("FrameworkBuilder", main);
-
-            return new Framework((MainBinding) main, scanner, initialModule, injector, startupRegisterables,
-                    shutdownRegisterables, commandPrefixes, files, threads, configs, fileDir, overrideLangFile, langConfig, customLang, debug);
-        }
     }
 }

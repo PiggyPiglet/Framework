@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.bootstrap;
+package me.piggypiglet.framework.init.bootstrap;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;

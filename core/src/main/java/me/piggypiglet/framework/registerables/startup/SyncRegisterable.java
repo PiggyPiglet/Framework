@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
+import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;

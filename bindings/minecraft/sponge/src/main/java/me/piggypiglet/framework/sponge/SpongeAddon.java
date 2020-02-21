@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.sponge;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
+import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.sponge.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.sponge.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.sponge.registerables.LoggerRegisterable;

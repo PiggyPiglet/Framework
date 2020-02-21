@@ -24,6 +24,14 @@
 
 package me.piggypiglet.framework.mapping;
 
+/**
+ * Simple high level interface for any type of object mapping
+ * operation, that is, converting one data type to another,
+ * and vice versa.
+ *
+ * @param <D> Data type
+ * @param <T> Other type
+ */
 public interface ObjectMapper<D, T> {
     T dataToType(final D data);
 

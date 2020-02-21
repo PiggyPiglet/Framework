@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.nukkit;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
+import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.nukkit.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.nukkit.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.nukkit.registerables.LoggerRegisterable;

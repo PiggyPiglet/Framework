@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.utils.annotations.registerable;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
+import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
 import java.lang.annotation.ElementType;

@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.addon.objects.ConfigInfo;
-import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
+import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
 import java.util.Map;

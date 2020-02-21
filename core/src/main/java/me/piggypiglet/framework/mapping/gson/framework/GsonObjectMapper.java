@@ -162,7 +162,6 @@ public abstract class GsonObjectMapper<T> implements ObjectMapper<Map<String, Ob
         } else if (isConstructable(clazz)) {
             final GsonObjectMapper<?> mapper = initializer.apply(new GsonObjectMapperData(clazz, gson));
             mapper.init();
-
             final Object data = mapper.typeToData(gson.fromJson(gson.toJsonTree(value), new TypeToken<Map<String, Object>>(){}.getType()));
 
             return new AbstractMap.SimpleEntry<>(key, data);

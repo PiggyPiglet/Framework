@@ -24,13 +24,13 @@
 
 package me.piggypiglet.framework.http;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
 import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;
 import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.PermissionRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
+import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;

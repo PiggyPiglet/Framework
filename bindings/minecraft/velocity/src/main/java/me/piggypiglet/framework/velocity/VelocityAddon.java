@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.velocity;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
+import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 import me.piggypiglet.framework.velocity.registerables.CommandExecutorRegisterable;

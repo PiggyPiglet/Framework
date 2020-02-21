@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.bootstrap;
+package me.piggypiglet.framework.init.bootstrap;
 
 /**
  * Boot priorities available to startup registerables, ran in the order as defined in here

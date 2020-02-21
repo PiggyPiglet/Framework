@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.jda;
 
-import me.piggypiglet.framework.bootstrap.BootPriority;
+import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.jda.shutdown.JDAShutdown;
 import me.piggypiglet.framework.jda.startup.JDARegisterable;

@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.file.objects;
+package me.piggypiglet.framework.init.builder.stages.file;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public final class FileData implements Comparable<FileData> {
@@ -35,33 +35,21 @@ public final class FileData implements Comparable<FileData> {
     private final String name;
     private final String hardInternalPath;
     private final ConfigPathReference internalPathReference;
-    private final String externalPath;
+    private final String hardExternalPath;
+    private final ConfigPathReference externalPathReference;
     private final Class<? extends Annotation> annotationClass;
     private final Annotation annotationInstance;
 
-    public FileData(boolean config, String name, @NotNull String internalPath, String externalPath, Class<? extends Annotation> annotationClass) {
-        this(config, name, internalPath, null, externalPath, annotationClass, null);
-    }
-
-    public FileData(boolean config, String name, @NotNull String internalPath, String externalPath, Annotation annotation) {
-        this(config, name, internalPath, null, externalPath, null, annotation);
-    }
-
-    public FileData(boolean config, String name, @NotNull ConfigPathReference internalPath, String externalPath, Class<? extends Annotation> annotation) {
-        this(config, name, null, internalPath, externalPath, annotation, null);
-    }
-
-    public FileData(boolean config, String name, @NotNull ConfigPathReference internalPath, String externalPath, Annotation annotation) {
-        this(config, name, null, internalPath, externalPath, null, annotation);
-    }
-
-    private FileData(boolean config, String name, String hardInternalPath, ConfigPathReference internalPathReference,
-                     String externalPath, Class<? extends Annotation> annotationClass, Annotation annotationInstance) {
+    FileData(final boolean config, @NotNull final String name,
+                     @Nullable final String hardInternalPath, @Nullable final ConfigPathReference internalPathReference,
+                     @Nullable final String hardExternalPath, @Nullable final ConfigPathReference externalPathReference,
+                     @Nullable final Class<? extends Annotation> annotationClass, @Nullable final Annotation annotationInstance) {
         this.config = config;
         this.name = name;
         this.hardInternalPath = hardInternalPath;
         this.internalPathReference = internalPathReference;
-        this.externalPath = externalPath;
+        this.hardExternalPath = hardExternalPath;
+        this.externalPathReference = externalPathReference;
         this.annotationClass = annotationClass;
         this.annotationInstance = annotationInstance;
     }
@@ -70,32 +58,43 @@ public final class FileData implements Comparable<FileData> {
         return config;
     }
 
+    @NotNull
     public String getName() {
         return name;
     }
 
+    @Nullable
     public String getHardInternalPath() {
         return hardInternalPath;
     }
 
+    @Nullable
     public ConfigPathReference getInternalPathReference() {
         return internalPathReference;
     }
 
-    public String getExternalPath() {
-        return externalPath;
+    @Nullable
+    public String getHardExternalPath() {
+        return hardExternalPath;
     }
 
+    @Nullable
+    public ConfigPathReference getExternalPathReference() {
+        return externalPathReference;
+    }
+
+    @Nullable
     public Class<? extends Annotation> getAnnotationClass() {
         return annotationClass;
     }
 
+    @Nullable
     public Annotation getAnnotationInstance() {
         return annotationInstance;
     }
 
     @Override
-    public int compareTo(@NotNull FileData fileData) {
+    public int compareTo(@NotNull final FileData fileData) {
         if (fileData.hardInternalPath == null) {
             return -1;
         }
@@ -109,31 +108,49 @@ public final class FileData implements Comparable<FileData> {
         private final String def;
         private final UnaryOperator<String> mapper;
 
-        public ConfigPathReference(String config, String path, String def) {
-            this(config, path, def, null);
-        }
-
-        public ConfigPathReference(String config, String path, String def, UnaryOperator<String> mapper) {
+        private ConfigPathReference(@NotNull final String config, @NotNull final String path,
+                                    @NotNull final String def, @Nullable final UnaryOperator<String> mapper) {
             this.config = config;
             this.path = path;
             this.def = def;
             this.mapper = mapper;
         }
 
+        @NotNull
         public String getConfig() {
             return config;
         }
 
+        @NotNull
         public String getPath() {
             return path;
         }
 
+        @NotNull
         public String getDef() {
             return def;
         }
 
-        public Function<String, String> getMapper() {
+        @Nullable
+        public UnaryOperator<String> getMapper() {
             return mapper;
+        }
+
+        @NotNull
+        public static ConfigPathReference of(@NotNull final String config, @NotNull final String path) {
+            return of(config, path, "null");
+        }
+
+        @NotNull
+        public static ConfigPathReference of(@NotNull final String config, @NotNull final String path,
+                                             @NotNull final String def) {
+            return of(config, path, def, null);
+        }
+
+        @NotNull
+        public static ConfigPathReference of(@NotNull final String config, @NotNull final String path,
+                                             @NotNull final String def, @Nullable final UnaryOperator<String> mapper) {
+            return new ConfigPathReference(config, path, def, mapper);
         }
     }
 }

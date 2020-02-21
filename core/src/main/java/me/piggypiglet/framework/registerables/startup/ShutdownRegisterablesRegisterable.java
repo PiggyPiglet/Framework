@@ -26,8 +26,8 @@ package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.hooks.ShutdownHook;
+import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.shutdown.TaskShutdownRegisterable;

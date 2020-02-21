@@ -27,7 +27,7 @@ package me.piggypiglet.framework.logging;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.bootstrap.FrameworkBootstrap;
+import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 
 public final class LoggerFactory {
