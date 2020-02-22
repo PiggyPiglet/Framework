@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.hooks.ShutdownHook;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.shutdown.ShutdownHook;
 
 public final class ShutdownHookRegisterable extends StartupRegisterable {
     @Inject private ShutdownHook shutdownHook;

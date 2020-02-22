@@ -25,16 +25,18 @@
 package me.piggypiglet.framework;
 
 import com.google.inject.Injector;
-import me.piggypiglet.framework.addon.objects.ConfigInfo;
+import me.piggypiglet.framework.addon.builders.ConfigInfo;
+import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.init.builder.FrameworkBuilder;
-import me.piggypiglet.framework.init.builder.stages.file.FileData;
+import me.piggypiglet.framework.init.builder.stages.file.FilesData;
+import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
 import me.piggypiglet.framework.lang.objects.CustomLang;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
+import me.piggypiglet.framework.registerables.objects.RegisterableData;
 import me.piggypiglet.framework.scanning.framework.Scanner;
-import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,21 +61,15 @@ public final class Framework {
     private final CustomLang customLang;
     private final boolean debug;
 
-    public Framework(MainBinding main, Scanner scanner, BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule,
-                      Injector injector, List<RegisterableData> startupRegisterables, List<Class<? extends ShutdownRegisterable>> shutdownRegisterables,
-                      String[] commandPrefixes, List<FileData> files, int threads, Map<Class<?>, ConfigInfo> configs, String configDir,
-                      boolean overrideLangFile, ConfigInfo langConfig, CustomLang customLang, boolean debug) {
+    public Framework(MainBinding main, Scanner scanner, GuiceData guice,
+                     String[] commandPrefixes, FilesData files, int threads, Map<Class<?>, ConfigInfo> configs,
+                     boolean overrideLangFile, ConfigInfo langConfig, CustomLang customLang, boolean debug) {
         this.main = main;
         this.scanner = scanner;
-        this.initialModule = initialModule;
-        this.injector = injector;
-        this.startupRegisterables = startupRegisterables;
-        this.shutdownRegisterables = shutdownRegisterables;
         this.commandPrefixes = commandPrefixes;
         this.files = files;
         this.threads = threads;
         this.configs = configs;
-        this.fileDir = configDir;
         this.overrideLangFile = overrideLangFile;
         this.langConfig = langConfig;
         this.customLang = customLang;

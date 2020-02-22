@@ -31,10 +31,10 @@ import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.PermissionRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
+import me.piggypiglet.framework.registerables.objects.Startup;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(
         startup = {

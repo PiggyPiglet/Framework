@@ -28,8 +28,8 @@ import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.nukkit.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.nukkit.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.nukkit.registerables.LoggerRegisterable;
+import me.piggypiglet.framework.registerables.objects.Startup;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(startup = {
         @Startup(

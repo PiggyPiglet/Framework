@@ -9,7 +9,6 @@ import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 import me.piggypiglet.framework.utils.builder.AbstractBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,13 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public final class GuiceBuilder<R> extends AbstractBuilder<GuiceData, R> {
     private BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule = InitialModule::new;
     private Injector injector = null;
-    private List<RegisterableData> startup = new ArrayList<>();
-    private List<Class<? extends ShutdownRegisterable>> shutdown = new ArrayList<>();
+    private final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup = ArrayListMultimap.create();
+    private final List<Class<? extends ShutdownRegisterable>> shutdown = new ArrayList<>();
 
     @NotNull
     public GuiceBuilder<R> initialModule(@NotNull final BiFunction<FrameworkBootstrap, Framework, InitialModule> value) {
@@ -40,15 +38,13 @@ public final class GuiceBuilder<R> extends AbstractBuilder<GuiceData, R> {
     @SafeVarargs
     @NotNull
     public final GuiceBuilder<R> startup(@NotNull final Class<? extends StartupRegisterable>... registerables) {
-        return this;
+        return startup(BootPriority.MANUAL, registerables);
     }
 
     @SafeVarargs
     @NotNull
     public final GuiceBuilder<R> startup(@NotNull final BootPriority priority, @NotNull final Class<? extends StartupRegisterable>... registerables) {
-        startup.addAll(Arrays.stream(registerables)
-                .map(registerable -> new RegisterableData(registerable, priority))
-                .collect(Collectors.toList()));
+        Arrays.stream(registerables).forEach(registerable -> startup.put(priority, registerable));
         return this;
     }
 
@@ -62,9 +58,6 @@ public final class GuiceBuilder<R> extends AbstractBuilder<GuiceData, R> {
     @NotNull
     @Override
     protected GuiceData provideBuild() {
-        final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup = ArrayListMultimap.create();
-        this.startup.forEach(d -> startup.put(d.getPriority(), d.getRegisterable()));
-
         return new GuiceData(initialModule, injector, startup, shutdown);
     }
 }

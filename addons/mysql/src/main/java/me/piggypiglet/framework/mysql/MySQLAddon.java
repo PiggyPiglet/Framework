@@ -30,10 +30,10 @@ import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLFinalSave;
 import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLShutdown;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLRegisterable;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLSavingRegisterable;
+import me.piggypiglet.framework.registerables.objects.Startup;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(
         startup = {

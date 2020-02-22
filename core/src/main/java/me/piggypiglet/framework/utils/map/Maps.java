@@ -24,10 +24,12 @@
 
 package me.piggypiglet.framework.utils.map;
 
+import me.piggypiglet.framework.utils.builder.AbstractBuilder;
+import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -39,76 +41,29 @@ public class Maps {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
-    /**
-     * Create an embeddable map builder instance. Embeddable meaning, the final build() method will
-     * return your defined instance, not a Map.
-     *
-     * @param implementation Map implementation.
-     * @param returnInstance Instance returned on build().
-     * @param build          Logic to perform on build, to store the Map instance somewhere.
-     * @param <K>            Key type
-     * @param <V>            Value type
-     * @param <R>            Return instance type
-     * @return Map Builder
-     */
-    public static <K, V, R> Builder<K, V, R, V> builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build) {
-        return builder(implementation, returnInstance, build, null);
+    public static <K, V, T> Builder<K, V, T, Map<K, V>> of(@NotNull final Map<K, V> implementation) {
+        return of(implementation, null);
     }
 
-    /**
-     * Create an embeddable map builder instance, with a value mapper. Embeddable meaning, the final
-     * build() method return your defined instance, not a Map.
-     *
-     * @param implementation Map implementation.
-     * @param returnInstance Instance returned on build().
-     * @param build          Logic to perform on build, to store the Map instance somewhere.
-     * @param mapper         Value mapper
-     * @param <K>            Key type
-     * @param <V>            Value type
-     * @param <R>            Return instance type
-     * @param <T>            Inputted value type
-     * @return Map Builder
-     */
-    public static <K, V, R, T> Builder<K, V, R, T> builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build, Function<T, V> mapper) {
-        return new Builder<>(implementation, returnInstance, build, mapper);
+    public static <K, V, T> Builder<K, V, T, Map<K, V>> of(@NotNull final Map<K, V> implementation, @Nullable final Function<T, V> mapper) {
+        return new Builder<>(implementation, mapper);
     }
 
-    /**
-     * Create a Map Builder.
-     *
-     * @param implementation Map implementation
-     * @param <K>            Key type
-     * @param <V>            Value type
-     * @return Map Builder
-     */
-    public static <K, V> Builder<K, V, Map<K, V>, V> of(Map<K, V> implementation) {
-        return builder(implementation, null, null, null);
+    public static <K, V, T, R> Builder<K, V, T, R> builder(@NotNull final Map<K, V> implementation, @NotNull final Function<Map<K, V>, R> builder) {
+        return builder(implementation, null, builder);
     }
 
-    /**
-     * Create a Map Builder with a value mapper.
-     *
-     * @param implementation Map implementation
-     * @param mapper         Value mapper
-     * @param <K>            Key type
-     * @param <V>            Value type
-     * @param <T>            Inputted value type
-     * @return Map Builder
-     */
-    public static <K, V, T> Builder<K, V, Map<K, V>, T> of(Map<K, V> implementation, Function<T, V> mapper) {
-        return builder(implementation, null, null, mapper);
+    public static <K, V, T, R> Builder<K, V, T, R> builder(@NotNull final Map<K, V> implementation, @Nullable final Function<T, V> mapper,
+                                                           @NotNull final Function<Map<K, V>, R> builder) {
+        return BuilderUtils.customBuilder(new Builder<>(implementation, mapper), builder);
     }
 
-    public static final class Builder<K, V, R, T> {
+    public static final class Builder<K, V, T, R> extends AbstractBuilder<Map<K, V>, R> {
         private final Map<K, V> map;
-        private final R returnInstance;
-        private final Consumer<Map<K, V>> build;
         private final Function<T, V> mapper;
 
-        private Builder(Map<K, V> implementation, R returnInstance, Consumer<Map<K, V>> build, Function<T, V> mapper) {
+        private Builder(Map<K, V> implementation, Function<T, V> mapper) {
             map = implementation;
-            this.returnInstance = returnInstance;
-            this.build = build;
             this.mapper = mapper;
         }
 
@@ -149,14 +104,8 @@ public class Maps {
              * @param value Value
              * @return Parent Map Builder
              */
-            public Builder<K, V, R, T> value(T value) {
-                final V real;
-
-                if (mapper != null) {
-                    real = mapper.apply(value);
-                } else {
-                    real = (V) value;
-                }
+            public Builder<K, V, T, R> value(T value) {
+                final V real = mapper == null ? (V) value : mapper.apply(value);
 
                 if (requirement != null) {
                     if (!requirement.test(real)) return Builder.this;
@@ -168,18 +117,9 @@ public class Maps {
             }
         }
 
-        /**
-         * Build the map.
-         *
-         * @return Map or configured return instance.
-         */
-        public R build() {
-            if (returnInstance != null && build != null) {
-                build.accept(map);
-                return returnInstance;
-            }
-
-            return (R) map;
+        @Override
+        protected Map<K, V> provideBuild() {
+            return map;
         }
     }
 

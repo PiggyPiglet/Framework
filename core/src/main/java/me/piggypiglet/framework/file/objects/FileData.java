@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.init.builder.stages.file;
+package me.piggypiglet.framework.file.objects;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +40,7 @@ public final class FileData implements Comparable<FileData> {
     private final Class<? extends Annotation> annotationClass;
     private final Annotation annotationInstance;
 
-    FileData(final boolean config, @NotNull final String name,
+    public FileData(final boolean config, @NotNull final String name,
                      @Nullable final String hardInternalPath, @Nullable final ConfigPathReference internalPathReference,
                      @Nullable final String hardExternalPath, @Nullable final ConfigPathReference externalPathReference,
                      @Nullable final Class<? extends Annotation> annotationClass, @Nullable final Annotation annotationInstance) {

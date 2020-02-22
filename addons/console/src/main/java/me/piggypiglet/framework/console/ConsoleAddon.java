@@ -24,10 +24,18 @@
 
 package me.piggypiglet.framework.console;
 
+import me.piggypiglet.framework.addon.builders.AddonBuilder;
+import me.piggypiglet.framework.addon.builders.AddonData;
+import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.console.registerables.ConsoleRegisterable;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(startup = @Startup(ConsoleRegisterable.class))
-public final class ConsoleAddon {
+public final class ConsoleAddon implements Addon {
+    @NotNull
+    @Override
+    public AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+        return builder
+                .startup(ConsoleRegisterable.class)
+                .build();
+    }
 }

@@ -22,18 +22,24 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.addon.objects;
+package me.piggypiglet.framework.shutdown;
 
-import java.util.Map;
+import com.google.inject.Singleton;
+import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 
-public final class Config {
-    private final Map<String, Object> items;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Config(Map<String, Object> items) {
-        this.items = items;
+@Singleton
+public final class ShutdownHook extends Thread {
+    private final List<ShutdownRegisterable> registerables = new ArrayList<>();
+
+    @Override
+    public void run() {
+        registerables.forEach(Runnable::run);
     }
 
-    public Map<String, Object> getItems() {
-        return items;
+    public List<ShutdownRegisterable> getRegisterables() {
+        return registerables;
     }
 }

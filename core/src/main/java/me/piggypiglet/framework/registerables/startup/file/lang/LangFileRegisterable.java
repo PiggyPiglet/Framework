@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.registerables.startup.file.lang;
 
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.addon.objects.ConfigInfo;
+import me.piggypiglet.framework.addon.builders.ConfigInfo;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;

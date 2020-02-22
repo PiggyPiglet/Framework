@@ -2,10 +2,11 @@ package me.piggypiglet.framework.init.builder;
 
 import com.google.common.base.Preconditions;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.addon.objects.ConfigInfo;
+import me.piggypiglet.framework.addon.builders.ConfigInfo;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.init.builder.stages.file.FileBuilder;
-import me.piggypiglet.framework.init.builder.stages.file.FileData;
+import me.piggypiglet.framework.init.builder.stages.commands.CommandsBuilder;
+import me.piggypiglet.framework.init.builder.stages.file.FilesBuilder;
+import me.piggypiglet.framework.init.builder.stages.file.FilesData;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceBuilder;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
 import me.piggypiglet.framework.lang.LangEnum;
@@ -19,19 +20,17 @@ import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class FrameworkBuilder<T> {
     private final MainBinding main;
 
     private Scanner scanner = null;
-    private GuiceData data = null;
+    private GuiceData guice = null;
     private String[] commandPrefixes = null;
-    private List<FileData> files;
+    private FilesData files;
     private int threads = 15;
     private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
-    private String fileDir = ".";
     private boolean overrideLangFile = false;
     private ConfigInfo langConfig = null;
     private CustomLang customLang = null;
@@ -62,25 +61,21 @@ public final class FrameworkBuilder<T> {
     @NotNull
     public GuiceBuilder<FrameworkBuilder<T>> guice() {
         return BuilderUtils.customBuilder(new GuiceBuilder<>(), data -> {
-            this.data = data;
+            guice = data;
             return this;
         });
     }
 
-    /**
-     * The application's command prefixes, to be used in command handlers.
-     *
-     * @param commandPrefixes Strings
-     * @return FrameworkBuilder
-     */
-    public final FrameworkBuilder<T> commandPrefixes(String... commandPrefixes) {
-        this.commandPrefixes = commandPrefixes;
-        return this;
+    public CommandsBuilder<FrameworkBuilder<T>> commands() {
+        return BuilderUtils.customBuilder(new CommandsBuilder<>(), prefixes -> {
+            commandPrefixes = prefixes;
+            return this;
+        });
     }
 
-    public FileBuilder<FrameworkBuilder<T>> files() {
-        return BuilderUtils.customBuilder(new FileBuilder<>(), files -> {
-            this.files = files;
+    public FilesBuilder<FrameworkBuilder<T>> files() {
+        return BuilderUtils.customBuilder(new FilesBuilder<>(), data -> {
+            files = data;
             return this;
         });
     }
@@ -91,7 +86,7 @@ public final class FrameworkBuilder<T> {
      * @param threads Amount of threads
      * @return FrameworkBuilder
      */
-    public final FrameworkBuilder threads(int threads) {
+    public FrameworkBuilder<T> threads(int threads) {
         this.threads = threads;
         return this;
     }
@@ -109,17 +104,6 @@ public final class FrameworkBuilder<T> {
         Preconditions.checkArgument(addon.getAnnotation(Addon.class) != null, "%s is not a valid addon.", addon.getSimpleName());
 
         configs.put(addon, new ConfigInfo(config, locations, false));
-        return this;
-    }
-
-    /**
-     * Set the parent directory configs will be put in. Don't include a file separator (/ or \) at the end.
-     *
-     * @param dir Path of the directory
-     * @return FrameworkBuilder
-     */
-    public final FrameworkBuilder fileDir(String dir) {
-        fileDir = dir;
         return this;
     }
 

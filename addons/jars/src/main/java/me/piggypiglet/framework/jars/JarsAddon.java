@@ -27,8 +27,8 @@ package me.piggypiglet.framework.jars;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.jars.registerables.ClassLoaderRegisterable;
 import me.piggypiglet.framework.jars.registerables.LoaderFinderRegisterable;
+import me.piggypiglet.framework.registerables.objects.Startup;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(
         startup = {@Startup(

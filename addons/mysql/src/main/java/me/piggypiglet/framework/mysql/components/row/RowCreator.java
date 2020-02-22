@@ -53,8 +53,11 @@ public final class RowCreator extends MySQLComponent {
             this.table = table;
         }
 
-        public Maps.Builder<String, Object, Builder, Object> data() {
-            return Maps.builder(new LinkedHashMap<>(), this, m -> data = m);
+        public Maps.Builder<String, Object, ?, Builder> data() {
+            return Maps.builder(new LinkedHashMap<>(), m -> {
+                data = m;
+                return this;
+            });
         }
 
         public Builder data(Map<String, Object> data) {

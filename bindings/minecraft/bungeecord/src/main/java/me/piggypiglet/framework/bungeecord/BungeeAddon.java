@@ -28,8 +28,8 @@ import me.piggypiglet.framework.bungeecord.registerables.CommandExecutorRegister
 import me.piggypiglet.framework.bungeecord.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.LoggerRegisterable;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
+import me.piggypiglet.framework.registerables.objects.Startup;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(
         startup = {

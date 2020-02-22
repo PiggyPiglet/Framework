@@ -26,8 +26,8 @@ package me.piggypiglet.demo;
 
 import me.piggypiglet.demo.registerables.BroadcasterRegisterable;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.registerables.objects.RegisterableData;
 import me.piggypiglet.framework.utils.annotations.files.Config;
-import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Demo extends JavaPlugin {

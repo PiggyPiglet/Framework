@@ -33,6 +33,7 @@ import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.registerables.objects.RegisterableData;
 import me.piggypiglet.framework.registerables.startup.*;
 import me.piggypiglet.framework.registerables.startup.addon.DefaultConfigsRegisterable;
 import me.piggypiglet.framework.registerables.startup.addon.UserConfigsRegisterable;
@@ -47,7 +48,6 @@ import me.piggypiglet.framework.registerables.startup.file.migration.MigrationRe
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.registerable.RegisterableData;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;

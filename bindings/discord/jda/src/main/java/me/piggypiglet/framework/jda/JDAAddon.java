@@ -28,10 +28,10 @@ import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.jda.shutdown.JDAShutdown;
 import me.piggypiglet.framework.jda.startup.JDARegisterable;
+import me.piggypiglet.framework.registerables.objects.Startup;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.annotations.addon.Config;
 import me.piggypiglet.framework.utils.annotations.addon.File;
-import me.piggypiglet.framework.utils.annotations.registerable.Startup;
 
 @Addon(
         startup = {

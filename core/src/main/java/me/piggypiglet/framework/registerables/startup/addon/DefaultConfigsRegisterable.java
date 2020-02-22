@@ -27,7 +27,7 @@ package me.piggypiglet.framework.registerables.startup.addon;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.addon.objects.ConfigInfo;
+import me.piggypiglet.framework.addon.builders.ConfigInfo;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
