@@ -1,17 +1,18 @@
 package me.piggypiglet.framework.addon.framework.config;
 
-import me.piggypiglet.framework.addon.framework.config.objects.ConfigMappings;
 import org.jetbrains.annotations.NotNull;
 
-public class AddonConfiguration {
-    private final ConfigMappings mappings;
+import java.util.Map;
 
-    public AddonConfiguration(@NotNull final ConfigMappings mappings) {
-        this.mappings = mappings;
+public class AddonConfiguration {
+    private final Map<String, FileConfigInfo> fileConfigs;
+
+    public AddonConfiguration(@NotNull final Map<String, FileConfigInfo> fileConfigs) {
+        this.fileConfigs = fileConfigs;
     }
 
     @NotNull
-    public ConfigMappings getMappings() {
-        return mappings;
+    public Map<String, FileConfigInfo> getFileConfigs() {
+        return fileConfigs;
     }
 }

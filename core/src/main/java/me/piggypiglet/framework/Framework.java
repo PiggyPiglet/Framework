@@ -76,7 +76,7 @@ public final class Framework {
         this.debug = debug;
     }
 
-    public static <T> FrameworkBuilder<T> builder(@NotNull final Class<T> main) {
+    public static <T> FrameworkBuilder<T> builder(@NotNull final T main) {
         return new FrameworkBuilder<>(main);
     }
 

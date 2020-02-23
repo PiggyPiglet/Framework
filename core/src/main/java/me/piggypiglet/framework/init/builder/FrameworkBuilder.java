@@ -1,9 +1,11 @@
 package me.piggypiglet.framework.init.builder;
 
-import com.google.common.base.Preconditions;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.builders.ConfigInfo;
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.framework.config.AddonConfiguration;
 import me.piggypiglet.framework.guice.objects.MainBinding;
+import me.piggypiglet.framework.init.builder.stages.addons.AddonsBuilder;
 import me.piggypiglet.framework.init.builder.stages.commands.CommandsBuilder;
 import me.piggypiglet.framework.init.builder.stages.file.FilesBuilder;
 import me.piggypiglet.framework.init.builder.stages.file.FilesData;
@@ -15,7 +17,6 @@ import me.piggypiglet.framework.scanning.Scanners;
 import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.annotations.Main;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +29,8 @@ public final class FrameworkBuilder<T> {
     private Scanner scanner = null;
     private GuiceData guice = null;
     private String[] commandPrefixes = null;
-    private FilesData files;
+    private FilesData files = null;
+    private Map<Class<? extends Addon<?>>, AddonConfiguration> addons = null;
     private int threads = 15;
     private final Map<Class<?>, ConfigInfo> configs = new HashMap<>();
     private boolean overrideLangFile = false;
@@ -80,6 +82,13 @@ public final class FrameworkBuilder<T> {
         });
     }
 
+    public AddonsBuilder addons() {
+        return BuilderUtils.customBuilder(new AddonsBuilder(), addons -> {
+            this.addons = addons;
+            return build();
+        });
+    }
+
     /**
      * Set the amount of threads that will be available via the default task manager's thread pol
      *
@@ -88,22 +97,6 @@ public final class FrameworkBuilder<T> {
      */
     public FrameworkBuilder<T> threads(int threads) {
         this.threads = threads;
-        return this;
-    }
-
-    /**
-     * Configure a config for an addon that requires configuration. If not done manually,
-     * the addon will usually create it's own configuration file.
-     *
-     * @param addon     Addon to configure
-     * @param config    String reference to config in FileManager
-     * @param locations Locations of the values the addon needs
-     * @return FrameworkBuilder
-     */
-    public final FrameworkBuilder config(Class<?> addon, String config, Map<String, String> locations) {
-        Preconditions.checkArgument(addon.getAnnotation(Addon.class) != null, "%s is not a valid addon.", addon.getSimpleName());
-
-        configs.put(addon, new ConfigInfo(config, locations, false));
         return this;
     }
 
