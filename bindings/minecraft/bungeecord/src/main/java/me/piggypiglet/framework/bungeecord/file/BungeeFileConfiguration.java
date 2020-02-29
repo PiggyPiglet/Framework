@@ -27,8 +27,8 @@ package me.piggypiglet.framework.bungeecord.file;
 import me.piggypiglet.framework.bungeecord.file.api.Configuration;
 import me.piggypiglet.framework.bungeecord.file.api.YamlConfiguration;
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 import java.io.File;
 import java.util.HashMap;

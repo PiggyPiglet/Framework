@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.jars.loading.web.update;
 
 import me.piggypiglet.framework.jars.loading.web.DownloadableJar;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 import java.io.File;
 

@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.task;
 
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 public abstract class GRunnable implements Runnable {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("GRunnable");

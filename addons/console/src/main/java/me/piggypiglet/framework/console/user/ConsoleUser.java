@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.console.user;
 
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.user.User;
 
 public final class ConsoleUser extends User {

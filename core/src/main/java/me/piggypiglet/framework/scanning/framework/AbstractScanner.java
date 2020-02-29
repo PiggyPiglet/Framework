@@ -3,6 +3,7 @@ package me.piggypiglet.framework.scanning.framework;
 import com.google.common.collect.ImmutableSet;
 import me.piggypiglet.framework.scanning.objects.ScannerData;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -14,6 +15,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static me.piggypiglet.framework.utils.annotations.wrapper.AnnotationUtils.isAnnotationPresent;
 
 /**
  * Utility abstraction around Scanner interface to handle class list population
@@ -110,13 +113,13 @@ public abstract class AbstractScanner implements Scanner {
      * Get all known classes that are annotated with a specific annotation type.
      * Check is performed with Class#isAnnotationPresent.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation classes
      * @return Set of classes
      */
     @Override
-    public Set<Class<?>> getClassesAnnotatedWith(@NotNull final Class<? extends Annotation> annotation) {
+    public Set<Class<?>> getClassesAnnotatedWith(@NotNull final AnnotationWrapper... annotations) {
         return stream(classes)
-                .filter(c -> c.isAnnotationPresent(annotation))
+                .filter(clazz -> Arrays.stream(annotations).anyMatch(annotation -> isAnnotationPresent(clazz, annotation)))
                 .collect(Collectors.toSet());
     }
 
@@ -124,13 +127,13 @@ public abstract class AbstractScanner implements Scanner {
      * Get all known classes that have methods annotated with a specific annotation
      * type. Check is performed with Method#isAnnotationPresent.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation classes
      * @return Set of classes
      */
     @Override
-    public Set<Class<?>> getClassesWithAnnotatedMethods(@NotNull final Class<? extends Annotation> annotation) {
+    public Set<Class<?>> getClassesWithAnnotatedMethods(@NotNull final AnnotationWrapper... annotations) {
         return stream(methods)
-                .filter(m -> m.isAnnotationPresent(annotation))
+                .filter(method -> Arrays.stream(annotations).anyMatch(annotation -> isAnnotationPresent(method, annotation)))
                 .map(Method::getDeclaringClass)
                 .collect(Collectors.toSet());
     }
@@ -141,16 +144,17 @@ public abstract class AbstractScanner implements Scanner {
      * constructors, then streaming their respective parameters, and finally
      * performing a reference equality check on the annotation types.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation classes
      * @return Set of parameters
      */
     @Override
-    public Set<Parameter> getParametersInConstructorsAnnotatedWith(@NotNull final Class<? extends Annotation> annotation) {
+    public Set<Parameter> getParametersAnnotatedWithInConstructors(@NotNull final AnnotationWrapper... annotations) {
         return stream(constructors)
                 .flatMap(c -> Arrays.stream(c.getParameters())
                         .filter(p -> Arrays.stream(p.getAnnotations())
                                 .map(Annotation::annotationType)
-                                .anyMatch(pt -> pt == annotation)))
+                                .map(AnnotationWrapper::new)
+                                .anyMatch(annotation -> Arrays.asList(annotations).contains(annotation))))
                 .collect(Collectors.toSet());
     }
 
@@ -158,13 +162,13 @@ public abstract class AbstractScanner implements Scanner {
      * Get all known fields that are annotated with a specific annotation type.
      * Check is performed with Field#isAnnotationPresent.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation classes
      * @return Set of fields
      */
     @Override
-    public Set<Field> getFieldsAnnotatedWith(@NotNull final Class<? extends Annotation> annotation) {
+    public Set<Field> getFieldsAnnotatedWith(@NotNull final AnnotationWrapper... annotations) {
         return stream(fields)
-                .filter(f -> f.isAnnotationPresent(annotation))
+                .filter(field -> Arrays.stream(annotations).anyMatch(annotation -> isAnnotationPresent(field, annotation)))
                 .collect(Collectors.toSet());
     }
 

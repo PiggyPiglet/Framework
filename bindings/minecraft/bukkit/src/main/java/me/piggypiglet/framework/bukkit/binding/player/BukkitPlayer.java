@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.bukkit.binding.player;
 
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.minecraft.player.Player;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Inventory;
 import me.piggypiglet.framework.minecraft.player.inventory.objects.Item;

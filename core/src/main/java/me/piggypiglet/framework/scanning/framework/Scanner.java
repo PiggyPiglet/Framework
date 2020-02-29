@@ -24,9 +24,9 @@
 
 package me.piggypiglet.framework.scanning.framework;
 
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.util.Set;
@@ -49,34 +49,34 @@ public interface Scanner {
     /**
      * Get all known classes that are annotated with a specific annotation type.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation
      * @return Set of classes
      */
-    Set<Class<?>> getClassesAnnotatedWith(@NotNull Class<? extends Annotation> annotation);
+    Set<Class<?>> getClassesAnnotatedWith(@NotNull final AnnotationWrapper... annotations);
 
     /**
      * Get all known classes that have methods annotated with a specific annotation
      * type.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation
      * @return Set of classes
      */
-    Set<Class<?>> getClassesWithAnnotatedMethods(@NotNull Class<? extends Annotation> annotation);
+    Set<Class<?>> getClassesWithAnnotatedMethods(@NotNull final AnnotationWrapper... annotations);
 
     /**
      * Get all known constructor parameters that are annotated with a specific
      * annotation type.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation class
      * @return Set of parameters
      */
-    Set<Parameter> getParametersInConstructorsAnnotatedWith(@NotNull Class<? extends Annotation> annotation);
+    Set<Parameter> getParametersAnnotatedWithInConstructors(@NotNull final AnnotationWrapper... annotations);
 
     /**
      * Get all known fields that are annotated with a specific annotation type.
      *
-     * @param annotation Annotation class
+     * @param annotations Annotation class
      * @return Set of fields
      */
-    Set<Field> getFieldsAnnotatedWith(@NotNull Class<? extends Annotation> annotation);
+    Set<Field> getFieldsAnnotatedWith(@NotNull final AnnotationWrapper... annotations);
 }

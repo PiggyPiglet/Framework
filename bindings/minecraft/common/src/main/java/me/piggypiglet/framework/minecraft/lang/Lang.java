@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.minecraft.lang;
 
-import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.framework.LangEnum;
 
 public enum Lang implements LangEnum {
     PLAYER_ONLY("commands.player-only"),

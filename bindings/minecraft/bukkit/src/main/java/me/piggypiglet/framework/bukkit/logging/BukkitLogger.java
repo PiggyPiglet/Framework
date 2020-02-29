@@ -26,7 +26,7 @@ package me.piggypiglet.framework.bukkit.logging;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class BukkitLogger extends Logger<java.util.logging.Logger> {

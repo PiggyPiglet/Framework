@@ -26,7 +26,7 @@ package me.piggypiglet.framework.sponge.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;

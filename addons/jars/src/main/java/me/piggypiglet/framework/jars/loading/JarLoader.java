@@ -26,8 +26,8 @@ package me.piggypiglet.framework.jars.loading;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.jars.loading.framework.Jar;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 import java.io.File;
 import java.net.URL;

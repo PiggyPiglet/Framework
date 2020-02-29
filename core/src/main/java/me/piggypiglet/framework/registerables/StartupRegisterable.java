@@ -28,6 +28,8 @@ import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
 import me.piggypiglet.framework.guice.objects.Binding;
 import me.piggypiglet.framework.guice.objects.Injector;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -86,10 +88,46 @@ public abstract class StartupRegisterable {
      * @param instance   Instance of the object to be binded
      * @param <T>        Object type
      */
-    protected <T> void addAnnotatedBinding(TypeLiteral<? super T> type, Annotation annotation, T instance) {
+    protected <T> void addAnnotatedBinding(@NotNull final TypeLiteral<? super T> type, @NotNull final Class<? extends Annotation> annotation,
+                                           @NotNull final T instance) {
+        addAnnotatedBinding(type, new AnnotationWrapper(annotation), instance);
+    }
+
+    /**
+     * Add a binding to guice that's only injectable when a specific annotation is provided.
+     *
+     * @param type       Reference type to be binded to
+     * @param annotation Annotation instance
+     * @param instance   Instance of the object to be binded
+     * @param <T>        Object type
+     */
+    protected <T> void addAnnotatedBinding(@NotNull final TypeLiteral<? super T> type, @NotNull final Annotation annotation,
+                                           @NotNull final T instance) {
+        addAnnotatedBinding(type, new AnnotationWrapper(annotation), instance);
+    }
+
+    /**
+     * Add a binding to guice that's only injectable when a specific annotation is provided.
+     *
+     * @param type       Reference type to be binded to
+     * @param annotation Annotation instance
+     * @param instance   Instance of the object to be binded
+     * @param <T>        Object type
+     */
+    private <T> void addAnnotatedBinding(TypeLiteral<? super T> type, AnnotationWrapper annotation, T instance) {
         annotatedBindings.add(
                 new AnnotatedBinding<>(type, annotation, instance)
         );
+    }
+
+    protected <T> void addAnnotatedBinding(@NotNull final Class<? super T> interfaze, @NotNull final Class<? extends Annotation> annotation,
+                                           @NotNull final T instance) {
+        addAnnotatedBinding(interfaze, new AnnotationWrapper(annotation), instance);
+    }
+
+    protected <T> void addAnnotatedBinding(@NotNull final Class<? super T> interfaze, @NotNull final Annotation annotation,
+                                           @NotNull final T instance) {
+        addAnnotatedBinding(interfaze, new AnnotationWrapper(annotation), instance);
     }
 
     /**
@@ -100,35 +138,7 @@ public abstract class StartupRegisterable {
      * @param instance   Instance of the object to be binded
      * @param <T>        Object type
      */
-    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Annotation annotation, T instance) {
-        annotatedBindings.add(
-                new AnnotatedBinding<>(interfaze, annotation, instance)
-        );
-    }
-
-    /**
-     * Add a binding to guice that's only injectable when a specific annotation is provided.
-     *
-     * @param type       Reference type to be binded to
-     * @param annotation Class extending annotation
-     * @param instance   Instance of the object to be binded.
-     * @param <T>        Object type
-     */
-    protected <T> void addAnnotatedBinding(TypeLiteral<? super T> type, Class<? extends Annotation> annotation, T instance) {
-        annotatedBindings.add(
-                new AnnotatedBinding<>(type, annotation, instance)
-        );
-    }
-
-    /**
-     * Add a binding to guice that's only injectable when a specific annotation is provided.
-     *
-     * @param interfaze  Reference class to be binded to
-     * @param annotation Class extending annotation
-     * @param instance   Instance of the object to be binded.
-     * @param <T>        Object type
-     */
-    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, Class<? extends Annotation> annotation, T instance) {
+    private <T> void addAnnotatedBinding(Class<? super T> interfaze, AnnotationWrapper annotation, T instance) {
         annotatedBindings.add(
                 new AnnotatedBinding<>(interfaze, annotation, instance)
         );

@@ -25,28 +25,33 @@
 package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Names;
-import me.piggypiglet.framework.logging.Logger;
+import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.task.implementations.DefaultTask;
+import me.piggypiglet.framework.utils.annotations.internal.Internal;
+import me.piggypiglet.framework.utils.annotations.internal.InternalAnnotations;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.Set;
 
 public final class ImplementationFinderRegisterable extends StartupRegisterable {
-    @Inject private Scanner scanner;
+    @Inject @Internal("task_types") private Set<Class<? extends Task>> tasks;
+    @Inject @Internal("logger_types") private Set<Class<? extends Logger<?>>> loggers;
 
     @Override
     protected void execute() {
-        addBinding(Task.class, injector.getInstance(find(Task.class).orElse(DefaultTask.class)));
-        addAnnotatedBinding(Class.class, Names.named("logger"), find(Logger.class).orElse(DefaultLogger.class));
+        addBinding(Task.class, injector.getInstance(optionalImplementation(tasks).orElse(DefaultTask.class)));
+        addAnnotatedBinding(new TypeLiteral<Class<? extends Logger<?>>>(){}, InternalAnnotations.internal("logger_class"),
+                optionalImplementation(loggers).orElse(DefaultLogger.class));
         requestStaticInjections(LoggerFactory.class);
     }
 
-    private <T> Optional<Class<? extends T>> find(Class<T> interfaze) {
-        return scanner.getSubTypesOf(interfaze).stream().findFirst();
+    private <T> Optional<Class<? extends T>> optionalImplementation(@NotNull final Set<Class<? extends T>> classes) {
+        return classes.stream().findAny();
     }
 }

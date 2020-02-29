@@ -27,7 +27,7 @@ package me.piggypiglet.framework.registerables.startup.file.lang;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.lang.Lang;
-import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.framework.LangEnum;
 import me.piggypiglet.framework.lang.objects.CustomLang;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.StringUtils;

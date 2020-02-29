@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.http.commands;
 
 import me.piggypiglet.framework.commands.framework.BaseCommand;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.user.User;
 
 import java.security.*;

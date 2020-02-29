@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.sponge.file;
 
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

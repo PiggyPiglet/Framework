@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.bungeecord.registerables;
 
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 
 public final class LoggerRegisterable extends StartupRegisterable {

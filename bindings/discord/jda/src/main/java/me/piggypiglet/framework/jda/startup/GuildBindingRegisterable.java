@@ -45,7 +45,7 @@ public final class GuildBindingRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        final Set<IDInfo> info = Stream.concat(scanner.getParametersInConstructorsAnnotatedWith(ID.class).stream(), scanner.getFieldsAnnotatedWith(ID.class).stream())
+        final Set<IDInfo> info = Stream.concat(scanner.getParametersAnnotatedWithInConstructors(ID.class).stream(), scanner.getFieldsAnnotatedWith(ID.class).stream())
                 .map(p -> new IDInfo(p instanceof Parameter ? ((Parameter) p).getType() : ((Field) p).getType(), p.getAnnotation(ID.class)))
                 .collect(Collectors.toSet());
 

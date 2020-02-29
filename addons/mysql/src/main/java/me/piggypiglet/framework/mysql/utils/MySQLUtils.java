@@ -26,8 +26,8 @@ package me.piggypiglet.framework.mysql.utils;
 
 import co.aikar.idb.DB;
 import co.aikar.idb.DbRow;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.task.GRunnable;
 
 import java.util.List;

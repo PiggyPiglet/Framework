@@ -24,8 +24,8 @@
 
 package me.piggypiglet.framework.utils;
 
-import me.piggypiglet.framework.lang.LangEnum;
 import me.piggypiglet.framework.lang.LanguageGetter;
+import me.piggypiglet.framework.lang.framework.LangEnum;
 import me.piggypiglet.framework.utils.annotations.addon.Addon;
 
 import java.util.ArrayList;

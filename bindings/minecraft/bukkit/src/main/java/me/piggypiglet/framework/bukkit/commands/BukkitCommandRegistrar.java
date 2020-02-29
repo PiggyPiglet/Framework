@@ -27,7 +27,7 @@ package me.piggypiglet.framework.bukkit.commands;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.utils.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

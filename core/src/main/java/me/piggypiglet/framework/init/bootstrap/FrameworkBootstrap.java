@@ -29,11 +29,14 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.addon.builders.AddonData;
+import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
 import me.piggypiglet.framework.guice.objects.Injector;
+import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
+import me.piggypiglet.framework.logging.internal.registerables.LoggerRegistrar;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.registerables.objects.RegisterableData;
 import me.piggypiglet.framework.registerables.startup.*;
 import me.piggypiglet.framework.registerables.startup.addon.DefaultConfigsRegisterable;
 import me.piggypiglet.framework.registerables.startup.addon.UserConfigsRegisterable;
@@ -47,7 +50,7 @@ import me.piggypiglet.framework.registerables.startup.file.lang.LangValuesRegist
 import me.piggypiglet.framework.registerables.startup.file.migration.MigrationRegisterable;
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
 import me.piggypiglet.framework.scanning.framework.Scanner;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import me.piggypiglet.framework.scanning.internal.registerables.ScanningRequestFulfiller;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -58,9 +61,10 @@ import java.util.stream.Stream;
 public final class FrameworkBootstrap {
     private final AtomicReference<Injector> injector = new AtomicReference<>();
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
-    private final Map<Class<?>, Addon> addons = new HashMap<>();
+    private final Map<Class<? extends Addon<?>>, Addon<?>> addons = new HashMap<>();
 
-    @Inject private Scanner scanner;
+    @Inject
+    private Scanner scanner;
 
     private final Framework config;
 
@@ -68,29 +72,34 @@ public final class FrameworkBootstrap {
         this.config = config;
     }
 
+    @SuppressWarnings("unchecked")
     public void start() {
-        final InitialModule initialModule = config.getInitialModule().apply(this, config);
+        final GuiceData guice = config.getGuice();
+        final InitialModule initialModule = guice.getInitialModule().apply(this, config);
 
-        if (config.getInjector() == null) {
+        if (guice.getInjector() == null) {
             injector.set(new Injector(initialModule.createInjector()));
         } else {
-            injector.set(new Injector(config.getInjector().createChildInjector(initialModule)));
+            injector.set(new Injector(guice.getInjector().createChildInjector(initialModule)));
         }
 
-        injector.get().getReal().injectMembers(this);
+        final com.google.inject.Injector real = injector.get().getReal();
+        real.injectMembers(this);
+        real.injectMembers(config.getMain().getInstance());
 
         if (scanner instanceof AbstractScanner) {
             ((AbstractScanner) scanner).populate();
         }
 
         scanner
-                .getClassesAnnotatedWith(Addon.class)
-                .forEach(c -> addons.put(c, c.getAnnotation(Addon.class)));
+                .getSubTypesOf(Addon.class)
+                .forEach(c -> addons.put((Class<? extends Addon<?>>) c, injector.get().getInstance(c)));
 
         final Multimap<BootPriority, Class<? extends StartupRegisterable>> boot = ArrayListMultimap.create();
 
         boot.putAll(BootPriority.IMPL, linkedHashSet(
-                ImplementationFinderRegisterable.class, FileTypesRegisterable.class,
+                ScanningRequestFulfiller.class, ImplementationFinderRegisterable.class,
+                LoggerRegistrar.class, FileTypesRegisterable.class,
                 DefaultConfigsRegisterable.class, FilesRegisterable.class,
                 MigrationRegisterable.class, FileMappingRegisterable.class,
                 UserConfigsRegisterable.class, LangValuesRegisterable.class,
@@ -110,12 +119,11 @@ public final class FrameworkBootstrap {
         boot.put(BootPriority.AFTER_SHUTDOWN, SyncRegisterable.class);
 
         addons.values().stream()
-                .map(Addon::startup)
-                .map(Arrays::stream)
-                .map(s -> s.map(RegisterableData::new))
-                .forEach(s -> processRegisterableData(s, boot));
+                .map(Addon::getConfig)
+                .map(AddonData::getStartup)
+                .forEach(boot::putAll);
 
-        processRegisterableData(config.getStartupRegisterables().stream(), boot);
+        boot.putAll(config.getGuice().getStartup());
 
         for (BootPriority priority : BootPriority.values()) {
             final Collection<Class<? extends StartupRegisterable>> section = boot.get(priority);
@@ -124,8 +132,8 @@ public final class FrameworkBootstrap {
                 StartupRegisterable registerable = injector.get().getInstance(r);
                 registerable.run(injector.get());
 
-                if (registerable.getBindings().size() > 0 || registerable.getAnnotatedBindings().size() > 0 ||
-                        registerable.getStaticInjections().size() > 0) {
+                if (Stream.of(registerable.getBindings(), registerable.getAnnotatedBindings(), registerable.getStaticInjections())
+                        .anyMatch(list -> list.size() > 0)) {
                     injector.set(new Injector(injector.get().getReal().createChildInjector(new BindingSetterModule(
                             registerable.getBindings(),
                             registerable.getAnnotatedBindings(),
@@ -133,7 +141,7 @@ public final class FrameworkBootstrap {
                     ))));
                 }
 
-                this.registerables.add(registerable);
+                registerables.add(registerable);
             });
         }
     }
@@ -143,12 +151,9 @@ public final class FrameworkBootstrap {
         return Arrays.stream(registerables).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private void processRegisterableData(Stream<RegisterableData> data, Multimap<BootPriority, Class<? extends StartupRegisterable>> registerables) {
-        data.forEach(r -> registerables.put(r.getPriority(), r.getRegisterable()));
-    }
-
     /**
      * Get an instance of the current injector, as the injectable injector isn't updated through child injectors.
+     *
      * @return Injector instance
      */
     public Injector getInjector() {
@@ -157,6 +162,7 @@ public final class FrameworkBootstrap {
 
     /**
      * Get all the startup registerable instances that were initialized during startup.
+     *
      * @return Set of StartupRegisterable instances
      */
     public Set<StartupRegisterable> getRegisterables() {
@@ -165,9 +171,10 @@ public final class FrameworkBootstrap {
 
     /**
      * Get all found addons and their data.
+     *
      * @return Set of Addon annotation data objects.
      */
-    public Map<Class<?>, Addon> getAddons() {
+    public Map<Class<? extends Addon<?>>, Addon<?>> getAddons() {
         return addons;
     }
 }

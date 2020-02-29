@@ -7,7 +7,7 @@ import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.init.builder.stages.file.FilesBuilder;
 import me.piggypiglet.framework.init.builder.stages.file.FilesData;
-import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.framework.LangEnum;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.builder.AbstractBuilder;
@@ -19,13 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class AddonBuilder<R> extends AbstractBuilder<AddonData, R> {
-    private final Addon addon;
+    private final Addon<?> addon;
     private FilesData files = null;
     private final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup = ArrayListMultimap.create();
     private final List<Class<? extends ShutdownRegisterable>> shutdown = new ArrayList<>();
     private LangData lang = null;
 
-    public AddonBuilder(@NotNull final Addon addon) {
+    public AddonBuilder(@NotNull final Addon<?> addon) {
         this.addon = addon;
     }
 

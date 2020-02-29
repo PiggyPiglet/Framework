@@ -1,6 +1,6 @@
 package me.piggypiglet.framework.addon.builders.objects;
 
-import me.piggypiglet.framework.lang.LangEnum;
+import me.piggypiglet.framework.lang.framework.LangEnum;
 import org.jetbrains.annotations.NotNull;
 
 public final class LangData {

@@ -81,8 +81,4 @@ public final class HTTPAddon extends Addon<HTTPAddon> {
                 .shutdown(ShutdownHTTP.class)
                 .build();
     }
-
-    public HTTPAddon test() {
-        return this;
-    }
 }

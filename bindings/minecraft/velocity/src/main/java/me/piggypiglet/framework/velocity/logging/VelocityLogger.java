@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.velocity.logging;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 public final class VelocityLogger extends Logger<org.slf4j.Logger> {
     @Inject private org.slf4j.Logger logger;

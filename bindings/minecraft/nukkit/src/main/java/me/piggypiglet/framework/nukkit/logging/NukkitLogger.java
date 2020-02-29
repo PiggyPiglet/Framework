@@ -28,7 +28,7 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.PluginLogger;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 public final class NukkitLogger extends Logger<PluginLogger> {
     @Inject private MainBinding main;

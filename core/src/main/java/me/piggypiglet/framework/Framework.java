@@ -24,58 +24,49 @@
 
 package me.piggypiglet.framework;
 
-import com.google.inject.Injector;
-import me.piggypiglet.framework.addon.builders.ConfigInfo;
-import me.piggypiglet.framework.file.objects.FileData;
-import me.piggypiglet.framework.guice.modules.InitialModule;
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.framework.config.AddonConfiguration;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.init.builder.FrameworkBuilder;
 import me.piggypiglet.framework.init.builder.stages.file.FilesData;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
-import me.piggypiglet.framework.lang.objects.CustomLang;
-import me.piggypiglet.framework.registerables.ShutdownRegisterable;
-import me.piggypiglet.framework.registerables.objects.RegisterableData;
-import me.piggypiglet.framework.scanning.framework.Scanner;
+import me.piggypiglet.framework.init.builder.stages.lang.LangData;
+import me.piggypiglet.framework.init.builder.stages.scanning.ScanningData;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public final class Framework {
     private final MainBinding main;
-    private final Scanner scanner;
-    private final BiFunction<FrameworkBootstrap, Framework, InitialModule> initialModule;
-    private final Injector injector;
-    private final List<RegisterableData> startupRegisterables;
-    private final List<Class<? extends ShutdownRegisterable>> shutdownRegisterables;
+    private final ScanningData scanning;
+    private final GuiceData guice;
     private final String[] commandPrefixes;
-    private final List<FileData> files;
+    private final FilesData files;
+    private final Map<Class<? extends Addon<?>>, AddonConfiguration> addons;
     private final int threads;
-    private final Map<Class<?>, ConfigInfo> configs;
-    private final String fileDir;
-    private final boolean overrideLangFile;
-    private final ConfigInfo langConfig;
-    private final CustomLang customLang;
+    private final LangData lang;
     private final boolean debug;
 
-    public Framework(MainBinding main, Scanner scanner, GuiceData guice,
-                     String[] commandPrefixes, FilesData files, int threads, Map<Class<?>, ConfigInfo> configs,
-                     boolean overrideLangFile, ConfigInfo langConfig, CustomLang customLang, boolean debug) {
+    public Framework(@NotNull final MainBinding main, @NotNull final ScanningData scanning,
+                     @NotNull final GuiceData guice, @Nullable final String[] commandPrefixes,
+                     @NotNull final FilesData files, @NotNull final Map<Class<? extends Addon<?>>, AddonConfiguration> addons,
+                     final int threads, @NotNull final LangData lang,
+                     final boolean debug) {
         this.main = main;
-        this.scanner = scanner;
+        this.scanning = scanning;
+        this.guice = guice;
         this.commandPrefixes = commandPrefixes;
         this.files = files;
+        this.addons = addons;
         this.threads = threads;
-        this.configs = configs;
-        this.overrideLangFile = overrideLangFile;
-        this.langConfig = langConfig;
-        this.customLang = customLang;
+        this.lang = lang;
         this.debug = debug;
     }
 
+    @NotNull
     public static <T> FrameworkBuilder<T> builder(@NotNull final T main) {
         return new FrameworkBuilder<>(main);
     }
@@ -85,133 +76,52 @@ public final class Framework {
      *
      * @return FrameworkBootstrap instance
      */
+    @NotNull
     public FrameworkBootstrap init() {
         return GenericBuilder.of(() -> new FrameworkBootstrap(this))
                 .with(FrameworkBootstrap::start)
                 .build();
     }
 
-    /**
-     * Get the main instance
-     *
-     * @return MainBinding
-     */
+    @NotNull
     public MainBinding getMain() {
         return main;
     }
 
-    public Scanner getScanner() {
-        return scanner;
+    @NotNull
+    public ScanningData getScanning() {
+        return scanning;
     }
 
-    public BiFunction<FrameworkBootstrap, Framework, InitialModule> getInitialModule() {
-        return initialModule;
+    @NotNull
+    public GuiceData getGuice() {
+        return guice;
     }
 
-    /**
-     * Get the project's initial injector
-     *
-     * @return Injector
-     */
-    public Injector getInjector() {
-        return injector;
-    }
-
-    /**
-     * Get all manually inputted StartupRegisterables
-     *
-     * @return Classes extending StartupRegisterable
-     */
-    public List<RegisterableData> getStartupRegisterables() {
-        return startupRegisterables;
-    }
-
-    /**
-     * Get all manually inputted ShutdownRegisterables
-     *
-     * @return Classes extending ShutdownRegisterable
-     */
-    public List<Class<? extends ShutdownRegisterable>> getShutdownRegisterables() {
-        return shutdownRegisterables;
-    }
-
-    /**
-     * Get the application's command prefixes.
-     *
-     * @return String
-     */
+    @Nullable
     public String[] getCommandPrefixes() {
         return commandPrefixes;
     }
 
-    /**
-     * Get information on all files that need to be made
-     *
-     * @return List of FileData
-     */
-    public List<FileData> getFiles() {
+    @NotNull
+    public FilesData getFiles() {
         return files;
     }
 
-    /**
-     * Get the amount of threads to be stored in the default task manager's thread pool
-     *
-     * @return Amount of threads available in the thread pool
-     */
+    @NotNull
+    public Map<Class<? extends Addon<?>>, AddonConfiguration> getAddons() {
+        return addons;
+    }
+
     public int getThreads() {
         return threads;
     }
 
-    /**
-     * Get user defined configs for addons
-     *
-     * @return custom addon configs
-     */
-    public Map<Class<?>, ConfigInfo> getConfigs() {
-        return configs;
+    @NotNull
+    public LangData getLang() {
+        return lang;
     }
 
-    /**
-     * Get the directory files will be put in.
-     *
-     * @return directory path
-     */
-    public String getFileDir() {
-        return fileDir;
-    }
-
-    /**
-     * Whether to override default language files with a custom one.
-     *
-     * @return boolean
-     */
-    public boolean overrideLangFile() {
-        return overrideLangFile;
-    }
-
-    /**
-     * Info about custom lang config, used if default is overridden.
-     *
-     * @return ConfigInfo
-     */
-    public ConfigInfo getLangConfig() {
-        return langConfig;
-    }
-
-    /**
-     * Custom language data, not necessarily related to overriding defaults.
-     *
-     * @return CustomLang
-     */
-    public CustomLang getCustomLang() {
-        return customLang;
-    }
-
-    /**
-     * Whether to log debug messages.
-     *
-     * @return boolean
-     */
     public boolean isDebug() {
         return debug;
     }

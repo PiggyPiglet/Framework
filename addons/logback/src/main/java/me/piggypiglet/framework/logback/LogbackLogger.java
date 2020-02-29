@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.logback;
 
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class LogbackLogger extends Logger<org.slf4j.Logger> {

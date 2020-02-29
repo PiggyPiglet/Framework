@@ -27,8 +27,8 @@ package me.piggypiglet.framework.jars.registerables;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.jars.loading.JarManager;
 import me.piggypiglet.framework.jars.loading.framework.Loader;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 

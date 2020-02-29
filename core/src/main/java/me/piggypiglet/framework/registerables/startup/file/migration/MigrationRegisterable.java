@@ -29,8 +29,8 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
 import me.piggypiglet.framework.file.migration.Migrator;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 

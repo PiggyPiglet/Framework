@@ -29,8 +29,8 @@ import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
 import me.piggypiglet.framework.addon.ConfigManager;
 import me.piggypiglet.framework.http.HTTPAddon;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 
 import javax.net.ssl.KeyManagerFactory;
 import java.io.FileInputStream;

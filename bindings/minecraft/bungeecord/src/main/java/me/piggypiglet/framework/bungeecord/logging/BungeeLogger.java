@@ -26,7 +26,7 @@ package me.piggypiglet.framework.bungeecord.logging;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BungeeLogger extends Logger<java.util.logging.Logger> {

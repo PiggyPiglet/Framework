@@ -27,8 +27,8 @@ package me.piggypiglet.framework.bungeecord.binding.player.inventory.packets.uti
 import com.google.common.base.Preconditions;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.TObjectIntMap;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.minecraft.versions.ProtocolVersions;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;

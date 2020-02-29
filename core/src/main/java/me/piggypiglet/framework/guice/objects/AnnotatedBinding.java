@@ -25,38 +25,27 @@
 package me.piggypiglet.framework.guice.objects;
 
 import com.google.inject.TypeLiteral;
-
-import java.lang.annotation.Annotation;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 
 public final class AnnotatedBinding<T> {
     private final Object type;
-    private final Object annotation;
+    private final AnnotationWrapper annotation;
     private final T instance;
     private final boolean typeLiteral;
-    private final boolean annotationInstance;
 
-    public AnnotatedBinding(TypeLiteral<? super T> literal, Annotation annotation, T instance) {
+    public AnnotatedBinding(TypeLiteral<? super T> literal, AnnotationWrapper annotation, T instance) {
         this((Object) literal, annotation, instance);
     }
 
-    public AnnotatedBinding(Class<? super T> clazz, Annotation annotation, T instance) {
+    public AnnotatedBinding(Class<? super T> clazz, AnnotationWrapper annotation, T instance) {
         this((Object) clazz, annotation, instance);
     }
 
-    public AnnotatedBinding(TypeLiteral<? super T> literal, Class<? extends Annotation> annotation, T instance) {
-        this((Object) literal, annotation, instance);
-    }
-
-    public AnnotatedBinding(Class<? super T> clazz, Class<? extends Annotation> annotation, T instance) {
-        this((Object) clazz, annotation, instance);
-    }
-
-    private AnnotatedBinding(Object type, Object annotation, T instance) {
+    private AnnotatedBinding(Object type, AnnotationWrapper annotation, T instance) {
         this.type = type;
         this.annotation = annotation;
         this.instance = instance;
         typeLiteral = type instanceof TypeLiteral;
-        annotationInstance = annotation instanceof Annotation;
     }
 
     @SuppressWarnings("unchecked")
@@ -69,13 +58,8 @@ public final class AnnotatedBinding<T> {
         return (Class<? super T>) type;
     }
 
-    public Annotation getAnnotationInstance() {
-        return (Annotation) annotation;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Class<? extends Annotation> getAnnotationClass() {
-        return (Class<? extends Annotation>) annotation;
+    public AnnotationWrapper getAnnotationInstance() {
+        return annotation;
     }
 
     public T getInstance() {
@@ -84,9 +68,5 @@ public final class AnnotatedBinding<T> {
 
     public boolean isTypeLiteral() {
         return typeLiteral;
-    }
-
-    public boolean isAnnotationInstance() {
-        return annotationInstance;
     }
 }

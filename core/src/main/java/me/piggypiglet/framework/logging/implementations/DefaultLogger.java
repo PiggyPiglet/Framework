@@ -24,7 +24,7 @@
 
 package me.piggypiglet.framework.logging.implementations;
 
-import me.piggypiglet.framework.logging.Logger;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 
 @Disabled

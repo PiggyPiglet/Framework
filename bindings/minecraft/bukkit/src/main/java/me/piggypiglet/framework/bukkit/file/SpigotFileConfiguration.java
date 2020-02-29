@@ -26,8 +26,8 @@ package me.piggypiglet.framework.bukkit.file;
 
 import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
 import me.piggypiglet.framework.file.framework.objects.Mapper;
-import me.piggypiglet.framework.logging.Logger;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.framework.Logger;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
