@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.minecraft;
 
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
-import me.piggypiglet.framework.minecraft.lang.Lang;
+import me.piggypiglet.framework.minecraft.lang.Language;
 import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
 import me.piggypiglet.framework.minecraft.registerables.ServerRegisterable;
 import me.piggypiglet.framework.registerables.objects.Startup;
@@ -45,7 +45,7 @@ import me.piggypiglet.framework.utils.annotations.addon.Langs;
         },
         lang = @Langs(
                 file = "minecraft_lang.json",
-                clazz = Lang.class
+                clazz = Language.class
         )
 )
 public final class MinecraftAddon {}

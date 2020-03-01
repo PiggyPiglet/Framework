@@ -26,9 +26,9 @@ package me.piggypiglet.framework.registerables.startup.file.lang;
 
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
-import me.piggypiglet.framework.lang.Lang;
-import me.piggypiglet.framework.lang.framework.LangEnum;
-import me.piggypiglet.framework.lang.objects.CustomLang;
+import me.piggypiglet.framework.language.Language;
+import me.piggypiglet.framework.language.framework.LanguageEnum;
+import me.piggypiglet.framework.language.objects.CustomLang;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.annotations.addon.Langs;
@@ -41,25 +41,25 @@ import java.util.Set;
 
 public final class LangValuesRegisterable extends StartupRegisterable {
     @Inject private FrameworkBootstrap bootstrap;
-    @Inject private Lang lang;
+    @Inject private Language language;
     @Inject private Framework framework;
 
     @Override
     protected void execute() {
-        final Set<LangEnum> values = lang.getValues();
-        final Map<String, Set<LangEnum>> specificValues = lang.getSpecificValues();
+        final Set<LanguageEnum> values = language.getValues();
+        final Map<String, Set<LanguageEnum>> specificValues = language.getSpecificValues();
 
-        values.addAll(Arrays.asList(Lang.Values.values()));
+        values.addAll(Arrays.asList(Language.Values.values()));
         specificValues.put("core", new HashSet<>(values));
 
         bootstrap.getAddons().forEach((c, a) -> {
             Langs lang = a.lang();
 
-            if (lang.clazz() != Lang.Values.class) {
-                final Set<LangEnum> tempValues = new HashSet<>();
+            if (lang.clazz() != Language.Values.class) {
+                final Set<LanguageEnum> tempValues = new HashSet<>();
 
-                for (Enum<? extends LangEnum> val : lang.clazz().getEnumConstants()) {
-                    tempValues.add((LangEnum) val);
+                for (Enum<? extends LanguageEnum> val : lang.clazz().getEnumConstants()) {
+                    tempValues.add((LanguageEnum) val);
                 }
 
                 values.addAll(tempValues);
@@ -70,7 +70,7 @@ public final class LangValuesRegisterable extends StartupRegisterable {
         final CustomLang custom = framework.getCustomLang();
 
         if (custom != null) {
-            final Set<LangEnum> temp = new HashSet<>(Arrays.asList(custom.getValues()));
+            final Set<LanguageEnum> temp = new HashSet<>(Arrays.asList(custom.getValues()));
             values.addAll(temp);
             specificValues.put("custom", temp);
         }

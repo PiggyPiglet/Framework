@@ -44,8 +44,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static me.piggypiglet.framework.lang.Lang.Values.*;
-
 public class CommandHandler {
     public static final Pattern ARGUMENT_PATTERN = Pattern.compile("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 

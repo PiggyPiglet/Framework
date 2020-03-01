@@ -2,7 +2,7 @@ package me.piggypiglet.framework.init.builder;
 
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.framework.Addon;
-import me.piggypiglet.framework.addon.framework.config.AddonConfiguration;
+import me.piggypiglet.framework.addon.framework.api.AddonConfiguration;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.init.builder.stages.addons.AddonsBuilder;
 import me.piggypiglet.framework.init.builder.stages.commands.CommandsBuilder;
@@ -10,8 +10,8 @@ import me.piggypiglet.framework.init.builder.stages.file.FilesBuilder;
 import me.piggypiglet.framework.init.builder.stages.file.FilesData;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceBuilder;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
-import me.piggypiglet.framework.init.builder.stages.lang.LangBuilder;
-import me.piggypiglet.framework.init.builder.stages.lang.LangData;
+import me.piggypiglet.framework.init.builder.stages.language.LanguageBuilder;
+import me.piggypiglet.framework.init.builder.stages.language.LanguageData;
 import me.piggypiglet.framework.init.builder.stages.scanning.ScanningBuilder;
 import me.piggypiglet.framework.init.builder.stages.scanning.ScanningData;
 import me.piggypiglet.framework.utils.annotations.Main;
@@ -29,7 +29,7 @@ public final class FrameworkBuilder<T> {
     private FilesData files = null;
     private Map<Class<? extends Addon<?>>, AddonConfiguration> addons = null;
     private int threads = 15;
-    private LangData lang;
+    private LanguageData language;
     private boolean debug = false;
 
     public FrameworkBuilder(@NotNull final T main) {
@@ -87,9 +87,9 @@ public final class FrameworkBuilder<T> {
     }
 
     @NotNull
-    public LangBuilder<FrameworkBuilder<T>> lang() {
-        return BuilderUtils.customBuilder(new LangBuilder<>(), data -> {
-            lang = data;
+    public LanguageBuilder<FrameworkBuilder<T>> language() {
+        return BuilderUtils.customBuilder(new LanguageBuilder<>(), data -> {
+            language = data;
             return this;
         });
     }
@@ -108,6 +108,6 @@ public final class FrameworkBuilder<T> {
 
     @NotNull
     public Framework build() {
-        return new Framework(main, scanning, guice, commandPrefixes, files, addons, threads, lang, debug);
+        return new Framework(main, scanning, guice, commandPrefixes, files, addons, threads, language, debug);
     }
 }

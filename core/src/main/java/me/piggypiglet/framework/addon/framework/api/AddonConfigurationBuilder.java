@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.addon.framework.config;
+package me.piggypiglet.framework.addon.framework.api;
 
 import me.piggypiglet.framework.init.builder.stages.addons.AddonsBuilder;
 import me.piggypiglet.framework.utils.builder.AbstractBuilder;

@@ -27,7 +27,7 @@ package me.piggypiglet.framework.minecraft.commands;
 import me.piggypiglet.framework.commands.CommandHandler;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.minecraft.commands.framework.GenericMinecraftCommand;
-import me.piggypiglet.framework.minecraft.lang.Lang;
+import me.piggypiglet.framework.minecraft.lang.Language;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.user.User;
 
@@ -39,18 +39,18 @@ public class MinecraftCommandHandler extends CommandHandler {
             final GenericMinecraftCommand<?> mcCommand = (GenericMinecraftCommand<?>) command;
 
             if (mcCommand.isPlayerOnly() && !mcUser.isPlayer()) {
-                user.sendMessage(Lang.PLAYER_ONLY);
+                user.sendMessage(Language.PLAYER_ONLY);
                 return false;
             }
 
             if (mcCommand.isConsoleOnly() && !mcUser.isConsole()) {
-                user.sendMessage(Lang.CONSOLE_ONLY);
+                user.sendMessage(Language.CONSOLE_ONLY);
                 return false;
             }
         }
 
         if (command instanceof GenericMinecraftCommand && !(user instanceof MinecraftUser)) {
-            user.sendMessage(Lang.NOT_MINECRAFT_USER);
+            user.sendMessage(Language.NOT_MINECRAFT_USER);
             return false;
         }
 

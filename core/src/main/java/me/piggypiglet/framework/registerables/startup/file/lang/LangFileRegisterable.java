@@ -25,15 +25,15 @@
 package me.piggypiglet.framework.registerables.startup.file.lang;
 
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.addon.builders.ConfigInfo;
+import me.piggypiglet.framework.addon.init.ConfigInfo;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
-import me.piggypiglet.framework.lang.Lang;
-import me.piggypiglet.framework.lang.LanguageGetter;
-import me.piggypiglet.framework.lang.framework.LangEnum;
-import me.piggypiglet.framework.lang.objects.CustomLang;
-import me.piggypiglet.framework.lang.objects.LangConfig;
+import me.piggypiglet.framework.language.Language;
+import me.piggypiglet.framework.language.LanguageGetter;
+import me.piggypiglet.framework.language.framework.LanguageEnum;
+import me.piggypiglet.framework.language.objects.CustomLang;
+import me.piggypiglet.framework.language.objects.LangConfig;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.annotations.addon.Langs;
@@ -49,7 +49,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
     @Inject private Framework framework;
     @Inject private FileManager fileManager;
     @Inject private FrameworkBootstrap main;
-    @Inject private Lang lang;
+    @Inject private Language language;
 
     @Override
     protected void execute() {
@@ -57,7 +57,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
         final Map<String, String> map = new HashMap<>();
 
         if (customLang != null) {
-            map.putAll(doConfig(Arrays.stream(customLang.getValues()).collect(Collectors.toMap(LangEnum::getPath, LangEnum::getPath)), fileManager.getConfig(customLang.getConfig())));
+            map.putAll(doConfig(Arrays.stream(customLang.getValues()).collect(Collectors.toMap(LanguageEnum::getPath, LanguageEnum::getPath)), fileManager.getConfig(customLang.getConfig())));
         }
 
         if (framework.overrideLangFile()) {
@@ -90,19 +90,19 @@ public final class LangFileRegisterable extends StartupRegisterable {
 
     private Map<String, String> useDefaultLang(boolean external) {
         final String exception = "Something went dreadfully wrong when loading the default language file. How disappointing :(";
-        final Collector<? super LangEnum, ?, Map<String, String>> collector = Collectors.toMap(LangEnum::getPath, LangEnum::getPath);
+        final Collector<? super LanguageEnum, ?, Map<String, String>> collector = Collectors.toMap(LanguageEnum::getPath, LanguageEnum::getPath);
         final Map<String, String> map = new HashMap<>();
 
         main.getAddons().forEach((c, a) -> {
             final Langs lang = a.lang();
 
-            if (lang.clazz() != Lang.Values.class) {
+            if (lang.clazz() != Language.Values.class) {
                 try {
                     final String file = lang.file();
                     final String name = StringUtils.addonName(c);
 
                     map.putAll(doConfig(
-                            this.lang.getSpecificValues().get(name).stream().collect(collector),
+                            this.language.getSpecificValues().get(name).stream().collect(collector),
                             fileManager.loadConfig(name, "/" + file, external ? "lang/" + file : null)
                     ));
                 } catch (Exception e) {
@@ -113,7 +113,7 @@ public final class LangFileRegisterable extends StartupRegisterable {
 
         try {
             final Map<String, String> m = doConfig(
-                    this.lang.getSpecificValues().get("core").stream().collect(collector),
+                    this.language.getSpecificValues().get("core").stream().collect(collector),
                     fileManager.loadConfig("def_lang", "/core_lang.json", external ? "lang/core_lang.json" : null)
             );
 

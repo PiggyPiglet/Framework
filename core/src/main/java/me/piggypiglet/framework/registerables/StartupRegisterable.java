@@ -114,7 +114,7 @@ public abstract class StartupRegisterable {
      * @param instance   Instance of the object to be binded
      * @param <T>        Object type
      */
-    private <T> void addAnnotatedBinding(TypeLiteral<? super T> type, AnnotationWrapper annotation, T instance) {
+    protected <T> void addAnnotatedBinding(TypeLiteral<? super T> type, AnnotationWrapper annotation, T instance) {
         annotatedBindings.add(
                 new AnnotatedBinding<>(type, annotation, instance)
         );
@@ -138,7 +138,7 @@ public abstract class StartupRegisterable {
      * @param instance   Instance of the object to be binded
      * @param <T>        Object type
      */
-    private <T> void addAnnotatedBinding(Class<? super T> interfaze, AnnotationWrapper annotation, T instance) {
+    protected <T> void addAnnotatedBinding(Class<? super T> interfaze, AnnotationWrapper annotation, T instance) {
         annotatedBindings.add(
                 new AnnotatedBinding<>(interfaze, annotation, instance)
         );

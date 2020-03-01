@@ -2,7 +2,7 @@ package me.piggypiglet.framework.init.builder.stages.addons;
 
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.framework.Addon;
-import me.piggypiglet.framework.addon.framework.config.AddonConfiguration;
+import me.piggypiglet.framework.addon.framework.api.AddonConfiguration;
 import me.piggypiglet.framework.utils.builder.AbstractBuilder;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import org.jetbrains.annotations.NotNull;

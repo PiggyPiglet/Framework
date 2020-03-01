@@ -24,9 +24,9 @@
 
 package me.piggypiglet.framework.http;
 
-import me.piggypiglet.framework.addon.builders.AddonBuilder;
-import me.piggypiglet.framework.addon.builders.AddonData;
 import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
 import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;

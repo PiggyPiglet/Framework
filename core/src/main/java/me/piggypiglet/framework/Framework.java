@@ -25,13 +25,13 @@
 package me.piggypiglet.framework;
 
 import me.piggypiglet.framework.addon.framework.Addon;
-import me.piggypiglet.framework.addon.framework.config.AddonConfiguration;
+import me.piggypiglet.framework.addon.framework.api.AddonConfiguration;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.init.builder.FrameworkBuilder;
 import me.piggypiglet.framework.init.builder.stages.file.FilesData;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
-import me.piggypiglet.framework.init.builder.stages.lang.LangData;
+import me.piggypiglet.framework.init.builder.stages.language.LanguageData;
 import me.piggypiglet.framework.init.builder.stages.scanning.ScanningData;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -47,13 +47,13 @@ public final class Framework {
     private final FilesData files;
     private final Map<Class<? extends Addon<?>>, AddonConfiguration> addons;
     private final int threads;
-    private final LangData lang;
+    private final LanguageData lang;
     private final boolean debug;
 
     public Framework(@NotNull final MainBinding main, @NotNull final ScanningData scanning,
                      @NotNull final GuiceData guice, @Nullable final String[] commandPrefixes,
                      @NotNull final FilesData files, @NotNull final Map<Class<? extends Addon<?>>, AddonConfiguration> addons,
-                     final int threads, @NotNull final LangData lang,
+                     final int threads, @NotNull final LanguageData lang,
                      final boolean debug) {
         this.main = main;
         this.scanning = scanning;
@@ -118,7 +118,7 @@ public final class Framework {
     }
 
     @NotNull
-    public LangData getLang() {
+    public LanguageData getLang() {
         return lang;
     }
 

@@ -22,29 +22,23 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.lang;
+package me.piggypiglet.framework.minecraft.lang;
 
-import me.piggypiglet.framework.lang.framework.LangEnum;
-import org.jetbrains.annotations.NotNull;
+import me.piggypiglet.framework.language.framework.LanguageEnum;
 
-public enum Lang implements LangEnum {
-    INCORRECT_USAGE("commands.incorrect_usage"),
-    NO_PERMISSION("commands.no_permission"),
-    UNKNOWN_COMMAND("commands.unknown_command");
+public enum Language implements LanguageEnum {
+    PLAYER_ONLY("commands.player-only"),
+    CONSOLE_ONLY("commands.console-only"),
+    NOT_MINECRAFT_USER("commands.not-minecraft-user");
 
     private final String path;
 
-    Lang(@NotNull final String path) {
+    Language(String path) {
         this.path = path;
     }
 
     @Override
     public String getPath() {
         return path;
-    }
-
-    @Override
-    public String toString() {
-        return LanguageGetter.get(path);
     }
 }

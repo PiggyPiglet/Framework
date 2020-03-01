@@ -1,6 +1,7 @@
 package me.piggypiglet.framework.scanning.internal;
 
 import com.google.inject.TypeLiteral;
+import me.piggypiglet.framework.language.framework.LanguageEnum;
 import me.piggypiglet.framework.logging.annotations.LoggerName;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.scanning.framework.Scanner;
@@ -17,6 +18,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 public enum ScanningKeys {
+    LANGUAGES("languages", new TypeLiteral<Set<Class<? extends Enum<? extends LanguageEnum>>>>(){}.getType(),
+            scanner -> scanner.getSubTypesOf(LanguageEnum.class)),
     TASK_TYPES("task_types", new TypeLiteral<Set<Class<? extends Task>>>(){}.getType(),
             scanner -> scanner.getSubTypesOf(Task.class)),
     LOGGING_TYPES("logger_types", new TypeLiteral<Set<Class<? extends Logger<?>>>>(){}.getType(),

@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.addon.framework.config;
+package me.piggypiglet.framework.addon.framework.api;
 
 import org.jetbrains.annotations.NotNull;
 

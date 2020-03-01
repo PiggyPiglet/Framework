@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.registerables.startup.file;
+package me.piggypiglet.framework.file.internal.registerables.mapping;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.file.FileManager;
