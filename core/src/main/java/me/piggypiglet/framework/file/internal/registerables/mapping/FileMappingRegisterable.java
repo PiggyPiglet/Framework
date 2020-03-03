@@ -31,6 +31,7 @@ import me.piggypiglet.framework.file.mapping.Maps;
 import me.piggypiglet.framework.mapping.gson.GsonObjectMappers;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 
 public final class FileMappingRegisterable extends StartupRegisterable {
     @Inject private FileManager fileManager;
@@ -38,7 +39,7 @@ public final class FileMappingRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        scanner.getClassesAnnotatedWith(Maps.class).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
+        scanner.getClassesAnnotatedWith(new AnnotationWrapper(Maps.class)).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
     }
 
     private <T> void add(Class<T> clazz, String name) {

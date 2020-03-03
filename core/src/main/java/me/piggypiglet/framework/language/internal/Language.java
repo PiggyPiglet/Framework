@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.language;
+package me.piggypiglet.framework.language.internal;
 
 import me.piggypiglet.framework.language.framework.LanguageEnum;
 import org.jetbrains.annotations.NotNull;

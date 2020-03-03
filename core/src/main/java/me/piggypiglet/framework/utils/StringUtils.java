@@ -24,9 +24,10 @@
 
 package me.piggypiglet.framework.utils;
 
+import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.language.LanguageGetter;
 import me.piggypiglet.framework.language.framework.LanguageEnum;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -292,10 +293,7 @@ public final class StringUtils {
      * @param addon Addon class
      * @return String
      */
-    public static String addonName(Class<?> addon) {
-        if (!addon.isAnnotationPresent(Addon.class))
-            throw new UnsupportedOperationException("Class provided is not an addon class.");
-
+    public static String addonName(@NotNull final Class<? extends Addon<?>> addon) {
         return "addon_" + addon.getSimpleName().toLowerCase().replace("addon", "");
     }
 

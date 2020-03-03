@@ -61,7 +61,7 @@ import java.util.stream.Stream;
 public final class FrameworkBootstrap {
     private final AtomicReference<Injector> injector = new AtomicReference<>();
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
-    private final Map<Class<? extends Addon<?>>, Addon<?>> addons = new HashMap<>();
+    private final Map<Class<? extends Addon<?>>, AddonData> addons = new HashMap<>();
 
     @Inject
     private Scanner scanner;
@@ -93,7 +93,7 @@ public final class FrameworkBootstrap {
 
         scanner
                 .getSubTypesOf(Addon.class)
-                .forEach(c -> addons.put((Class<? extends Addon<?>>) c, injector.get().getInstance(c)));
+                .forEach(c -> addons.put((Class<? extends Addon<?>>) c, injector.get().getInstance(c).getConfig()));
 
         final Multimap<BootPriority, Class<? extends StartupRegisterable>> boot = ArrayListMultimap.create();
 
@@ -119,7 +119,6 @@ public final class FrameworkBootstrap {
         boot.put(BootPriority.AFTER_SHUTDOWN, SyncRegisterable.class);
 
         addons.values().stream()
-                .map(Addon::getConfig)
                 .map(AddonData::getStartup)
                 .forEach(boot::putAll);
 
@@ -174,7 +173,7 @@ public final class FrameworkBootstrap {
      *
      * @return Set of Addon annotation data objects.
      */
-    public Map<Class<? extends Addon<?>>, Addon<?>> getAddons() {
+    public Map<Class<? extends Addon<?>>, AddonData> getAddons() {
         return addons;
     }
 }

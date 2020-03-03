@@ -38,6 +38,7 @@ import me.piggypiglet.framework.utils.FileUtils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Singleton
@@ -91,14 +92,14 @@ public final class FileManager {
      * @param name Name of the config
      * @return FileConfiguration instance, or null if the file couldn't be found, or isn't a config
      */
-    public FileConfiguration getConfig(String name) {
+    public Optional<FileConfiguration> getConfig(String name) {
         Object obj = files.get(name);
 
         if (obj instanceof FileConfiguration) {
-            return (FileConfiguration) files.get(name);
+            return Optional.of((FileConfiguration) obj);
         }
 
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -173,7 +174,7 @@ public final class FileManager {
     }
 
     private File createFile(String externalPath, String internalPath) throws Exception {
-        externalPath = framework.getFileDir() + "/" + externalPath;
+        externalPath = framework.getFiles().getFileDir() + "/" + externalPath;
         File file = new File(externalPath);
 
         if (!file.exists()) {
