@@ -24,33 +24,37 @@
 
 package me.piggypiglet.framework.logging.implementations;
 
-import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Logger;
 
 @Disabled
-public final class DefaultLogger extends Logger<java.util.logging.Logger> {
+public final class DefaultLogger extends me.piggypiglet.framework.logging.framework.Logger<Logger> {
+    @NotNull
     @Override
-    protected java.util.logging.Logger init(String name) {
-        return java.util.logging.Logger.getLogger(name);
+    protected Logger init(@NotNull final String name) {
+        return Logger.getLogger(name);
+    }
+
+    @NotNull
+    @Override
+    protected void info(@NotNull final Logger logger, @NotNull String message) {
+        logger.info(message);
     }
 
     @Override
-    protected void info(String message) {
-        underlyingLogger.info(message);
+    protected void warning(@NotNull final Logger logger, @NotNull final String message) {
+        logger.warning(message);
     }
 
     @Override
-    protected void warning(String message) {
-        underlyingLogger.warning(message);
+    protected void error(@NotNull final Logger logger, @NotNull final String message) {
+        logger.severe(message);
     }
 
     @Override
-    protected void error(String message) {
-        underlyingLogger.severe(message);
-    }
-
-    @Override
-    protected void debug(String message) {
-        info(message);
+    protected void debug(@NotNull final Logger logger, @NotNull final String message) {
+        info(logger, message);
     }
 }

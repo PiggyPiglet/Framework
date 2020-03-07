@@ -58,7 +58,7 @@ public final class AnnotatedBinding<T> {
         return (Class<? super T>) type;
     }
 
-    public AnnotationWrapper getAnnotationInstance() {
+    public AnnotationWrapper getAnnotation() {
         return annotation;
     }
 

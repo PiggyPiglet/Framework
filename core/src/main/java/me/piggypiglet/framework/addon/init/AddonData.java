@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Set;
 
 public final class AddonData {
-    private final Addon<?> addon;
+    private final Addon addon;
     private final FilesData files;
     private final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup;
     private final List<Class<? extends ShutdownRegisterable>> shutdown;
     private final Set<ScanningRequest> requests;
     private final LanguageData lang;
 
-    AddonData(@NotNull final Addon<?> addon, @NotNull final FilesData files,
+    AddonData(@NotNull final Addon addon, @NotNull final FilesData files,
               @NotNull final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup,
               @NotNull final List<Class<? extends ShutdownRegisterable>> shutdown, @NotNull final Set<ScanningRequest> requests,
               @NotNull final LanguageData lang) {
@@ -34,7 +34,7 @@ public final class AddonData {
     }
 
     @NotNull
-    public Addon<?> getAddon() {
+    public Addon getAddon() {
         return addon;
     }
 

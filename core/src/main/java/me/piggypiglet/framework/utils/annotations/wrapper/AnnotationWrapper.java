@@ -1,13 +1,11 @@
 package me.piggypiglet.framework.utils.annotations.wrapper;
 
-import com.google.auto.value.AutoValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 
-@AutoValue
-public final class AnnotationWrapper {
+public class AnnotationWrapper {
     private final Class<? extends Annotation> annotationClass;
     private final Annotation annotationInstance;
 

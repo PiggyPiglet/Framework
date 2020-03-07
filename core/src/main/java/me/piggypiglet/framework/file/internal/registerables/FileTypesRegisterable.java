@@ -26,7 +26,7 @@ package me.piggypiglet.framework.file.internal.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.file.FileConfigurationFactory;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.file.implementations.BlankFileConfiguration;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
@@ -37,7 +37,7 @@ public final class FileTypesRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        scanner.getSubTypesOf(AbstractFileConfiguration.class).stream()
+        scanner.getSubTypesOf(MapFileConfiguration.class).stream()
                 .filter(c -> c != BlankFileConfiguration.class)
                 .map(injector::getInstance)
                 .forEach(f -> fileConfigurationFactory.getConfigTypes().put(f.getMatch(), f.getClass()));

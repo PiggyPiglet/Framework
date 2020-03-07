@@ -29,6 +29,7 @@ import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
 import me.piggypiglet.framework.guice.objects.Binding;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 
 import java.util.List;
 
@@ -72,11 +73,12 @@ public final class BindingSetterModule extends AbstractModule {
         }
 
         final LinkedBindingBuilder<? super T> link;
+        final AnnotationWrapper annotation = binding.getAnnotation();
 
-        if (binding.isAnnotationInstance()) {
-            link = bind.annotatedWith(binding.getAnnotationInstance());
+        if (annotation.getAnnotationClass() == null) {
+            link = bind.annotatedWith(annotation.getAnnotationInstance());
         } else {
-            link = bind.annotatedWith(binding.getAnnotationClass());
+            link = bind.annotatedWith(annotation.getAnnotationClass());
         }
 
         link.toInstance(binding.getInstance());

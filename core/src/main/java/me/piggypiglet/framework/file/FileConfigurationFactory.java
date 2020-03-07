@@ -28,8 +28,8 @@ import com.google.inject.Singleton;
 import me.piggypiglet.framework.file.exceptions.RPFFileException;
 import me.piggypiglet.framework.file.exceptions.config.BadConfigTypeException;
 import me.piggypiglet.framework.file.exceptions.config.UnknownConfigTypeException;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.utils.FileUtils;
 
 import java.io.File;
@@ -41,7 +41,7 @@ import java.util.function.Predicate;
 
 @Singleton
 public final class FileConfigurationFactory {
-    private final Map<Predicate<String>, Class<? extends AbstractFileConfiguration>> configTypes = new HashMap<>();
+    private final Map<Predicate<String>, Class<? extends MapFileConfiguration>> configTypes = new HashMap<>();
 
     /**
      * Load a fileconfiguration from a file object
@@ -65,9 +65,9 @@ public final class FileConfigurationFactory {
         return getAFC(path).load(null, fileContent);
     }
 
-    private AbstractFileConfiguration getAFC(String path) throws RPFFileException {
+    private MapFileConfiguration getAFC(String path) throws RPFFileException {
         try {
-            return (AbstractFileConfiguration) Arrays.stream(configTypes.get(configTypes.keySet().stream()
+            return (MapFileConfiguration) Arrays.stream(configTypes.get(configTypes.keySet().stream()
                     .filter(p -> p.test(path))
                     .findAny()
                     .orElseThrow(() -> new UnknownConfigTypeException("Unknown config type: " + path))).getConstructors())
@@ -84,7 +84,7 @@ public final class FileConfigurationFactory {
      * Get all config types this factory can map to
      * @return Map of AbstractFileConfigurations, with the key as a predicate testing whether a path matches a config
      */
-    public Map<Predicate<String>, Class<? extends AbstractFileConfiguration>> getConfigTypes() {
+    public Map<Predicate<String>, Class<? extends MapFileConfiguration>> getConfigTypes() {
         return configTypes;
     }
 }

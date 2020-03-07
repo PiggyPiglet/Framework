@@ -24,23 +24,56 @@
 
 package me.piggypiglet.framework.init.bootstrap;
 
+import me.piggypiglet.framework.file.internal.registerables.FileRelocationRegisterable;
+import me.piggypiglet.framework.file.internal.registerables.FileTypesRegisterable;
+import me.piggypiglet.framework.file.internal.registerables.FilesRegisterable;
+import me.piggypiglet.framework.file.internal.registerables.mapping.FileMappingRegisterable;
+import me.piggypiglet.framework.file.internal.registerables.migration.MigrationRegisterable;
+import me.piggypiglet.framework.language.internal.registerables.LanguageValuesRegisterable;
+import me.piggypiglet.framework.logging.internal.registerables.LoggerRegistrarRegisterable;
+import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.registerables.startup.*;
+import me.piggypiglet.framework.registerables.startup.commands.CommandHandlerRegisterable;
+import me.piggypiglet.framework.registerables.startup.commands.CommandsRegisterable;
+import me.piggypiglet.framework.scanning.internal.registerables.ScanningRequestFulfiller;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Boot priorities available to startup registerables, ran in the order as defined in here
  */
 public enum BootPriority {
     BEFORE_IMPL,
-    IMPL,
+    IMPL(ScanningRequestFulfiller.class, ImplementationFinderRegisterable.class,
+            LoggerRegistrarRegisterable.class, FileTypesRegisterable.class,
+            FilesRegisterable.class, FileRelocationRegisterable.class,
+            MigrationRegisterable.class, FileMappingRegisterable.class,
+            LanguageValuesRegisterable.class),
     AFTER_IMPL,
     BEFORE_MANUAL,
     MANUAL,
     AFTER_MANUAL,
     BEFORE_COMMANDS,
-    COMMANDS,
+    COMMANDS(CommandsRegisterable.class, CommandHandlerRegisterable.class),
     AFTER_COMMANDS,
     BEFORE_ADDONS,
     ADDONS,
     AFTER_ADDONS,
     BEFORE_SHUTDOWN,
-    SHUTDOWN,
-    AFTER_SHUTDOWN
+    SHUTDOWN(ManagersRegisterable.class, ShutdownRegisterablesRegisterable.class, ShutdownHookRegisterable.class),
+    AFTER_SHUTDOWN(SyncRegisterable.class);
+
+    private final List<Class<? extends StartupRegisterable>> def;
+
+    @SafeVarargs
+    BootPriority(@NotNull final Class<? extends StartupRegisterable>... def) {
+        this.def = Arrays.asList(def);
+    }
+
+    @NotNull
+    List<Class<? extends StartupRegisterable>> getDefault() {
+        return def;
+    }
 }

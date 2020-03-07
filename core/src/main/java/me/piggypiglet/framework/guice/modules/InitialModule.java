@@ -80,6 +80,6 @@ public class InitialModule extends AbstractModule {
     @Provides
     @Singleton
     public Scanner providesScanner() {
-        return config.getScanner();
+        return config.getScanning().getScanner();
     }
 }

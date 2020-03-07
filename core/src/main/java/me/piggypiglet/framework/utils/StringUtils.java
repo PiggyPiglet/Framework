@@ -25,8 +25,8 @@
 package me.piggypiglet.framework.utils;
 
 import me.piggypiglet.framework.addon.framework.Addon;
-import me.piggypiglet.framework.language.LanguageGetter;
 import me.piggypiglet.framework.language.framework.LanguageEnum;
+import me.piggypiglet.framework.language.internal.LanguageGetter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -293,7 +293,7 @@ public final class StringUtils {
      * @param addon Addon class
      * @return String
      */
-    public static String addonName(@NotNull final Class<? extends Addon<?>> addon) {
+    public static String addonName(@NotNull final Class<? extends Addon> addon) {
         return "addon_" + addon.getSimpleName().toLowerCase().replace("addon", "");
     }
 
@@ -358,6 +358,6 @@ public final class StringUtils {
     }
 
     public static String format(Object message) {
-        return message instanceof LanguageEnum ? LanguageGetter.get(((LanguageEnum) message).getPath()) : String.valueOf(message);
+        return message instanceof LanguageEnum ? LanguageGetter.get((LanguageEnum) message) : String.valueOf(message);
     }
 }

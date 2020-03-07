@@ -26,7 +26,8 @@ package me.piggypiglet.framework.file.internal.registerables.mapping;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.file.FileManager;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.file.mapping.Maps;
 import me.piggypiglet.framework.mapping.gson.GsonObjectMappers;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
@@ -43,10 +44,13 @@ public final class FileMappingRegisterable extends StartupRegisterable {
     }
 
     private <T> void add(Class<T> clazz, String name) {
-        AbstractFileConfiguration config = (AbstractFileConfiguration) fileManager.getConfig(name);
+        final FileConfiguration config = fileManager.getConfig(name)
+                .orElseThrow(() -> new RuntimeException("Provided config: " + name + " for mapping doesn't exist."));
 
-        if (config != null) {
-            addBinding(clazz, GsonObjectMappers.of(clazz).dataToType(config.getAll()));
+        if (config instanceof MapFileConfiguration) {
+            addBinding(clazz, GsonObjectMappers.of(clazz).dataToType(((MapFileConfiguration) config).getAll()));
+        } else {
+            throw new RuntimeException("Provided config: " + name + " for mapping isn't a MapFileConfiguration.");
         }
     }
 }

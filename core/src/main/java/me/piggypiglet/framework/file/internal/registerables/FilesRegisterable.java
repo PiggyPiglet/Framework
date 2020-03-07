@@ -26,75 +26,56 @@ package me.piggypiglet.framework.file.internal.registerables;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.addon.ConfigManager;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.objects.ConfigPathReference;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
+import me.piggypiglet.framework.init.builder.stages.file.FilesData;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.File;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class FilesRegisterable extends StartupRegisterable {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("FilesRegisterable");
 
     @Inject private Framework framework;
     @Inject private FileManager fileManager;
-    @Inject private FrameworkBootstrap frameworkBootstrap;
-    @Inject private ConfigManager configManager;
+    @Inject private FrameworkBootstrap main;
 
     @Override
     protected void execute() {
-        final List<FileData> files = new ArrayList<>(framework.getFiles());
+        final List<FileData> files = new ArrayList<>(framework.getFiles().getFiles());
+        main.getAddons().values().stream()
+                .map(AddonData::getFiles)
+                .map(FilesData::getFiles)
+                .flatMap(List::stream)
+                .forEach(files::add);
+
         Collections.sort(files);
-
-        frameworkBootstrap.getAddons().values().stream()
-                .map(Addon::files)
-                .map(Arrays::stream)
-                .forEach(s -> {
-                    for (File f : s.toArray(File[]::new)) {
-                        if (f.config() && !configManager.getFilesToBeCreated().contains(f.name())) continue;
-
-                        files.add(new FileData(f.config(), f.name(), f.internalPath(), f.externalPath(), f.annotation()));
-                    }
-                });
 
         files.forEach(f -> {
             try {
                 final String name = f.getName();
-                final String internalPath;
-
-                if (f.getInternalPathReference() != null) {
-                    final FileData.ConfigPathReference path = f.getInternalPathReference();
-
-                    String value = fileManager.getConfig(path.getConfig()).getString(path.getPath(), path.getDef());
-
-                    if (path.getMapper() != null) {
-                        value = path.getMapper().apply(value);
-                    }
-
-                    internalPath = "/" + value;
-                } else {
-                    internalPath = f.getHardInternalPath();
-                }
-
-                final String externalPath = f.getExternalPath();
-                final Class<? extends Annotation> annotationClass = f.getAnnotationClass();
-                final Annotation annotationInstance = f.getAnnotationInstance();
+                final String internalPath = "/" + path(f.getInternalPathReference(), f.getHardInternalPath());
+                final String externalPath = path(f.getExternalPathReference(), f.getHardExternalPath());
+                final AnnotationWrapper annotation = f.getAnnotation();
 
                 if (f.isConfig()) {
-                    bind(FileConfiguration.class, annotationClass, annotationInstance, fileManager.loadConfig(name, internalPath, externalPath));
+                    bind(FileConfiguration.class, annotation, fileManager.loadConfig(name, internalPath, externalPath));
                 } else {
-                    bind(FileWrapper.class, annotationClass, annotationInstance, fileManager.loadFile(name, internalPath, externalPath));
+                    bind(FileWrapper.class, annotation, fileManager.loadFile(name, internalPath, externalPath));
                 }
             } catch (Exception e) {
                 LOGGER.error(e);
@@ -102,11 +83,20 @@ public final class FilesRegisterable extends StartupRegisterable {
         });
     }
 
-    private <T> void bind(Class<? super T> interfaze, Class<? extends Annotation> annotationClass, Annotation annotationInstance, T instance) {
-        if (annotationClass == null) {
-            addAnnotatedBinding(interfaze, annotationInstance, instance);
-        } else {
-            addAnnotatedBinding(interfaze, annotationClass, instance);
+    private <T> void bind(@NotNull final Class<? super T> interfaze, @NotNull final AnnotationWrapper annotation,
+                          @NotNull final T instance) {
+        addAnnotatedBinding(interfaze, annotation, instance);
+    }
+
+    @Contract("null, _ -> !null; _, null -> !null")
+    @NotNull
+    private String path(@Nullable final ConfigPathReference reference, @Nullable final String hard) {
+        if (reference != null) {
+            return reference.getMapper().orElse(s -> s).apply(fileManager.getConfig(reference.getConfig())
+                    .orElseThrow(() -> new RuntimeException("Provided config: " + reference.getConfig() + " for config path reference doesn't exist."))
+                    .getString(reference.getPath(), reference.getDef()));
         }
+
+        return Objects.requireNonNull(hard);
     }
 }

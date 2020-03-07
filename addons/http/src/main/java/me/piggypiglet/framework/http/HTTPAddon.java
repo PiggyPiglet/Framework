@@ -67,7 +67,7 @@ import org.jetbrains.annotations.NotNull;
 //        ),
 //        shutdown = ShutdownHTTP.class
 //)
-public final class HTTPAddon extends Addon<HTTPAddon> {
+public final class HTTPAddon extends Addon {
     @NotNull
     @Override
     protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {

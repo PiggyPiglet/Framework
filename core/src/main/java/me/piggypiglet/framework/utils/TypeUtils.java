@@ -24,6 +24,9 @@
 
 package me.piggypiglet.framework.utils;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public final class TypeUtils {
     private TypeUtils() {
         throw new RuntimeException("This class cannot be instantiated.");
@@ -37,8 +40,9 @@ public final class TypeUtils {
      * @param <T>       Type of value
      * @return value, nullValue, or def
      */
+    @Nullable
     @SafeVarargs
-    public static <T> T valueNullDef(T value, T nullValue, T... def) {
+    public static <T> T valueNullDef(@Nullable final T value, @Nullable T nullValue, @NotNull T... def) {
         if (value != null) {
             return value;
         }

@@ -23,14 +23,14 @@ import java.util.*;
 import java.util.function.Function;
 
 public final class AddonBuilder<R> extends AbstractBuilder<AddonData, R> {
-    private final Addon<?> addon;
+    private final Addon addon;
     private FilesData files = null;
     private final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup = ArrayListMultimap.create();
     private final List<Class<? extends ShutdownRegisterable>> shutdown = new ArrayList<>();
     private final Set<ScanningRequest> requests = new HashSet<>();
     private LanguageData language = null;
 
-    public AddonBuilder(@NotNull final Addon<?> addon) {
+    public AddonBuilder(@NotNull final Addon addon) {
         this.addon = addon;
     }
 

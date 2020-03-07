@@ -148,23 +148,6 @@ public interface FileConfiguration {
     boolean getBoolean(String path, boolean def);
 
     /**
-     * Get a list of strings at a specific path
-     *
-     * @param path Path of the list
-     * @return List of Strings
-     */
-    List<String> getStringList(String path);
-
-    /**
-     * Get a list of strings at a specific path, and if it's null, use a default value
-     *
-     * @param path Path of the list
-     * @param def  Default value
-     * @return List of Strings
-     */
-    List<String> getStringList(String path, List<String> def);
-
-    /**
      * Get a list of FileConfigurations at a specific path
      *
      * @param path Path of the list

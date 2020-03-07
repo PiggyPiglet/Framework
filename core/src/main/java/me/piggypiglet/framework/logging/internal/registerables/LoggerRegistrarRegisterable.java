@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public final class LoggerRegistrar extends StartupRegisterable {
+public final class LoggerRegistrarRegisterable extends StartupRegisterable {
     private static final TypeLiteral<Logger<?>> TYPE = new TypeLiteral<Logger<?>>(){};
 
     @Inject private LoggerManager loggerManager;

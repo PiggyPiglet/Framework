@@ -26,15 +26,14 @@ package me.piggypiglet.framework.registerables.startup;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.Framework;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.registerables.shutdown.TaskShutdownRegisterable;
 import me.piggypiglet.framework.shutdown.ShutdownHook;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,11 +47,11 @@ public final class ShutdownRegisterablesRegisterable extends StartupRegisterable
         List<Class<? extends ShutdownRegisterable>> shutdown = new ArrayList<>();
 
         shutdown.add(TaskShutdownRegisterable.class);
-        shutdown.addAll(config.getShutdownRegisterables());
+        shutdown.addAll(config.getGuice().getShutdown());
 
         frameworkBootstrap.getAddons().values().stream()
-                .map(Addon::shutdown)
-                .map(Arrays::stream)
+                .map(AddonData::getShutdown)
+                .map(List::stream)
                 .forEach(s -> s.forEach(shutdown::add));
 
         shutdownHook.getRegisterables().addAll(shutdown.stream().map(injector::getInstance).collect(Collectors.toList()));

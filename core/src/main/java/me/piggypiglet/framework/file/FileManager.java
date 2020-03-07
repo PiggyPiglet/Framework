@@ -29,8 +29,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.file.exceptions.file.CreateFileException;
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.utils.FileUtils;
@@ -133,8 +133,8 @@ public final class FileManager {
     public void update(String name) throws Exception {
         Object item = get(name);
 
-        if (item instanceof AbstractFileConfiguration) {
-            AbstractFileConfiguration config = (AbstractFileConfiguration) item;
+        if (item instanceof MapFileConfiguration) {
+            MapFileConfiguration config = (MapFileConfiguration) item;
             config.load(config.getFile(), FileUtils.readFileToString(config.getFile()));
         } else {
             FileWrapper file = (FileWrapper) item;

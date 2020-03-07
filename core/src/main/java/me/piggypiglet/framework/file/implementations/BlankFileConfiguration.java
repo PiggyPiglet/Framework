@@ -24,71 +24,27 @@
 
 package me.piggypiglet.framework.file.implementations;
 
-import me.piggypiglet.framework.file.framework.AbstractFileConfiguration;
-import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public final class BlankFileConfiguration extends AbstractFileConfiguration {
+public final class BlankFileConfiguration extends MapFileConfiguration {
     public BlankFileConfiguration() {
         super(s -> true);
     }
 
+    @NotNull
     @Override
-    public Object get(String path) {
-        return null;
-    }
-
-    @Override
-    public FileConfiguration getConfigSection(String path) {
-        return this;
-    }
-
-    @Override
-    public String getString(String path) {
-        return NULL_STRING;
-    }
-
-    @Override
-    public Integer getInt(String path) {
-        return NULL_NUM;
-    }
-
-    @Override
-    public Long getLong(String path) {
-        return (long) NULL_NUM;
-    }
-
-    @Override
-    public Double getDouble(String path) {
-        return (double) NULL_NUM;
-    }
-
-    @Override
-    public Boolean getBoolean(String path) {
-        return NULL_BOOL;
-    }
-
-    @Override
-    public List<String> getStringList(String path) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<FileConfiguration> getConfigList(String path) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public <T> List<T> getList(String path) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected Map<String, Object> retrieveAll() {
+    protected Map<String, Object> provide(@NotNull final File file, @NotNull final String content) {
         return new HashMap<>();
+    }
+
+    @NotNull
+    @Override
+    protected String convert(@NotNull final Map<String, Object> items) {
+        return "";
     }
 }

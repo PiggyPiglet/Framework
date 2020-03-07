@@ -25,7 +25,7 @@
 package me.piggypiglet.framework;
 
 import me.piggypiglet.framework.addon.framework.Addon;
-import me.piggypiglet.framework.addon.framework.api.AddonConfiguration;
+import me.piggypiglet.framework.addon.framework.config.AddonConfiguration;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.init.builder.FrameworkBuilder;
@@ -45,14 +45,14 @@ public final class Framework {
     private final GuiceData guice;
     private final String[] commandPrefixes;
     private final FilesData files;
-    private final Map<Class<? extends Addon<?>>, AddonConfiguration> addons;
+    private final Map<Class<? extends Addon>, AddonConfiguration> addons;
     private final int threads;
     private final LanguageData lang;
     private final boolean debug;
 
     public Framework(@NotNull final MainBinding main, @NotNull final ScanningData scanning,
                      @NotNull final GuiceData guice, @Nullable final String[] commandPrefixes,
-                     @NotNull final FilesData files, @NotNull final Map<Class<? extends Addon<?>>, AddonConfiguration> addons,
+                     @NotNull final FilesData files, @NotNull final Map<Class<? extends Addon>, AddonConfiguration> addons,
                      final int threads, @NotNull final LanguageData lang,
                      final boolean debug) {
         this.main = main;
@@ -67,15 +67,15 @@ public final class Framework {
     }
 
     @NotNull
-    public static <T> FrameworkBuilder<T> builder(@NotNull final T main) {
-        return new FrameworkBuilder<>(main);
+    public static FrameworkBuilder builder(@NotNull final Object main) {
+        return new FrameworkBuilder(main);
     }
 
-    /**
-     * Start the bootstrap process with the current framework configuration.
-     *
-     * @return FrameworkBootstrap instance
-     */
+    @NotNull
+    public static <T> FrameworkBuilder builder(@NotNull final Class<? super T> interfaze, @NotNull final T instance) {
+        return new FrameworkBuilder(interfaze, instance);
+    }
+
     @NotNull
     public FrameworkBootstrap init() {
         return GenericBuilder.of(() -> new FrameworkBootstrap(this))
@@ -109,7 +109,7 @@ public final class Framework {
     }
 
     @NotNull
-    public Map<Class<? extends Addon<?>>, AddonConfiguration> getAddons() {
+    public Map<Class<? extends Addon>, AddonConfiguration> getAddons() {
         return addons;
     }
 

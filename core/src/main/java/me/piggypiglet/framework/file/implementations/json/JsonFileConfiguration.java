@@ -25,8 +25,10 @@
 package me.piggypiglet.framework.file.implementations.json;
 
 import com.google.gson.GsonBuilder;
-import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.json.JsonParser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Map;
@@ -36,13 +38,15 @@ public final class JsonFileConfiguration extends MapFileConfiguration {
         super(s -> s.endsWith(".json"));
     }
 
+    @NotNull
     @Override
-    protected Map<String, Object> provide(File file, String fileContent) {
+    protected Map<String, Object> provide(@Nullable final File file, @NotNull final String fileContent) {
         return JsonParser.of(fileContent).getMap();
     }
 
+    @NotNull
     @Override
-    protected String convert(Map<String, Object> items) {
+    protected String convert(@NotNull final Map<String, Object> items) {
         return new GsonBuilder().setPrettyPrinting().create().toJson(items);
     }
 }

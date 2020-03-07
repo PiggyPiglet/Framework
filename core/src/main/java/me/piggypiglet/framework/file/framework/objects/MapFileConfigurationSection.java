@@ -22,30 +22,33 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.registerables.startup.addon;
+package me.piggypiglet.framework.file.framework.objects;
 
-import com.google.inject.Inject;
-import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.addon.init.ConfigInfo;
-import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
-import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
+import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.Map;
 
-public final class DefaultConfigsRegisterable extends StartupRegisterable {
-    @Inject private FrameworkBootstrap bootstrap;
-    @Inject private Framework framework;
-    @Inject private ConfigManager configManager;
+@Disabled
+public final class MapFileConfigurationSection extends MapFileConfiguration {
+    private final Map<String, Object> items;
 
+    public MapFileConfigurationSection(@NotNull final Map<String, Object> items) {
+        super(s -> true);
+        this.items = items;
+    }
+
+    @NotNull
     @Override
-    protected void execute() {
-        Map<Class<?>, ConfigInfo> configs = framework.getConfigs();
+    protected Map<String, Object> provide(@NotNull final File file, @NotNull final String fileContent) {
+        return items;
+    }
 
-        bootstrap.getAddons().forEach((c, a) -> {
-            if (!configs.containsKey(c) && !a.config().name().equals("null")) {
-                configManager.getFilesToBeCreated().add(a.config().name());
-            }
-        });
+    @NotNull
+    @Override
+    protected String convert(@NotNull final Map<String, Object> items) {
+        throw new UnsupportedOperationException("Map sections shouldn't be converted via this API.");
     }
 }
