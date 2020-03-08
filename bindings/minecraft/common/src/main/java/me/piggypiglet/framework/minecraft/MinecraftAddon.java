@@ -24,28 +24,26 @@
 
 package me.piggypiglet.framework.minecraft;
 
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.minecraft.lang.Language;
 import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
 import me.piggypiglet.framework.minecraft.registerables.ServerRegisterable;
-import me.piggypiglet.framework.registerables.objects.Startup;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.Langs;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(
-        startup = {
-                @Startup(
-                        value = ServerRegisterable.class,
-                        priority = BootPriority.IMPL
-                ),
-                @Startup(
-                        value = CommandHandlerRegisterable.class,
-                        priority = BootPriority.COMMANDS
-                )
-        },
-        lang = @Langs(
-                file = "minecraft_lang.json",
-                clazz = Language.class
-        )
-)
-public final class MinecraftAddon {}
+public final class MinecraftAddon extends Addon {
+    @NotNull
+    @Override
+    protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+        return builder
+                .startup(BootPriority.IMPL, ServerRegisterable.class)
+                .startup(CommandHandlerRegisterable.class)
+                .files()
+                        .config("minecraft_lang", "minecraft_lang.json", "minecraft_lang.json")
+                        .build()
+                .language("minecraft_lang", Language.class)
+                .build();
+    }
+}

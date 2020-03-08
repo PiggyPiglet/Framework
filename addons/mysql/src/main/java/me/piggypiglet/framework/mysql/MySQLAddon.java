@@ -24,40 +24,28 @@
 
 package me.piggypiglet.framework.mysql;
 
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.mysql.annotations.SQL;
 import me.piggypiglet.framework.mysql.annotations.SQLConfig;
 import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLFinalSave;
 import me.piggypiglet.framework.mysql.registerables.shutdown.MySQLShutdown;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLRegisterable;
 import me.piggypiglet.framework.mysql.registerables.startup.MySQLSavingRegisterable;
-import me.piggypiglet.framework.registerables.objects.Startup;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.Config;
-import me.piggypiglet.framework.utils.annotations.addon.File;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(
-        startup = {
-                @Startup(MySQLRegisterable.class),
-                @Startup(MySQLSavingRegisterable.class)
-        },
-        shutdown = {MySQLFinalSave.class, MySQLShutdown.class},
-        files = {@File(
-                config = true,
-                name = "sql-config",
-                externalPath = "mysql.json",
-                internalPath = "/mysql.json",
-                annotation = SQLConfig.class
-        ), @File(
-                config = false,
-                name = "sql",
-                externalPath = "./schema.sql",
-                internalPath = "/schema.sql",
-                annotation = SQL.class
-        )},
-        config = @Config(
-                name = "sql-config",
-                keys = {"user", "password", "db", "host", "save-interval", "tables"}
-        )
-)
-public final class MySQLAddon {
+public final class MySQLAddon extends Addon {
+    @NotNull
+    @Override
+    protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+        return builder
+                .startup(MySQLRegisterable.class, MySQLSavingRegisterable.class)
+                .shutdown(MySQLFinalSave.class, MySQLShutdown.class)
+                .files()
+                        .config("sql-config", "mysql.json", "mysql.json", SQLConfig.class)
+                        .file("sql", "schema.sql", "schema.sql", SQL.class)
+                        .build()
+                .build();
+    }
 }

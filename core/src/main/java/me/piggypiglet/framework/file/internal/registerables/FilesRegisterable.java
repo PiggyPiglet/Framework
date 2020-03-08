@@ -29,27 +29,25 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.file.FileManager;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.file.internal.InternalFiles;
 import me.piggypiglet.framework.file.objects.ConfigPathReference;
 import me.piggypiglet.framework.file.objects.FileData;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.init.builder.stages.file.FilesData;
-import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.annotations.LoggerName;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
+import me.piggypiglet.framework.utils.annotations.internal.InternalAnnotations;
 import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public final class FilesRegisterable extends StartupRegisterable {
-    private static final Logger<?> LOGGER = LoggerFactory.getLogger("FilesRegisterable");
-
+    @Inject @LoggerName("FilesRegisterable") private Logger<?> logger;
     @Inject private Framework framework;
     @Inject private FileManager fileManager;
     @Inject private FrameworkBootstrap main;
@@ -59,9 +57,16 @@ public final class FilesRegisterable extends StartupRegisterable {
         final List<FileData> files = new ArrayList<>(framework.getFiles().getFiles());
         main.getAddons().values().stream()
                 .map(AddonData::getFiles)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(FilesData::getFiles)
                 .flatMap(List::stream)
                 .forEach(files::add);
+
+        for (InternalFiles file : InternalFiles.values()) {
+            files.add(new FileData(file.isConfig(), file.getName(), file.getPath(), null,
+                    file.getPath(), null, new AnnotationWrapper(InternalAnnotations.internal(file.getName()))));
+        }
 
         Collections.sort(files);
 
@@ -78,7 +83,7 @@ public final class FilesRegisterable extends StartupRegisterable {
                     bind(FileWrapper.class, annotation, fileManager.loadFile(name, internalPath, externalPath));
                 }
             } catch (Exception e) {
-                LOGGER.error(e);
+                logger.error(e);
             }
         });
     }

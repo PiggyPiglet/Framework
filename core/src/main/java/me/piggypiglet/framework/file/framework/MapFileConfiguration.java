@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.file.framework;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
 import me.piggypiglet.framework.file.exceptions.config.ConfigSaveException;
@@ -59,7 +60,7 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
 
     private Map<String, Object> items;
     private Map<String, Object> flat;
-    private Table<FileConfiguration, String, String> relocations;
+    private Table<FileConfiguration, String, String> relocations = HashBasedTable.create();
 
     private File file;
 

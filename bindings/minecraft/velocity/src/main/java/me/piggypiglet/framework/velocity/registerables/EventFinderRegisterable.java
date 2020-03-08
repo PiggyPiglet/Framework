@@ -32,6 +32,7 @@ import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import me.piggypiglet.framework.utils.clazz.ClassUtils;
 import me.piggypiglet.framework.utils.clazz.GenericException;
 
@@ -45,7 +46,7 @@ public final class EventFinderRegisterable extends StartupRegisterable {
     @SuppressWarnings("unchecked")
     protected void execute() {
         final Object main = this.main.getInstance();
-        scanner.getClassesWithAnnotatedMethods(Subscribe.class).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> eventManager.register(main, l));
+        scanner.getClassesWithAnnotatedMethods(new AnnotationWrapper(Subscribe.class)).stream().map(injector::getInstance).filter(o -> o != main).forEach(l -> eventManager.register(main, l));
         scanner.getSubTypesOf(EventHandler.class).forEach(l -> {
             try {
                 eventManager.register(main, ClassUtils.getImplementedGeneric(l), injector.getInstance(l));

@@ -113,6 +113,10 @@ public final class FrameworkBuilder {
 
     @NotNull
     public Framework build() {
+        if (scanning == null) scanning().build();
+        if (guice == null) guice().build();
+        if (files == null) files().build();
+
         return new Framework(main, scanning, guice, commandPrefixes, files, addons, threads, language, debug);
     }
 }

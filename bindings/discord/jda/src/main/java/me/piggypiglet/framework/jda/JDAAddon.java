@@ -24,38 +24,25 @@
 
 package me.piggypiglet.framework.jda;
 
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.jda.shutdown.JDAShutdown;
 import me.piggypiglet.framework.jda.startup.JDARegisterable;
-import me.piggypiglet.framework.registerables.objects.Startup;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
-import me.piggypiglet.framework.utils.annotations.addon.Config;
-import me.piggypiglet.framework.utils.annotations.addon.File;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(
-        startup = {
-                @Startup(
-                        value = JDARegisterable.class,
-                        priority = BootPriority.AFTER_IMPL
-                )/*,
-                @Startup(
-                        value = GuildBindingRegisterable.class,
-                        priority = BootPriority.AFTER_IMPL
-                )*/
-        },
-        files = {@File(
-                config = true,
-                name = "bot",
-                externalPath = "bot.json",
-                internalPath = "/bot.json",
-                annotation = Bot.class
-        )},
-        config = @Config(
-                name = "bot",
-                keys = {"token", "activity.type", "activity.activity"}
-        ),
-        shutdown = JDAShutdown.class
-)
-public final class JDAAddon {
+public final class JDAAddon extends Addon {
+    @NotNull
+    @Override
+    protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+        return builder
+                .startup(BootPriority.AFTER_IMPL, JDARegisterable.class)
+                .shutdown(JDAShutdown.class)
+                .files()
+                        .config("bot", "bot.json", "bot.json", Bot.class)
+                        .build()
+                .build();
+    }
 }

@@ -36,7 +36,8 @@ public final class LanguageValuesRegisterable extends StartupRegisterable {
     protected void execute() {
         final LanguageData userInput = framework.getLang();
         final Map<Class<? extends Addon>, me.piggypiglet.framework.addon.init.objects.LanguageData> addonInput = main.getAddons().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLang()));
+                .filter(entry -> entry.getValue().getLang().isPresent())
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLang().get()));
 
         // name, table<enum, path, value>
         final Map<String, Table<LanguageEnum, String, String>> languages = Maps.of(new HashMap<String, Table<LanguageEnum, String, String>>())

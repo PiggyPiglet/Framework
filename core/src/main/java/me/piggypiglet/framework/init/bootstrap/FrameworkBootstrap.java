@@ -58,7 +58,6 @@ public final class FrameworkBootstrap {
         this.config = config;
     }
 
-    @SuppressWarnings("unchecked")
     public void start() {
         final GuiceData guice = config.getGuice();
         final InitialModule initialModule = guice.getInitialModule().apply(this, config);

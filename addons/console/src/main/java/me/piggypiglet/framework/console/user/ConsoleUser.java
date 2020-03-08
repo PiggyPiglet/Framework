@@ -24,20 +24,21 @@
 
 package me.piggypiglet.framework.console.user;
 
-import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.user.User;
+import org.jetbrains.annotations.NotNull;
 
 public final class ConsoleUser extends User {
-    private static final Logger LOGGER = LoggerFactory.getLogger("Console");
+    private final Logger<?> logger;
 
-    public ConsoleUser() {
+    public ConsoleUser(@NotNull final Logger<?> logger) {
         super("Console", "");
+        this.logger = logger;
     }
 
     @Override
     protected void sendMessage(String message) {
-        LOGGER.info(message);
+        logger.info(message);
     }
 
     @Override

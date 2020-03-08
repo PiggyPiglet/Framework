@@ -25,33 +25,35 @@
 package me.piggypiglet.framework.sponge.logging;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.logging.framework.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
-public final class SpongeLogger extends Logger<org.slf4j.Logger> {
-    @Inject private org.slf4j.Logger logger;
+public final class SpongeLogger extends me.piggypiglet.framework.logging.framework.Logger<Logger> {
+    @Inject private Logger logger;
 
+    @NotNull
     @Override
-    protected org.slf4j.Logger init(String name) {
+    protected Logger init(@NotNull final String name) {
         return logger;
     }
 
     @Override
-    protected void info(String message) {
+    protected void info(@NotNull final Logger logger, @NotNull final String message) {
         logger.info(message);
     }
 
     @Override
-    protected void warning(String message) {
+    protected void warning(@NotNull final Logger logger, @NotNull final String message) {
         logger.warn(message);
     }
 
     @Override
-    protected void error(String message) {
+    protected void error(@NotNull final Logger logger, @NotNull final String message) {
         logger.error(message);
     }
 
     @Override
-    protected void debug(String message) {
+    protected void debug(@NotNull final Logger logger, @NotNull final String message) {
         logger.debug(message);
     }
 }

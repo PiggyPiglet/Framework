@@ -26,9 +26,11 @@ package me.piggypiglet.framework.bungeecord.file;
 
 import me.piggypiglet.framework.bungeecord.file.api.Configuration;
 import me.piggypiglet.framework.bungeecord.file.api.YamlConfiguration;
-import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.HashMap;
@@ -42,8 +44,9 @@ public final class BungeeFileConfiguration extends MapFileConfiguration {
         super(s -> s.endsWith(".yml"));
     }
 
+    @NotNull
     @Override
-    protected Map<String, Object> provide(File file, String fileContent) {
+    protected Map<String, Object> provide(@Nullable final File file, @NotNull final String content) {
         final Configuration config;
 
         try {
@@ -56,8 +59,9 @@ public final class BungeeFileConfiguration extends MapFileConfiguration {
         return config.getAll();
     }
 
+    @NotNull
     @Override
-    protected String convert(Map<String, Object> items) {
+    protected String convert(@NotNull final Map<String, Object> items) {
         final String dump = YamlConfiguration.YAML.dump(items);
         return dump.equals(BLANK_CONFIG) ? "" : dump;
     }

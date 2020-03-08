@@ -24,22 +24,23 @@
 
 package me.piggypiglet.framework.bukkit;
 
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.bukkit.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.bukkit.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bukkit.registerables.LoggerRegisterable;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
-import me.piggypiglet.framework.registerables.objects.Startup;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(startup = {
-        @Startup(
-                value = LoggerRegisterable.class,
-                priority = BootPriority.IMPL
-        ),
-        @Startup(
-                value = CommandExecutorRegisterable.class,
-                priority = BootPriority.COMMANDS
-        ),
-        @Startup(EventFinderRegisterable.class)
-})
-public final class BukkitAddon {}
+public final class BukkitAddon extends Addon {
+        @NotNull
+        @Override
+        protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+                return builder
+                        .startup(BootPriority.IMPL, LoggerRegisterable.class)
+                        .startup(BootPriority.COMMANDS, CommandExecutorRegisterable.class)
+                        .startup(EventFinderRegisterable.class)
+                        .build();
+        }
+}

@@ -44,7 +44,7 @@ public final class PermissionRegisterable extends StartupRegisterable {
     protected void execute() {
         final Optional<? extends Manager> manager = scanner.getSubTypesOf(Manager.class).stream().filter(m -> {
             try {
-                return Permission.class.isAssignableFrom(ClassUtils.getImplementedGeneric(m.getClass()));
+                return Permission.class.isAssignableFrom(ClassUtils.getImplementedGeneric(m));
             } catch (Exception e) {
                 return false;
             }

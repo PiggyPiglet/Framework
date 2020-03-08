@@ -25,19 +25,19 @@
 package me.piggypiglet.framework.mysql.registerables.startup;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.mysql.MySQLAddon;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.mysql.annotations.SQLConfig;
 import me.piggypiglet.framework.mysql.manager.MySQLManagers;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 
 public final class MySQLSavingRegisterable extends StartupRegisterable {
     @Inject private Task task;
-    @Inject private ConfigManager configManager;
+    @Inject @SQLConfig private FileConfiguration config;
     @Inject private MySQLManagers mySQLManagers;
 
     @Override
     protected void execute() {
-        task.async(r -> mySQLManagers.saveAll(), (String) configManager.getConfigs().get(MySQLAddon.class).getItems().get("save-interval"), true);
+        task.async(r -> mySQLManagers.saveAll(), config.getString("save-interval"), true);
     }
 }

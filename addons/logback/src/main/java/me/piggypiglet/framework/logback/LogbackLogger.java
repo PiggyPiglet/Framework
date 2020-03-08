@@ -24,32 +24,34 @@
 
 package me.piggypiglet.framework.logback;
 
-import me.piggypiglet.framework.logging.framework.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class LogbackLogger extends Logger<org.slf4j.Logger> {
+public final class LogbackLogger extends me.piggypiglet.framework.logging.framework.Logger<Logger> {
+    @NotNull
     @Override
-    protected org.slf4j.Logger init(String name) {
+    protected Logger init(@NotNull final String name) {
         return LoggerFactory.getLogger(name);
     }
 
     @Override
-    protected void info(String message) {
-        underlyingLogger.info(message);
+    protected void info(@NotNull final Logger logger, @NotNull final String message) {
+        logger.info(message);
     }
 
     @Override
-    protected void warning(String message) {
-        underlyingLogger.warn(message);
+    protected void warning(@NotNull final Logger logger, @NotNull final String message) {
+        logger.warn(message);
     }
 
     @Override
-    protected void error(String message) {
-        underlyingLogger.error(message);
+    protected void error(@NotNull final Logger logger, @NotNull final String message) {
+        logger.error(message);
     }
 
     @Override
-    protected void debug(String message) {
-        underlyingLogger.debug(message);
+    protected void debug(@NotNull final Logger logger, @NotNull final String message) {
+        logger.debug(message);
     }
 }

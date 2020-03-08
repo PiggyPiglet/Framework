@@ -24,10 +24,12 @@
 
 package me.piggypiglet.framework.sponge.file;
 
-import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -52,8 +54,9 @@ public final class SpongeYamlFileConfiguration extends MapFileConfiguration {
     }
 
     @SuppressWarnings("unchecked")
+    @NotNull
     @Override
-    protected Map<String, Object> provide(File file, String fileContent) {
+    protected Map<String, Object> provide(@Nullable final File file, @NotNull final String content) {
         try {
              return (Map<String, Object>) YAMLConfigurationLoader.builder()
                      .setFile(file)
@@ -66,8 +69,9 @@ public final class SpongeYamlFileConfiguration extends MapFileConfiguration {
         return new HashMap<>();
     }
 
+    @NotNull
     @Override
-    protected String convert(Map<String, Object> items) {
+    protected String convert(@NotNull final Map<String, Object> items) {
         String dump = yaml.dump(items);
 
         if (dump.equals(BLANK_CONFIG)) {

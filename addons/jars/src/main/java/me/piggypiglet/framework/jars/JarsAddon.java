@@ -24,21 +24,20 @@
 
 package me.piggypiglet.framework.jars;
 
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.jars.registerables.ClassLoaderRegisterable;
 import me.piggypiglet.framework.jars.registerables.LoaderFinderRegisterable;
-import me.piggypiglet.framework.registerables.objects.Startup;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(
-        startup = {@Startup(
-                value = ClassLoaderRegisterable.class,
-                priority = BootPriority.AFTER_IMPL
-        ),
-        @Startup(
-                value = LoaderFinderRegisterable.class,
-                priority = BootPriority.AFTER_IMPL
-        )}
-)
-public final class JarsAddon {
+public final class JarsAddon extends Addon {
+        @NotNull
+        @Override
+        protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+                return builder
+                        .startup(BootPriority.AFTER_IMPL, ClassLoaderRegisterable.class, LoaderFinderRegisterable.class)
+                        .build();
+        }
 }

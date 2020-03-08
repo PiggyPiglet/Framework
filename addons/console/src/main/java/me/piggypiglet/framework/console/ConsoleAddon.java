@@ -30,7 +30,7 @@ import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.console.registerables.ConsoleRegisterable;
 import org.jetbrains.annotations.NotNull;
 
-public final class ConsoleAddon implements Addon {
+public final class ConsoleAddon extends Addon {
     @NotNull
     @Override
     public AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {

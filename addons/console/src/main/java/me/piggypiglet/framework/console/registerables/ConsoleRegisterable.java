@@ -28,6 +28,8 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.console.user.ConsoleUser;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.annotations.LoggerName;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.user.User;
@@ -38,7 +40,12 @@ public final class ConsoleRegisterable extends StartupRegisterable {
     @Inject private Task task;
     @Inject private CommandHandlers commandHandlers;
 
-    private static final User USER = new ConsoleUser();
+    private final User user;
+
+    @Inject
+    public ConsoleRegisterable(@LoggerName("CONSOLE") Logger<?> logger) {
+        user = new ConsoleUser(logger);
+    }
 
     @Override
     protected void execute() {
@@ -49,9 +56,10 @@ public final class ConsoleRegisterable extends StartupRegisterable {
         task.async(r -> {
             Scanner input = new Scanner(System.in);
 
+            //noinspection InfiniteLoopStatement
             while (true) {
                 final String str = input.nextLine();
-                commandHandlers.process("console", USER, str);
+                commandHandlers.process("console", user, str);
             }
         });
     }

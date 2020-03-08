@@ -27,8 +27,8 @@ package me.piggypiglet.framework.http.server;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
-import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.http.HTTPAddon;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
 
@@ -36,14 +36,13 @@ import javax.net.ssl.KeyManagerFactory;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
-import java.util.Map;
 
 /**
  * Wrapper class for NanoHTTP HTTP server
  */
 @Singleton
 public final class HTTPServer {
-    @Inject private ConfigManager configManager;
+    @Inject @HTTP private FileConfiguration config;
     @Inject private ResponseHandler responseHandler;
 
     private static final Logger LOGGER = LoggerFactory.getLogger("HTTP");
@@ -54,17 +53,16 @@ public final class HTTPServer {
      * Start the HTTP server
      */
     public void start() {
-        final Map<String, Object> items = configManager.getConfigs().get(HTTPAddon.class).getItems();
-        String ip = (String) items.get("host");
-        int port = (int) (double) items.get("port");
+        String ip = config.getString("host");
+        int port = config.getInt("port");
 
         try {
             nanoHTTPD = new NestedServer(ip, port);
 
-            if ((boolean) items.get("ssl.enabled")) {
-                char[] password = ((String) items.get("ssl.password")).toCharArray();
+            if (config.getBoolean("ssl.enabled")) {
+                char[] password = config.getString("ssl.password").toCharArray();
                 KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                InputStream in = new FileInputStream((String) items.get("ssl.path"));
+                InputStream in = new FileInputStream(config.getString("ssl.path"));
                 ks.load(in, password);
                 in.close();
                 KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());

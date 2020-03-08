@@ -26,34 +26,37 @@ package me.piggypiglet.framework.bukkit.logging;
 
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
-import me.piggypiglet.framework.logging.framework.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-public final class BukkitLogger extends Logger<java.util.logging.Logger> {
+import java.util.logging.Logger;
+
+public final class BukkitLogger extends me.piggypiglet.framework.logging.framework.Logger<Logger> {
     @Inject private MainBinding main;
 
+    @NotNull
     @Override
-    protected java.util.logging.Logger init(String name) {
+    protected Logger init(@NotNull final String name) {
         return ((JavaPlugin) main.getInstance()).getLogger();
     }
 
     @Override
-    protected void info(String message) {
-        underlyingLogger.info(message);
+    protected void info(@NotNull final Logger logger, @NotNull final String message) {
+        logger.info(message);
     }
 
     @Override
-    protected void warning(String message) {
-        underlyingLogger.warning(message);
+    protected void warning(@NotNull final Logger logger, @NotNull final String message) {
+        logger.warning(message);
     }
 
     @Override
-    protected void error(String message) {
-        underlyingLogger.severe(message);
+    protected void error(@NotNull final Logger logger, @NotNull final String message) {
+        logger.severe(message);
     }
 
     @Override
-    protected void debug(String message) {
+    protected void debug(@NotNull final Logger logger, @NotNull final String message) {
         info(message);
     }
 }

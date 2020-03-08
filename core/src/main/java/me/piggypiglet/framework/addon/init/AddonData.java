@@ -9,8 +9,10 @@ import me.piggypiglet.framework.registerables.ShutdownRegisterable;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.internal.objects.ScanningRequest;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public final class AddonData {
@@ -21,10 +23,10 @@ public final class AddonData {
     private final Set<ScanningRequest> requests;
     private final LanguageData lang;
 
-    AddonData(@NotNull final Addon addon, @NotNull final FilesData files,
+    AddonData(@NotNull final Addon addon, @Nullable final FilesData files,
               @NotNull final Multimap<BootPriority, Class<? extends StartupRegisterable>> startup,
               @NotNull final List<Class<? extends ShutdownRegisterable>> shutdown, @NotNull final Set<ScanningRequest> requests,
-              @NotNull final LanguageData lang) {
+              @Nullable final LanguageData lang) {
         this.addon = addon;
         this.files = files;
         this.startup = startup;
@@ -39,8 +41,8 @@ public final class AddonData {
     }
 
     @NotNull
-    public FilesData getFiles() {
-        return files;
+    public Optional<FilesData> getFiles() {
+        return Optional.ofNullable(files);
     }
 
     @NotNull
@@ -59,7 +61,7 @@ public final class AddonData {
     }
 
     @NotNull
-    public LanguageData getLang() {
-        return lang;
+    public Optional<LanguageData> getLang() {
+        return Optional.ofNullable(lang);
     }
 }

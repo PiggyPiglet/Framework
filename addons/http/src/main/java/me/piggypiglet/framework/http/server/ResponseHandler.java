@@ -27,10 +27,10 @@ package me.piggypiglet.framework.http.server;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import fi.iki.elonen.NanoHTTPD;
-import me.piggypiglet.framework.addon.ConfigManager;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
-import me.piggypiglet.framework.http.HTTPAddon;
 import me.piggypiglet.framework.http.files.DefaultHTTP;
+import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.http.routes.Route;
 import me.piggypiglet.framework.http.routes.auth.permissions.Permission;
 import me.piggypiglet.framework.http.routes.mixins.Authenticated;
@@ -40,13 +40,12 @@ import me.piggypiglet.framework.managers.Manager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
 public final class ResponseHandler {
     @Inject @DefaultHTTP private FileWrapper def;
-    @Inject private ConfigManager configManager;
+    @Inject @HTTP private FileConfiguration config;
     @Inject private Manager<Permission> permStore;
 
     private final List<Route> routes = new ArrayList<>();
@@ -69,14 +68,13 @@ public final class ResponseHandler {
 
                 if (auth != null) {
                     final NanoHTTPD.Response noPermission = NanoHTTPD.newFixedLengthResponse("<p>No permission.</p>");
-                    final Map<String, Object> config = configManager.getConfigs().get(HTTPAddon.class).getItems();
                     final String token = session.getHeaders().getOrDefault("auth", null);
 
                     if (token == null || !permStore.exists(token)) return noPermission;
 
                     final Collection<String> perms = permStore.get(token).getPermissions();
 
-                    if ((boolean) config.get("standard-authentication.enabled") &&
+                    if (config.getBoolean("standard-authentication.enabled") &&
                             (!auth.permission().isEmpty() && !perms.contains(auth.permission()) && !perms.contains("*"))) {
                         return noPermission;
                     }

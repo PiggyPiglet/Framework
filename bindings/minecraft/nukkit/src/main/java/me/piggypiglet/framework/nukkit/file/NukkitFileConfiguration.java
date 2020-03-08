@@ -27,14 +27,17 @@ package me.piggypiglet.framework.nukkit.file;
 import cn.nukkit.utils.Config;
 import com.google.common.io.Files;
 import com.google.gson.GsonBuilder;
-import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class NukkitFileConfiguration extends MapFileConfiguration {
@@ -42,14 +45,20 @@ public final class NukkitFileConfiguration extends MapFileConfiguration {
         super(s -> StringUtils.endsWithAny(s, ".properties", ".con", ".conf", ".config", ".yml", ".yaml", ".txt", ".list", ".enum"));
     }
 
+    @NotNull
     @Override
-    protected Map<String, Object> provide(File file, String fileContent) {
-        return new Config(file).getAll();
+    protected Map<String, Object> provide(@Nullable final File file, @NotNull final String content) {
+        if (file != null) {
+            return new Config(file).getAll();
+        }
+
+        return new HashMap<>();
     }
 
     @SuppressWarnings("UnstableApiUsage")
+    @NotNull
     @Override
-    protected String convert(Map<String, Object> items) {
+    protected String convert(@NotNull final Map<String, Object> items) {
         StringBuilder content = new StringBuilder();
 
         // https://github.com/NukkitX/Nukkit/blob/master/src/main/java/cn/nukkit/utils/Config.java#L216-L254

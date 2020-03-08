@@ -24,29 +24,23 @@
 
 package me.piggypiglet.framework.bungeecord;
 
+import me.piggypiglet.framework.addon.framework.Addon;
+import me.piggypiglet.framework.addon.init.AddonBuilder;
+import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.bungeecord.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bungeecord.registerables.LoggerRegisterable;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
-import me.piggypiglet.framework.registerables.objects.Startup;
-import me.piggypiglet.framework.utils.annotations.addon.Addon;
+import org.jetbrains.annotations.NotNull;
 
-@Addon(
-        startup = {
-                @Startup(
-                        value = LoggerRegisterable.class,
-                        priority = BootPriority.IMPL
-                ),
-                @Startup(EventFinderRegisterable.class),
-                @Startup(
-                        value = CommandExecutorRegisterable.class,
-                        priority = BootPriority.COMMANDS
-                )/*,
-                @Startup(
-                        value = PacketRegisterable.class,
-                        priority = BootPriority.IMPL
-                )*/
-        }
-)
-public final class BungeeAddon {
+public final class BungeeAddon extends Addon {
+    @NotNull
+    @Override
+    protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
+        return builder
+                .startup(BootPriority.IMPL, LoggerRegisterable.class)
+                .startup(BootPriority.COMMANDS, CommandExecutorRegisterable.class)
+                .startup(EventFinderRegisterable.class)
+                .build();
+    }
 }

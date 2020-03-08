@@ -26,8 +26,8 @@ package me.piggypiglet.framework.http.routes.auth.permissions;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.http.HTTPAddon;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.http.files.HTTP;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.managers.Manager;
@@ -40,7 +40,10 @@ import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.List;
 
 @Disabled
 @Singleton
@@ -57,21 +60,20 @@ public final class DefaultPermissionStore extends Manager<Permission> {
         }
     }
 
-    @Inject private ConfigManager configManager;
+    @Inject @HTTP private FileConfiguration config;
 
     private final List<Permission> permissions = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void postConfigure() {
-        ((List<Map<String, Object>>) configManager.getConfigs().get(HTTPAddon.class).getItems().get("standard-authentication.tokens")).forEach(m -> {
+        config.getConfigList("standard-authentication.tokens").forEach(m -> {
             try {
-                final String pub = (String) m.get("pub");
+                final String pub = m.getString("pub");
 
                 if (!pub.isEmpty()) {
                     add(new Permission(
-                            KEY_FACTORY.generatePublic(new X509EncodedKeySpec(DECODER.decode((String) m.get("pub")))),
-                            (List<String>) m.get("permissions")
+                            KEY_FACTORY.generatePublic(new X509EncodedKeySpec(DECODER.decode(pub))),
+                            m.getList("permissions")
                     ));
                 }
             } catch (Exception e) {

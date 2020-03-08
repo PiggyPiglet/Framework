@@ -24,13 +24,15 @@
 
 package me.piggypiglet.framework.bukkit.file;
 
-import me.piggypiglet.framework.file.framework.implementations.map.MapFileConfiguration;
+import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.file.framework.objects.Mapper;
 import me.piggypiglet.framework.logging.LoggerFactory;
 import me.piggypiglet.framework.logging.framework.Logger;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
@@ -57,10 +59,11 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
     }
 
     @SuppressWarnings("unchecked")
+    @NotNull
     @Override
-    protected Map<String, Object> provide(File file, String fileContent) {
+    protected Map<String, Object> provide(@Nullable final File file, @NotNull final String content) {
         try {
-            return (Map<String, Object>) YAML.load(fileContent);
+            return (Map<String, Object>) YAML.load(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,8 +71,9 @@ public final class SpigotFileConfiguration extends MapFileConfiguration {
         return new LinkedHashMap<>();
     }
 
+    @NotNull
     @Override
-    protected String convert(Map<String, Object> items) {
+    protected String convert(@NotNull final Map<String, Object> items) {
         String dump = YAML.dump(items);
 
         if (dump.equals(BLANK_CONFIG)) {

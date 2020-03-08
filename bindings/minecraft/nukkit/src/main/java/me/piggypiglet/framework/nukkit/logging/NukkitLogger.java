@@ -29,32 +29,34 @@ import cn.nukkit.plugin.PluginLogger;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.guice.objects.MainBinding;
 import me.piggypiglet.framework.logging.framework.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public final class NukkitLogger extends Logger<PluginLogger> {
     @Inject private MainBinding main;
 
+    @NotNull
     @Override
-    protected PluginLogger init(String name) {
+    protected PluginLogger init(@NotNull final String name) {
         return ((PluginBase) main.getInstance()).getLogger();
     }
 
     @Override
-    protected void info(String message) {
-        underlyingLogger.info(message);
+    protected void info(@NotNull final PluginLogger logger, @NotNull final String message) {
+        logger.info(message);
     }
 
     @Override
-    protected void warning(String message) {
-        underlyingLogger.warning(message);
+    protected void warning(@NotNull final PluginLogger logger, @NotNull final String message) {
+        logger.warning(message);
     }
 
     @Override
-    protected void error(String message) {
-        underlyingLogger.error(message);
+    protected void error(@NotNull final PluginLogger logger, @NotNull final String message) {
+        logger.error(message);
     }
 
     @Override
-    protected void debug(String message) {
-        underlyingLogger.debug(message);
+    protected void debug(@NotNull final PluginLogger logger, @NotNull final String message) {
+        logger.debug(message);
     }
 }

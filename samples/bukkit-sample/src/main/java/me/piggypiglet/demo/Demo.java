@@ -26,21 +26,25 @@ package me.piggypiglet.demo;
 
 import me.piggypiglet.demo.registerables.BroadcasterRegisterable;
 import me.piggypiglet.framework.Framework;
-import me.piggypiglet.framework.registerables.objects.RegisterableData;
 import me.piggypiglet.framework.utils.annotations.files.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Demo extends JavaPlugin {
     @Override
     public void onEnable() {
-        Framework.builder()
-                .main(JavaPlugin.class, this)
-                .scanner()
+        Framework.builder(JavaPlugin.class, this)
+                .scanning().scanner()
                         .pckg("me.piggypiglet.demo")
+                        .build().build()
+                .commands()
+                        .prefixes("demo")
                         .build()
-                .commandPrefixes("demo")
-                .startup(new RegisterableData(BroadcasterRegisterable.class))
-                .file(true, "config", "/config.yml", getDataFolder() + "/config.yml", Config.class)
+                .guice()
+                        .startup(BroadcasterRegisterable.class)
+                        .build()
+                .files()
+                        .config("config", "config.yml", getDataFolder().getPath() + "/config.yml", Config.class)
+                        .build()
                 .build()
                 .init();
     }

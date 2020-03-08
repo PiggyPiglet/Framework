@@ -27,14 +27,13 @@ package me.piggypiglet.framework.jars.registerables;
 import com.google.inject.Inject;
 import me.piggypiglet.framework.jars.loading.JarManager;
 import me.piggypiglet.framework.jars.loading.framework.Loader;
-import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.annotations.LoggerName;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 
 public final class LoaderFinderRegisterable extends StartupRegisterable {
-    private static final Logger<?> LOGGER = LoggerFactory.getLogger("LoaderRegisterable");
-
+    @Inject @LoggerName("LoaderRegisterable") private Logger<?> logger;
     @Inject private Scanner scanner;
     @Inject private JarManager jarManager;
 
@@ -45,7 +44,7 @@ public final class LoaderFinderRegisterable extends StartupRegisterable {
         try {
             jarManager.load().scan(injector);
         } catch (Exception e) {
-            LOGGER.error(e);
+            logger.error(e);
         }
     }
 }

@@ -24,10 +24,10 @@
 
 package me.piggypiglet.framework.console.commands;
 
-import me.piggypiglet.framework.commands.framework.Command;
+import me.piggypiglet.framework.commands.framework.BaseCommand;
 import me.piggypiglet.framework.user.User;
 
-public final class StopCommand extends Command {
+public final class StopCommand extends BaseCommand {
     public StopCommand() {
         super("stop");
         options.handlers("console").usage("").description("Stop the application.");

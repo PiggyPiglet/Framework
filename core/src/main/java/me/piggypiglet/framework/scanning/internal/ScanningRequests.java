@@ -22,7 +22,7 @@ public enum ScanningRequests {
     LOGGING_TYPES("logger_types", new TypeLiteral<Set<Class<? extends Logger<?>>>>(){}.getType(),
             scanner -> scanner.getSubTypesOf(Logger.class)),
     LOGGING_FIELDS("logger_fields", new TypeLiteral<Set<Field>>(){}.getType(),
-            scanner -> scanner.getClassesAnnotatedWith(new AnnotationWrapper(LoggerName.class))),
+            scanner -> scanner.getFieldsAnnotatedWith(new AnnotationWrapper(LoggerName.class))),
     LOGGING_PARAMETERS("logger_params", new TypeLiteral<Set<Parameter>>(){}.getType(),
             scanner -> scanner.getParametersAnnotatedWithInConstructors(new AnnotationWrapper(LoggerName.class)));
 

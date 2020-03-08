@@ -25,9 +25,11 @@
 package me.piggypiglet.framework.jda.startup;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.addon.ConfigManager;
-import me.piggypiglet.framework.jda.JDAAddon;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.jda.annotation.Bot;
 import me.piggypiglet.framework.logging.LoggerFactory;
+import me.piggypiglet.framework.logging.annotations.LoggerName;
+import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
 import me.piggypiglet.framework.task.Task;
@@ -39,25 +41,23 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.EventListener;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class JDARegisterable extends StartupRegisterable {
-    @Inject private ConfigManager configManager;
+    @Inject @LoggerName("JDA") private Logger<?> logger;
+    @Inject @Bot private FileConfiguration config;
     @Inject private Scanner scanner;
     @Inject private Task task;
 
     @Override
     protected void execute() {
-        LoggerFactory.getLogger("JDA").debug("Initializing bot and bindings.");
-
-        final Map<String, Object> items = configManager.getConfigs().get(JDAAddon.class).getItems();
+        logger.debug("Initializing bot and bindings.");
 
         JDABuilder builder = new JDABuilder(AccountType.BOT)
-                .setToken((String) items.get("token"))
+                .setToken(config.getString("token"))
                 .setActivity(Activity.of(
-                        Activity.ActivityType.valueOf(((String) items.getOrDefault("activity.type", "default")).toUpperCase()), (String) items.get("activity.activity")
+                        Activity.ActivityType.valueOf(config.getString("activity.type", "default").toUpperCase()), config.getString("activity.activity")
                 )
         );
 

@@ -36,37 +36,6 @@ import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import org.jetbrains.annotations.NotNull;
 
-//@Addon(
-//        startup = {
-//                @Startup(RoutesRegisterable.class),
-//                @Startup(HTTPRegisterable.class),
-//                @Startup(
-//                        value = PermissionRegisterable.class,
-//                        priority = BootPriority.BEFORE_ADDONS
-//                )
-//        },
-//        files = {@File(
-//                config = true,
-//                name = "http",
-//                externalPath = "http.json",
-//                internalPath = "/http.json",
-//                annotation = HTTP.class
-//        ), @File(
-//                config = false,
-//                name = "http-default",
-//                externalPath = "index.html",
-//                internalPath = "/index.html",
-//                annotation = DefaultHTTP.class
-//        )},
-//        config = @Config(
-//                name = "http",
-//                keys = {
-//                        "host", "port", "ssl.enabled", "ssl.path", "ssl.password", "standard-authentication", "standard-authentication.enabled",
-//                        "standard-authentication.tokens"
-//                }
-//        ),
-//        shutdown = ShutdownHTTP.class
-//)
 public final class HTTPAddon extends Addon {
     @NotNull
     @Override
