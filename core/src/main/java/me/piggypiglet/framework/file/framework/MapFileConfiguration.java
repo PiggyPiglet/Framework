@@ -60,7 +60,7 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
 
     private Map<String, Object> items;
     private Map<String, Object> flat;
-    private Table<FileConfiguration, String, String> relocations = HashBasedTable.create();
+    private Table<MapFileConfiguration, String, String> relocations = HashBasedTable.create();
 
     private File file;
 
@@ -123,7 +123,8 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
     @Override
     public Object get(@NotNull final String path) {
         if (relocations.containsColumn(path)) {
-            return getFromRelocation(path, FileConfiguration::get);
+            return getFromRelocation(path, FileConfiguration::get,
+                    (cfg, _path) -> Maps.recursiveGet(cfg.items, _path));
         }
 
         return Maps.recursiveGet(items, path);
@@ -148,7 +149,7 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
 
     @Override
     public String getString(String path) {
-        return (String) getFromRelocation(path, FileConfiguration::getString);
+        return getFromRelocation(path, FileConfiguration::getString, this::getFromFlat);
     }
 
     @Override
@@ -187,13 +188,13 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
     }
 
     private <T> T number(String path, Function<Number, T> value) {
-        final Object obj = getFromRelocation(path, (config, _path) -> ((MapFileConfiguration) config).number(_path, value));
+        final Object obj = getFromRelocation(path, (cfg, _path) -> cfg.number(_path, value), this::getFromFlat);
         return obj == null ? null : value.apply(((Number) obj));
     }
 
     @Override
     public Boolean getBoolean(String path) {
-        return (Boolean) getFromRelocation(path, FileConfiguration::getBoolean);
+        return getFromRelocation(path, FileConfiguration::getBoolean, this::getFromFlat);
     }
 
     @Override
@@ -204,7 +205,7 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> getList(String path) {
-        return (List<T>) getFromRelocation(path, FileConfiguration::getList);
+        return (List<T>) getFromRelocation(path, FileConfiguration::getList, this::getFromFlat);
     }
 
     @Override
@@ -282,14 +283,20 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
         return flat;
     }
 
-    public void setRelocations(@NotNull final Table<FileConfiguration, String, String> relocations) {
+    public void setRelocations(@NotNull final Table<MapFileConfiguration, String, String> relocations) {
         this.relocations = relocations;
     }
 
-    private <T> T getFromRelocation(@NotNull final String path, @NotNull final BiFunction<FileConfiguration, String, T> getter) {
+    @SuppressWarnings("unchecked")
+    private <T> T getFromFlat(@NotNull final MapFileConfiguration config, @NotNull final String path) {
+        return (T) config.flat.get(path);
+    }
+
+    private <T> T getFromRelocation(@NotNull final String path, @NotNull final BiFunction<MapFileConfiguration, String, T> retrier,
+                                    @NotNull final BiFunction<MapFileConfiguration, String, T> getter) {
         if (relocations.containsColumn(path)) {
-            final Map.Entry<FileConfiguration, String> entry = Iterables.getOnlyElement(relocations.column(path).entrySet());
-            return getter.apply(entry.getKey(), entry.getValue());
+            final Map.Entry<MapFileConfiguration, String> entry = Iterables.getOnlyElement(relocations.column(path).entrySet());
+            return retrier.apply(entry.getKey(), entry.getValue());
         }
 
         return getter.apply(this, path);
