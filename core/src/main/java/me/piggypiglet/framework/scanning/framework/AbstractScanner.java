@@ -6,7 +6,6 @@ import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -150,11 +149,8 @@ public abstract class AbstractScanner implements Scanner {
     @Override
     public Set<Parameter> getParametersAnnotatedWithInConstructors(@NotNull final AnnotationWrapper... annotations) {
         return stream(constructors)
-                .flatMap(c -> Arrays.stream(c.getParameters())
-                        .filter(p -> Arrays.stream(p.getAnnotations())
-                                .map(Annotation::annotationType)
-                                .map(AnnotationWrapper::new)
-                                .anyMatch(annotation -> Arrays.asList(annotations).contains(annotation))))
+                .flatMap(constructor -> Arrays.stream(constructor.getParameters()))
+                .filter(parameter -> Arrays.stream(annotations).anyMatch(annotation -> isAnnotationPresent(parameter, annotation)))
                 .collect(Collectors.toSet());
     }
 

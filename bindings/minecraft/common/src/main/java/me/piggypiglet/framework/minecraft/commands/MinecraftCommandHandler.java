@@ -24,16 +24,24 @@
 
 package me.piggypiglet.framework.minecraft.commands;
 
+import com.google.inject.Inject;
+import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.CommandHandler;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.minecraft.commands.framework.GenericMinecraftCommand;
 import me.piggypiglet.framework.minecraft.lang.Language;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.user.User;
+import org.jetbrains.annotations.NotNull;
 
 public class MinecraftCommandHandler extends CommandHandler {
+    @Inject
+    public MinecraftCommandHandler(@NotNull final Framework framework) {
+        super(framework);
+    }
+
     @Override
-    protected boolean run(User user, Command command) {
+    protected boolean run(@NotNull final User user, @NotNull final Command<? extends User> command) {
         if (user instanceof MinecraftUser && command instanceof GenericMinecraftCommand) {
             final MinecraftUser mcUser = (MinecraftUser) user;
             final GenericMinecraftCommand<?> mcCommand = (GenericMinecraftCommand<?>) command;

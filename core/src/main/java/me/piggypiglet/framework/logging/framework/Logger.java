@@ -77,7 +77,7 @@ public abstract class Logger<T> {
 
     public void debug(@NotNull final Object message, @NotNull final Object... vars) {
         if (debug) {
-            debug(format(message, vars));
+            debug(handle, format(message, vars));
         }
     }
 

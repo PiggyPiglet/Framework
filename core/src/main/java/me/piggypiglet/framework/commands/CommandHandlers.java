@@ -24,12 +24,15 @@
 
 package me.piggypiglet.framework.commands;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.user.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,74 +42,84 @@ import java.util.stream.Collectors;
 
 @Singleton
 public final class CommandHandlers {
-
     @Inject private Task task;
+    private final boolean enabled;
 
-    private final Set<Command> commands = new HashSet<>();
+    @Inject
+    public CommandHandlers(@NotNull final Framework config) {
+        enabled = config.getCommandPrefixes() != null;
+    }
+
+    private final Set<Command<? extends User>> commands = new HashSet<>();
     private final Map<String, CommandHandler> handlers = new HashMap<>();
 
-    /**
-     * Find and run a command in a specific handler.
-     * @param commandHandler Handler to attempt to find the command in
-     * @param user User running the command
-     * @param message Message, including command prefix, command, and arguments.
-     */
-    public void process(String commandHandler, User user, String message) {
+    public void process(@NotNull final String commandHandler, @NotNull final User user,
+                        @NotNull final String message) {
+        if (!enabled) return;
+
         task.async(r -> handlers.get(commandHandler).handle(user, message, commandHandler));
     }
 
-    /**
-     * Create a new command handler.
-     * @param name String the command handler will be referenced by
-     * @param injector Instance of the applications injector.
-     */
-    public void newHandler(String name, Injector injector) {
+    public void newHandler(@NotNull final String name, @NotNull final Injector injector) {
+        if (!enabled) return;
+
         newHandler(name, CommandHandler.class, injector);
     }
 
-    /**
-     * Create a new command handler, with a custom type
-     * @param name String the command handler will be referenced by
-     * @param handler Class of the command handler
-     * @param injector Instance of the application's injector
-     */
-    public void newHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
+    public void newHandler(@NotNull final String name, @NotNull final Class<? extends CommandHandler> handler,
+                           @NotNull final Injector injector) {
+        if (!enabled) return;
+
         final CommandHandler commandHandler = injector.getInstance(handler);
 
         handlers.put(name, commandHandler);
-        commandHandler.setCommands(commands.stream().filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name)).collect(Collectors.toSet()));
+        updateCommands();
     }
 
-    public void overrideHandler(String name, Class<? extends CommandHandler> handler, Injector injector) {
-        if (handlers.containsKey(name)) {
-            CommandHandler commandHandler = injector.getInstance(handler);
+    public void overrideHandler(@NotNull final String name, @NotNull final Class<? extends CommandHandler> handler,
+                                @NotNull final Injector injector) {
+        if (!enabled || !handlers.containsKey(name)) return;
 
-            commandHandler.setCommands(handlers.get(name).getCommands());
-            handlers.put(name, commandHandler);
-        }
+        final CommandHandler commandHandler = injector.getInstance(handler);
+
+        commandHandler.setCommands(handlers.get(name).getCommands());
+        handlers.put(name, commandHandler);
     }
 
-    /**
-     * Get the commands from a specific handler
-     * @param handler Handler name
-     * @return Set of commands that handler can process
-     */
-    public Set<Command> getCommands(String handler) {
-        return handlers.get(handler).getCommands();
+    @NotNull
+    public Set<Command<? extends User>> getCommands(@NotNull final String handler) {
+        return ImmutableSet.copyOf(handlers.get(handler).getCommands());
     }
 
-    /**
-     * Get all commands registered in RPF
-     * @return List of commands
-     */
-    public Set<Command> getCommands() {
-        return commands;
+    @NotNull
+    public Set<Command<? extends User>> getAllCommands() {
+        return ImmutableSet.copyOf(commands);
     }
 
-    /**
-     * Clear commands in here, and all underlying command handlers.
-     */
+    public void addCommands(@NotNull final Set<Command<? extends User>> commands) {
+        if (!enabled) return;
+
+        this.commands.addAll(commands);
+        updateCommands();
+    }
+
+    public void updateCommands() {
+        if (!enabled) return;
+
+        handlers.keySet().forEach(this::updateCommands);
+    }
+
+    public void updateCommands(@NotNull final String name) {
+        if (!enabled) return;
+
+        handlers.get(name).setCommands(commands.stream()
+                .filter(c -> c.getHandlers().isEmpty() || c.getHandlers().contains(name))
+                .collect(Collectors.toSet()));
+    }
+
     public void clearCommands() {
+        if (!enabled) return;
+
         commands.clear();
         handlers.values().stream().map(CommandHandler::getCommands).forEach(Set::clear);
     }

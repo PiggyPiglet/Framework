@@ -30,8 +30,10 @@ import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.minecraft.commands.framework.MinecraftCommand;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,14 +49,14 @@ public final class HelpCommand extends MinecraftCommand {
 
     @Override
     protected boolean execute(MinecraftUser user, String[] args) {
-        final Set<Command> commands = commandHandlers.getCommands();
-        final String prefix = framework.getCommandPrefixes()[0];
+        final Set<Command<? extends User>> commands = commandHandlers.getAllCommands();
+        final String prefix = Objects.requireNonNull(framework.getCommandPrefixes())[0];
 
         if (args.length > 0) {
-            final Optional<Command> command = commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(args[0])).findAny();
+            final Optional<Command<? extends User>> command = commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(args[0])).findAny();
 
             if (command.isPresent()) {
-                final Command cmd = command.get();
+                final Command<? extends User> cmd = command.get();
                 user.sendMessage("&c/%s %s%s &8- &7%s\n",
                         prefix,
                         cmd.getCommand(),

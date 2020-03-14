@@ -28,17 +28,21 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.commands.CommandHandlers;
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.framework.Scanner;
+import me.piggypiglet.framework.user.User;
+import me.piggypiglet.framework.utils.annotations.internal.Internal;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class CommandsRegisterable extends StartupRegisterable {
-    @Inject private Scanner scanner;
+    @Inject @Internal("command_impls") private Set<Class<? extends Command<? extends User>>> commands;
     @Inject private CommandHandlers commandHandlers;
 
     @Override
     protected void execute() {
         commandHandlers.clearCommands();
-        commandHandlers.getCommands().addAll(scanner.getSubTypesOf(Command.class).stream().map(injector::getInstance).collect(Collectors.toSet()));
+        commandHandlers.addCommands(commands.stream()
+                .map(injector::getInstance)
+                .collect(Collectors.toSet()));
     }
 }

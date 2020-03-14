@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class LanguageValuesRegisterable extends StartupRegisterable {
@@ -34,7 +35,6 @@ public final class LanguageValuesRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        final LanguageData userInput = framework.getLang();
         final Map<Class<? extends Addon>, me.piggypiglet.framework.addon.init.objects.LanguageData> addonInput = main.getAddons().entrySet().stream()
                 .filter(entry -> entry.getValue().getLang().isPresent())
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLang().get()));
@@ -45,10 +45,14 @@ public final class LanguageValuesRegisterable extends StartupRegisterable {
                         .orElseThrow(() -> new RuntimeException("Something went wrong when loading the core language file."))))
                 .build();
 
-        final LanguageFileEnumPair custom = userInput.getCustom();
-        final Table<LanguageEnum, String, String> userData = data(custom.getEnums(), fileManager.getConfig(custom.getConfig())
-                .orElseThrow(() -> new RuntimeException("Supplied custom config: " + custom.getConfig() + " doesn't exist.")));
-        languages.put("custom", userData);
+        final Optional<LanguageData> userInput = framework.getLang();
+
+        if (userInput.isPresent()) {
+            final LanguageFileEnumPair custom = userInput.get().getCustom();
+            final Table<LanguageEnum, String, String> userData = data(custom.getEnums(), fileManager.getConfig(custom.getConfig())
+                    .orElseThrow(() -> new RuntimeException("Supplied custom config: " + custom.getConfig() + " doesn't exist.")));
+            languages.put("custom", userData);
+        }
 
         addonInput.forEach((addon, data) ->
                 languages.put(StringUtils.addonName(addon), data((LanguageEnum[]) data.getClazz().getEnumConstants(), fileManager.getConfig(data.getFile())

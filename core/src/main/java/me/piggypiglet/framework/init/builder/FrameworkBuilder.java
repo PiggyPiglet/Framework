@@ -30,7 +30,7 @@ public final class FrameworkBuilder {
     private FilesData files = null;
     private final Map<Class<? extends Addon>, AddonConfiguration> addons = new HashMap<>();
     private int threads = 15;
-    private LanguageData language;
+    private LanguageData language = null;
     private boolean debug = false;
 
     public <T> FrameworkBuilder(@NotNull final T main) {

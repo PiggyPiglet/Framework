@@ -32,6 +32,7 @@ import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.StringUtils;
 import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
 import me.piggypiglet.framework.utils.annotations.reflection.def.UltraDefault;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -49,76 +50,92 @@ import static me.piggypiglet.framework.language.internal.Language.*;
 public class CommandHandler {
     public static final Pattern ARGUMENT_PATTERN = Pattern.compile("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-    private static final BiPredicate<Command, Class<? extends Annotation>> HAS_ANNOTATION = (c, a) -> c.getClass().isAnnotationPresent(a);
-    private static final Predicate<Command> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.test(c, UltraDefault.class);
-    private static final Predicate<Command> IS_DEFAULT = c -> HAS_ANNOTATION.test(c, Default.class);
+    private static final BiPredicate<Command<? extends User>, Class<? extends Annotation>> HAS_ANNOTATION =
+            (c, a) -> c.getClass().isAnnotationPresent(a);
+    private static final Predicate<Command<? extends User>> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.test(c, UltraDefault.class);
+    private static final Predicate<Command<? extends User>> IS_DEFAULT = c -> HAS_ANNOTATION.test(c, Default.class);
 
-    @Inject private Framework framework;
     @Inject private HelpCommand defHelpCommand;
+    private final String[] commandPrefixes;
 
-    private Set<Command> commands;
-    private Command helpCommand;
+    @Inject
+    public CommandHandler(@NotNull final Framework framework) {
+        commandPrefixes = framework.getCommandPrefixes();
 
-    @SuppressWarnings("unchecked")
-    public void handle(User user, String message, String handler) {
-        if (StringUtils.startsWithAny(message, framework.getCommandPrefixes())) {
-            final AtomicReference<String> messageRef = new AtomicReference<>(message);
-            Arrays.stream(framework.getCommandPrefixes()).forEach(c -> messageRef.set(messageRef.get().replaceFirst(c, "")));
-            message = messageRef.get().trim();
-
-            if (message.isEmpty()) {
-                helpCommand.run(user, new String[]{}, handler);
-                return;
-            }
-
-            for (Command c : commands) {
-                String cmd = c.getCommand();
-
-                if (startsWith(message, cmd)) {
-                    List<String> permissions = c.getPermissions();
-
-                    if (permissions.isEmpty() || permissions.stream().anyMatch(user::hasPermission)) {
-                        String[] args = args(message.replaceFirst(cmd, "").trim());
-
-                        if (!run(user, c)) return;
-
-                        if (!c.run(user, args, handler)) {
-                            user.sendMessage(INCORRECT_USAGE, cmd, c.getUsage());
-                        }
-                    } else {
-                        user.sendMessage(NO_PERMISSION);
-                    }
-
-                    return;
-                }
-            }
-
-            user.sendMessage(UNKNOWN_COMMAND);
+        if (commandPrefixes == null) {
+            throw new RuntimeException("Command Prefixes cannot be null");
         }
     }
 
-    protected boolean run(User user, Command command) {
+    private Set<Command<? extends User>> commands;
+    private Command<? extends User> helpCommand;
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public <T extends User> void handle(@NotNull final T user, @NotNull String message,
+                                        @NotNull final String handler) {
+        if (!StringUtils.startsWithAny(message, commandPrefixes)) {
+            return;
+        }
+
+        final AtomicReference<String> messageRef = new AtomicReference<>(message);
+        Arrays.stream(commandPrefixes).forEach(c -> messageRef.set(messageRef.get().replaceFirst(c, "")));
+        message = messageRef.get().trim();
+
+        if (message.isEmpty()) {
+            ((Command) helpCommand).run(user, new String[]{}, handler);
+            return;
+        }
+
+        for (Command<? extends User> c : commands) {
+            final String cmd = c.getCommand();
+
+            if (startsWith(message, cmd)) {
+                final List<String> permissions = c.getPermissions();
+
+                if (permissions.isEmpty() || permissions.stream().anyMatch(user::hasPermission)) {
+                    final String[] args = args(message.replaceFirst(cmd, "").trim());
+
+                    if (!run(user, c)) return;
+
+                    if (!((Command) c).run(user, args, handler)) {
+                        user.sendMessage(INCORRECT_USAGE, cmd, c.getUsage());
+                    }
+                } else {
+                    user.sendMessage(NO_PERMISSION);
+                }
+
+                return;
+            }
+        }
+
+        user.sendMessage(UNKNOWN_COMMAND);
+    }
+
+    protected boolean run(@NotNull final User user, @NotNull final Command<? extends User> command) {
         return process(user, command);
     }
 
     /**
-     * Handle any extra processing the default method doesn't provide in sub classes. Custom messages will need to be handled here.
-     * @param user User
+     * Handle any extra processing the default method doesn't provide in sub classes.
+     * Custom messages will need to be handled here.
+     *
+     * @param user    User
      * @param command Command
      * @return boolean on whether to execute or not
      */
-    protected boolean process(User user, Command command) {
+    protected boolean process(@NotNull final User user, @NotNull final Command<? extends User> command) {
         return true;
     }
 
     /**
      * Set this commandhandler's commands.
+     *
      * @param commands Commands to set
      */
-    public void setCommands(Set<Command> commands) {
-        Set<Command> clone = new HashSet<>(commands);
+    void setCommands(Set<Command<? extends User>> commands) {
+        Set<Command<? extends User>> clone = new HashSet<>(commands);
 
-        Set<Command> defs = clone.stream()
+        Set<Command<? extends User>> defs = clone.stream()
                 .filter(Command::isDefault)
                 .filter(c -> !IS_ULTRA_DEFAULT.test(c))
                 .collect(Collectors.toSet());
@@ -139,19 +156,20 @@ public class CommandHandler {
 
     /**
      * Get commands this command handler can process
+     *
      * @return List of commands
      */
-    public Set<Command> getCommands() {
+    Set<Command<? extends User>> getCommands() {
         return commands;
     }
 
-    private String[] args(String text) {
+    private static String[] args(@NotNull final String text) {
         String[] args = ARGUMENT_PATTERN.split(text.trim());
 
         return args[0].isEmpty() ? new String[]{} : args;
     }
 
-    private boolean startsWith(String msg, String q) {
+    private static boolean startsWith(@NotNull final String msg, @NotNull final String q) {
         String lowerMsg = msg.toLowerCase();
         String lowerQ = q.toLowerCase();
 

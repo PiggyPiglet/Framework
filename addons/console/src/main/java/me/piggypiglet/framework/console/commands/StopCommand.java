@@ -35,6 +35,7 @@ public final class StopCommand extends BaseCommand {
 
     @Override
     protected boolean execute(User user, String[] args) {
+        System.out.println("test");
         System.exit(0);
         return true;
     }

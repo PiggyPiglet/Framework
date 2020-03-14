@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 public final class Framework {
     private final MainBinding main;
@@ -53,7 +54,7 @@ public final class Framework {
     public Framework(@NotNull final MainBinding main, @NotNull final ScanningData scanning,
                      @NotNull final GuiceData guice, @Nullable final String[] commandPrefixes,
                      @NotNull final FilesData files, @NotNull final Map<Class<? extends Addon>, AddonConfiguration> addons,
-                     final int threads, @NotNull final LanguageData lang,
+                     final int threads, @Nullable final LanguageData lang,
                      final boolean debug) {
         this.main = main;
         this.scanning = scanning;
@@ -118,8 +119,8 @@ public final class Framework {
     }
 
     @NotNull
-    public LanguageData getLang() {
-        return lang;
+    public Optional<LanguageData> getLang() {
+        return Optional.ofNullable(lang);
     }
 
     public boolean isDebug() {
