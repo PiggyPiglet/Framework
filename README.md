@@ -1,4 +1,3 @@
-test
 # Reflection Based Project Framework
 RPF, as the name suggests, is a reflection based Java project framework. What is reflection though? In essence, reflection is basically a tool that allows you to view and extend a class's architecture, for example, allowing you to get all annotations in a class, or on a method. RPF takes this basic tool to the next level though, by integrating well-known reflection utilizing libraries such as Guice and Guava, resulting in a unique and efficient way of creating applications.
 ### Features:
