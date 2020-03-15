@@ -50,7 +50,7 @@ public final class CommandHandlers {
         enabled = config.getCommandPrefixes() != null;
     }
 
-    private final Set<Command<? extends User>> commands = new HashSet<>();
+    private final Set<Command<? extends User, ?>> commands = new HashSet<>();
     private final Map<String, CommandHandler> handlers = new HashMap<>();
 
     public void process(@NotNull final String commandHandler, @NotNull final User user,
@@ -87,16 +87,16 @@ public final class CommandHandlers {
     }
 
     @NotNull
-    public Set<Command<? extends User>> getCommands(@NotNull final String handler) {
+    public Set<Command<? extends User, ?>> getCommands(@NotNull final String handler) {
         return ImmutableSet.copyOf(handlers.get(handler).getCommands());
     }
 
     @NotNull
-    public Set<Command<? extends User>> getAllCommands() {
+    public Set<Command<? extends User, ?>> getAllCommands() {
         return ImmutableSet.copyOf(commands);
     }
 
-    public void addCommands(@NotNull final Set<Command<? extends User>> commands) {
+    public void addCommands(@NotNull final Set<Command<? extends User, ?>> commands) {
         if (!enabled) return;
 
         this.commands.addAll(commands);

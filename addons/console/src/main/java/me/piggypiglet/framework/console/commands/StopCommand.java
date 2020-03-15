@@ -26,16 +26,19 @@ package me.piggypiglet.framework.console.commands;
 
 import me.piggypiglet.framework.commands.framework.BaseCommand;
 import me.piggypiglet.framework.user.User;
+import org.jetbrains.annotations.NotNull;
 
 public final class StopCommand extends BaseCommand {
     public StopCommand() {
         super("stop");
-        options.handlers("console").usage("").description("Stop the application.");
+        options()
+                .handlers("console")
+                .usage("")
+                .description("Stop the application.");
     }
 
     @Override
-    protected boolean execute(User user, String[] args) {
-        System.out.println("test");
+    protected boolean execute(@NotNull final User user, @NotNull final String[] args) {
         System.exit(0);
         return true;
     }

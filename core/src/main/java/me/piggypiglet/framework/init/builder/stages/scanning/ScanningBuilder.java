@@ -1,6 +1,5 @@
 package me.piggypiglet.framework.init.builder.stages.scanning;
 
-import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.scanning.Scanners;
 import me.piggypiglet.framework.scanning.builders.ScannerBuilder;
 import me.piggypiglet.framework.scanning.framework.Scanner;
@@ -10,6 +9,7 @@ import me.piggypiglet.framework.utils.builder.AbstractBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -39,19 +39,21 @@ public final class ScanningBuilder<R> extends AbstractBuilder<ScanningData, R> {
     }
 
     @NotNull
-    public <T> ScanningBuilder<R> request(@NotNull final Class<? extends Annotation> annotation, @NotNull final Function<Scanner, Set<T>> function) {
-        return request(new AnnotationWrapper(annotation), function);
+    public ScanningBuilder<R> request(@NotNull final Class<? extends Annotation> annotation, @NotNull final Type type,
+                                          @NotNull final Function<Scanner, Set<?>> function) {
+        return request(new AnnotationWrapper(annotation), type, function);
     }
 
     @NotNull
-    public <T> ScanningBuilder<R> request(@NotNull final Annotation annotation, @NotNull final Function<Scanner, Set<T>> function) {
-        return request(new AnnotationWrapper(annotation), function);
+    public ScanningBuilder<R> request(@NotNull final Annotation annotation, @NotNull final Type type,
+                                          @NotNull final Function<Scanner, Set<?>> function) {
+        return request(new AnnotationWrapper(annotation), type, function);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @NotNull
-    private <T> ScanningBuilder<R> request(@NotNull final AnnotationWrapper annotation, @NotNull final Function<Scanner, Set<T>> function) {
-        requests.add(new ScanningRequest(annotation, new TypeLiteral<Set<T>>(){}.getType(), (Function) function));
+    private ScanningBuilder<R> request(@NotNull final AnnotationWrapper annotation, @NotNull final Type type,
+                                           @NotNull final Function<Scanner, Set<?>> function) {
+        requests.add(new ScanningRequest(annotation, type, function));
         return this;
     }
 

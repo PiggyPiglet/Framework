@@ -25,9 +25,18 @@
 package me.piggypiglet.framework.commands.framework;
 
 import me.piggypiglet.framework.user.User;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseCommand extends Command<User> {
-    protected BaseCommand(String command) {
+public abstract class BaseCommand extends Command<User, BaseCommand.Options> {
+    protected BaseCommand(@NotNull final String command) {
         super(command);
     }
+
+    @NotNull
+    @Override
+    protected Options options() {
+        return new Options();
+    }
+
+    protected final class Options extends Command<User, Options>.Options<Options> {}
 }

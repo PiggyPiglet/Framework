@@ -25,12 +25,13 @@
 package me.piggypiglet.framework.commands.framework;
 
 import me.piggypiglet.framework.user.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Command<T extends User> {
+public abstract class Command<U extends User, O extends Command<U, O>.Options<O>> {
     private final String prefix;
 
     private List<String> handlers = new ArrayList<>();
@@ -41,12 +42,7 @@ public abstract class Command<T extends User> {
 
     private String handler;
 
-    /**
-     * Configure options for this command.
-     */
-    protected Options options = new Options();
-
-    protected Command(String prefix) {
+    protected Command(@NotNull final String prefix) {
         this.prefix = prefix;
     }
 
@@ -56,29 +52,38 @@ public abstract class Command<T extends User> {
      * @param args Message, excluding the prefix and command, split via space. Multiple word arguments can be achieved by using double quotes in the user's input. For example, test "multi word" would only be two arguments.
      * @return Whether the command's usage method should be sent or not. Returning false will send the message.
      */
-    protected abstract boolean execute(T user, String[] args);
+    protected abstract boolean execute(@NotNull final U user, @NotNull final String[] args);
 
-    public boolean run(T user, String[] args, String handler) {
+    public boolean run(@NotNull final U user, @NotNull final String[] args,
+                       @NotNull final String handler) {
         this.handler = handler;
         return execute(user, args);
     }
 
+    @NotNull
+    protected abstract Options<O> options();
+
+    @NotNull
     public String getCommand() {
         return prefix;
     }
 
+    @NotNull
     public List<String> getHandlers() {
         return handlers;
     }
 
+    @NotNull
     public String getDescription() {
         return description;
     }
 
+    @NotNull
     public String getUsage() {
         return usage;
     }
 
+    @NotNull
     public List<String> getPermissions() {
         return permissions;
     }
@@ -87,19 +92,23 @@ public abstract class Command<T extends User> {
         return def;
     }
 
+    @NotNull
     protected String getHandler() {
         return handler;
     }
 
-    protected class Options {
+    protected abstract class Options<R extends Options<R>> {
+        @SuppressWarnings("unchecked") protected final R instance = (R) this;
+
         /**
          * Which handlers should be able to process this command? Leave empty for it to be runnable on all handlers.
          * @param handlers Handler references
          * @return Options
          */
-        public Options handlers(String... handlers) {
+        @NotNull
+        public R handlers(@NotNull final String... handlers) {
             Command.this.handlers = Arrays.asList(handlers);
-            return this;
+            return instance;
         }
 
         /**
@@ -107,9 +116,10 @@ public abstract class Command<T extends User> {
          * @param description String describing the command, keep it short
          * @return Options
          */
-        public Options description(String description) {
+        @NotNull
+        public R description(@NotNull final String description) {
             Command.this.description = description;
-            return this;
+            return instance;
         }
 
         /**
@@ -117,9 +127,10 @@ public abstract class Command<T extends User> {
          * @param usage String
          * @return Options
          */
-        public Options usage(String usage) {
+        @NotNull
+        public R usage(@NotNull final String usage) {
             Command.this.usage = usage;
-            return this;
+            return instance;
         }
 
         /**
@@ -127,9 +138,10 @@ public abstract class Command<T extends User> {
          * @param permissions Permissions
          * @return Options
          */
-        public Options permissions(String... permissions) {
+        @NotNull
+        public R permissions(@NotNull final String... permissions) {
             Command.this.permissions = Arrays.asList(permissions);
-            return this;
+            return instance;
         }
 
         /**
@@ -137,9 +149,10 @@ public abstract class Command<T extends User> {
          * @param value Boolean
          * @return Options
          */
-        public Options def(boolean value) {
+        @NotNull
+        public R def(final boolean value) {
             def = value;
-            return this;
+            return instance;
         }
     }
 }

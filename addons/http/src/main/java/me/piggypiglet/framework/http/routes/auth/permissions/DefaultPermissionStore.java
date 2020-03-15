@@ -34,6 +34,7 @@ import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import me.piggypiglet.framework.utils.key.KeyUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.KeyFactory;
 import java.security.interfaces.ECPrivateKey;
@@ -82,8 +83,9 @@ public final class DefaultPermissionStore extends Manager<Permission> {
         });
     }
 
+    @NotNull
     @Override
-    protected KeyTypeInfo configure(KeyTypeInfo.Builder builder) {
+    protected KeyTypeInfo configure(@NotNull final KeyTypeInfo.Builder builder) {
         return builder
                 .key(String.class)
                         .getter(priv -> permissions.stream().filter(p -> {
@@ -102,15 +104,16 @@ public final class DefaultPermissionStore extends Manager<Permission> {
     }
 
     @Override
-    protected void insert(Permission item) {
+    protected void insert(@NotNull final Permission item) {
         permissions.add(item);
     }
 
     @Override
-    protected void delete(Permission item) {
+    protected void delete(@NotNull final Permission item) {
         permissions.remove(item);
     }
 
+    @NotNull
     @Override
     protected Collection<Permission> retrieveAll() {
         return permissions;

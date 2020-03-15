@@ -73,7 +73,7 @@ public final class FilesRegisterable extends StartupRegisterable {
         files.forEach(f -> {
             try {
                 final String name = f.getName();
-                final String internalPath = "/" + path(f.getInternalPathReference(), f.getHardInternalPath());
+                final String internalPath = path(f.getInternalPathReference(), f.getHardInternalPath());
                 final String externalPath = path(f.getExternalPathReference(), f.getHardExternalPath());
                 final AnnotationWrapper annotation = f.getAnnotation();
 

@@ -25,9 +25,18 @@
 package me.piggypiglet.framework.minecraft.commands.framework;
 
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class MinecraftCommand extends GenericMinecraftCommand<MinecraftUser> {
-    protected MinecraftCommand(String command) {
+public abstract class MinecraftCommand extends GenericMinecraftCommand<MinecraftUser, MinecraftCommand.Options> {
+    protected MinecraftCommand(@NotNull final String command) {
         super(command);
     }
+
+    @NotNull
+    @Override
+    protected Options options() {
+        return new Options();
+    }
+
+    protected final class Options extends GenericMinecraftCommand<MinecraftUser, Options>.Options<Options> {}
 }

@@ -26,6 +26,7 @@ package me.piggypiglet.framework.utils;
 
 import com.google.common.io.Resources;
 import me.piggypiglet.framework.Framework;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +49,7 @@ public final class FileUtils {
      * @param destination Destination path
      * @throws Exception IO error
      */
-    public static void exportResource(InputStream in, String destination) throws Exception {
+    public static void exportResource(@NotNull final InputStream in, @NotNull final  String destination) throws Exception {
         Files.copy(in, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -60,7 +61,7 @@ public final class FileUtils {
      * @throws Exception when read process errors
      */
     @SuppressWarnings("UnstableApiUsage")
-    public static String readFileToString(File file) throws Exception {
+    public static String readFileToString(@NotNull final  File file) throws Exception {
         return com.google.common.io.Files.asCharSource(file, StandardCharsets.UTF_8).read();
     }
 
@@ -71,7 +72,7 @@ public final class FileUtils {
      * @return String
      * @throws Exception when read process errors
      */
-    public static String readEmbedToString(String path) throws Exception {
+    public static String readEmbedToString(@NotNull final String path) throws Exception {
         return readEmbedToString(path, Framework.class);
     }
 
@@ -84,7 +85,7 @@ public final class FileUtils {
      * @throws Exception when read process errors
      */
     @SuppressWarnings("UnstableApiUsage")
-    public static String readEmbedToString(String path, Class<?> clazz) throws Exception {
+    public static String readEmbedToString(@NotNull final String path, @NotNull final Class<?> clazz) throws Exception {
         return Resources.toString(clazz.getResource(path), StandardCharsets.UTF_8);
     }
 
@@ -97,7 +98,7 @@ public final class FileUtils {
      * @return checksum
      * @throws Exception IO exception
      */
-    public static String md5Checksum(File file) throws Exception {
+    public static String md5Checksum(@NotNull final File file) throws Exception {
         try (InputStream fis = new FileInputStream(file)) {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] buffer = new byte[1024];

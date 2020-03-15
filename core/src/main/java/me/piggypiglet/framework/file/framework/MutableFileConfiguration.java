@@ -25,9 +25,10 @@
 package me.piggypiglet.framework.file.framework;
 
 import me.piggypiglet.framework.file.exceptions.config.ConfigSaveException;
+import org.jetbrains.annotations.NotNull;
 
 public interface MutableFileConfiguration extends FileConfiguration {
-    void set(String path, Object value);
+    void set(@NotNull final String path, @NotNull final Object value);
 
     void save() throws ConfigSaveException;
 }

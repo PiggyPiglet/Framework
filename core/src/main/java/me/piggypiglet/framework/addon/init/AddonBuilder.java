@@ -2,7 +2,6 @@ package me.piggypiglet.framework.addon.init;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.addon.init.objects.LanguageData;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
@@ -19,6 +18,7 @@ import me.piggypiglet.framework.utils.builder.AbstractBuilder;
 import me.piggypiglet.framework.utils.builder.BuilderUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 
@@ -45,7 +45,7 @@ public final class AddonBuilder<R> extends AbstractBuilder<AddonData, R> {
     @SafeVarargs
     @NotNull
     public final AddonBuilder<R> startup(@NotNull final Class<? extends StartupRegisterable>... registerables) {
-        return startup(BootPriority.MANUAL, registerables);
+        return startup(BootPriority.ADDONS, registerables);
     }
 
     @SafeVarargs
@@ -62,11 +62,10 @@ public final class AddonBuilder<R> extends AbstractBuilder<AddonData, R> {
         return this;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @NotNull
-    public <T> AddonBuilder<R> request(@NotNull final String annotation, @NotNull final Function<Scanner, Set<T>> function) {
-        requests.add(new ScanningRequest(new AnnotationWrapper(InternalAnnotations.internal(annotation)), new TypeLiteral<Set<T>>(){}.getType(),
-                (Function) function));
+    public AddonBuilder<R> request(@NotNull final String annotation, @NotNull final Type type,
+                                   @NotNull final Function<Scanner, Set<?>> function) {
+        requests.add(new ScanningRequest(new AnnotationWrapper(InternalAnnotations.internal(annotation)), type, function));
         return this;
     }
 

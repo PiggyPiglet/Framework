@@ -34,6 +34,8 @@ import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.file.framework.MutableFileConfiguration;
 import me.piggypiglet.framework.file.objects.FileWrapper;
 import me.piggypiglet.framework.utils.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.HashMap;
@@ -57,12 +59,14 @@ public final class FileManager {
      * @return Returns a file wrapper containing the file object and it's plaintext content
      * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
-    public FileWrapper loadFile(String name, String internalPath, String externalPath) throws Exception {
+    @NotNull
+    public FileWrapper loadFile(@NotNull final String name, @NotNull final String internalPath,
+                                @Nullable final String externalPath) throws Exception {
         if (externalPath == null) {
             return putAndGet(name, new FileWrapper(null, FileUtils.readEmbedToString(internalPath)));
         }
 
-        File file = createFile(externalPath, internalPath);
+        final File file = createFile(externalPath, internalPath);
 
         return putAndGet(name, new FileWrapper(file, FileUtils.readFileToString(file)));
     }
@@ -76,12 +80,14 @@ public final class FileManager {
      * @return FileConfiguration object
      * @throws Exception Will throw if IO, BadConfigType, or UnknownConfigType exceptions are encountered
      */
-    public FileConfiguration loadConfig(String name, String internalPath, String externalPath) throws Exception {
+    @NotNull
+    public FileConfiguration loadConfig(@NotNull final String name, @NotNull final String internalPath,
+                                        @Nullable final String externalPath) throws Exception {
         if (externalPath == null) {
             return putAndGet(name, fileConfigurationFactory.get(internalPath, FileUtils.readEmbedToString(internalPath)));
         }
 
-        File file = createFile(externalPath, internalPath);
+        final File file = createFile(externalPath, internalPath);
 
         return putAndGet(name, fileConfigurationFactory.get(file));
     }
@@ -92,7 +98,8 @@ public final class FileManager {
      * @param name Name of the config
      * @return FileConfiguration instance, or null if the file couldn't be found, or isn't a config
      */
-    public Optional<FileConfiguration> getConfig(String name) {
+    @NotNull
+    public Optional<FileConfiguration> getConfig(@NotNull final String name) {
         Object obj = files.get(name);
 
         if (obj instanceof FileConfiguration) {
@@ -108,7 +115,7 @@ public final class FileManager {
      * @param name Name of the file
      * @return boolean
      */
-    public boolean exists(String name) {
+    public boolean exists(@NotNull final String name) {
         return files.containsKey(name);
     }
 
@@ -119,8 +126,9 @@ public final class FileManager {
      * @param <T>  Type
      * @return Type
      */
+    @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T get(String name) {
+    public <T> T get(@NotNull final String name) {
         return (T) files.get(name);
     }
 
@@ -130,7 +138,7 @@ public final class FileManager {
      * @param name Reference to the stored object
      * @throws Exception IO error
      */
-    public void update(String name) throws Exception {
+    public void update(@NotNull final String name) throws Exception {
         Object item = get(name);
 
         if (item instanceof MapFileConfiguration) {
@@ -148,7 +156,7 @@ public final class FileManager {
      * @param name Name of the fileconfiguration.
      * @throws Exception May throw on IO error
      */
-    public void save(String name) throws Exception {
+    public void save(@NotNull final String name) throws Exception {
         Object item = get(name);
 
         if (item instanceof MutableFileConfiguration) {
@@ -164,23 +172,27 @@ public final class FileManager {
      *
      * @return ImmutableMap of String and object
      */
+    @NotNull
     public ImmutableMap<String, Object> getAll() {
         return ImmutableMap.copyOf(files);
     }
 
-    private <T> T putAndGet(String name, T file) {
+    @NotNull
+    private <T> T putAndGet(@NotNull final String name, @NotNull final T file) {
         files.put(name, file);
         return file;
     }
 
-    private File createFile(String externalPath, String internalPath) throws Exception {
+    @NotNull
+    private File createFile(@NotNull String internalPath, @NotNull String externalPath) throws Exception {
+        internalPath = "/" + internalPath;
         externalPath = framework.getFiles().getFileDir() + "/" + externalPath;
-        File file = new File(externalPath);
+        final File file = new File(externalPath);
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            boolean fileSuc = file.createNewFile();
-            if (!fileSuc) throw new CreateFileException("can't create file");
+            if (!file.createNewFile()) throw new CreateFileException("can't create file");
+
             FileUtils.exportResource(Framework.class.getResourceAsStream(internalPath), externalPath);
         }
 

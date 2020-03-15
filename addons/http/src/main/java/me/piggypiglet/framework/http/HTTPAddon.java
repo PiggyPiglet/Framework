@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.http;
 
+import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.addon.init.AddonBuilder;
 import me.piggypiglet.framework.addon.init.AddonData;
@@ -33,21 +34,40 @@ import me.piggypiglet.framework.http.registerables.shutdown.ShutdownHTTP;
 import me.piggypiglet.framework.http.registerables.startup.HTTPRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.PermissionRegisterable;
 import me.piggypiglet.framework.http.registerables.startup.RoutesRegisterable;
+import me.piggypiglet.framework.http.routes.Route;
+import me.piggypiglet.framework.http.routes.auth.permissions.Permission;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
+import me.piggypiglet.framework.managers.Manager;
+import me.piggypiglet.framework.utils.clazz.ClassUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class HTTPAddon extends Addon {
     @NotNull
     @Override
     protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
         return builder
-                .startup(RoutesRegisterable.class, HTTPRegisterable.class)
                 .startup(BootPriority.BEFORE_ADDONS, PermissionRegisterable.class)
+                .startup(RoutesRegisterable.class, HTTPRegisterable.class)
                 .files()
-                        .config("http", "/http.json", "http.json", HTTP.class)
-                        .file("http-default", "/index.html", "index.html", DefaultHTTP.class)
+                        .config("http", "http.json", "http.json", HTTP.class)
+                        .file("http-default", "index.html", "index.html", DefaultHTTP.class)
                         .build()
                 .shutdown(ShutdownHTTP.class)
+                .request("permission_managers", new TypeLiteral<Set<Class<? extends Manager<Permission>>>>() {}.getType(),
+                        scanner -> scanner.getSubTypesOf(Manager.class).stream()
+                                .filter(manager -> {
+                                    try {
+                                        return Permission.class.equals(ClassUtils.getImplementedGeneric(manager));
+                                    } catch (Exception e) {
+                                        return false;
+                                    }
+                                })
+                                .collect(Collectors.toSet()))
+                .request("routes", new TypeLiteral<Set<Class<? extends Route>>>() {}.getType(),
+                        scanner -> scanner.getSubTypesOf(Route.class))
                 .build();
     }
 }

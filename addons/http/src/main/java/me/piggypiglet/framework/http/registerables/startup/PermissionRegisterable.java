@@ -30,34 +30,28 @@ import me.piggypiglet.framework.http.routes.auth.permissions.DefaultPermissionSt
 import me.piggypiglet.framework.http.routes.auth.permissions.Permission;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.framework.Scanner;
-import me.piggypiglet.framework.utils.clazz.ClassUtils;
+import me.piggypiglet.framework.utils.annotations.internal.Internal;
 
 import java.util.Optional;
+import java.util.Set;
 
 public final class PermissionRegisterable extends StartupRegisterable {
-    @Inject private Scanner scanner;
+    private static final TypeLiteral<Manager<Permission>> MANAGER_TYPE = new TypeLiteral<Manager<Permission>>(){};;
+
+    @Inject @Internal("permission_managers") private Set<Class<? extends Manager<Permission>>> managers;
     @Inject private DefaultPermissionStore defaultPermissionStore;
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void execute() {
-        final Optional<? extends Manager> manager = scanner.getSubTypesOf(Manager.class).stream().filter(m -> {
-            try {
-                return Permission.class.isAssignableFrom(ClassUtils.getImplementedGeneric(m));
-            } catch (Exception e) {
-                return false;
-            }
-        }).map(injector::getInstance).findAny();
+        final Optional<Manager<Permission>> manager = managers.stream()
+                .map(injector::getInstance)
+                .map(instance -> (Manager<Permission>) instance)
+                .findAny();
 
-        final TypeLiteral<Manager<Permission>> typeLiteral = new TypeLiteral<Manager<Permission>>(){};
-
-        if (manager.isPresent()) {
-            //noinspection unchecked
-            addBinding(typeLiteral, (Manager<Permission>) manager.get());
-        } else {
-            addBinding(typeLiteral, defaultPermissionStore);
+        if (!manager.isPresent()) {
             defaultPermissionStore.setup();
         }
+
+        addBinding(MANAGER_TYPE, manager.orElse(defaultPermissionStore));
     }
 }

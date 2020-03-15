@@ -24,6 +24,9 @@
 
 package me.piggypiglet.framework.file.framework;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -34,7 +37,8 @@ public interface FileConfiguration {
      * @param path Path of the object
      * @return Object
      */
-    Object get(String path);
+    @Nullable
+    Object get(@NotNull final String path);
 
     /**
      * Get an object at a specific path, and if it's null, use a default value
@@ -43,7 +47,8 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return Object
      */
-    Object get(String path, Object def);
+    @NotNull
+    Object get(@NotNull final String path, @NotNull final Object def);
 
     /**
      * Get a config section as a FileConfiguration at a specific path
@@ -51,7 +56,8 @@ public interface FileConfiguration {
      * @param path Path of the section
      * @return FileConfiguration
      */
-    FileConfiguration getConfigSection(String path);
+    @Nullable
+    FileConfiguration getConfigSection(@NotNull final String path);
 
     /**
      * Get a config section as a FileConfiguration at a specific path, and if it's null, use a default value
@@ -60,7 +66,8 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return FileConfiguration
      */
-    FileConfiguration getConfigSection(String path, FileConfiguration def);
+    @NotNull
+    FileConfiguration getConfigSection(@NotNull final String path, @NotNull final FileConfiguration def);
 
     /**
      * Get an String at a specific path
@@ -68,7 +75,8 @@ public interface FileConfiguration {
      * @param path Path of the String
      * @return String
      */
-    String getString(String path);
+    @Nullable
+    String getString(@NotNull final String path);
 
     /**
      * Get a String at a specific path, and if it's null, use a default value
@@ -77,7 +85,8 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return String
      */
-    String getString(String path, String def);
+    @NotNull
+    String getString(@NotNull final String path, @NotNull final String def);
 
     /**
      * Get an Integer at a specific path
@@ -85,7 +94,8 @@ public interface FileConfiguration {
      * @param path Path of the Integer
      * @return Integer
      */
-    Integer getInt(String path);
+    @Nullable
+    Integer getInt(@NotNull final String path);
 
     /**
      * Get an int at a specific path, and if it's null, use a default value
@@ -94,7 +104,7 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return int
      */
-    int getInt(String path, int def);
+    int getInt(@NotNull final String path, @NotNull final int def);
 
     /**
      * Get a Long at a specific path
@@ -102,7 +112,8 @@ public interface FileConfiguration {
      * @param path Path of the Long
      * @return Long
      */
-    Long getLong(String path);
+    @Nullable
+    Long getLong(@NotNull final String path);
 
     /**
      * Get a Long at a specific path, and if it's null, use a default value
@@ -111,7 +122,7 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return Long
      */
-    long getLong(String path, long def);
+    long getLong(@NotNull final String path, final long def);
 
     /**
      * Get a Double at a specific path
@@ -119,7 +130,8 @@ public interface FileConfiguration {
      * @param path Path of the Double
      * @return Double
      */
-    Double getDouble(String path);
+    @Nullable
+    Double getDouble(@NotNull final String path);
 
     /**
      * Get a Double at a specific path, and if it's null, use a default value
@@ -128,7 +140,7 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return Double
      */
-    double getDouble(String path, double def);
+    double getDouble(@NotNull final String path, final double def);
 
     /**
      * Get a Boolean at a specific path
@@ -136,7 +148,8 @@ public interface FileConfiguration {
      * @param path Path of the Boolean
      * @return Boolean
      */
-    Boolean getBoolean(String path);
+    @Nullable
+    Boolean getBoolean(@NotNull final String path);
 
     /**
      * Get a boolean at a specific path, and if it's null, use a default value
@@ -145,7 +158,8 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return Boolean
      */
-    boolean getBoolean(String path, boolean def);
+    @NotNull
+    boolean getBoolean(@NotNull final String path, final boolean def);
 
     /**
      * Get a list of FileConfigurations at a specific path
@@ -153,7 +167,8 @@ public interface FileConfiguration {
      * @param path Path of the list
      * @return List of FileConfiguration
      */
-    List<FileConfiguration> getConfigList(String path);
+    @Nullable
+    List<FileConfiguration> getConfigList(@NotNull final String path);
 
     /**
      * Get a list of FileConfigurations at a specific path, and if it's null, use a default value
@@ -162,7 +177,8 @@ public interface FileConfiguration {
      * @param def  Default value
      * @return List of FileConfiguration
      */
-    List<FileConfiguration> getConfigList(String path, List<FileConfiguration> def);
+    @NotNull
+    List<FileConfiguration> getConfigList(@NotNull final String path, @NotNull final List<FileConfiguration> def);
 
     /**
      * Get a List at a specific path
@@ -171,7 +187,8 @@ public interface FileConfiguration {
      * @param <T>  Object type
      * @return List
      */
-    <T> List<T> getList(String path);
+    @Nullable
+    <T> List<T> getList(@NotNull final String path);
 
     /**
      * Get a List at a specific path, and if it's null, use a default value
@@ -181,5 +198,6 @@ public interface FileConfiguration {
      * @param <T>  Object type
      * @return List
      */
-    <T> List<T> getList(String path, List<T> def);
+    @NotNull
+    <T> List<T> getList(@NotNull final String path, @NotNull final List<T> def);
 }

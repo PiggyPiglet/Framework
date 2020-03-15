@@ -120,6 +120,7 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
         return match;
     }
 
+    @Nullable
     @Override
     public Object get(@NotNull final String path) {
         if (relocations.containsColumn(path)) {
@@ -130,7 +131,7 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
         return Maps.recursiveGet(items, path);
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Object get(@NotNull final String path, @NotNull final Object def) {
         return valueNullDef(get(path), null, def);
@@ -138,83 +139,96 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
 
     @SuppressWarnings("unchecked")
     @Override
-    public FileConfiguration getConfigSection(String path) {
+    public FileConfiguration getConfigSection(@NotNull final String path) {
         return configSection((Map<String, Object>) get(path));
     }
 
+    @NotNull
     @Override
-    public FileConfiguration getConfigSection(String path, FileConfiguration def) {
-        return valueNullDef(getConfigSection(path), new BlankFileConfiguration(), def);
+    public FileConfiguration getConfigSection(@NotNull final String path, @NotNull final FileConfiguration def) {
+        return valueNullDef(getConfigSection(path), null, def);
     }
 
+    @Nullable
     @Override
-    public String getString(String path) {
+    public String getString(@NotNull final String path) {
         return getFromRelocation(path, FileConfiguration::getString, this::getFromFlat);
     }
 
+    @NotNull
     @Override
-    public String getString(String path, String def) {
+    public String getString(@NotNull final String path, @NotNull final String def) {
         return valueNullDef(getString(path), NULL_STRING, def);
     }
 
+    @Nullable
     @Override
-    public Integer getInt(String path) {
+    public Integer getInt(@NotNull final String path) {
         return number(path, Number::intValue);
     }
 
     @Override
-    public int getInt(String path, int def) {
+    public int getInt(@NotNull final String path, final int def) {
         return valueNullDef(getInt(path), NULL_NUM, def);
     }
 
+    @Nullable
     @Override
-    public Long getLong(String path) {
+    public Long getLong(@NotNull final String path) {
         return number(path, Number::longValue);
     }
 
     @Override
-    public long getLong(String path, long def) {
+    public long getLong(@NotNull final String path, final long def) {
         return valueNullDef(getLong(path), (long) NULL_NUM, def);
     }
 
+    @Nullable
     @Override
-    public Double getDouble(String path) {
+    public Double getDouble(@NotNull final String path) {
         return number(path, Number::doubleValue);
     }
 
     @Override
-    public double getDouble(String path, double def) {
+    public double getDouble(@NotNull final String path, final double def) {
         return valueNullDef(getDouble(path), (double) NULL_NUM, def);
     }
 
-    private <T> T number(String path, Function<Number, T> value) {
-        final Object obj = getFromRelocation(path, (cfg, _path) -> cfg.number(_path, value), this::getFromFlat);
-        return obj == null ? null : value.apply(((Number) obj));
+    @Nullable
+    private <T> T number(@NotNull final String path, @NotNull final Function<Number, T> value) {
+        return Optional.ofNullable(getFromRelocation(path, (cfg, _path) -> cfg.number(_path, value), this::getFromFlat))
+                .map(obj -> (Number) obj)
+                .map(value)
+                .orElse(null);
     }
 
+    @Nullable
     @Override
-    public Boolean getBoolean(String path) {
+    public Boolean getBoolean(@NotNull final String path) {
         return getFromRelocation(path, FileConfiguration::getBoolean, this::getFromFlat);
     }
 
     @Override
-    public boolean getBoolean(String path, boolean def) {
+    public boolean getBoolean(@NotNull final String path, final boolean def) {
         return valueNullDef(getBoolean(path), NULL_BOOL, def);
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public <T> List<T> getList(String path) {
-        return (List<T>) getFromRelocation(path, FileConfiguration::getList, this::getFromFlat);
+    public <T> List<T> getList(@NotNull final String path) {
+        return (List<T>) getFromRelocation(path, FileConfiguration::getList, MapFileConfiguration::get);
     }
 
+    @NotNull
     @Override
-    public <T> List<T> getList(String path, List<T> def) {
-        return valueNullDef(getList(path), new ArrayList<>(), def);
+    public <T> List<T> getList(@NotNull final String path, @NotNull final List<T> def) {
+        return valueNullDef(getList(path), null, def);
     }
 
+    @NotNull
     @Override
-    public List<FileConfiguration> getConfigList(String path) {
+    public List<FileConfiguration> getConfigList(@NotNull final String path) {
         final List<Map<String, Object>> list = getList(path);
 
         if (list != null && !list.isEmpty()) {
@@ -226,13 +240,15 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
         return new ArrayList<>();
     }
 
+    @NotNull
     @Override
-    public List<FileConfiguration> getConfigList(String path, List<FileConfiguration> def) {
+    public List<FileConfiguration> getConfigList(@NotNull final String path, @NotNull final List<FileConfiguration> def) {
         return valueNullDef(getConfigList(path), new ArrayList<>(), def);
     }
 
-    private FileConfiguration configSection(Map<String, Object> items) {
-        return items == null ? null : new MapFileConfigurationSection(items);
+    @Nullable
+    private FileConfiguration configSection(@Nullable final Map<String, Object> items) {
+        return items == null ? new BlankFileConfiguration() : new MapFileConfigurationSection(items).load(null, "");
     }
 
     @Override
@@ -275,10 +291,12 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
         }
     }
 
+    @NotNull
     public Map<String, Object> getAll() {
         return items;
     }
 
+    @NotNull
     public Map<String, Object> getFlattened() {
         return flat;
     }
@@ -307,5 +325,10 @@ public abstract class MapFileConfiguration implements FileConfiguration, Mutable
                 .flatMap(Maps::flatten)
                 .distinct()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(items);
     }
 }

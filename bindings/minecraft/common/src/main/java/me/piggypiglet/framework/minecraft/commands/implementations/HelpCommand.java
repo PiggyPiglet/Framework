@@ -32,6 +32,7 @@ import me.piggypiglet.framework.minecraft.commands.framework.MinecraftCommand;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.reflection.def.Default;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -44,19 +45,22 @@ public final class HelpCommand extends MinecraftCommand {
 
     public HelpCommand() {
         super("help");
-        options.root().description("Get a description of all commands or a specific one.").usage("[command]").def(true);
+        options()
+                .description("Get a description of all commands or a specific one.")
+                .usage("[command]")
+                .def(true);
     }
 
     @Override
-    protected boolean execute(MinecraftUser user, String[] args) {
-        final Set<Command<? extends User>> commands = commandHandlers.getAllCommands();
+    protected boolean execute(@NotNull final MinecraftUser user, @NotNull final String[] args) {
+        final Set<Command<? extends User, ?>> commands = commandHandlers.getAllCommands();
         final String prefix = Objects.requireNonNull(framework.getCommandPrefixes())[0];
 
         if (args.length > 0) {
-            final Optional<Command<? extends User>> command = commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(args[0])).findAny();
+            final Optional<Command<? extends User, ?>> command = commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(args[0])).findAny();
 
             if (command.isPresent()) {
-                final Command<? extends User> cmd = command.get();
+                final Command<? extends User, ?> cmd = command.get();
                 user.sendMessage("&c/%s %s%s &8- &7%s\n",
                         prefix,
                         cmd.getCommand(),

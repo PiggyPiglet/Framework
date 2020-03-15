@@ -50,10 +50,10 @@ import static me.piggypiglet.framework.language.internal.Language.*;
 public class CommandHandler {
     public static final Pattern ARGUMENT_PATTERN = Pattern.compile("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-    private static final BiPredicate<Command<? extends User>, Class<? extends Annotation>> HAS_ANNOTATION =
+    private static final BiPredicate<Command<? extends User, ?>, Class<? extends Annotation>> HAS_ANNOTATION =
             (c, a) -> c.getClass().isAnnotationPresent(a);
-    private static final Predicate<Command<? extends User>> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.test(c, UltraDefault.class);
-    private static final Predicate<Command<? extends User>> IS_DEFAULT = c -> HAS_ANNOTATION.test(c, Default.class);
+    private static final Predicate<Command<? extends User, ?>> IS_ULTRA_DEFAULT = c -> HAS_ANNOTATION.test(c, UltraDefault.class);
+    private static final Predicate<Command<? extends User, ?>> IS_DEFAULT = c -> HAS_ANNOTATION.test(c, Default.class);
 
     @Inject private HelpCommand defHelpCommand;
     private final String[] commandPrefixes;
@@ -67,8 +67,8 @@ public class CommandHandler {
         }
     }
 
-    private Set<Command<? extends User>> commands;
-    private Command<? extends User> helpCommand;
+    private Set<Command<? extends User, ?>> commands;
+    private Command<? extends User, ?> helpCommand;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public <T extends User> void handle(@NotNull final T user, @NotNull String message,
@@ -86,7 +86,7 @@ public class CommandHandler {
             return;
         }
 
-        for (Command<? extends User> c : commands) {
+        for (Command<? extends User, ?> c : commands) {
             final String cmd = c.getCommand();
 
             if (startsWith(message, cmd)) {
@@ -111,7 +111,7 @@ public class CommandHandler {
         user.sendMessage(UNKNOWN_COMMAND);
     }
 
-    protected boolean run(@NotNull final User user, @NotNull final Command<? extends User> command) {
+    protected boolean run(@NotNull final User user, @NotNull final Command<? extends User, ?> command) {
         return process(user, command);
     }
 
@@ -123,7 +123,7 @@ public class CommandHandler {
      * @param command Command
      * @return boolean on whether to execute or not
      */
-    protected boolean process(@NotNull final User user, @NotNull final Command<? extends User> command) {
+    protected boolean process(@NotNull final User user, @NotNull final Command<? extends User, ?> command) {
         return true;
     }
 
@@ -132,10 +132,10 @@ public class CommandHandler {
      *
      * @param commands Commands to set
      */
-    void setCommands(Set<Command<? extends User>> commands) {
-        Set<Command<? extends User>> clone = new HashSet<>(commands);
+    void setCommands(Set<Command<? extends User, ?>> commands) {
+        Set<Command<? extends User, ?>> clone = new HashSet<>(commands);
 
-        Set<Command<? extends User>> defs = clone.stream()
+        Set<Command<? extends User, ?>> defs = clone.stream()
                 .filter(Command::isDefault)
                 .filter(c -> !IS_ULTRA_DEFAULT.test(c))
                 .collect(Collectors.toSet());
@@ -159,7 +159,7 @@ public class CommandHandler {
      *
      * @return List of commands
      */
-    Set<Command<? extends User>> getCommands() {
+    Set<Command<? extends User, ?>> getCommands() {
         return commands;
     }
 

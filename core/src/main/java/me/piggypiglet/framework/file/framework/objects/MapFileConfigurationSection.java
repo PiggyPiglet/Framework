@@ -27,6 +27,7 @@ package me.piggypiglet.framework.file.framework.objects;
 import me.piggypiglet.framework.file.framework.MapFileConfiguration;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Map;
@@ -42,7 +43,7 @@ public final class MapFileConfigurationSection extends MapFileConfiguration {
 
     @NotNull
     @Override
-    protected Map<String, Object> provide(@NotNull final File file, @NotNull final String fileContent) {
+    protected Map<String, Object> provide(@Nullable final File file, @NotNull final String fileContent) {
         return items;
     }
 

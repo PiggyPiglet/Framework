@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.utils;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +41,7 @@ public final class TypeUtils {
      * @param <T>       Type of value
      * @return value, nullValue, or def
      */
+    @Contract("_, _, !null -> !null; _, !null, _ -> !null")
     @Nullable
     @SafeVarargs
     public static <T> T valueNullDef(@Nullable final T value, @Nullable T nullValue, @NotNull T... def) {

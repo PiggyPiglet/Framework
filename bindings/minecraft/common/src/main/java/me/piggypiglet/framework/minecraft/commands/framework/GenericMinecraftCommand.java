@@ -26,14 +26,13 @@ package me.piggypiglet.framework.minecraft.commands.framework;
 
 import me.piggypiglet.framework.commands.framework.Command;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class GenericMinecraftCommand<T extends MinecraftUser> extends Command<T> {
+public abstract class GenericMinecraftCommand<U extends MinecraftUser, O extends GenericMinecraftCommand<U, O>.Options<O>> extends Command<U, O> {
     private boolean playerOnly = false;
     private boolean consoleOnly = false;
 
-    protected final Options options = new Options();
-
-    protected GenericMinecraftCommand(String command) {
+    protected GenericMinecraftCommand(@NotNull final String command) {
         super(command);
     }
 
@@ -45,21 +44,17 @@ public abstract class GenericMinecraftCommand<T extends MinecraftUser> extends C
         return consoleOnly;
     }
 
-    public final class Options {
-        private final GenericMinecraftCommand<T> instance = GenericMinecraftCommand.this;
-
-        public Command<T>.Options root() {
-            return GenericMinecraftCommand.super.options;
+    public abstract class Options<R extends Options<R>> extends Command<U, O>.Options<R> {
+        @NotNull
+        public R playerOnly(final boolean value) {
+            GenericMinecraftCommand.this.playerOnly = value;
+            return instance;
         }
 
-        public Command<T>.Options playerOnly(boolean value) {
-            instance.playerOnly = value;
-            return root();
-        }
-
-        public Command<T>.Options consoleOnly(boolean value) {
-            instance.consoleOnly = value;
-            return root();
+        @NotNull
+        public R consoleOnly(final boolean value) {
+            GenericMinecraftCommand.this.consoleOnly = value;
+            return instance;
         }
     }
 }

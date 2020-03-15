@@ -38,7 +38,9 @@ public final class HelpCommand extends BaseCommand {
 
     protected HelpCommand() {
         super("help");
-        options.description("Help command.").usage("");
+        options()
+                .description("Help command.")
+                .usage("");
     }
 
     @Override

@@ -28,14 +28,18 @@ import com.google.inject.Inject;
 import me.piggypiglet.framework.http.routes.Route;
 import me.piggypiglet.framework.http.server.ResponseHandler;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
-import me.piggypiglet.framework.scanning.framework.Scanner;
+import me.piggypiglet.framework.utils.annotations.internal.Internal;
+
+import java.util.Set;
 
 public final class RoutesRegisterable extends StartupRegisterable {
-    @Inject private Scanner scanner;
+    @Inject @Internal("routes") private Set<Class<? extends Route>> routes;
     @Inject private ResponseHandler responseHandler;
 
     @Override
     protected void execute() {
-        scanner.getSubTypesOf(Route.class).stream().map(injector::getInstance).forEach(responseHandler.getRoutes()::add);
+        routes.stream()
+                .map(injector::getInstance)
+                .forEach(responseHandler.getRoutes()::add);
     }
 }

@@ -157,7 +157,7 @@ public final class JsonParser {
         private boolean nullableValues = true;
         private Gson gson = GSON_DEFAULT;
 
-        private Builder(final String json) {
+        private Builder(@NotNull final String json) {
             this.json = json;
         }
 
@@ -201,6 +201,7 @@ public final class JsonParser {
          * @return Configured JsonParser instance
          */
         @SuppressWarnings("unchecked")
+        @NotNull
         @Override
         protected JsonParser provideBuild() {
             final JsonElement data = PARSER.parse(json);
