@@ -50,6 +50,9 @@ public final class ZISScanner extends AbstractScanner {
     }
 
     /**
+     * Get all the classes in the main class's classloader, which are
+     * in a specific package, and aren't in any of the excluded packages.
+     *
      * Semantics:
      * A class is not loaded if any of the following conditions are true:
      * <i>Filename includes the file name, and it's relative path from the root of the jar</i>

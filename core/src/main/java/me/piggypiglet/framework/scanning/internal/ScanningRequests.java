@@ -27,7 +27,7 @@ public enum ScanningRequests {
             scanner -> scanner.getFieldsAnnotatedWith(new AnnotationWrapper(LoggerName.class))),
     LOGGING_PARAMETERS("logger_params", new TypeLiteral<Set<Parameter>>(){}.getType(),
             scanner -> scanner.getParametersAnnotatedWithInConstructors(new AnnotationWrapper(LoggerName.class))),
-    COMMAND_IMPLEMENTATIONS("command_impls", new TypeLiteral<Set<Class<? extends Command<? extends User>>>>(){}.getType(),
+    COMMAND_IMPLEMENTATIONS("command_impls", new TypeLiteral<Set<Class<? extends Command<? extends User, ?>>>>(){}.getType(),
             scanner -> scanner.getSubTypesOf(Command.class));
 
     private final ScanningRequest compiled;

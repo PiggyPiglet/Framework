@@ -35,7 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class CommandsRegisterable extends StartupRegisterable {
-    @Inject @Internal("command_impls") private Set<Class<? extends Command<? extends User>>> commands;
+    @Inject @Internal("command_impls") private Set<Class<? extends Command<? extends User, ?>>> commands;
     @Inject private CommandHandlers commandHandlers;
 
     @Override

@@ -59,7 +59,8 @@ public abstract class AbstractScanner implements Scanner {
     }
 
     /**
-     * Provisioning logic of the classes retrievable from the scanner configuration.
+     * Provision all the classes in the main class's classloader, which are
+     * in a specific package, and aren't in any of the excluded packages.
      *
      * @return Set of loaded classes
      */

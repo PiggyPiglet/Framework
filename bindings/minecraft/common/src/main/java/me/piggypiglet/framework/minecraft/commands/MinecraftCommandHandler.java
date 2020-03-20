@@ -41,10 +41,10 @@ public class MinecraftCommandHandler extends CommandHandler {
     }
 
     @Override
-    protected boolean run(@NotNull final User user, @NotNull final Command<? extends User> command) {
+    protected boolean run(@NotNull final User user, @NotNull final Command<? extends User, ?> command) {
         if (user instanceof MinecraftUser && command instanceof GenericMinecraftCommand) {
             final MinecraftUser mcUser = (MinecraftUser) user;
-            final GenericMinecraftCommand<?> mcCommand = (GenericMinecraftCommand<?>) command;
+            final GenericMinecraftCommand<? extends MinecraftUser, ?> mcCommand = (GenericMinecraftCommand<? extends MinecraftUser, ?>) command;
 
             if (mcCommand.isPlayerOnly() && !mcUser.isPlayer()) {
                 user.sendMessage(Language.PLAYER_ONLY);
