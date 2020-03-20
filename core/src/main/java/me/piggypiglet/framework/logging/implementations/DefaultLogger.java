@@ -37,9 +37,8 @@ public final class DefaultLogger extends me.piggypiglet.framework.logging.framew
         return Logger.getLogger(name);
     }
 
-    @NotNull
     @Override
-    protected void info(@NotNull final Logger logger, @NotNull String message) {
+    protected void info(@NotNull final Logger logger, @NotNull final String message) {
         logger.info(message);
     }
 

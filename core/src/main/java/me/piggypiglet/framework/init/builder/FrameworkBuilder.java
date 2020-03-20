@@ -86,7 +86,7 @@ public final class FrameworkBuilder {
     }
 
     @NotNull
-    public FrameworkBuilder threads(int threads) {
+    public FrameworkBuilder threads(final int threads) {
         this.threads = threads;
         return this;
     }
@@ -106,7 +106,7 @@ public final class FrameworkBuilder {
      * @return FrameworkBuilder
      */
     @NotNull
-    public FrameworkBuilder debug(boolean debug) {
+    public FrameworkBuilder debug(final boolean debug) {
         this.debug = debug;
         return this;
     }

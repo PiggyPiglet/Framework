@@ -29,22 +29,34 @@ import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.init.bootstrap.FrameworkBootstrap;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.logging.implementations.DefaultLogger;
+import me.piggypiglet.framework.logging.internal.LoggerManager;
 import me.piggypiglet.framework.utils.annotations.internal.Internal;
 
 public final class LoggerFactory {
     @Inject private static FrameworkBootstrap main;
     @Inject private static Framework framework;
     @Inject @Internal("logger_class") private static Class<? extends Logger<?>> logger;
+    @Inject private static LoggerManager loggerManager;
 
-    private LoggerFactory() {}
+    private LoggerFactory() {
+    }
 
     /**
-     * Get an instance using the set logger implementation. Will return DefaultLogger (implementation of Java Logger) if no custom loggers have been made.
+     * Get an instance using the set logger implementation. Will return
+     * DefaultLogger (implementation of Java Logger) if no custom loggers have been made.
+     * <p>
+     * Prefer to inject a logger instead of using this function, as it relies on static
+     * injections.
+     *
      * @param name Name of the logger
      * @return Logger instance
      */
     public static Logger<?> getLogger(String name) {
         final boolean debug = framework.isDebug();
+
+        if (loggerManager.exists(name)) {
+            return loggerManager.get(name);
+        }
 
         try {
             return main.getInjector().getInstance(logger).create(name, debug);
