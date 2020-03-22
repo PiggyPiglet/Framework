@@ -26,8 +26,10 @@ package me.piggypiglet.framework.nukkit.commands.framework;
 
 import me.piggypiglet.framework.nukkit.user.NukkitUser;
 
-public abstract class NukkitCommand extends GenericNukkitCommand<NukkitUser> {
+public abstract class NukkitCommand extends GenericNukkitCommand<NukkitUser, NukkitCommand.Options> {
     protected NukkitCommand(String command) {
         super(command);
     }
+
+    protected final class Options extends GenericNukkitCommand<NukkitUser, Options>.Options<Options> {}
 }

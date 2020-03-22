@@ -25,17 +25,17 @@
 package me.piggypiglet.demo.commands;
 
 import com.google.inject.Inject;
-import me.piggypiglet.framework.commands.framework.Command;
+import me.piggypiglet.framework.commands.framework.BaseCommand;
 import me.piggypiglet.framework.file.framework.FileConfiguration;
 import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.files.Config;
 
-public final class DemoInfoCommand extends Command {
+public final class DemoInfoCommand extends BaseCommand {
     @Inject @Config private FileConfiguration config;
 
     public DemoInfoCommand() {
         super("info");
-        options.usage("").description("Get info about the demo plugin.");
+        options().usage("").description("Get info about the demo plugin.");
     }
 
     @Override

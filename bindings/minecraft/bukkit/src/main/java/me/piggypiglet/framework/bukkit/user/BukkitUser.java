@@ -26,13 +26,13 @@ package me.piggypiglet.framework.bukkit.user;
 
 import me.piggypiglet.framework.bukkit.binding.player.BukkitPlayer;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
+import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public final class BukkitUser extends MinecraftUser {
-
     private final CommandSender sender;
 
     public BukkitUser(CommandSender sender) {
@@ -46,7 +46,7 @@ public final class BukkitUser extends MinecraftUser {
 
     @Override
     protected void sendJsonMessage(String json) {
-        ((BukkitPlayer) getAsPlayer()).sendRawMessage(json);
+        getAsPlayer().sendRawMessage(json);
     }
 
     @Override
@@ -74,7 +74,9 @@ public final class BukkitUser extends MinecraftUser {
     }
 
     @Override
-    public me.piggypiglet.framework.minecraft.player.Player<Player> getAsPlayer() {
-        return new BukkitPlayer((Player) sender);
+    public me.piggypiglet.framework.minecraft.api.player.Player<Player> getAsPlayer() {
+        return GenericBuilder.of(() -> new BukkitPlayer((Player) sender))
+                .with(me.piggypiglet.framework.minecraft.api.player.Player::setup)
+                .build();
     }
 }

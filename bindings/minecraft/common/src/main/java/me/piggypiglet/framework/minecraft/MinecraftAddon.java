@@ -27,10 +27,8 @@ package me.piggypiglet.framework.minecraft;
 import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.addon.init.AddonBuilder;
 import me.piggypiglet.framework.addon.init.AddonData;
-import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.minecraft.lang.Language;
 import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
-import me.piggypiglet.framework.minecraft.registerables.ServerRegisterable;
 import org.jetbrains.annotations.NotNull;
 
 public final class MinecraftAddon extends Addon {
@@ -38,7 +36,6 @@ public final class MinecraftAddon extends Addon {
     @Override
     protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
         return builder
-                .startup(BootPriority.IMPL, ServerRegisterable.class)
                 .startup(CommandHandlerRegisterable.class)
                 .files()
                         .config("minecraft_lang", "minecraft_lang.json", "minecraft_lang.json")

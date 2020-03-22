@@ -27,7 +27,7 @@ package me.piggypiglet.framework.sponge.commands.framework;
 import me.piggypiglet.framework.minecraft.commands.framework.GenericMinecraftCommand;
 import me.piggypiglet.framework.sponge.user.SpongeUser;
 
-public abstract class GenericSpongeCommand<T extends SpongeUser> extends GenericMinecraftCommand<T> {
+public abstract class GenericSpongeCommand<U extends SpongeUser, O extends GenericSpongeCommand<U, O>.Options<O>> extends GenericMinecraftCommand<U, O> {
     protected GenericSpongeCommand(String command) {
         super(command);
     }

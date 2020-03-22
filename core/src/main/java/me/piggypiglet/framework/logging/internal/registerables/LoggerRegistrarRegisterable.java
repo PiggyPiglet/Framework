@@ -25,6 +25,8 @@ public final class LoggerRegistrarRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
+        loggerManager.setup();
+
         final Map<LoggerName, Logger<?>> loggers = new HashMap<>();
 
         Stream.concat(fields.stream(), parameters.stream()).forEach(element -> {

@@ -27,7 +27,7 @@ package me.piggypiglet.framework.velocity.commands.framework;
 import me.piggypiglet.framework.minecraft.commands.framework.GenericMinecraftCommand;
 import me.piggypiglet.framework.velocity.user.VelocityUser;
 
-public abstract class GenericVelocityCommand<T extends VelocityUser> extends GenericMinecraftCommand<T> {
+public abstract class GenericVelocityCommand<U extends VelocityUser, O extends GenericMinecraftCommand<U, O>.Options<O>> extends GenericMinecraftCommand<U, O> {
     protected GenericVelocityCommand(String command) {
         super(command);
     }

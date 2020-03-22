@@ -24,8 +24,7 @@
 
 package me.piggypiglet.framework.bungeecord.user;
 
-import me.piggypiglet.framework.bungeecord.binding.player.BungeeCordPlayer;
-import me.piggypiglet.framework.minecraft.player.Player;
+import me.piggypiglet.framework.minecraft.api.player.Player;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -82,7 +81,7 @@ public final class BungeeUser extends MinecraftUser {
     }
 
     @Override
-    public Player getAsPlayer() {
-        return new BungeeCordPlayer((ProxiedPlayer) sender);
+    public Player<?> getAsPlayer() {
+        return null;
     }
 }

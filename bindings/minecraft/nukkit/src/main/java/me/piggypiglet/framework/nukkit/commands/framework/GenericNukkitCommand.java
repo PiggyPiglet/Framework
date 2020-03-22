@@ -27,7 +27,7 @@ package me.piggypiglet.framework.nukkit.commands.framework;
 import me.piggypiglet.framework.minecraft.commands.framework.GenericMinecraftCommand;
 import me.piggypiglet.framework.nukkit.user.NukkitUser;
 
-public abstract class GenericNukkitCommand<T extends NukkitUser> extends GenericMinecraftCommand<T> {
+public abstract class GenericNukkitCommand<U extends NukkitUser, O extends GenericNukkitCommand<U, O>.Options<O>> extends GenericMinecraftCommand<U, O> {
     protected GenericNukkitCommand(String command) {
         super(command);
     }

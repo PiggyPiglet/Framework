@@ -26,8 +26,10 @@ package me.piggypiglet.framework.bungeecord.commands.framework;
 
 import me.piggypiglet.framework.bungeecord.user.BungeeUser;
 
-public abstract class BungeeCommand extends GenericBungeeCommand<BungeeUser> {
+public abstract class BungeeCommand extends GenericBungeeCommand<BungeeUser, BungeeCommand.Options> {
     protected BungeeCommand(String command) {
         super(command);
     }
+
+    protected final class Options extends GenericBungeeCommand<BungeeUser, Options>.Options<Options> {}
 }

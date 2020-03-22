@@ -69,7 +69,7 @@ public final class VelocityUser extends MinecraftUser {
     }
 
     @Override
-    public me.piggypiglet.framework.minecraft.player.Player getAsPlayer() {
+    public me.piggypiglet.framework.minecraft.api.player.Player<?> getAsPlayer() {
         return null;
     }
 }

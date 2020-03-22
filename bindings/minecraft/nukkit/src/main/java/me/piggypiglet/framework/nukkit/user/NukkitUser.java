@@ -31,7 +31,6 @@ import cn.nukkit.command.ConsoleCommandSender;
 import cn.nukkit.utils.TextFormat;
 import me.piggypiglet.framework.minecraft.text.Text;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
-import me.piggypiglet.framework.nukkit.binding.player.NukkitPlayer;
 import me.piggypiglet.framework.utils.StringUtils;
 
 public final class NukkitUser extends MinecraftUser {
@@ -79,7 +78,7 @@ public final class NukkitUser extends MinecraftUser {
     }
 
     @Override
-    public me.piggypiglet.framework.minecraft.player.Player getAsPlayer() {
-        return new NukkitPlayer((Player) sender);
+    public me.piggypiglet.framework.minecraft.api.player.Player<?> getAsPlayer() {
+        return null;
     }
 }

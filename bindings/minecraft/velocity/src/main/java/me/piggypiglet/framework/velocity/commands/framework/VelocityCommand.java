@@ -26,8 +26,10 @@ package me.piggypiglet.framework.velocity.commands.framework;
 
 import me.piggypiglet.framework.velocity.user.VelocityUser;
 
-public abstract class VelocityCommand extends GenericVelocityCommand<VelocityUser> {
+public abstract class VelocityCommand extends GenericVelocityCommand<VelocityUser, VelocityCommand.Options> {
     protected VelocityCommand(String command) {
         super(command);
     }
+
+    protected final class Options extends GenericVelocityCommand<VelocityUser, Options>.Options<Options> {}
 }

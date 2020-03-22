@@ -25,7 +25,7 @@
 package me.piggypiglet.framework.minecraft.user;
 
 import com.google.gson.Gson;
-import me.piggypiglet.framework.minecraft.player.Player;
+import me.piggypiglet.framework.minecraft.api.player.Player;
 import me.piggypiglet.framework.user.User;
 
 public abstract class MinecraftUser extends User {
@@ -56,5 +56,5 @@ public abstract class MinecraftUser extends User {
 
     public abstract boolean isConsole();
 
-    public abstract Player getAsPlayer();
+    public abstract Player<?> getAsPlayer();
 }

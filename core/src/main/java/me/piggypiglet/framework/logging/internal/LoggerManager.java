@@ -4,12 +4,14 @@ import com.google.inject.Singleton;
 import me.piggypiglet.framework.logging.framework.Logger;
 import me.piggypiglet.framework.managers.Manager;
 import me.piggypiglet.framework.managers.objects.KeyTypeInfo;
+import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Disabled
 @Singleton
 public final class LoggerManager extends Manager<Logger<?>> {
     private final Map<String, Logger<?>> loggers = new HashMap<>();

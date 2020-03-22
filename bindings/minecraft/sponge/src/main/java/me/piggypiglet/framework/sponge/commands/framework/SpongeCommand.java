@@ -26,8 +26,10 @@ package me.piggypiglet.framework.sponge.commands.framework;
 
 import me.piggypiglet.framework.sponge.user.SpongeUser;
 
-public abstract class SpongeCommand extends GenericSpongeCommand<SpongeUser> {
+public abstract class SpongeCommand extends GenericSpongeCommand<SpongeUser, SpongeCommand.Options> {
     protected SpongeCommand(String command) {
         super(command);
     }
+
+    protected final class Options extends GenericSpongeCommand<SpongeUser, Options>.Options<Options> {}
 }

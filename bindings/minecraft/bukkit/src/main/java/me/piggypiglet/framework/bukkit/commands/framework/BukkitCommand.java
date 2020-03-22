@@ -25,9 +25,18 @@
 package me.piggypiglet.framework.bukkit.commands.framework;
 
 import me.piggypiglet.framework.bukkit.user.BukkitUser;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class BukkitCommand extends GenericBukkitCommand<BukkitUser> {
+public abstract class BukkitCommand extends GenericBukkitCommand<BukkitUser, BukkitCommand.Options> {
     protected BukkitCommand(String command) {
         super(command);
     }
+
+    @NotNull
+    @Override
+    protected Options options() {
+        return new Options();
+    }
+
+    protected final class Options extends GenericBukkitCommand<BukkitUser, Options>.Options<Options> {}
 }

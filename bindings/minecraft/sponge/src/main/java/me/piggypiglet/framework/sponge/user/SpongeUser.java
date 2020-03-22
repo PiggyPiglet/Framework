@@ -24,9 +24,8 @@
 
 package me.piggypiglet.framework.sponge.user;
 
-import me.piggypiglet.framework.minecraft.player.Player;
+import me.piggypiglet.framework.minecraft.api.player.Player;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
-import me.piggypiglet.framework.sponge.binding.player.SpongePlayer;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.text.serializer.TextSerializers;
@@ -69,8 +68,8 @@ public final class SpongeUser extends MinecraftUser {
     }
 
     @Override
-    public Player getAsPlayer() {
-        return new SpongePlayer((org.spongepowered.api.entity.living.player.Player) src);
+    public Player<?> getAsPlayer() {
+        return null;
     }
 
     public CommandSource getSrc() {

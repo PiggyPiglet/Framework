@@ -39,6 +39,7 @@ public final class LoggerFactory {
     @Inject private static LoggerManager loggerManager;
 
     private LoggerFactory() {
+        throw new RuntimeException("LoggerFactory class should not be instantiated.");
     }
 
     /**
