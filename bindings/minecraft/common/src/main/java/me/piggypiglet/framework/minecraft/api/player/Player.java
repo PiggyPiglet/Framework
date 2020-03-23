@@ -6,7 +6,6 @@ import me.piggypiglet.framework.minecraft.api.meta.data.KeyFactory;
 import me.piggypiglet.framework.minecraft.api.meta.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.meta.framework.Key;
 import me.piggypiglet.framework.minecraft.api.meta.framework.KeyImpl;
-import me.piggypiglet.framework.minecraft.api.player.data.Gamemode;
 import me.piggypiglet.framework.utils.SearchUtils;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -52,15 +51,15 @@ public abstract class Player<H> implements SearchUtils.Searchable {
         return (Optional<V>) keyFunctions.getOrDefault(PlayerKeys.fromKey(key), (KeyImpl<?, H>) DEFAULT_KEY).get(getHandle());
     }
 
-    protected abstract int provideGamemode();
-
-    @NotNull
-    public Gamemode getGamemode() {
-        return Gamemode.fromId(provideGamemode());
-    }
-
     protected enum PlayerKeys {
         UUID(KeyNames.UUID),
+        NAME(KeyNames.NAME),
+        INVENTORY(KeyNames.INVENTORY),
+        HEALTH(KeyNames.HEALTH),
+        HEALTH_SCALE(KeyNames.HEALTH_SCALE),
+        CHAT_VISIBILITY(KeyNames.PLAYER_CHAT_VISIBILITY),
+        ADDRESS(KeyNames.PLAYER_ADDRESS),
+        ENDER_CHEST_INVENTORY(KeyNames.PLAYER_ENDER_CHEST_INVENTORY),
         UNKNOWN(KeyNames.UNKNOWN);
 
         private final KeyNames name;

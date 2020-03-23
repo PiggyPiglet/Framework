@@ -35,27 +35,14 @@ public final class BukkitPlayer extends me.piggypiglet.framework.minecraft.api.p
     protected Map<PlayerKeys, KeyImpl<?, Player>> provideKeyFunctions() {
         return Maps.of(new EnumMap<PlayerKeys, KeyImpl<?, Player>>(PlayerKeys.class))
                 .key(PlayerKeys.UUID).value(FACTORY.ofNullable(Player::getUniqueId, KeyNames.UUID))
+                .key(PlayerKeys.NAME).value(FACTORY.ofNullable(Player::getName, KeyNames.NAME))
+                //.key(PlayerKeys.INVENTORY).value(FACTORY.ofNullable(Player::getName, KeyNames.INVENTORY))
+                .key(PlayerKeys.HEALTH).value(FACTORY.ofNullable(Player::getHealth, KeyNames.HEALTH))
+                .key(PlayerKeys.HEALTH_SCALE).value(FACTORY.ofNullable(Player::getHealthScale, KeyNames.HEALTH_SCALE))
+                //.key(PlayerKeys.CHAT_VISIBILITY).value(FACTORY.ofNullable(Player::getName, KeyNames.PLAYER_CHAT_VISIBILITY))
+                .key(PlayerKeys.ADDRESS).value(FACTORY.ofNullable(Player::getAddress, KeyNames.PLAYER_ADDRESS))
+                //.key(PlayerKeys.ENDER_CHEST_INVENTORY).value(FACTORY.ofNullable(Player::getName, KeyNames.PLAYER_ENDER_CHEST_INVENTORY))
                 .build();
-    }
-
-    @Override
-    protected int provideGamemode() {
-        switch (handle.getGameMode()) {
-            case SURVIVAL:
-                return 0;
-
-            case CREATIVE:
-                return 1;
-
-            case ADVENTURE:
-                return 2;
-
-            case SPECTATOR:
-                return 3;
-
-            default:
-                return -1;
-        }
     }
 
     @NotNull
