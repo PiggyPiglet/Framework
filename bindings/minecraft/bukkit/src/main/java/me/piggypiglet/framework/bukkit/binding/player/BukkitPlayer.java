@@ -1,8 +1,8 @@
 package me.piggypiglet.framework.bukkit.binding.player;
 
-import me.piggypiglet.framework.minecraft.api.meta.data.KeyFactory;
-import me.piggypiglet.framework.minecraft.api.meta.data.KeyNames;
-import me.piggypiglet.framework.minecraft.api.meta.framework.KeyImpl;
+import me.piggypiglet.framework.minecraft.api.key.data.KeyFactory;
+import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
+import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
 import me.piggypiglet.framework.utils.map.Maps;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

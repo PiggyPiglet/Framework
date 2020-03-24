@@ -1,7 +1,7 @@
-package me.piggypiglet.framework.minecraft.api.meta.framework;
+package me.piggypiglet.framework.minecraft.api.key.framework;
 
 import com.google.inject.TypeLiteral;
-import me.piggypiglet.framework.minecraft.api.meta.data.KeyNames;
+import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import org.jetbrains.annotations.NotNull;
 
 

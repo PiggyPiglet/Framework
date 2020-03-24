@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.text;
+package me.piggypiglet.framework.minecraft.api.text;
 
-import me.piggypiglet.framework.minecraft.text.components.Color;
-import me.piggypiglet.framework.minecraft.text.components.Component;
-import me.piggypiglet.framework.minecraft.text.components.Style;
+import me.piggypiglet.framework.minecraft.api.text.components.Color;
+import me.piggypiglet.framework.minecraft.api.text.components.Component;
+import me.piggypiglet.framework.minecraft.api.text.components.Style;
 import me.piggypiglet.framework.utils.map.Maps;
 
 import java.util.ArrayList;

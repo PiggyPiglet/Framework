@@ -29,7 +29,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
 import cn.nukkit.utils.TextFormat;
-import me.piggypiglet.framework.minecraft.text.Text;
+import me.piggypiglet.framework.minecraft.api.text.Text;
 import me.piggypiglet.framework.minecraft.user.MinecraftUser;
 import me.piggypiglet.framework.utils.StringUtils;
 

@@ -1,7 +1,7 @@
-package me.piggypiglet.framework.minecraft.api.meta.data;
+package me.piggypiglet.framework.minecraft.api.key.data;
 
-import me.piggypiglet.framework.minecraft.api.meta.framework.Key;
-import me.piggypiglet.framework.minecraft.api.meta.framework.KeyImpl;
+import me.piggypiglet.framework.minecraft.api.key.framework.Key;
+import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

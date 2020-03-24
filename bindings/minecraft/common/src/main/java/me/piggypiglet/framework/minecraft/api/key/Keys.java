@@ -1,7 +1,7 @@
-package me.piggypiglet.framework.minecraft.api.meta;
+package me.piggypiglet.framework.minecraft.api.key;
 
-import me.piggypiglet.framework.minecraft.api.meta.data.KeyNames;
-import me.piggypiglet.framework.minecraft.api.meta.framework.Key;
+import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
+import me.piggypiglet.framework.minecraft.api.key.framework.Key;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;

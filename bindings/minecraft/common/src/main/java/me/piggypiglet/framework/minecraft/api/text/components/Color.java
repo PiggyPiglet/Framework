@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.text.components;
+package me.piggypiglet.framework.minecraft.api.text.components;
 
 public enum Color implements Component {
     BLACK('0'),

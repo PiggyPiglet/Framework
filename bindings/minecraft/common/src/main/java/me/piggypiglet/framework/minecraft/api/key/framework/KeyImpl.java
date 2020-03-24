@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.minecraft.api.meta.framework;
+package me.piggypiglet.framework.minecraft.api.key.framework;
 
 import org.jetbrains.annotations.NotNull;
 

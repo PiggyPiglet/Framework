@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.minecraft.api.meta.data;
+package me.piggypiglet.framework.minecraft.api.key.data;
 
 public enum KeyNames {
     UUID,
