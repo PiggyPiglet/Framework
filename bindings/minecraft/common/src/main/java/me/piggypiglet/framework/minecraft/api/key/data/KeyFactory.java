@@ -7,23 +7,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class KeyFactory<H> {
-
+public final class KeyFactory {
     private KeyFactory() {}
 
     @NotNull
-    public static <H> KeyFactory<H> initFactoryFromHandle() {
-        return new KeyFactory<>();
+    public static  <V, H> KeyImpl<V, H> ofNullable(@NotNull final Function<H, V> getter, @NotNull final KeyNames name) {
+        return initImpl(handle -> Optional.ofNullable(getter.apply(handle)), name);
     }
 
     @NotNull
-    public <V> KeyImpl<V, H> ofNullable(@NotNull final Function<H, V> getter, @NotNull final KeyNames name) {
-        return from(handle -> Optional.ofNullable(getter.apply(handle)), name);
-    }
-
-    @NotNull
-    public <V> KeyImpl<V, H> of(@NotNull final Function<H, Optional<V>> getter, @NotNull final KeyNames name) {
-        return from(handle -> {
+    public static <V, H> KeyImpl<V, H> of(@NotNull final Function<H, Optional<V>> getter, @NotNull final KeyNames name) {
+        return initImpl(handle -> {
             final Optional<V> result = getter.apply(handle);
 
             //noinspection OptionalAssignedToNull
@@ -35,7 +29,7 @@ public final class KeyFactory<H> {
         }, name);
     }
 
-    private static <V, H> KeyImpl<V, H> from(@NotNull final Function<H, Optional<V>> getter, @NotNull final KeyNames name) {
+    private static <V, H> KeyImpl<V, H> initImpl(@NotNull final Function<H, Optional<V>> getter, @NotNull final KeyNames name) {
         return new KeyImpl<V, H>() {
             @NotNull
             @Override

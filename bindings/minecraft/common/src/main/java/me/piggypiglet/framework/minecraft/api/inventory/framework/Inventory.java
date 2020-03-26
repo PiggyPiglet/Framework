@@ -1,7 +1,7 @@
 package me.piggypiglet.framework.minecraft.api.inventory.framework;
 
 import me.piggypiglet.framework.minecraft.api.inventory.objects.Item;
-import me.piggypiglet.framework.minecraft.api.key.framework.Keyable;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
