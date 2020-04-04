@@ -24,9 +24,12 @@
 
 package me.piggypiglet.framework.minecraft.versions.material.implementations;
 
-import me.piggypiglet.framework.minecraft.versions.material.Material;
+import me.piggypiglet.framework.minecraft.versions.Versions;
+import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialEnum;
+import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialVersion;
 
-public enum Material1144 implements Material {
+@MaterialVersion(Versions.V1_14)
+public enum Material14 implements MaterialEnum {
     AIR(0),
     STONE(1),
     GRANITE(2),
@@ -908,7 +911,7 @@ public enum Material1144 implements Material {
 
     private final int id;
 
-    Material1144(int id) {
+    Material14(int id) {
         this.id = id;
     }
 
@@ -917,8 +920,8 @@ public enum Material1144 implements Material {
         return id;
     }
 
-    public static Material1144 fromId(int id) {
-        for (Material1144 mat : values()) {
+    public static Material14 fromId(int id) {
+        for (Material14 mat : values()) {
             if (mat.id == id) {
                 return mat;
             }

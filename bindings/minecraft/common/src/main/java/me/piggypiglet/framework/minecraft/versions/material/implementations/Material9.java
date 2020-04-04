@@ -24,9 +24,12 @@
 
 package me.piggypiglet.framework.minecraft.versions.material.implementations;
 
-import me.piggypiglet.framework.minecraft.versions.material.Material;
+import me.piggypiglet.framework.minecraft.versions.Versions;
+import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialEnum;
+import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialVersion;
 
-public enum Material194 implements Material {
+@MaterialVersion(Versions.V1_9)
+public enum Material9 implements MaterialEnum {
     ACACIA_BOAT(447, 0),
     ACACIA_DOOR(430, 0),
     ACACIA_FENCE(192, 0),
@@ -586,7 +589,7 @@ public enum Material194 implements Material {
     private final int id;
     private final int data;
 
-    Material194(int id, int data) {
+    Material9(int id, int data) {
         this.id = id;
         this.data = data;
     }
@@ -601,8 +604,8 @@ public enum Material194 implements Material {
         return data;
     }
 
-    public static Material194 fromIdData(int id, int data) {
-        for (Material194 mat : values()) {
+    public static Material9 fromIdData(int id, int data) {
+        for (Material9 mat : values()) {
             if (mat.id == id && mat.data == data) {
                 return mat;
             }
