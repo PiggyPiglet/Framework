@@ -27,7 +27,7 @@ package me.piggypiglet.framework.minecraft.versions;
 import java.util.HashSet;
 import java.util.Set;
 
-public enum ProtocolVersions {
+public enum Versions {
     V1_15(565, 574),
     V1_14(472, 498),
     V1_13(383, 404),
@@ -41,7 +41,7 @@ public enum ProtocolVersions {
 
     private final Set<Integer> ids = new HashSet<>();
 
-    ProtocolVersions(int begin, int end) {
+    Versions(int begin, int end) {
         for (int i = begin; i <= end; ++i) {
             ids.add(i);
         }
@@ -51,8 +51,8 @@ public enum ProtocolVersions {
         return ids;
     }
 
-    public static ProtocolVersions fromId(int id) {
-        for (ProtocolVersions ver : values()) {
+    public static Versions fromId(int id) {
+        for (Versions ver : values()) {
             if (ver.ids.contains(id)) {
                 return ver;
             }

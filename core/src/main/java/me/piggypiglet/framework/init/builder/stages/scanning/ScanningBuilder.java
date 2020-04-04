@@ -59,6 +59,12 @@ public final class ScanningBuilder<R> extends AbstractBuilder<ScanningData, R> {
 
     @Override
     protected ScanningData provideBuild() {
+        if (scanner == null) {
+            scanner()
+                    .pckg(main.getPackage().getName())
+                    .build();
+        }
+
         return new ScanningData(requests, scanner);
     }
 }

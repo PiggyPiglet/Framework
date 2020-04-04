@@ -6,33 +6,40 @@ import me.piggypiglet.framework.minecraft.api.key.Keys;
 import me.piggypiglet.framework.minecraft.api.key.framework.Key;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
 import me.piggypiglet.framework.utils.builder.GenericBuilder;
-import me.piggypiglet.framework.utils.map.Maps;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class Keyable<E extends Enum<E> & KeyEnum, H> {
+public abstract class Keyable<H> {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("Keyable");
 
-    private final Class<E> enumClass;
-    private final E unknown;
+    private final Class<? extends KeyEnum> enumClass;
+    private final KeyEnum unknown;
+    private final Function<H, Keyable<H>> initializer;
 
-    protected final Map<E, KeyImpl<?, H>> keyFunctions;
+    protected final Map<KeyEnum, KeyImpl<?, H>> keyFunctions;
 
-    protected Keyable(@NotNull final Class<E> enumClass, @NotNull final E unknown) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected <E extends Enum<E> & KeyEnum> Keyable(@NotNull final Class<E> enumClass, @NotNull final E unknown,
+                      @NotNull final Function<H, Keyable<H>> initializer) {
         this.enumClass = enumClass;
         this.unknown = unknown;
+        this.initializer = initializer;
 
-        keyFunctions = Maps.of(new EnumMap<E, KeyImpl<?, H>>(enumClass))
-                .key(unknown).value(Keys.UNKNOWN)
-                .build();
+        keyFunctions = (Map) new EnumMap<>(enumClass);
     }
 
-    public void setup() {
-        keyFunctions.putAll(provideKeyFunctions());
-        final String difference = GenericBuilder.of(() -> new ArrayList<>(Arrays.asList(enumClass.getEnumConstants())))
-                .with(list -> list.remove(unknown))
+    @SuppressWarnings("unchecked")
+    public <E extends Enum<E> & KeyEnum> void setup() {
+        GenericBuilder.of(() -> keyFunctions)
+                .with(map -> map.put(unknown, (KeyImpl<?, H>) Keys.UNKNOWN))
+                .with(Map::putAll, provideKeyFunctions())
+                .build();
+
+        final String difference = GenericBuilder.of(() -> new ArrayList<>(Arrays.asList(((Class<E>) enumClass).getEnumConstants())))
+                .with(List::remove, unknown)
                 .with(List::removeAll, keyFunctions.keySet())
                 .build()
                 .stream()
@@ -46,12 +53,23 @@ public abstract class Keyable<E extends Enum<E> & KeyEnum, H> {
     }
 
     @NotNull
-    protected abstract Map<E, KeyImpl<?, H>> provideKeyFunctions();
+    public Keyable<H> create(@NotNull final H handle) {
+        return GenericBuilder.of(() -> initializer.apply(handle))
+                .with(keyable -> keyable.setup(keyFunctions))
+                .build();
+    }
+
+    private void setup(@NotNull final Map<KeyEnum, KeyImpl<?, H>> keyFunctions) {
+        this.keyFunctions.putAll(keyFunctions);
+    }
+
+    @NotNull
+    protected abstract Map<KeyEnum, KeyImpl<?, H>> provideKeyFunctions();
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <V> Optional<V> get(@NotNull final Key<V, ?> key) {
-        return (Optional<V>) keyFunctions.get(KeyEnum.fromKey(enumClass, key).orElse(unknown)).get(getHandle());
+    public <E extends Enum<E> & KeyEnum, V> Optional<V> get(@NotNull final Key<V, ?> key) {
+        return (Optional<V>) keyFunctions.get(KeyEnum.fromKey((Class<E>) enumClass, key).orElse((E) unknown)).get(getHandle());
     }
 
     @NotNull

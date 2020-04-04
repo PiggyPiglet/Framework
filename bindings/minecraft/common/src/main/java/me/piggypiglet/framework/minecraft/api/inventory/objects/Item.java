@@ -5,9 +5,12 @@ import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class Item<H> extends Keyable<Item.ItemKeys, H> {
-    public Item() {
-        super(ItemKeys.class, ItemKeys.UNKNOWN);
+import java.util.function.Function;
+
+public abstract class Item<H> extends Keyable<H> {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public Item(@NotNull final Function<H, Item<H>> initializer) {
+        super(ItemKeys.class, ItemKeys.UNKNOWN, (Function) initializer);
     }
 
     protected enum ItemKeys implements KeyEnum {

@@ -22,7 +22,7 @@ subprojects {
 
     group 'me.piggypiglet'
     version '1.8.36'
-    sourceCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         mavenCentral()
