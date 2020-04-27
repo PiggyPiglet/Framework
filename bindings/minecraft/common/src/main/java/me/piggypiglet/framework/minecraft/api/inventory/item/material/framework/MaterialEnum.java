@@ -22,27 +22,10 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.versions.material.framework;
-
-import me.piggypiglet.framework.minecraft.versions.material.Material;
-import org.jetbrains.annotations.NotNull;
+package me.piggypiglet.framework.minecraft.api.inventory.item.material.framework;
 
 public interface MaterialEnum {
     int getId();
-//
-//    @NotNull
-//    Material getMatch();
 
-    default int getData() {
-        return -1;
-    }
-
-    static <T extends Enum<T> & MaterialEnum> MaterialEnum from(@NotNull final Class<T> enumClazz,
-                                                                @NotNull final Material match) {
-//        for (final T mat : enumClazz.getEnumConstants()) {
-//            if (mat.getMatch() == match) return mat;
-//        }
-
-        return Material.UNKNOWN;
-    }
+    int getData();
 }

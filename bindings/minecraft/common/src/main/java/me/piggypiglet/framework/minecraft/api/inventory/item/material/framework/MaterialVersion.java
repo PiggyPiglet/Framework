@@ -1,6 +1,6 @@
-package me.piggypiglet.framework.minecraft.versions.material.framework;
+package me.piggypiglet.framework.minecraft.api.inventory.item.material.framework;
 
-import me.piggypiglet.framework.minecraft.versions.Versions;
+import me.piggypiglet.framework.minecraft.api.versions.Versions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

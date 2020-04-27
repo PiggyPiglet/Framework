@@ -1,5 +1,6 @@
 package me.piggypiglet.framework.minecraft.api.key;
 
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.Material;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyFactory;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.Key;
@@ -12,6 +13,10 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class Keys {
+    private Keys() {
+        throw new AssertionError("This class cannot be initialized.");
+    }
+
     public static final KeyImpl<?, ?> UNKNOWN = KeyFactory.ofNullable(redundant -> null, KeyNames.UNKNOWN);
 
     public static final Key<UUID, ?> UUID = () -> KeyNames.UUID;
@@ -20,7 +25,7 @@ public final class Keys {
     public static final Key<Double, ?> ENTITY_HEALTH_SCALE = () -> KeyNames.ENTITY_HEALTH_SCALE;
     public static final Key<InetSocketAddress, ?> PLAYER_ADDRESS = () -> KeyNames.PLAYER_ADDRESS;
 
-    public static final Key<String, ?> ITEM_MATERIAL = () -> KeyNames.ITEM_MATERIAL;
+    public static final Key<Material, ?> ITEM_MATERIAL = () -> KeyNames.ITEM_MATERIAL;
     public static final Key<Integer, ?> ITEM_AMOUNT = () -> KeyNames.ITEM_AMOUNT;
     public static final Key<Integer, ?> ITEM_DURABILITY = () -> KeyNames.ITEM_DURABILITY;
     public static final Key<List<String>, ?> ITEM_LORE = () -> KeyNames.ITEM_LORE;

@@ -24,6 +24,7 @@
 
 package me.piggypiglet.framework.scanning.framework;
 
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationRules;
 import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,15 +45,15 @@ public interface Scanner {
      * @param <T>  Type generic
      * @return Set of classes
      */
-    <T> Set<Class<? extends T>> getSubTypesOf(@NotNull Class<T> type);
+    <T> Set<Class<? extends T>> getSubTypesOf(@NotNull final Class<T> type);
 
     /**
-     * Get all known classes that are annotated with a specific annotation type.
+     * Get all known classes whose annotations adhere to the provided rules.
      *
-     * @param annotations Annotation
+     * @param rules Annotation rules
      * @return Set of classes
      */
-    Set<Class<?>> getClassesAnnotatedWith(@NotNull final AnnotationWrapper... annotations);
+    Set<Class<?>> getClassesAnnotatedWith(@NotNull final AnnotationRules rules);
 
     /**
      * Get all known classes that have methods annotated with a specific annotation

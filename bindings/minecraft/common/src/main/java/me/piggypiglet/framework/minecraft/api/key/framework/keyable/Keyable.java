@@ -52,15 +52,15 @@ public abstract class Keyable<H> {
         }
     }
 
+    private void setup(@NotNull final Map<KeyEnum, KeyImpl<?, H>> keyFunctions) {
+        this.keyFunctions.putAll(keyFunctions);
+    }
+
     @NotNull
     public Keyable<H> create(@NotNull final H handle) {
         return GenericBuilder.of(() -> initializer.apply(handle))
                 .with(keyable -> keyable.setup(keyFunctions))
                 .build();
-    }
-
-    private void setup(@NotNull final Map<KeyEnum, KeyImpl<?, H>> keyFunctions) {
-        this.keyFunctions.putAll(keyFunctions);
     }
 
     @NotNull

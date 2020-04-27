@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.versions;
+package me.piggypiglet.framework.minecraft.api.versions;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,10 +49,12 @@ public enum Versions {
         }
     }
 
+    @NotNull
     public Set<Integer> getIds() {
         return ids;
     }
 
+    @NotNull
     public static Versions fromId(int id) {
         for (Versions ver : values()) {
             if (ver.ids.contains(id)) {
@@ -59,5 +63,11 @@ public enum Versions {
         }
 
         return UNKNOWN;
+    }
+
+    @NotNull
+    public static Versions getVersion() {
+        //todo: implement version
+        return V1_15;
     }
 }

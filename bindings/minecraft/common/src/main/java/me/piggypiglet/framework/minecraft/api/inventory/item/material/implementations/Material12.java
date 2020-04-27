@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.framework.minecraft.versions.material.implementations;
+package me.piggypiglet.framework.minecraft.api.inventory.item.material.implementations;
 
-import me.piggypiglet.framework.minecraft.versions.Versions;
-import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialEnum;
-import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialVersion;
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialEnum;
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialVersion;
+import me.piggypiglet.framework.minecraft.api.versions.Versions;
 
-@MaterialVersion(Versions.V1_9)
-public enum Material9 implements MaterialEnum {
+@MaterialVersion(Versions.V1_12)
+public enum Material12 implements MaterialEnum {
     ACACIA_BOAT(447, 0),
     ACACIA_DOOR(430, 0),
     ACACIA_FENCE(192, 0),
@@ -62,7 +62,22 @@ public enum Material9 implements MaterialEnum {
     WHITE_BANNER(425, 15),
     BARRIER(166, 0),
     BEACON(138, 0),
-    RED_BED(355, 0),
+    WHITE_BED(355, 0),
+    ORANGE_BED(355, 1),
+    MAGENTA_BED(355, 2),
+    LIGHT_BLUE_BED(355, 3),
+    YELLOW_BED(355, 4),
+    LIME_BED(355, 5),
+    PINK_BED(355, 6),
+    GRAY_BED(355, 7),
+    LIGHT_GRAY_BED(355, 8),
+    CYAN_BED(355, 9),
+    PURPLE_BED(355, 10),
+    BLUE_BED(355, 11),
+    BROWN_BED(355, 12),
+    GREEN_BED(355, 13),
+    RED_BED(355, 14),
+    BLACK_BED(355, 15),
     BEDROCK(7, 0),
     RAW_BEEF(363, 0),
     BEETROOT(434, 0),
@@ -73,10 +88,15 @@ public enum Material9 implements MaterialEnum {
     BIRCH_FENCE(189, 0),
     BIRCH_FENCE_GATE(184, 0),
     BIRCH_WOOD_STAIRS(135, 0),
+    BLACK_GLAZED_TERRACOTTA(250, 0),
+    BLACK_SHULKER_BOX(234, 0),
     BLAZE_POWDER(377, 0),
     BLAZE_ROD(369, 0),
+    BLUE_GLAZED_TERRACOTTA(246, 0),
+    BLUE_SHULKER_BOX(230, 0),
     OAK_BOAT(333, 0),
     BONE(352, 0),
+    BONE_BLOCK(216, 0),
     BOOK(340, 0),
     BOOKSHELF(47, 0),
     BOW(261, 0),
@@ -86,8 +106,10 @@ public enum Material9 implements MaterialEnum {
     BRICK(336, 0),
     BRICKS(45, 0),
     BRICK_STAIRS(108, 0),
+    BROWN_GLAZED_TERRACOTTA(247, 0),
     BROWN_MUSHROOM(39, 0),
     BROWN_MUSHROOM_BLOCK(99, 0),
+    BROWN_SHULKER_BOX(231, 0),
     BUCKET(325, 0),
     CACTUS(81, 0),
     CAKE(354, 0),
@@ -136,6 +158,38 @@ public enum Material9 implements MaterialEnum {
     MINECART_WITH_COMMAND_BLOCK(422, 0),
     REDSTONE_COMPARATOR(404, 0),
     COMPASS(345, 0),
+    WHITE_CONCRETE(251, 0),
+    ORANGE_CONCRETE(251, 1),
+    MAGENTA_CONCRETE(251, 2),
+    LIGHT_BLUE_CONCRETE(251, 3),
+    YELLOW_CONCRETE(251, 4),
+    LIME_CONCRETE(251, 5),
+    PINK_CONCRETE(251, 6),
+    GRAY_CONCRETE(251, 7),
+    LIGHT_GRAY_CONCRETE(251, 8),
+    CYAN_CONCRETE(251, 9),
+    PURPLE_CONCRETE(251, 10),
+    BLUE_CONCRETE(251, 11),
+    BROWN_CONCRETE(251, 12),
+    GREEN_CONCRETE(251, 13),
+    RED_CONCRETE(251, 14),
+    BLACK_CONCRETE(251, 15),
+    WHITE_CONCRETE_POWDER(252, 0),
+    ORANGE_CONCRETE_POWDER(252, 1),
+    MAGENTA_CONCRETE_POWDER(252, 2),
+    LIGHT_BLUE_CONCRETE_POWDER(252, 3),
+    YELLOW_CONCRETE_POWDER(252, 4),
+    LIME_CONCRETE_POWDER(252, 5),
+    PINK_CONCRETE_POWDER(252, 6),
+    GRAY_CONCRETE_POWDER(252, 7),
+    LIGHT_GRAY_CONCRETE_POWDER(252, 8),
+    CYAN_CONCRETE_POWDER(252, 9),
+    PURPLE_CONCRETE_POWDER(252, 10),
+    BLUE_CONCRETE_POWDER(252, 11),
+    BROWN_CONCRETE_POWDER(252, 12),
+    GREEN_CONCRETE_POWDER(252, 13),
+    RED_CONCRETE_POWDER(252, 14),
+    BLACK_CONCRETE_POWDER(252, 15),
     STEAK(364, 0),
     COOKED_CHICKEN(366, 0),
     COOKED_FISH(350, 0),
@@ -145,6 +199,8 @@ public enum Material9 implements MaterialEnum {
     COOKED_RABBIT(412, 0),
     COOKIE(357, 0),
     CRAFTING_TABLE(58, 0),
+    CYAN_GLAZED_TERRACOTTA(244, 0),
+    CYAN_SHULKER_BOX(228, 0),
     DARK_OAK_BOAT(448, 0),
     DARK_OAK_DOOR(431, 0),
     DARK_OAK_FENCE(191, 0),
@@ -257,6 +313,10 @@ public enum Material9 implements MaterialEnum {
     GRASS_BLOCK(2, 0),
     GRASS_PATH(208, 0),
     GRAVEL(13, 0),
+    GRAY_GLAZED_TERRACOTTA(242, 0),
+    GRAY_SHULKER_BOX(226, 0),
+    GREEN_GLAZED_TERRACOTTA(248, 0),
+    GREEN_SHULKER_BOX(232, 0),
     GUNPOWDER(289, 0),
     TERRACOTTA(172, 0),
     HAY_BALE(170, 0),
@@ -275,6 +335,7 @@ public enum Material9 implements MaterialEnum {
     IRON_HORSE_ARMOR(417, 0),
     IRON_INGOT(265, 0),
     IRON_LEGGINGS(308, 0),
+    IRON_NUGGET(452, 0),
     IRON_ORE(15, 0),
     IRON_PICKAXE(257, 0),
     IRON_SHOVEL(256, 0),
@@ -304,7 +365,11 @@ public enum Material9 implements MaterialEnum {
     ACACIA_LEAVES(161, 0),
     DARK_OAK_LEAVES(161, 1),
     LEVER(69, 0),
+    LIGHT_BLUE_GLAZED_TERRACOTTA(238, 0),
+    LIGHT_BLUE_SHULKER_BOX(222, 0),
     LIGHT_WEIGHTED_PRESSURE_PLATE(147, 0),
+    LIME_GLAZED_TERRACOTTA(240, 0),
+    LIME_SHULKER_BOX(224, 0),
     LINGERING_POTION(441, 0),
     JACK_O_LANTERN(91, 0),
     OAK_LOG(17, 0),
@@ -313,6 +378,9 @@ public enum Material9 implements MaterialEnum {
     JUNGLE_LOG(17, 3),
     ACACIA_LOG(162, 0),
     DARK_OAK_LOG(162, 1),
+    MAGENTA_GLAZED_TERRACOTTA(237, 0),
+    MAGENTA_SHULKER_BOX(221, 0),
+    MAGMA_BLOCK(213, 0),
     MAGMA_CREAM(378, 0),
     MAP(395, 0),
     MELON_SLICE(360, 0),
@@ -337,14 +405,20 @@ public enum Material9 implements MaterialEnum {
     NETHER_BRICK_STAIRS(114, 0),
     NETHER_STAR(399, 0),
     NETHER_WART(372, 0),
+    NETHER_WART_BLOCK(214, 0),
     NETHER_BRICK(405, 0),
     NETHERRACK(87, 0),
     NOTE_BLOCK(25, 0),
     OAK_WOOD_STAIRS(53, 0),
+    OBSERVER(218, 0),
     OBSIDIAN(49, 0),
+    ORANGE_GLAZED_TERRACOTTA(236, 0),
+    ORANGE_SHULKER_BOX(220, 0),
     PACKED_ICE(174, 0),
     PAINTING(321, 0),
     PAPER(339, 0),
+    PINK_GLAZED_TERRACOTTA(241, 0),
+    PINK_SHULKER_BOX(225, 0),
     PISTON(33, 0),
     OAK_WOOD_PLANK(5, 0),
     SPRUCE_WOOD_PLANK(5, 1),
@@ -364,6 +438,8 @@ public enum Material9 implements MaterialEnum {
     PUMPKIN(86, 0),
     PUMPKIN_PIE(400, 0),
     PUMPKIN_SEEDS(361, 0),
+    PURPLE_GLAZED_TERRACOTTA(245, 0),
+    PURPLE_SHULKER_BOX(229, 0),
     PURPUR_BLOCK(201, 0),
     PURPUR_PILLAR(202, 0),
     PURPUR_SLAB(205, 0),
@@ -400,12 +476,15 @@ public enum Material9 implements MaterialEnum {
     WHITE_TULIP(38, 6),
     PINK_TULIP(38, 7),
     OXEYE_DAISY(38, 8),
+    RED_GLAZED_TERRACOTTA(249, 0),
     RED_MUSHROOM(40, 0),
     RED_MUSHROOM_BLOCK(100, 0),
+    RED_NETHER_BRICK(215, 0),
     RED_SANDSTONE(179, 0),
     CHISELED_RED_SANDSTONE(179, 1),
     SMOOTH_RED_SANDSTONE(179, 2),
     RED_SANDSTONE_STAIRS(180, 0),
+    RED_SHULKER_BOX(233, 0),
     REDSTONE(331, 0),
     BLOCK_OF_REDSTONE(152, 0),
     REDSTONE_LAMP(123, 0),
@@ -431,7 +510,10 @@ public enum Material9 implements MaterialEnum {
     SEA_LANTERN(169, 0),
     SHEARS(359, 0),
     SHIELD(442, 0),
+    SHULKER_SHELL(450, 0),
     OAK_SIGN(323, 0),
+    LIGHT_GRAY_GLAZED_TERRACOTTA(243, 0),
+    LIGHT_GRAY_SHULKER_BOX(227, 0),
     SKELETON_SKULL(397, 0),
     WITHER_SKELETON_SKULL(397, 1),
     ZOMBIE_HEAD(397, 2),
@@ -535,13 +617,16 @@ public enum Material9 implements MaterialEnum {
     CRACKED_STONE_BRICKS(98, 2),
     CHISELED_STONE_BRICKS(98, 3),
     STRING(287, 0),
+    STRUCTURE_BLOCK(255, 0),
+    STRUCTURE_VOID(217, 0),
     SUGAR(353, 0),
     GRASS(31, 1),
     FERN(31, 2),
-    TIPPED(440, 0),
+    TIPPED_ARROW(440, 0),
     TNT(46, 0),
     MINECART_WITH_TNT(407, 0),
     TORCH(50, 0),
+    TOTEM_OF_UNDYING(449, 0),
     OAK_TRAPDOOR(96, 0),
     TRAPPED_CHEST(146, 0),
     TRIPWIRE_HOOK(131, 0),
@@ -551,6 +636,8 @@ public enum Material9 implements MaterialEnum {
     COBWEB(30, 0),
     WHEAT(296, 0),
     SEEDS(295, 0),
+    WHITE_GLAZED_TERRACOTTA(235, 0),
+    WHITE_SHULKER_BOX(219, 0),
     WOODEN_AXE(271, 0),
     OAK_BUTTON(143, 0),
     OAK_DOOR(324, 0),
@@ -584,12 +671,13 @@ public enum Material9 implements MaterialEnum {
     BOOK_AND_QUILL(386, 0),
     WRITTEN_BOOK(387, 0),
     DANDELION(37, 0),
-    UNKNOWN(-1, -1);
+    YELLOW_GLAZED_TERRACOTTA(239, 0),
+    YELLOW_SHULKER_BOX(223, 0);
 
     private final int id;
     private final int data;
 
-    Material9(int id, int data) {
+    Material12(int id, int data) {
         this.id = id;
         this.data = data;
     }
@@ -602,15 +690,5 @@ public enum Material9 implements MaterialEnum {
     @Override
     public int getData() {
         return data;
-    }
-
-    public static Material9 fromIdData(int id, int data) {
-        for (Material9 mat : values()) {
-            if (mat.id == id && mat.data == data) {
-                return mat;
-            }
-        }
-
-        return UNKNOWN;
     }
 }

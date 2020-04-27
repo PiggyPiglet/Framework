@@ -32,7 +32,8 @@ import me.piggypiglet.framework.file.mapping.Maps;
 import me.piggypiglet.framework.mapping.gson.GsonObjectMappers;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.Scanner;
-import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationRules;
+import org.jetbrains.annotations.NotNull;
 
 public final class FileMappingRegisterable extends StartupRegisterable {
     @Inject private FileManager fileManager;
@@ -40,10 +41,11 @@ public final class FileMappingRegisterable extends StartupRegisterable {
 
     @Override
     protected void execute() {
-        scanner.getClassesAnnotatedWith(new AnnotationWrapper(Maps.class)).forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
+        scanner.getClassesAnnotatedWith(AnnotationRules.hasAnnotation(Maps.class))
+                .forEach(c -> add(c, c.getAnnotation(Maps.class).value()));
     }
 
-    private <T> void add(Class<T> clazz, String name) {
+    private <T> void add(@NotNull final Class<T> clazz, @NotNull final String name) {
         final FileConfiguration config = fileManager.getConfig(name)
                 .orElseThrow(() -> new RuntimeException("Provided config: " + name + " for mapping doesn't exist."));
 

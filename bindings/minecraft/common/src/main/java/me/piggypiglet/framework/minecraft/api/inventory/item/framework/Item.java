@@ -1,4 +1,4 @@
-package me.piggypiglet.framework.minecraft.api.inventory.objects;
+package me.piggypiglet.framework.minecraft.api.inventory.item.framework;
 
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;

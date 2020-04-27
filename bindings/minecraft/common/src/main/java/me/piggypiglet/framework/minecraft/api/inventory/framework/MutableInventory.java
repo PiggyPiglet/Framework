@@ -1,6 +1,6 @@
 package me.piggypiglet.framework.minecraft.api.inventory.framework;
 
-import me.piggypiglet.framework.minecraft.api.inventory.objects.Item;
+import me.piggypiglet.framework.minecraft.api.inventory.item.framework.Item;
 import org.jetbrains.annotations.NotNull;
 
 public interface MutableInventory {

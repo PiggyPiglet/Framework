@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -82,8 +83,6 @@ public final class ZISScanner extends AbstractScanner {
      */
     @Override
     protected Set<Class<?>> provideClasses(@NotNull final Class<?> main, @NotNull String pckg, @NotNull String[] exclusions) {
-        final Set<Class<?>> classes = new HashSet<>();
-
         final String framework = Framework.class.getPackage().getName()
                 .replace('.', '/');
         pckg = pckg
@@ -92,15 +91,16 @@ public final class ZISScanner extends AbstractScanner {
                 .map(s -> s.replace('.', '/'))
                 .toArray(String[]::new);
 
-        try {
-            final ClassLoader loader = main.getClassLoader();
-            final CodeSource src = main.getProtectionDomain().getCodeSource();
+        final ClassLoader loader = main.getClassLoader();
+        final CodeSource src = main.getProtectionDomain().getCodeSource();
 
-            if (src == null) {
-                return classes;
-            }
+        if (src == null) {
+            return Collections.emptySet();
+        }
 
-            final ZipInputStream zip = new ZipInputStream(src.getLocation().openStream());
+        final Set<Class<?>> classes = new HashSet<>();
+
+        try (final ZipInputStream zip = new ZipInputStream(src.getLocation().openStream())) {
             ZipEntry entry;
 
             while ((entry = zip.getNextEntry()) != null) {

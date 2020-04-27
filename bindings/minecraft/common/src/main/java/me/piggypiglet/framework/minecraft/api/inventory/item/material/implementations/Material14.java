@@ -1,32 +1,8 @@
-/*
- * MIT License
- *
- * Copyright (c) 2019-2020 PiggyPiglet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+package me.piggypiglet.framework.minecraft.api.inventory.item.material.implementations;
 
-package me.piggypiglet.framework.minecraft.versions.material.implementations;
-
-import me.piggypiglet.framework.minecraft.versions.Versions;
-import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialEnum;
-import me.piggypiglet.framework.minecraft.versions.material.framework.MaterialVersion;
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialEnum;
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialVersion;
+import me.piggypiglet.framework.minecraft.api.versions.Versions;
 
 @MaterialVersion(Versions.V1_14)
 public enum Material14 implements MaterialEnum {
@@ -408,7 +384,7 @@ public enum Material14 implements MaterialEnum {
     NETHER_WART_BLOCK(375),
     RED_NETHER_BRICKS(376),
     BONE_BLOCK(377),
-    STRUCTURE_V(378),
+    STRUCTURE_VOID(378),
     OBSERVER(379),
     SHULKER_BOX(380),
     WHITE_SHULKER_BOX(381),
@@ -906,12 +882,13 @@ public enum Material14 implements MaterialEnum {
     BELL(873),
     LANTERN(874),
     SWEET_BERRIES(875),
-    CAMPFIRE(87),
-    UNKNOWN(-1);
-
+    CAMPFIRE(876);
+    
+    private static final int DATA = 6;
+    
     private final int id;
-
-    Material14(int id) {
+    
+    Material14(final int id) {
         this.id = id;
     }
 
@@ -920,13 +897,8 @@ public enum Material14 implements MaterialEnum {
         return id;
     }
 
-    public static Material14 fromId(int id) {
-        for (Material14 mat : values()) {
-            if (mat.id == id) {
-                return mat;
-            }
-        }
-
-        return UNKNOWN;
+    @Override
+    public int getData() {
+        return DATA;
     }
 }

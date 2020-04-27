@@ -1,12 +1,12 @@
 package me.piggypiglet.framework.minecraft.api.inventory.framework;
 
-import me.piggypiglet.framework.minecraft.api.inventory.objects.Item;
+import me.piggypiglet.framework.minecraft.api.inventory.item.framework.Item;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public abstract class Inventory<H> extends Keyable<H> {
@@ -16,13 +16,15 @@ public abstract class Inventory<H> extends Keyable<H> {
     }
 
     @NotNull
-    public abstract Map<Integer, Item<?>> getAll();
+    public abstract Optional<Item<?>>[] getAll();
 
-    protected abstract void handleUpdate(final int slot, @NotNull final Item<?> item);
+    protected void handleUpdate(final int slot, @NotNull final Item<?> item) {
+        throw new UnsupportedOperationException("This inventory isn't mutable.");
+    }
 
     @NotNull
-    public Item<?> get(final int slot) {
-        return getAll().get(slot);
+    public Optional<Item<?>> get(final int slot) {
+        return getAll()[slot];
     }
 
     protected enum InventoryKeys implements KeyEnum {

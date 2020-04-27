@@ -3,6 +3,7 @@ package me.piggypiglet.framework.scanning.framework;
 import com.google.common.collect.ImmutableSet;
 import me.piggypiglet.framework.scanning.objects.ScannerData;
 import me.piggypiglet.framework.utils.annotations.reflection.Disabled;
+import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationRules;
 import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static me.piggypiglet.framework.utils.annotations.wrapper.AnnotationUtils.isAnnotationPresent;
+import static me.piggypiglet.framework.utils.annotations.wrapper.AnnotationUtils.rulesMatch;
 
 /**
  * Utility abstraction around Scanner interface to handle class list population
@@ -113,13 +115,13 @@ public abstract class AbstractScanner implements Scanner {
      * Get all known classes that are annotated with a specific annotation type.
      * Check is performed with Class#isAnnotationPresent.
      *
-     * @param annotations Annotation classes
+     * @param rules Annotation rules
      * @return Set of classes
      */
     @Override
-    public Set<Class<?>> getClassesAnnotatedWith(@NotNull final AnnotationWrapper... annotations) {
+    public Set<Class<?>> getClassesAnnotatedWith(@NotNull final AnnotationRules rules) {
         return stream(classes)
-                .filter(clazz -> Arrays.stream(annotations).anyMatch(annotation -> isAnnotationPresent(clazz, annotation)))
+                .filter(clazz -> rulesMatch(clazz, rules))
                 .collect(Collectors.toSet());
     }
 
