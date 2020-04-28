@@ -2,7 +2,7 @@ package me.piggypiglet.framework.minecraft.api.inventory.item.material;
 
 import org.jetbrains.annotations.NotNull;
 
-enum MaterialNames {
+public enum MaterialName {
     ACACIA_BOAT("acacia_boat"),
     ACACIA_BUTTON("acacia_button"),
     ACACIA_DOOR("acacia_door"),
@@ -890,12 +890,12 @@ enum MaterialNames {
 
     private final String name;
 
-    MaterialNames(@NotNull final String name) {
+    MaterialName(@NotNull final String name) {
         this.name = name;
     }
 
     @NotNull
-    String getName() {
+    public String getName() {
         return name;
     }
 }

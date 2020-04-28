@@ -24,8 +24,14 @@
 
 package me.piggypiglet.framework.minecraft.api.inventory.item.material.framework;
 
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.MaterialName;
+import org.jetbrains.annotations.Nullable;
+
 public interface MaterialEnum {
     int getId();
 
     int getData();
+
+    @Nullable
+    MaterialName getName();
 }
