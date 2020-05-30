@@ -39,12 +39,12 @@ public final class Demo extends JavaPlugin {
                 .commands()
                         .prefixes("demo")
                         .build()
-                .guice()
+/*                .guice()
                         .startup(BroadcasterRegisterable.class)
                         .build()
                 .files()
                         .config("config", "config.yml", getDataFolder().getPath() + "/config.yml", Config.class)
-                        .build()
+                        .build()*/
                 .build()
                 .init();
     }

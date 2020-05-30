@@ -25,6 +25,18 @@ public final class Keys {
     public static final Key<Double, ?> ENTITY_HEALTH_SCALE = () -> KeyNames.ENTITY_HEALTH_SCALE;
     public static final Key<InetSocketAddress, ?> PLAYER_ADDRESS = () -> KeyNames.PLAYER_ADDRESS;
 
+    public static final Key<InetSocketAddress, ?> SERVER_ADDRESS = () -> KeyNames.SERVER_ADDRESS;
+    public static final Key<Integer, ?> SERVER_PORT = () -> KeyNames.SERVER_PORT;
+    public static final Key<Set<String>, ?> IP_BANS = () -> KeyNames.SERVER_ADDRESS_BANS;
+    public static final Key<Set<UUID>, ?> PLAYER_BANS = () -> KeyNames.SERVER_BANNED_PLAYERS;
+    public static final Key<String, ?> VERSION = () -> KeyNames.SERVER_VERSION;
+    public static final Key<String, ?> IMPLEMENTATION_VERSION = () -> KeyNames.SERVER_IMPLEMENTATION_VERSION;
+    public static final Key<Set<UUID>, ?> OPERATORS = () -> KeyNames.SERVER_OPERATORS;
+    public static final Key<Integer, ?> MAX_PLAYERS = () -> KeyNames.SERVER_MAX_PLAYERS;
+    public static final Key<Boolean, ?> ONLINE_MODE = () -> KeyNames.SERVER_ONLINE_MODE;
+    public static final Key<Set<UUID>, ?> PLAYERS = () -> KeyNames.SERVER_PLAYERS;
+    public static final Key<Set<UUID>, ?> WORLDS = () -> KeyNames.SERVER_WORLDS;
+
     public static final Key<Material, ?> ITEM_MATERIAL = () -> KeyNames.ITEM_MATERIAL;
     public static final Key<Integer, ?> ITEM_AMOUNT = () -> KeyNames.ITEM_AMOUNT;
     public static final Key<Integer, ?> ITEM_DURABILITY = () -> KeyNames.ITEM_DURABILITY;

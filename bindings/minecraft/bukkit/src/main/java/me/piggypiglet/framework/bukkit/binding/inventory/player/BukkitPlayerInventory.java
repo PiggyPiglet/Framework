@@ -36,7 +36,7 @@ public final class BukkitPlayerInventory
 
     @Override
     protected void handleUpdate(final int slot, final @NotNull Item<?> item) {
-        handle.setItem(slot, );
+     //   handle.setItem(slot, );
     }
 
     @NotNull
@@ -52,7 +52,7 @@ public final class BukkitPlayerInventory
     }
 
     private static ItemStack from(@NotNull final Item<?> item) {
-        final Material material = item.get(Keys.ITEM_MATERIAL);
+     //   final Material material = item.get(Keys.ITEM_MATERIAL);
         return null;
     }
 }
