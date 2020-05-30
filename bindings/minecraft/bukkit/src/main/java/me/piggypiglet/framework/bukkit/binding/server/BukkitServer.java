@@ -24,6 +24,8 @@ public class BukkitServer extends me.piggypiglet.framework.minecraft.api.server.
     protected Map<KeyEnum, KeyImpl<?, Server>> provideKeyFunctions() {
         return Maps.of(new HashMap<KeyEnum, KeyImpl<?, Server>>())
                 .key(ServerKeys.ADDRESS).value(KeyFactory.ofNullable(Server::getIp, KeyNames.SERVER_ADDRESS))
+                // port isn't nullable, but im bad at coding so
+                .key(ServerKeys.PORT).value(KeyFactory.ofNullable(Server::getPort, KeyNames.SERVER_PORT))
                 .build();
     }
 

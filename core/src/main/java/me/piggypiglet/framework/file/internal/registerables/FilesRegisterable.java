@@ -47,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public final class FilesRegisterable extends StartupRegisterable {
-    // @Inject @LoggerName("FilesRegisterable") private Logger<?> logger;
+    @Inject @LoggerName("FilesRegisterable") private Logger<?> logger;
     @Inject private Framework framework;
     @Inject private FileManager fileManager;
     @Inject private FrameworkBootstrap main;
@@ -85,7 +85,7 @@ public final class FilesRegisterable extends StartupRegisterable {
                     bind(FileWrapper.class, annotation, fileManager.loadFile(name, internalPath, externalPath));
                 }
             } catch (Exception e) {
-               // logger.error(e);
+                logger.error(e);
             }
         });
     }

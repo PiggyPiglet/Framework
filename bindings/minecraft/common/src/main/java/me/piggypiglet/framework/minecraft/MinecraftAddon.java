@@ -24,15 +24,11 @@
 
 package me.piggypiglet.framework.minecraft;
 
-import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.addon.init.AddonBuilder;
 import me.piggypiglet.framework.addon.init.AddonData;
-import me.piggypiglet.framework.init.bootstrap.BootPriority;
-import me.piggypiglet.framework.minecraft.api.server.Server;
 import me.piggypiglet.framework.minecraft.lang.Language;
 import me.piggypiglet.framework.minecraft.registerables.CommandHandlerRegisterable;
-import me.piggypiglet.framework.minecraft.registerables.ServerRegisterable;
 import org.jetbrains.annotations.NotNull;
 
 public final class MinecraftAddon extends Addon {
@@ -41,13 +37,10 @@ public final class MinecraftAddon extends Addon {
     protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
         return builder
                 .startup(CommandHandlerRegisterable.class)
-                .startup(BootPriority.IMPL, ServerRegisterable.class)
                 .files()
                         .config("minecraft_lang", "minecraft_lang.json", "minecraft_lang.json")
                         .build()
                 .language("minecraft_lang", Language.class)
-                .request("server-implementation", TypeLiteral.get(Server.class).getType(),
-                        scanner -> scanner.getSubTypesOf(Server.class))
                 .build();
     }
 }

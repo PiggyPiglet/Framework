@@ -11,7 +11,7 @@ public final class KeyFactory {
     private KeyFactory() {}
 
     @NotNull
-    public static  <V, H> KeyImpl<V, H> ofNullable(@NotNull final Function<H, V> getter, @NotNull final KeyNames name) {
+    public static <V, H> KeyImpl<V, H> ofNullable(@NotNull final Function<H, V> getter, @NotNull final KeyNames name) {
         return initImpl(handle -> Optional.ofNullable(getter.apply(handle)), name);
     }
 

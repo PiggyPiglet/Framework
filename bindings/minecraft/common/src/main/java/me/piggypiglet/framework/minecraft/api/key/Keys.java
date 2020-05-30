@@ -25,7 +25,7 @@ public final class Keys {
     public static final Key<Double, ?> ENTITY_HEALTH_SCALE = () -> KeyNames.ENTITY_HEALTH_SCALE;
     public static final Key<InetSocketAddress, ?> PLAYER_ADDRESS = () -> KeyNames.PLAYER_ADDRESS;
 
-    public static final Key<InetSocketAddress, ?> SERVER_ADDRESS = () -> KeyNames.SERVER_ADDRESS;
+    public static final Key<String, ?> SERVER_ADDRESS = () -> KeyNames.SERVER_ADDRESS;
     public static final Key<Integer, ?> SERVER_PORT = () -> KeyNames.SERVER_PORT;
     public static final Key<Set<String>, ?> IP_BANS = () -> KeyNames.SERVER_ADDRESS_BANS;
     public static final Key<Set<UUID>, ?> PLAYER_BANS = () -> KeyNames.SERVER_BANNED_PLAYERS;

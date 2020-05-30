@@ -23,7 +23,7 @@ public abstract class Keyable<H> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected <E extends Enum<E> & KeyEnum> Keyable(@NotNull final Class<E> enumClass, @NotNull final E unknown,
-                      @NotNull final Function<H, Keyable<H>> initializer) {
+                                                    @NotNull final Function<H, Keyable<H>> initializer) {
         this.enumClass = enumClass;
         this.unknown = unknown;
         this.initializer = initializer;
