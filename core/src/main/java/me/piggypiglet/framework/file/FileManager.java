@@ -89,6 +89,10 @@ public final class FileManager {
 
         final File file = createFile(externalPath, internalPath);
 
+        System.out.println(file.exists());
+
+        System.out.println(name + " - " + internalPath + " - " + externalPath);
+
         return putAndGet(name, fileConfigurationFactory.get(file));
     }
 
