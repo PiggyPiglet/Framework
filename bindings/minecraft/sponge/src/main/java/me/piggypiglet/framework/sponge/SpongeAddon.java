@@ -31,6 +31,7 @@ import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.sponge.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.sponge.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.sponge.registerables.LoggerRegisterable;
+import me.piggypiglet.framework.sponge.registerables.ServerRegisterable;
 import org.jetbrains.annotations.NotNull;
 
 public final class SpongeAddon extends Addon {
@@ -38,7 +39,7 @@ public final class SpongeAddon extends Addon {
     @Override
     protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
         return builder
-                .startup(BootPriority.IMPL, LoggerRegisterable.class)
+                .startup(BootPriority.IMPL, LoggerRegisterable.class, ServerRegisterable.class)
                 .startup(BootPriority.COMMANDS, CommandExecutorRegisterable.class)
                 .startup(EventFinderRegisterable.class)
                 .build();
