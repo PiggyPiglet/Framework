@@ -31,6 +31,7 @@ import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import me.piggypiglet.framework.nukkit.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.nukkit.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.nukkit.registerables.LoggerRegisterable;
+import me.piggypiglet.framework.nukkit.registerables.ServerRegisterable;
 import org.jetbrains.annotations.NotNull;
 
 public final class NukkitAddon extends Addon {
@@ -38,7 +39,7 @@ public final class NukkitAddon extends Addon {
     @Override
     protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
         return builder
-                .startup(BootPriority.IMPL, LoggerRegisterable.class)
+                .startup(BootPriority.IMPL, LoggerRegisterable.class, ServerRegisterable.class)
                 .startup(BootPriority.COMMANDS, CommandExecutorRegisterable.class)
                 .startup(EventFinderRegisterable.class)
                 .build();
