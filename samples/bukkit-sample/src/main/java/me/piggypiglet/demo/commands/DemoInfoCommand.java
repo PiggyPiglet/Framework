@@ -22,30 +22,32 @@
  * SOFTWARE.
  */
 
-package me.piggypiglet.demo;
+package me.piggypiglet.demo.commands;
 
-import me.piggypiglet.demo.registerables.BroadcasterRegisterable;
-import me.piggypiglet.framework.Framework;
+import com.google.inject.Inject;
+import me.piggypiglet.framework.commands.framework.BaseCommand;
+import me.piggypiglet.framework.file.framework.FileConfiguration;
+import me.piggypiglet.framework.user.User;
 import me.piggypiglet.framework.utils.annotations.files.Config;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Demo extends JavaPlugin {
-    @Override
-    public void onEnable() {
-        Framework.builder(JavaPlugin.class, this)
-                .scanning().scanner()
-                        .pckg("me.piggypiglet.demo")
-                        .build().build()
-                .commands()
-                        .prefixes("demo")
-                        .build()
-                .guice()
-                        .startup(BroadcasterRegisterable.class)
-                        .build()
-                .files()
-                        .config("config", "config.yml", getDataFolder().getPath() + "/config.yml", Config.class)
-                        .build()
-                .build()
-                .init();
+public final class DemoInfoCommand extends BaseCommand {
+    @Inject @Config private FileConfiguration config;
+
+    public DemoInfoCommand() {
+        super("info");
+        options().usage("").description("Get info about the demo plugin.");
     }
-}
+
+    @Override
+    protected boolean execute(User user, String[] args) {
+        String[] message = {
+                "This is a demo plugin, using the RPF Bukkit Bindings. Here's the info stored in your config:",
+                "Broadcast Message: %s",
+                "Broadcast Interval: %s"
+        };
+
+        user.sendMessage(String.join("\n", message), config.getString("broadcast.message"), config.getString("broadcast.interval"));
+
+        return true;
+    }
+} 

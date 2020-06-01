@@ -58,7 +58,7 @@ public final class RowGetter extends MySQLComponent {
          * Location of the row(s) to find
          * @return Builder instance
          */
-        public Maps.Builder<String, Object, Builder, Object> location() {
+        public Maps.Builder<String, Object, Builder> location() {
             return Maps.builder(new LinkedHashMap<>(), m -> {
                 location = m;
                 return this;
