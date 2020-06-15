@@ -13,7 +13,7 @@ public final class ReferencesBuilder<R> extends AbstractBuilder<Table<String, St
     private final Table<String, String, String> references = HashBasedTable.create();
 
     @NotNull
-    public Maps.Builder<String, String, String, ReferencesBuilder<R>> references(@NotNull final String config) {
+    public Maps.Builder<String, String, ReferencesBuilder<R>> references(@NotNull final String config) {
         return Maps.builder(new HashMap<>(), map -> {
             map.forEach((base, reference) -> references.put(config, base, reference));
             return this;

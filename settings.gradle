@@ -15,5 +15,7 @@ include (
         ':bindings:minecraft:nukkit',
         ':bindings:discord:jda',
         ':samples:bukkit-sample',
-        'test'
+        'test:bukkit',
+        'test:nukkit',
+        'test:sponge'
 )

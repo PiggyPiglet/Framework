@@ -41,30 +41,32 @@ public class Maps {
         throw new RuntimeException("This class cannot be instantiated.");
     }
 
-    public static <K, V, T> Builder<K, V, T, Map<K, V>> of(@NotNull final Map<K, V> implementation) {
-        return of(implementation, null);
+    public static <K, V/*, T*/> Builder<K, V, /*T, */Map<K, V>> of(@NotNull final Map<K, V> implementation) {
+        return new Builder<>(implementation);
+//        return of(implementation, obj -> (V) obj);
     }
 
-    public static <K, V, T> Builder<K, V, T, Map<K, V>> of(@NotNull final Map<K, V> implementation, @Nullable final Function<T, V> mapper) {
-        return new Builder<>(implementation, mapper);
+//    public static <K, V, T> Builder<K, V, T, Map<K, V>> of(@NotNull final Map<K, V> implementation, @Nullable final Function<T, V> mapper) {
+//        return new Builder<>(implementation, mapper);
+//    }
+
+    public static <K, V, /*T, */R> Builder<K, V, /*T, */R> builder(@NotNull final Map<K, V> implementation, @NotNull final Function<Map<K, V>, R> builder) {
+        return BuilderUtils.customBuilder(new Builder<>(implementation), builder);
+//        return builder(implementation, obj -> (V) obj, builder);
     }
 
-    public static <K, V, T, R> Builder<K, V, T, R> builder(@NotNull final Map<K, V> implementation, @NotNull final Function<Map<K, V>, R> builder) {
-        return builder(implementation, null, builder);
-    }
+//    public static <K, V, T, R> Builder<K, V, T, R> builder(@NotNull final Map<K, V> implementation, @Nullable final Function<T, V> mapper,
+//                                                           @NotNull final Function<Map<K, V>, R> builder) {
+//        return BuilderUtils.customBuilder(new Builder<>(implementation, mapper), builder);
+//    }
 
-    public static <K, V, T, R> Builder<K, V, T, R> builder(@NotNull final Map<K, V> implementation, @Nullable final Function<T, V> mapper,
-                                                           @NotNull final Function<Map<K, V>, R> builder) {
-        return BuilderUtils.customBuilder(new Builder<>(implementation, mapper), builder);
-    }
-
-    public static final class Builder<K, V, T, R> extends AbstractBuilder<Map<K, V>, R> {
+    public static final class Builder<K, V, /*T, */R> extends AbstractBuilder<Map<K, V>, R> {
         private final Map<K, V> map;
-        private final Function<T, V> mapper;
+//        private final Function<T, V> mapper;
 
-        private Builder(Map<K, V> implementation, Function<T, V> mapper) {
+        private Builder(Map<K, V> implementation/*, Function<T, V> mapper*/) {
             map = implementation;
-            this.mapper = mapper;
+//            this.mapper = mapper;
         }
 
         /**
@@ -104,14 +106,14 @@ public class Maps {
              * @param value Value
              * @return Parent Map Builder
              */
-            public Builder<K, V, T, R> value(T value) {
-                final V real = mapper == null ? (V) value : mapper.apply(value);
+            public Builder<K, V, /*T, */R> value(/*T*/V value) {
+//                final V real = mapper == null ? (V) value : mapper.apply(value);
 
                 if (requirement != null) {
-                    if (!requirement.test(real)) return Builder.this;
+                    if (!requirement.test(value)) return Builder.this;
                 }
 
-                map.put(key, real);
+                map.put(key, value);
 
                 return Builder.this;
             }

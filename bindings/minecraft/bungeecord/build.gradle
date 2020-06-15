@@ -8,5 +8,5 @@ dependencies {
     compile project(":core")
     compile project(":bindings:minecraft:common")
 
-    compileOnly 'net.md-5:bungeecord-api:1.14-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-api:1.15-SNAPSHOT'
 }

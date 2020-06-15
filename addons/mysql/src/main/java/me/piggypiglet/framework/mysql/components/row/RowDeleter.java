@@ -56,7 +56,7 @@ public final class RowDeleter extends MySQLComponent {
          * Specify a location for the row
          * @return Builder instance
          */
-        public Maps.Builder<String, Object, ?, Builder> location() {
+        public Maps.Builder<String, Object, Builder> location() {
             return Maps.builder(new LinkedHashMap<>(), m -> {
                 location = m;
                 return this;

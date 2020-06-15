@@ -119,7 +119,7 @@ public final class FilesBuilder<R> extends AbstractBuilder<FilesData, R> {
     }
 
     @NotNull
-    public Maps.Builder<String, String, String, FilesBuilder<R>> values(@NotNull final String name) {
+    public Maps.Builder<String, String, FilesBuilder<R>> values(@NotNull final String name) {
         return Maps.builder(new HashMap<>(), map -> {
             configData(name).setValues(map);
             return this;
