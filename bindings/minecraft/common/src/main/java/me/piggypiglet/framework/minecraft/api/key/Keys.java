@@ -1,10 +1,12 @@
 package me.piggypiglet.framework.minecraft.api.key;
 
+import me.piggypiglet.framework.minecraft.api.inventory.framework.Inventory;
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.Material;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyFactory;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.Key;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
+import me.piggypiglet.framework.minecraft.api.versions.Versions;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -21,6 +23,7 @@ public final class Keys {
 
     public static final Key<UUID, ?> UUID = () -> KeyNames.UUID;
     public static final Key<String, ?> NAME = () -> KeyNames.NAME;
+    public static final Key<Inventory<?>, ?> INVENTORY = () -> KeyNames.INVENTORY;
     public static final Key<Double, ?> ENTITY_HEALTH = () -> KeyNames.ENTITY_HEALTH;
     public static final Key<Double, ?> ENTITY_HEALTH_SCALE = () -> KeyNames.ENTITY_HEALTH_SCALE;
     public static final Key<InetSocketAddress, ?> PLAYER_ADDRESS = () -> KeyNames.PLAYER_ADDRESS;
@@ -29,7 +32,7 @@ public final class Keys {
     public static final Key<Integer, ?> SERVER_PORT = () -> KeyNames.SERVER_PORT;
     public static final Key<Set<String>, ?> IP_BANS = () -> KeyNames.SERVER_ADDRESS_BANS;
     public static final Key<Set<UUID>, ?> PLAYER_BANS = () -> KeyNames.SERVER_BANNED_PLAYERS;
-    public static final Key<String, ?> VERSION = () -> KeyNames.SERVER_VERSION;
+    public static final Key<Versions, ?> VERSION = () -> KeyNames.SERVER_VERSION;
     public static final Key<String, ?> IMPLEMENTATION_VERSION = () -> KeyNames.SERVER_IMPLEMENTATION_VERSION;
     public static final Key<Set<UUID>, ?> OPERATORS = () -> KeyNames.SERVER_OPERATORS;
     public static final Key<Integer, ?> MAX_PLAYERS = () -> KeyNames.SERVER_MAX_PLAYERS;

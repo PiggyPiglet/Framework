@@ -3,6 +3,7 @@ package me.piggypiglet.framework.minecraft.api.inventory.item.material.registera
 import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.Material;
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.MaterialName;
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.MaterialWrapper;
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialEnum;
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialVersion;
 import me.piggypiglet.framework.minecraft.api.versions.Versions;
@@ -12,10 +13,7 @@ import me.piggypiglet.framework.utils.annotations.internal.InternalAnnotations;
 import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationRules;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class MaterialBindingRegisterable extends StartupRegisterable {
     @Inject private Scanner scanner;
@@ -34,10 +32,11 @@ public final class MaterialBindingRegisterable extends StartupRegisterable {
         final Map<MaterialName, MaterialEnum> bindings = new EnumMap<>(MaterialName.class);
 
         for (final MaterialEnum material : implementedMaterials) {
+            if (material.getName() == null) continue;
             bindings.put(material.getName(), material);
         }
 
-        final List<MaterialName> unimplemented = Arrays.asList(MaterialName.values());
+        final List<MaterialName> unimplemented = new ArrayList<>(Arrays.asList(MaterialName.values()));
         unimplemented.removeAll(bindings.keySet());
 
         unimplemented.forEach(name -> bindings.put(name, Material.UNKNOWN));
@@ -47,5 +46,7 @@ public final class MaterialBindingRegisterable extends StartupRegisterable {
                 InternalAnnotations.internal("material_handles"),
                 bindings
         );
+
+        requestStaticInjections(MaterialWrapper.class);
     }
 }

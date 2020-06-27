@@ -2,8 +2,11 @@ package me.piggypiglet.framework.minecraft.api.inventory.item.material.implement
 
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.MaterialName;
 import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialEnum;
+import me.piggypiglet.framework.minecraft.api.inventory.item.material.framework.MaterialVersion;
+import me.piggypiglet.framework.minecraft.api.versions.Versions;
 import org.jetbrains.annotations.Nullable;
 
+@MaterialVersion(Versions.V1_13)
 public enum Material13 implements MaterialEnum {
     AIR(0, -1, MaterialName.AIR),
     STONE(1, -1, MaterialName.STONE),
@@ -693,7 +696,7 @@ public enum Material13 implements MaterialEnum {
     WOLF_SPAWN_EGG(685, -1, MaterialName.WOLF_SPAWN_EGG),
     ZOMBIE_SPAWN_EGG(686, -1, MaterialName.ZOMBIE_SPAWN_EGG),
     ZOMBIE_HORSE_SPAWN_EGG(687, -1, MaterialName.ZOMBIE_HORSE_SPAWN_EGG),
-    ZOMBIE_PIGMAN_SPAWN_EGG(688, -1, MaterialName.ZOMBIE_PIGMAN_SPAWN_EGG),
+    ZOMBIE_PIGMAN_SPAWN_EGG(688, -1, null),
     ZOMBIE_VILLAGER_SPAWN_EGG(689, -1, MaterialName.ZOMBIE_VILLAGER_SPAWN_EGG),
     EXPERIENCE_BOTTLE(690, -1, MaterialName.EXPERIENCE_BOTTLE),
     FIRE_CHARGE(691, -1, MaterialName.FIRE_CHARGE),

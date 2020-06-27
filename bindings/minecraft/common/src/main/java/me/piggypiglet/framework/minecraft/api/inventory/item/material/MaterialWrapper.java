@@ -29,14 +29,15 @@ public final class MaterialWrapper implements MaterialEnum {
 
     @Inject @Internal("material_handles") private static Map<MaterialName, MaterialEnum> handles;
 
-    private final MaterialEnum handle;
+    private final MaterialName name;
+    private MaterialEnum handle = UNKNOWN;
 
     MaterialWrapper(@NotNull final MaterialName name) {
-        this.handle = handles.get(name);
+        this.name = name;
     }
 
     MaterialWrapper() {
-        this.handle = UNKNOWN;
+        this.name = null;
     }
 
     @Override
@@ -53,5 +54,14 @@ public final class MaterialWrapper implements MaterialEnum {
     @Override
     public MaterialName getName() {
         return handle.getName();
+    }
+
+    @NotNull
+    public MaterialEnum getHandle() {
+        return handle;
+    }
+
+    public void populate() {
+        handle = handles.get(name);
     }
 }

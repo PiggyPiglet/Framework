@@ -70,8 +70,6 @@ public final class FilesRegisterable extends StartupRegisterable {
 
         Collections.sort(files);
 
-        files.forEach(fileData -> System.out.println(fileData.getName()));
-
         files.forEach(f -> {
             try {
                 final String name = f.getName();

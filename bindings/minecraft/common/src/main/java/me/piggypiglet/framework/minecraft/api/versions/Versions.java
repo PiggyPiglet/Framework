@@ -30,7 +30,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum Versions {
-    V1_15(565, 574),
+    V1_16(701, 736),
+    V1_15(565, 578),
     V1_14(472, 498),
     V1_13(383, 404),
     V1_12(328, 340),
@@ -43,7 +44,7 @@ public enum Versions {
 
     private final Set<Integer> ids = new HashSet<>();
 
-    Versions(int begin, int end) {
+    Versions(final int begin, final int end) {
         for (int i = begin; i <= end; ++i) {
             ids.add(i);
         }
@@ -55,7 +56,7 @@ public enum Versions {
     }
 
     @NotNull
-    public static Versions fromId(int id) {
+    public static Versions fromId(final int id) {
         for (Versions ver : values()) {
             if (ver.ids.contains(id)) {
                 return ver;
@@ -66,8 +67,42 @@ public enum Versions {
     }
 
     @NotNull
-    public static Versions getVersion() {
-        //todo: implement version
-        return V1_15;
+    public static Versions fromName(@NotNull final String version) {
+        switch (version.toLowerCase()) {
+            case "1_7":
+                return V1_7;
+
+            case "1_8":
+                return V1_8;
+
+            case "1_9":
+                return V1_9;
+
+            case "1_10":
+                return V1_10;
+
+            case "1_11":
+                return V1_11;
+
+            case "1_12":
+                return V1_12;
+
+            case "1_13":
+                return V1_13;
+
+            case "1_14":
+                return V1_14;
+
+            case "1_15":
+                return V1_15;
+
+            default:
+                return getLatest();
+        }
+    }
+
+    @NotNull
+    public static Versions getLatest() {
+        return V1_16;
     }
 }

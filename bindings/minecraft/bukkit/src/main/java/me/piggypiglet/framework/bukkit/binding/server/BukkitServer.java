@@ -4,6 +4,7 @@ import me.piggypiglet.framework.minecraft.api.key.data.KeyFactory;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
+import me.piggypiglet.framework.minecraft.api.versions.Versions;
 import me.piggypiglet.framework.utils.map.Maps;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -32,7 +33,13 @@ public class BukkitServer extends me.piggypiglet.framework.minecraft.api.server.
                 .key(ServerKeys.PORT).value(KeyFactory.ofNullable(Server::getPort, KeyNames.SERVER_PORT))
                 .key(ServerKeys.IP_BANS).value(KeyFactory.ofNullable(Server::getIPBans, KeyNames.SERVER_ADDRESS_BANS))
                 .key(ServerKeys.PLAYER_BANS).value(KeyFactory.ofNullable(server -> server.getBannedPlayers().stream().map(OfflinePlayer::getUniqueId).collect(Collectors.toSet()), KeyNames.SERVER_BANNED_PLAYERS))
-                .key(ServerKeys.VERSION).value(KeyFactory.ofNullable(Server::getVersion, KeyNames.SERVER_VERSION))
+                .key(ServerKeys.VERSION).value(KeyFactory.ofNullable(
+                        server -> {
+                            final String[] parts = server.getBukkitVersion().split("\\.", 3);
+                            return Versions.fromName(String.join("_", parts[0], parts[1]));
+                        },
+                        KeyNames.SERVER_VERSION
+                ))
                 .key(ServerKeys.IMPLEMENTATION_VERSION).value(KeyFactory.ofNullable(Server::getBukkitVersion, KeyNames.SERVER_IMPLEMENTATION_VERSION))
                 .key(ServerKeys.OPERATORS).value(KeyFactory.ofNullable(server -> server.getOperators().stream().map(OfflinePlayer::getUniqueId).collect(Collectors.toSet()), KeyNames.SERVER_OPERATORS))
                 .key(ServerKeys.MAX_PLAYERS).value(KeyFactory.ofNullable(Server::getMaxPlayers, KeyNames.SERVER_MAX_PLAYERS))
