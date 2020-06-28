@@ -3,7 +3,7 @@ package me.piggypiglet.framework.bukkit.binding.player;
 import me.piggypiglet.framework.bukkit.binding.inventory.player.BukkitPlayerInventory;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
-import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.utils.map.Maps;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +34,8 @@ public final class BukkitPlayer extends me.piggypiglet.framework.minecraft.api.p
 
     @Override
     @NotNull
-    protected Map<KeyEnum, KeyImpl<?, Player>> provideKeyFunctions() {
-        return Maps.of(new HashMap<KeyEnum, KeyImpl<?, Player>>())
+    protected Map<KeyGroup, KeyImpl<?, Player>> provideKeyFunctions() {
+        return Maps.of(new HashMap<KeyGroup, KeyImpl<?, Player>>())
                 .key(PlayerKeys.UUID).value(ofNullable(Player::getUniqueId, KeyNames.UUID))
                 .key(PlayerKeys.NAME).value(ofNullable(Player::getName, KeyNames.NAME))
                 .key(PlayerKeys.INVENTORY).value(ofNullable(player -> new BukkitPlayerInventory(player.getInventory()), KeyNames.INVENTORY))

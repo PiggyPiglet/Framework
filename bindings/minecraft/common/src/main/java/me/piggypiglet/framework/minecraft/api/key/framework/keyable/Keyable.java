@@ -9,41 +9,34 @@ import me.piggypiglet.framework.utils.builder.GenericBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class Keyable<H> {
     private static final Logger<?> LOGGER = LoggerFactory.getLogger("Keyable");
 
-    private final Class<? extends KeyEnum> enumClass;
-    private final KeyEnum unknown;
-    private final Function<H, Keyable<H>> initializer;
+    private final KeyGroup[] keys;
+    private final KeyGroup unknown;
 
-    protected final Map<KeyEnum, KeyImpl<?, H>> keyFunctions;
+    protected final Map<KeyGroup, KeyImpl<?, H>> keyFunctions = new HashMap<>();
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected <E extends Enum<E> & KeyEnum> Keyable(@NotNull final Class<E> enumClass, @NotNull final E unknown,
-                                                    @NotNull final Function<H, Keyable<H>> initializer) {
-        this.enumClass = enumClass;
+    protected <E extends Enum<E> & KeyGroup> Keyable(@NotNull final KeyGroup[] keys, @NotNull final E unknown) {
+        this.keys = keys;
         this.unknown = unknown;
-        this.initializer = initializer;
-
-        keyFunctions = (Map) new EnumMap<>(enumClass);
     }
 
     @SuppressWarnings("unchecked")
-    public <E extends Enum<E> & KeyEnum> void setup() {
+    public void setup() {
         GenericBuilder.of(() -> keyFunctions)
                 .with(map -> map.put(unknown, (KeyImpl<?, H>) Keys.UNKNOWN))
                 .with(Map::putAll, provideKeyFunctions())
                 .build();
 
-        final String difference = GenericBuilder.of(() -> new ArrayList<>(Arrays.asList(((Class<E>) enumClass).getEnumConstants())))
+        final String difference = GenericBuilder.of(() -> new ArrayList<>(Arrays.asList(keys)))
                 .with(List::remove, unknown)
                 .with(List::removeAll, keyFunctions.keySet())
                 .build()
                 .stream()
-                .map(Enum::toString)
+                .map(Object::toString)
                 .collect(Collectors.joining(", "));
 
         if (!difference.isEmpty()) {
@@ -52,24 +45,26 @@ public abstract class Keyable<H> {
         }
     }
 
-    private void setup(@NotNull final Map<KeyEnum, KeyImpl<?, H>> keyFunctions) {
+    public void setup(@NotNull final Map<KeyGroup, KeyImpl<?, H>> keyFunctions) {
         this.keyFunctions.putAll(keyFunctions);
     }
 
     @NotNull
-    public Keyable<H> create(@NotNull final H handle) {
-        return GenericBuilder.of(() -> initializer.apply(handle))
-                .with(keyable -> keyable.setup(keyFunctions))
-                .build();
+    public final Map<KeyGroup, KeyImpl<?, H>> getKeyFunctions() {
+        return keyFunctions;
     }
 
     @NotNull
-    protected abstract Map<KeyEnum, KeyImpl<?, H>> provideKeyFunctions();
+    protected abstract Map<KeyGroup, KeyImpl<?, H>> provideKeyFunctions();
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <E extends Enum<E> & KeyEnum, V> Optional<V> get(@NotNull final Key<V, ?> key) {
-        return (Optional<V>) keyFunctions.get(KeyEnum.fromKey((Class<E>) enumClass, key).orElse((E) unknown)).get(getHandle());
+    public <V> Optional<V> get(@NotNull final Key<V, ?> key) {
+        return (Optional<V>) keyFunctions.get(
+                Arrays.stream(keys)
+                        .filter(storedKey -> storedKey.getParent() == key.getName())
+                        .findAny().orElse(unknown)
+        ).get(getHandle());
     }
 
     @NotNull

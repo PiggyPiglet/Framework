@@ -4,7 +4,7 @@ import me.piggypiglet.framework.bukkit.binding.inventory.item.BukkitItem;
 import me.piggypiglet.framework.minecraft.api.inventory.framework.MutableInventory;
 import me.piggypiglet.framework.minecraft.api.inventory.item.framework.Item;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
-import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
@@ -36,12 +36,12 @@ public final class BukkitPlayerInventory
 
     @Override
     protected void handleUpdate(final int slot, final @NotNull Item<?> item) {
-     //   handle.setItem(slot, );
+        handle.setItem(slot, from(item));
     }
 
     @NotNull
     @Override
-    protected Map<KeyEnum, KeyImpl<?, PlayerInventory>> provideKeyFunctions() {
+    protected Map<KeyGroup, KeyImpl<?, PlayerInventory>> provideKeyFunctions() {
         return null;
     }
 

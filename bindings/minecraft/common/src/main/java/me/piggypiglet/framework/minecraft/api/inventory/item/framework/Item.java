@@ -1,7 +1,7 @@
 package me.piggypiglet.framework.minecraft.api.inventory.item.framework;
 
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
-import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,10 +10,10 @@ import java.util.function.Function;
 public abstract class Item<H> extends Keyable<H> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Item(@NotNull final Function<H, Item<H>> initializer) {
-        super(ItemKeys.class, ItemKeys.UNKNOWN, (Function) initializer);
+        super(ItemKeys.values(), ItemKeys.UNKNOWN, (Function) initializer);
     }
 
-    protected enum ItemKeys implements KeyEnum {
+    protected enum ItemKeys implements KeyGroup {
         MATERIAL(KeyNames.ITEM_MATERIAL),
         AMOUNT(KeyNames.ITEM_AMOUNT),
         DURABILITY(KeyNames.ITEM_DURABILITY),
@@ -34,6 +34,12 @@ public abstract class Item<H> extends Keyable<H> {
         @Override
         public KeyNames getParent() {
             return parent;
+        }
+
+        @NotNull
+        @Override
+        public String getName() {
+            return name();
         }
     }
 }

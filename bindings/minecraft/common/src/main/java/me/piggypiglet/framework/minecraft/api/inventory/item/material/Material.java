@@ -1026,13 +1026,6 @@ public final class Material implements MaterialEnum {
     }
 
     @NotNull
-    public static Material fromIdData(final int id, final int data) {
-        return VALUES.stream()
-                .filter(material -> material.getId() == id && material.getData() == data)
-                .findAny().orElse(Material.UNKNOWN);
-    }
-
-    @NotNull
     public static Material fromName(@NotNull final String name) {
         return VALUES.stream()
                 // material.getName can't return null here

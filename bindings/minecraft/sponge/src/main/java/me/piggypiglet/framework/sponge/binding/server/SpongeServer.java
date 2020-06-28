@@ -3,7 +3,7 @@ package me.piggypiglet.framework.sponge.binding.server;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyFactory;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
-import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.utils.map.Maps;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Server;
@@ -24,8 +24,8 @@ public class SpongeServer extends me.piggypiglet.framework.minecraft.api.server.
 
     @Override
     @NotNull
-    protected Map<KeyEnum, KeyImpl<?, Server>> provideKeyFunctions() {
-        return Maps.of(new HashMap<KeyEnum, KeyImpl<?, Server>>())
+    protected Map<KeyGroup, KeyImpl<?, Server>> provideKeyFunctions() {
+        return Maps.of(new HashMap<KeyGroup, KeyImpl<?, Server>>())
                 .key(ServerKeys.ADDRESS).value(KeyFactory.of(Server::getBoundAddress, KeyNames.SERVER_ADDRESS))
                 //.key(ServerKeys.IP_BANS).value(KeyFactory.ofNullable(Sponge.getServiceManager().provide(BanService.class).get().getIpBans().stream().collect(Collectors.toSet()), KeyNames.SERVER_ADDRESS_BANS))
                 .key(ServerKeys.MAX_PLAYERS).value(KeyFactory.ofNullable(Server::getMaxPlayers, KeyNames.SERVER_MAX_PLAYERS))

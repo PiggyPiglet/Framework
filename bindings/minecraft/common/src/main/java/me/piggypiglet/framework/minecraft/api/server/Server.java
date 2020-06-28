@@ -1,7 +1,7 @@
 package me.piggypiglet.framework.minecraft.api.server;
 
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
-import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyEnum;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import me.piggypiglet.framework.utils.SearchUtils;
 import org.jetbrains.annotations.NotNull;
@@ -11,10 +11,10 @@ import java.util.function.Function;
 public abstract class Server<H> extends Keyable<H> implements SearchUtils.Searchable {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Server(@NotNull final Function<H, Server<H>> initializer) {
-        super(ServerKeys.class, ServerKeys.UNKNOWN, (Function) initializer);
+        super(ServerKeys.values(), ServerKeys.UNKNOWN, (Function) initializer);
     }
 
-    protected enum ServerKeys implements KeyEnum {
+    protected enum ServerKeys implements KeyGroup {
         ADDRESS(KeyNames.SERVER_ADDRESS),
         PORT(KeyNames.SERVER_PORT),
         IP_BANS(KeyNames.SERVER_ADDRESS_BANS),
@@ -37,6 +37,12 @@ public abstract class Server<H> extends Keyable<H> implements SearchUtils.Search
         @NotNull
         public KeyNames getParent() {
             return parent;
+        }
+
+        @NotNull
+        @Override
+        public String getName() {
+            return name();
         }
     }
 }
