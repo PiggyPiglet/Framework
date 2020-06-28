@@ -26,10 +26,10 @@ package me.piggypiglet.framework.commands;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.commands.framework.Command;
-import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.task.Task;
 import me.piggypiglet.framework.user.User;
 import org.jetbrains.annotations.NotNull;

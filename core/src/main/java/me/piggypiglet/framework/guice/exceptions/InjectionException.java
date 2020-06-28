@@ -24,8 +24,10 @@
 
 package me.piggypiglet.framework.guice.exceptions;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class InjectionException extends RuntimeException {
-    public InjectionException(String message) {
-        super(message);
+    public InjectionException(@NotNull final Throwable throwable) {
+        super(throwable);
     }
 }

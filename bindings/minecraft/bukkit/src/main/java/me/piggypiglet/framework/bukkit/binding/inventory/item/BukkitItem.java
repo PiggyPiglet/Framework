@@ -6,6 +6,7 @@ import me.piggypiglet.framework.minecraft.api.inventory.item.material.Material;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyFactory;
 import me.piggypiglet.framework.minecraft.api.key.data.KeyNames;
 import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
+import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Initializer;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.utils.map.Maps;
 import org.bukkit.inventory.ItemStack;
@@ -14,11 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+@Initializer()
 public final class BukkitItem extends Item<ItemStack> implements MutableItem {
     private final ItemStack handle;
 
     public BukkitItem(@NotNull final ItemStack handle) {
-        super(BukkitItem::new);
         this.handle = handle;
     }
 

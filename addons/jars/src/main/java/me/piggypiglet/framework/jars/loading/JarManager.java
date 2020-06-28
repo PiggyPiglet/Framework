@@ -26,11 +26,12 @@ package me.piggypiglet.framework.jars.loading;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.jars.loading.framework.Jar;
 import me.piggypiglet.framework.jars.loading.framework.Loader;
 import me.piggypiglet.framework.jars.loading.framework.ScannableLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.net.URLClassLoader;
@@ -67,7 +68,7 @@ public final class JarManager {
         return this;
     }
 
-    public void scan(Injector injector) throws Exception {
+    public void scan(@NotNull final Injector injector) throws Exception {
         for (Map.Entry<Loader, Jar[]> entry : loaders.entrySet()) {
             if (entry.getKey() instanceof ScannableLoader) {
                 ScannableLoader<?> loader = (ScannableLoader<?>) entry.getKey();
@@ -79,7 +80,7 @@ public final class JarManager {
                     final CompletableFuture<Class<?>> future = new JarScanner(loader.getMatch(), classLoaders.get(jar)).scan(new File(jar.getPath()).toURI());
 
                     if (future != null) {
-                        final Injector newInjector = new Injector(injector.getReal().createChildInjector(new AbstractModule(){}));
+                        final Injector newInjector = injector.createChildInjector(new AbstractModule(){});
 
                         future.whenComplete((c, t) -> {
                             final Object main = newInjector.getInstance(c);

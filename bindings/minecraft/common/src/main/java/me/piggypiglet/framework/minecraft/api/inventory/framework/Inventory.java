@@ -7,12 +7,10 @@ import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public abstract class Inventory<H> extends Keyable<H> {
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected Inventory(@NotNull final Function<H, Inventory<H>> initializer) {
-        super(InventoryKeys.values(), InventoryKeys.UNKNOWN, (Function) initializer);
+    protected Inventory() {
+        super(InventoryKeys.values(), InventoryKeys.UNKNOWN);
     }
 
     @NotNull

@@ -6,6 +6,7 @@ import me.piggypiglet.framework.minecraft.api.key.framework.KeyImpl;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.minecraft.api.versions.Versions;
 import me.piggypiglet.framework.utils.map.Maps;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -17,12 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BukkitServer extends me.piggypiglet.framework.minecraft.api.server.Server<Server> {
-    private final Server handle;
-
-    public BukkitServer(@NotNull final Server handle) {
-        super(BukkitServer::new);
-        this.handle = handle;
-    }
+    private static final Server HANDLE = Bukkit.getServer();
 
     @Override
     @NotNull
@@ -52,11 +48,11 @@ public class BukkitServer extends me.piggypiglet.framework.minecraft.api.server.
     @NotNull
     @Override
     public Server getHandle() {
-        return handle;
+        return HANDLE;
     }
 
     @Override
     public String getName() {
-        return handle.getName();
+        return HANDLE.getName();
     }
 }

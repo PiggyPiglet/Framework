@@ -5,7 +5,6 @@ import me.piggypiglet.framework.minecraft.api.inventory.item.framework.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public abstract class PlayerInventory<H> extends Inventory<H> {
     private static final int ARMOR_START = 100;
@@ -14,10 +13,6 @@ public abstract class PlayerInventory<H> extends Inventory<H> {
     private static final int HOTBAR_END = 8;
     private static final int MAIN_START = 9;
     private static final int MAIN_END = 35;
-
-    protected PlayerInventory(@NotNull final Function<H, Inventory<H>> initializer) {
-        super(initializer);
-    }
 
     @NotNull
     public Optional<Item<?>>[] getArmor() {

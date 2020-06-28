@@ -24,10 +24,10 @@
 
 package me.piggypiglet.framework.registerables;
 
+import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
 import me.piggypiglet.framework.guice.objects.AnnotatedBinding;
 import me.piggypiglet.framework.guice.objects.Binding;
-import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.utils.annotations.wrapper.AnnotationWrapper;
 import org.jetbrains.annotations.NotNull;
 

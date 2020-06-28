@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE)
 public @interface Initializer {
-    Class<? extends KeyableInitializer> value();
+    Class<? extends KeyableInitializer<? extends Keyable<?>>> value();
 }

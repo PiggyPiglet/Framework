@@ -6,12 +6,9 @@ import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import me.piggypiglet.framework.utils.SearchUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
 public abstract class Player<H> extends Keyable<H> implements SearchUtils.Searchable {
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Player(@NotNull final Function<H, Player<H>> initializer) {
-        super(PlayerKeys.values(), PlayerKeys.UNKNOWN, (Function) initializer);
+    public Player() {
+        super(PlayerKeys.values(), PlayerKeys.UNKNOWN);
     }
 
     public abstract void sendRawMessage(@NotNull final String json);

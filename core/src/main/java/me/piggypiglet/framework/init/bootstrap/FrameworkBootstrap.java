@@ -27,13 +27,14 @@ package me.piggypiglet.framework.init.bootstrap;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import me.piggypiglet.framework.Framework;
 import me.piggypiglet.framework.addon.framework.Addon;
 import me.piggypiglet.framework.addon.init.AddonData;
+import me.piggypiglet.framework.guice.ExceptionalInjector;
 import me.piggypiglet.framework.guice.modules.BindingSetterModule;
 import me.piggypiglet.framework.guice.modules.InitialModule;
-import me.piggypiglet.framework.guice.objects.Injector;
 import me.piggypiglet.framework.init.builder.stages.guice.GuiceData;
 import me.piggypiglet.framework.registerables.StartupRegisterable;
 import me.piggypiglet.framework.scanning.framework.AbstractScanner;
@@ -49,8 +50,7 @@ public final class FrameworkBootstrap {
     private final Set<StartupRegisterable> registerables = new LinkedHashSet<>();
     private final Map<Class<? extends Addon>, AddonData> addons = new HashMap<>();
 
-    @Inject
-    private Scanner scanner;
+    @Inject private Scanner scanner;
 
     private final Framework config;
 
@@ -63,14 +63,13 @@ public final class FrameworkBootstrap {
         final InitialModule initialModule = guice.getInitialModule().apply(this, config);
 
         if (guice.getInjector() == null) {
-            injector.set(new Injector(initialModule.createInjector()));
+            injector.set(new ExceptionalInjector(initialModule.createInjector()));
         } else {
-            injector.set(new Injector(guice.getInjector().createChildInjector(initialModule)));
+            injector.set(new ExceptionalInjector(guice.getInjector().createChildInjector(initialModule)));
         }
 
-        final com.google.inject.Injector real = injector.get().getReal();
-        real.injectMembers(this);
-        real.injectMembers(config.getMain().getInstance());
+        injector.get().injectMembers(this);
+        injector.get().injectMembers(config.getMain().getInstance());
 
         if (scanner instanceof AbstractScanner) {
             ((AbstractScanner) scanner).populate();
@@ -98,12 +97,12 @@ public final class FrameworkBootstrap {
                 registerable.run(injector.get());
 
                 if (Stream.of(registerable.getBindings(), registerable.getAnnotatedBindings(), registerable.getStaticInjections())
-                        .anyMatch(list -> list.size() > 0)) {
-                    injector.set(new Injector(injector.get().getReal().createChildInjector(new BindingSetterModule(
+                        .anyMatch(list -> !list.isEmpty())) {
+                    injector.set(injector.get().createChildInjector(new BindingSetterModule(
                             registerable.getBindings(),
                             registerable.getAnnotatedBindings(),
                             registerable.getStaticInjections().toArray(new Class[]{})
-                    ))));
+                    )));
                 }
 
                 registerables.add(registerable);

@@ -30,7 +30,6 @@ import me.piggypiglet.framework.addon.init.AddonData;
 import me.piggypiglet.framework.bukkit.registerables.CommandExecutorRegisterable;
 import me.piggypiglet.framework.bukkit.registerables.EventFinderRegisterable;
 import me.piggypiglet.framework.bukkit.registerables.LoggerRegisterable;
-import me.piggypiglet.framework.bukkit.registerables.ServerRegisterable;
 import me.piggypiglet.framework.init.bootstrap.BootPriority;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +38,7 @@ public final class BukkitAddon extends Addon {
         @Override
         protected AddonData provideConfig(@NotNull final AddonBuilder<AddonData> builder) {
                 return builder
-                        .startup(BootPriority.IMPL, LoggerRegisterable.class, ServerRegisterable.class)
+                        .startup(BootPriority.IMPL, LoggerRegisterable.class)
                         .startup(BootPriority.COMMANDS, CommandExecutorRegisterable.class)
                         .startup(EventFinderRegisterable.class)
                         .build();

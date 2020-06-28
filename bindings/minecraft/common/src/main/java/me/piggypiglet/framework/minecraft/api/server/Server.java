@@ -6,12 +6,9 @@ import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import me.piggypiglet.framework.utils.SearchUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
 public abstract class Server<H> extends Keyable<H> implements SearchUtils.Searchable {
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Server(@NotNull final Function<H, Server<H>> initializer) {
-        super(ServerKeys.values(), ServerKeys.UNKNOWN, (Function) initializer);
+    public Server() {
+        super(ServerKeys.values(), ServerKeys.UNKNOWN);
     }
 
     protected enum ServerKeys implements KeyGroup {

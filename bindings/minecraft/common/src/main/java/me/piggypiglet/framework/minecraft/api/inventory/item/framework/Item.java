@@ -5,12 +5,9 @@ import me.piggypiglet.framework.minecraft.api.key.framework.keyable.KeyGroup;
 import me.piggypiglet.framework.minecraft.api.key.framework.keyable.Keyable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
 public abstract class Item<H> extends Keyable<H> {
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Item(@NotNull final Function<H, Item<H>> initializer) {
-        super(ItemKeys.values(), ItemKeys.UNKNOWN, (Function) initializer);
+    public Item() {
+        super(ItemKeys.values(), ItemKeys.UNKNOWN);
     }
 
     protected enum ItemKeys implements KeyGroup {
